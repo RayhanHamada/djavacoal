@@ -1,4 +1,3 @@
-import { RootContext } from "@/backend/handlers/utils";
 import { OpenAPIReferencePlugin } from "@orpc/openapi/plugins";
 import { ZodToJsonSchemaConverter } from "@orpc/zod/zod4";
 
