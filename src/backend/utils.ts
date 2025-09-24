@@ -1,7 +1,7 @@
 import { OpenAPIReferencePlugin } from "@orpc/openapi/plugins";
 import { ZodToJsonSchemaConverter } from "@orpc/zod/zod4";
 
-export const API_PREFIX = "/api";
+export const API_PREFIX = "/rpc";
 
 export const plugins = [
   new OpenAPIReferencePlugin({

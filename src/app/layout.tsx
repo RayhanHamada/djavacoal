@@ -1,33 +1,18 @@
-import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
-import { ClientGlobalProvider, ServerGlobalProvider } from "@/components";
-
 import "./globals.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
+import { ClientGlobalProvider, ServerGlobalProvider } from "@/components";
+import fonts from "@/configs/fonts";
+import { metadatas } from "@/configs";
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
+export const metadata = metadatas.root;
 
-export const metadata: Metadata = {
-  title: "Djavacoal",
-  description: "Quality Charcoal from Indonesia",
-};
+type Props = Readonly<{ children: React.ReactNode }>;
 
-type Props = Readonly<{
-  children: React.ReactNode;
-}>;
-
-export default function RootLayout({ children }: Props) {
+export default function Layout({ children }: Props) {
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${fonts.geistSans.variable} ${fonts.geistMono.variable} antialiased`}
       >
         <ServerGlobalProvider>
           <ClientGlobalProvider>{children}</ClientGlobalProvider>

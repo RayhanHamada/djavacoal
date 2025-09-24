@@ -1,8 +1,8 @@
+import { VisitorLayout } from "@/components";
 import { PropsWithChildren } from "react";
-import AdminLayout from "@/components/admin-layout";
 
 type Props = PropsWithChildren;
 
 export default function Layout({ children }: Props) {
-  return <AdminLayout>{children}</AdminLayout>;
+  return <VisitorLayout>{children}</VisitorLayout>;
 }

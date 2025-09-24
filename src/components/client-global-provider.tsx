@@ -7,12 +7,10 @@ import { PropsWithChildren } from "react";
 
 type Props = PropsWithChildren;
 
-function ClientGlobalProvider({ children }: Props) {
+export default function ClientGlobalProvider({ children }: Props) {
   return (
     <>
       <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
     </>
   );
 }
-
-export default ClientGlobalProvider;

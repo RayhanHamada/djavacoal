@@ -4,12 +4,10 @@ import { NextIntlClientProvider } from "next-intl";
 
 type Props = PropsWithChildren;
 
-function ServerGlobalProvider({ children }: Props) {
+export default function ServerGlobalProvider({ children }: Props) {
   return (
     <NextIntlClientProvider>
       <NuqsAdapter>{children}</NuqsAdapter>
     </NextIntlClientProvider>
   );
 }
-
-export default ServerGlobalProvider;

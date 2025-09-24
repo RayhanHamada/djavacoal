@@ -1,5 +1,5 @@
 import { PropsWithChildren } from "react";
-import AdminLayout from "@/components/admin-layout";
+import { AdminLayout } from "@/components";
 
 type Props = PropsWithChildren;
 
