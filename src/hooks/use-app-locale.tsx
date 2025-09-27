@@ -1,5 +1,5 @@
 import { Locales } from "@/configs";
-import { setUserLocale } from "@/utils/locale";
+import { setUserLocale } from "@/lib/locale";
 import { useLocale } from "next-intl";
 import { useCallback } from "react";
 
