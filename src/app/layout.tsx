@@ -18,7 +18,7 @@ export default function Layout({ children }: Props) {
   return (
     <html lang="en">
       <body
-        className={`${fonts.geistSans.variable} ${fonts.geistMono.variable} antialiased`}
+        className={`${fonts.josefinSans.variable} ${fonts.openSans.variable} antialiased`}
       >
         <ServerGlobalProvider>
           <ClientGlobalProvider>{children}</ClientGlobalProvider>
