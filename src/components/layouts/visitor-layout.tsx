@@ -1,4 +1,4 @@
-import { VisitorFooter, VisitorNavbar } from "@/components/molecules";
+import { VisitorFooter, VisitorNavbar } from "@/components/organism";
 import { Fragment, PropsWithChildren } from "react";
 
 type Props = PropsWithChildren;
