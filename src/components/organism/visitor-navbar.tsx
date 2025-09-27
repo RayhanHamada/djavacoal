@@ -15,7 +15,6 @@ export default function VisitorNavbar({}: Props) {
       <Link href="/" className="font-semibold text-lg">
         <Image src="/svgs/logo.svg" alt="Logo" width={100} height={40} />
       </Link>
-      <div>{/* Add minimal nav links if needed */}</div>
     </nav>
   );
 }
