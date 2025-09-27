@@ -2,11 +2,17 @@ import "./globals.css";
 
 import { ClientGlobalProvider, ServerGlobalProvider } from "@/components";
 import fonts from "@/configs/fonts";
-import { metadatas } from "@/configs";
+import { Metadata } from "next";
+import { PropsWithChildren } from "react";
 
-export const metadata = metadatas.root;
+type Props = Readonly<PropsWithChildren>;
 
-type Props = Readonly<{ children: React.ReactNode }>;
+export async function generateMetadata(): Promise<Metadata> {
+  return {
+    title: "Djavacoal",
+    description: "Quality Charcoal from Indonesia",
+  };
+}
 
 export default function Layout({ children }: Props) {
   return (

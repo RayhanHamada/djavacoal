@@ -14,3 +14,7 @@ export const LIST_LOCALES = [LOCALES.EN, LOCALES.ID];
 export const DEFAULT_LOCALE = LOCALES.EN;
 
 export type Locales = (typeof LOCALES)[keyof typeof LOCALES];
+
+export const TIME_STRING_FORMAT = {
+  DD_MMMM_YYYY: "dd MMMM yyyy",
+};
