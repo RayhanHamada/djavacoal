@@ -1,4 +1,4 @@
-export function AboutUsSection() {
+export async function AboutUsSection() {
   return (
     <div className="w-full">
       <p>About us section</p>
