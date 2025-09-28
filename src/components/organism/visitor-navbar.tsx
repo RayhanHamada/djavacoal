@@ -1,5 +1,6 @@
 "use client";
 
+import { NavigationMenus } from "@/components/molecules";
 import { useAppLocale } from "@/hooks";
 import Image from "next/image";
 import Link from "next/link";
@@ -15,6 +16,7 @@ export default function VisitorNavbar({}: Props) {
       <Link href="/" className="font-semibold text-lg">
         <Image src="/svgs/logo.svg" alt="Logo" width={100} height={40} />
       </Link>
+      <NavigationMenus />
     </nav>
   );
 }
