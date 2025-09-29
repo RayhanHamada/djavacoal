@@ -1,5 +1,11 @@
 {
   "HomePage": {
-    "title": "Hello world!"
+    "title": "Hello world!",
+    "navbar": {
+      "home": "Home",
+      "about": "About Company",
+      "ourProducts": "Our Products",
+      "contact": "Contact Us"
+    }
   }
 }

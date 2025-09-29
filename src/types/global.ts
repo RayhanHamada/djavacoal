@@ -1,9 +1,11 @@
+import { LOCALES } from "@/configs";
 import messages from "@/i18n/messages/en.json";
-import { Locales } from "@/configs";
+
+type L = (typeof LOCALES)[keyof typeof LOCALES];
 
 declare module "next-intl" {
   interface AppConfig {
-    Locale: Locales;
+    Locale: L;
     Messages: typeof messages;
   }
 }

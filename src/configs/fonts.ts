@@ -1,18 +1,18 @@
-import { Geist, Geist_Mono } from "next/font/google";
+import { Josefin_Sans, Open_Sans } from "next/font/google";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const josefinSans = Josefin_Sans({
+  variable: "--font-josefin-sans",
   subsets: ["latin"],
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+const openSans = Open_Sans({
+  variable: "--font-open-sans",
   subsets: ["latin"],
 });
 
 const fonts = {
-  geistSans,
-  geistMono,
+  josefinSans,
+  openSans,
 };
 
 export default fonts;
