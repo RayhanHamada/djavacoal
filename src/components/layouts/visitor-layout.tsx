@@ -9,7 +9,7 @@ export default function VisitorLayout({ children }: Props) {
       <VisitorNavbar />
 
       {/* main contents */}
-      <main className="pt-23 w-full flex flex-col">{children}</main>
+      <main className="pt-24 w-full flex flex-col">{children}</main>
 
       {/* spacer */}
       <div className="flex-1" />
