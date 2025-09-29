@@ -15,5 +15,5 @@ export async function setUserLocale(locale: Locale) {
 export async function onChangeLocale() {
   const locale = await getUserLocale();
 
-  setUserLocale(locale === LOCALES.EN ? LOCALES.ID : LOCALES.EN);
+  setUserLocale(locale === LOCALES.EN ? LOCALES.AR : LOCALES.EN);
 }
