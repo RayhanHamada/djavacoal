@@ -1,14 +1,30 @@
-import { LOCALES } from "@/configs";
-import { getUserLocale, onChangeLocale, setUserLocale } from "@/utils/locale";
-import { getTranslations } from "next-intl/server";
+import {
+  AboutUsSection,
+  BannerSection,
+  DiscoverOurProductSection,
+  MajorityExportDestinationSection,
+  GlobalShippingPartnerSection,
+  LogoSlideSection,
+  PackagingOptionsSection,
+  ProductionInfoSection,
+  VisitOurFactorySection,
+  WhyChooseUsSection,
+} from "@/features/home/components";
+import { Fragment } from "react";
 
 export default async function Home() {
-  const t = await getTranslations();
-
   return (
-    <div className="">
-      {t("HomePage.title")}
-      <button onClick={onChangeLocale}>Change Locale</button>
-    </div>
+    <Fragment>
+      <BannerSection />
+      <LogoSlideSection />
+      <AboutUsSection />
+      <WhyChooseUsSection />
+      <DiscoverOurProductSection />
+      <PackagingOptionsSection />
+      <ProductionInfoSection />
+      <VisitOurFactorySection />
+      <MajorityExportDestinationSection />
+      <GlobalShippingPartnerSection />
+    </Fragment>
   );
 }
