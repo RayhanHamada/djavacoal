@@ -8,26 +8,11 @@ export const COOKIE_NAME = {
 
 export const LOCALES = {
   EN: "en",
-  ID: "id",
+  AR: "ar",
 } as const;
-export const LIST_LOCALES = [LOCALES.EN, LOCALES.ID];
+export const LIST_LOCALES = [LOCALES.EN, LOCALES.AR];
 export const DEFAULT_LOCALE = LOCALES.EN;
 
 export const TIME_STRING_FORMAT = {
   DD_MMMM_YYYY: "dd MMMM yyyy",
-};
-
-export type MenuItems = {
-  label: string;
-  href?: string;
-  submenus?: MenuItems[];
-};
-
-export const NAVIGATION_MENUS: MenuItems[] = [
-  {
-    label: "Home",
-    href: "/",
-  },
-];
-
-export type Locales = (typeof LOCALES)[keyof typeof LOCALES];
+} as const;
