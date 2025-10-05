@@ -27,7 +27,7 @@ export default function VisitorFooter() {
                   lg:grid-cols-4"
       >
         {/* Logo & Social Media */}
-        <div className="flex flex-col items-start md:items-center grid-cols-2">
+        <div className="flex flex-col items-start md:items-center">
           <Image
             src="/svgs/logo.svg"
             alt="Logo Djavacoal"
