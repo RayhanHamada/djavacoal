@@ -142,7 +142,6 @@ export default function VisitorFooter() {
               </li>
             </ul>
           </div>
-          <div></div>
           {/* Contact */}
           <div className="md:w-1/2 mt-8 md:mt-0">
             <h3 className="font-bold mb-2 pb-1 text-base sm:text-xl">
