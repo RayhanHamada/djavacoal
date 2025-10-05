@@ -9,7 +9,7 @@ import {
   FaPhoneAlt,
   FaMapMarkerAlt,
 } from "react-icons/fa";
-import { HiMail, HiOutlineMail } from "react-icons/hi";
+import { HiMail } from "react-icons/hi";
 
 export default function VisitorFooter() {
   const year = new Date().getFullYear();
