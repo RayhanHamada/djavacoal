@@ -12,9 +12,7 @@
     "preview": "bun build:cf && opennextjs-cloudflare preview",
     "cf-typegen": "wrangler types --env-interface CloudflareEnv ./cloudflare-env.d.ts",
     "d1:generate": "drizzle-kit generate --config src/adapters/d1/drizzle.config.ts",
-    "d1:up": "drizzle-kit up --config src/adapters/d1/drizzle.config.ts",
-    "d1:down": "drizzle-kit drop --config src/adapters/d1/drizzle.config.ts",
-    "d1:push": "drizzle-kit push --config src/adapters/d1/drizzle.config.ts",
+    "d1:migrate": "drizzle-kit migrate --config src/adapters/d1/drizzle.config.ts",
     "d1:studio": "drizzle-kit studio --config src/adapters/d1/drizzle.config.ts"
   },
   "dependencies": {
