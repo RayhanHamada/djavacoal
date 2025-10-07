@@ -1,5 +1,12 @@
-import "dotenv/config";
+import config from "dotenv";
+import process from "node:process";
+
+config.config({
+  path: path.resolve(process.cwd(), ".dev.vars"),
+});
+
 import { defineConfig } from "drizzle-kit";
+import path from "node:path";
 
 export default defineConfig({
   out: "./src/adapters/d1/migrations",

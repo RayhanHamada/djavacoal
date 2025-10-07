@@ -9,15 +9,10 @@ import {
   VERIFICATION_COLUMNS,
 } from "@/adapters/d1/constants";
 import { getDB } from "@/adapters/d1/db";
-import { betterAuth } from "better-auth";
+import { betterAuth, BetterAuthPlugin } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
-import { emailOTP } from "better-auth/plugins";
 
-const plugins = [
-  emailOTP({
-    async sendVerificationOTP({}) {},
-  }),
-];
+const plugins: BetterAuthPlugin[] = [];
 
 export const getAuth = (db: D1Database) =>
   betterAuth({
