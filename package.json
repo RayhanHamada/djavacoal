@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "next dev --turbopack",
     "start": "next start",
+    "build": "next build",
     "lint": "eslint .",
     "build:cf": "opennextjs-cloudflare build",
     "deploy": "bun build:cf && opennextjs-cloudflare deploy",
