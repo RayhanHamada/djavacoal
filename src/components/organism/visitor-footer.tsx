@@ -152,7 +152,7 @@ export default function VisitorFooter() {
                 href="https://maps.app.goo.gl/cAjob1UgJrb42iwj8"
                 className="flex items-start gap-2"
               >
-                <FaMapMarkerAlt className="size-8 md:size-12 mt-1 self-center" />
+                <FaMapMarkerAlt className="size-8 md:size-6 mt-1 self-center" />
                 <span className="text-xs md:text-base">
                   PT TAIBA COCOCHA INDONESIA Jl. PWRI No.53, RT.1/RW.6, Tonjong,
                   Tajur Halang, Bogor, Jawa Barat 16320, Indonesia
@@ -170,7 +170,7 @@ export default function VisitorFooter() {
                 href="mailto:marketing@djavacoal.com"
                 className="flex items-center gap-2"
               >
-                <HiMail className="size-6 md:size-6" /> marketing@djavacoal.com
+                <HiMail className="size-4 md:size-6" /> marketing@djavacoal.com
               </Link>
             </div>
           </div>
