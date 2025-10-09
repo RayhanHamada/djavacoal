@@ -10,14 +10,10 @@ import {
 } from "@/adapters/d1/constants";
 import { getDB } from "@/adapters/d1/db";
 import { betterAuth } from "better-auth";
-import { anonymous } from "better-auth/plugins";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { AUTH_APP_NAME } from "@/features/admin-auth/lib/constants";
-
-const plugins = [
-  // anonymous user plugin
-  anonymous(),
-];
+import { adminEmailActions } from "@/features/admin-email/lib";
+import { env } from "process";
 
 export function getAuth(db: D1Database) {
   return betterAuth({
@@ -78,12 +74,17 @@ export function getAuth(db: D1Database) {
         updatedAt: COMMON_COLUMNS.UPDATED_AT,
       },
     },
+
+    plugins: [],
+
     emailAndPassword: {
       enabled: true,
-      async sendResetPassword({ token, user }) {},
-    },
+      async sendResetPassword({ token, user: { email } }) {
+        const link = `${env.NEXT_PUBLIC_BASE_URL}/auth/reset-password?token=${encodeURIComponent(token)}`;
 
-    plugins,
+        await adminEmailActions.sendResetPasswordEmail(email, link);
+      },
+    },
   });
 }
 

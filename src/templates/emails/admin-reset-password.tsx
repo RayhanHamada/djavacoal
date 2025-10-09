@@ -8,19 +8,25 @@ import {
   Heading,
   Text,
   Button,
+  Preview,
   Link,
 } from "@react-email/components";
 
 type Props = {
-  resetLink: string;
+  email: string;
+  link: string;
 };
 
-export default function AdminResetPasswordEmail({ resetLink }: Props) {
+export default function AdminResetPasswordEmail({
+  link = "http://localhost:3000/auth/reset-password",
+  email = "user@example.com",
+}: Props) {
   return (
     <Html>
       <Head>
         <title>Reset Your Password - Djavacoal CMS</title>
       </Head>
+      <Preview>Reset your Djavacoal CMS account password</Preview>
       <Body
         style={{
           fontFamily: "Arial, sans-serif",
@@ -44,15 +50,15 @@ export default function AdminResetPasswordEmail({ resetLink }: Props) {
           </Section>
           <Section>
             <Heading as="h2">Reset Your Password</Heading>
-            <Text>Hello,</Text>
+            <Text>Hello, {email}</Text>
             <Text>
               We received a request to reset your password for your Djavacoal
-              account. If you made this request, click the button below to reset
-              your password:
+              CMS account. If you made this request, click the button below to
+              reset your password:
             </Text>
             <Section style={{ textAlign: "center", margin: "20px 0" }}>
               <Button
-                href={resetLink}
+                href={link}
                 style={{
                   backgroundColor: "#007bff",
                   color: "#ffffff",
@@ -65,16 +71,28 @@ export default function AdminResetPasswordEmail({ resetLink }: Props) {
                 Reset Password
               </Button>
             </Section>
-            <Text>
-              If the button doesn&apos;t work, copy and paste this link into
-              your browser:
-            </Text>
-            <Text>
-              <Link href={resetLink}>{resetLink}</Link>
-            </Text>
+
             <Text>
               If you didn&apos;t request a password reset, please ignore this
               email. Your password will remain unchanged.
+            </Text>
+            <Text
+              style={{
+                marginTop: 16,
+                fontSize: 12,
+                color: "#6b7280",
+                wordBreak: "break-all",
+              }}
+            >
+              If the button doesn&apos;t work, copy and paste the following link
+              into your browser:
+              <br />
+              <Link
+                href={link}
+                style={{ color: "#2563eb", textDecoration: "none" }}
+              >
+                {link}
+              </Link>
             </Text>
             <Text>
               Best regards,

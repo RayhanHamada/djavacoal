@@ -14,7 +14,8 @@
     "d1:generate": "drizzle-kit generate --config src/adapters/d1/drizzle.config.ts",
     "d1:migrate": "drizzle-kit migrate --config src/adapters/d1/drizzle.config.ts",
     "d1:studio": "drizzle-kit studio --config src/adapters/d1/drizzle.config.ts",
-    "dev:email": "email dev -d ./src/templates/emails"
+    "dev:email": "email dev -d ./src/templates/emails",
+    "build:email": "email build -d ./src/templates/emails"
   },
   "dependencies": {
     "@faker-js/faker": "^10.0.0",
@@ -83,6 +84,7 @@
     "@types/react": "^19.2.0",
     "@types/react-dom": "^19.2.0",
     "drizzle-kit": "^0.31.5",
+    "env-cmd": "^11.0.0",
     "eslint": "^9.37.0",
     "eslint-config-next": "15.5.3",
     "react-email": "^4.2.12",
