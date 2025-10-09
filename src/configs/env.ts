@@ -5,6 +5,9 @@ export const env = createEnv({
   shared: {
     NODE_ENV: z.enum(["development", "production"]),
 
+    NEXT_PUBLIC_ASSET_URL: z.url().optional(),
+    NEXT_PUBLIC_BASE_URL: z.url().default("http://localhost:3000"),
+
     BETTER_AUTH_SECRET: z.string(),
     BETTER_AUTH_URL: z.url(),
     BETTER_AUTH_BASE_PATH: z.string().default("/api/auth"),
@@ -16,10 +19,7 @@ export const env = createEnv({
     CLOUDFLARE_DATABASE_ID: z.uuid(),
     CLOUDFLARE_D1_TOKEN: z.string(),
   },
-  client: {
-    NEXT_PUBLIC_ASSET_URL: z.url().optional(),
-    NEXT_PUBLIC_BASE_URL: z.url().default("http://localhost:3000"),
-  },
+  client: {},
 
   experimental__runtimeEnv: {
     NODE_ENV: process.env.NODE_ENV,

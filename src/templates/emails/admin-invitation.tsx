@@ -1,4 +1,4 @@
-import { Button } from "@react-email/components";
+import { Button, Link } from "@react-email/components";
 import React from "react";
 import {
   Body,
@@ -13,17 +13,18 @@ import {
 
 type Props = {
   email: string;
-  token: string;
+  link: string;
 };
 
-export default function AdminInvitationEmail({ email, token }: Props) {
-  const acceptUrl = `http://localhost:3000/auth/accept-invitation?token=${encodeURIComponent(
-    token
-  )}`;
-
+export default function AdminInvitationEmail({
+  link = "http://localhost:3000/auth/reset-password",
+  email = "user@example.com",
+}: Props) {
   return (
     <Html>
-      <Head />
+      <Head>
+        <title>Invitation - Djavacoal CMS</title>
+      </Head>
       <Preview>Invitation to join djavacoal</Preview>
       <Body
         style={{
@@ -50,9 +51,7 @@ export default function AdminInvitationEmail({ email, token }: Props) {
           </Section>
 
           <Section style={{ paddingBottom: 16 }}>
-            <Text style={{ fontSize: 16, color: "#111827" }}>
-              Hi {email ?? "there"},
-            </Text>
+            <Text style={{ fontSize: 16, color: "#111827" }}>Hi {email},</Text>
 
             <Text
               style={{
@@ -69,7 +68,7 @@ export default function AdminInvitationEmail({ email, token }: Props) {
 
             <Section style={{ textAlign: "center", paddingTop: 18 }}>
               <Button
-                href={acceptUrl}
+                href={link}
                 style={{
                   backgroundColor: "#2563eb",
                   color: "#ffffff",
@@ -94,12 +93,12 @@ export default function AdminInvitationEmail({ email, token }: Props) {
               If the button doesn&apos;t work, copy and paste the following link
               into your browser:
               <br />
-              <a
-                href={acceptUrl}
+              <Link
+                href={link}
                 style={{ color: "#2563eb", textDecoration: "none" }}
               >
-                {acceptUrl}
-              </a>
+                {link}
+              </Link>
             </Text>
           </Section>
 
@@ -110,10 +109,10 @@ export default function AdminInvitationEmail({ email, token }: Props) {
               paddingTop: 12,
             }}
           >
-            <Text style={{ fontSize: 14, color: "#374151" }}>
-              Thanks,
+            <Text>
+              Best regards,
               <br />
-              The Djavacoal team
+              The Djavacoal Team
             </Text>
           </Section>
           <Text>&copy; 2023 Djavacoal. All rights reserved.</Text>
