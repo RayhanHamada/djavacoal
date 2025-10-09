@@ -9,16 +9,21 @@ import {
   VERIFICATION_COLUMNS,
 } from "@/adapters/d1/constants";
 import { getDB } from "@/adapters/d1/db";
-import { betterAuth, BetterAuthPlugin } from "better-auth";
+import { betterAuth } from "better-auth";
+import { anonymous } from "better-auth/plugins";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
+import { AUTH_APP_NAME } from "@/features/admin-auth/lib/constants";
 
-const plugins: BetterAuthPlugin[] = [];
+const plugins = [
+  // anonymous user plugin
+  anonymous(),
+];
 
-export const getAuth = (db: D1Database) =>
-  betterAuth({
-    database: drizzleAdapter(getDB(db), {
-      provider: "sqlite",
-    }),
+export function getAuth(db: D1Database) {
+  return betterAuth({
+    database: drizzleAdapter(getDB(db), { provider: "sqlite" }),
+
+    appName: AUTH_APP_NAME,
     user: {
       modelName: TABLE_NAMES.USERS,
       fields: {
@@ -75,9 +80,11 @@ export const getAuth = (db: D1Database) =>
     },
     emailAndPassword: {
       enabled: true,
+      async sendResetPassword({ token, user }) {},
     },
 
     plugins,
   });
+}
 
 export type Auth = ReturnType<typeof getAuth>;
