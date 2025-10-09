@@ -1,4 +1,4 @@
-import { getAuth } from "@/lib/auth/server";
+import { getAuth } from "@/features/admin-auth/lib/better-auth-server";
 import { getCloudflareContext } from "@opennextjs/cloudflare";
 import { toNextJsHandler } from "better-auth/next-js";
 

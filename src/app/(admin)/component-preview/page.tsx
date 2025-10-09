@@ -7,6 +7,8 @@ import { Stack, Text } from "@mantine/core";
 import { useState } from "react";
 import { CodeHighlight } from "@mantine/code-highlight";
 
+const encoder = new TextEncoder();
+
 export default function ComponentPreviewPage() {
   const [content, setContent] = useState("");
 
@@ -17,6 +19,10 @@ export default function ComponentPreviewPage() {
       <CustomRichTextEditor rtl content={content} onChange={setContent} />
 
       <CodeHighlight language="html" code={content} />
+      <CodeHighlight
+        language="text"
+        code={`${encoder.encode(content).length} bytes`}
+      />
     </Stack>
   );
 }

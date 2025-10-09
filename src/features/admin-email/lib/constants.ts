@@ -1,3 +1,5 @@
+import "server-only";
+
 export const EMAIL_SENDER_NAME = "Djavacoal CMS";
 
 export const EMAIL_SUBJECT = {
