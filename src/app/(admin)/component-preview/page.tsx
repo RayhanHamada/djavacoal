@@ -26,7 +26,9 @@ export default function ComponentPreviewPage() {
         code={`${encoder.encode(content).length} bytes`}
       />
       <Link href={env.NEXT_PUBLIC_BASE_URL}>Test</Link>
-      <Link href={process.env.CF_PAGES_URL ?? ""}>Test 2</Link>
+      <Link href={process.env.CF_PAGES_URL ?? ""}>
+        Test 2 {process.env.CF_PAGES_URL}
+      </Link>
     </Stack>
   );
 }
