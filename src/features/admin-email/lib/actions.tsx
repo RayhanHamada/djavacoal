@@ -13,7 +13,13 @@ import {
   QUERY_PARAMS,
 } from "@/features/admin-email/lib/constants";
 
+/**
+ * Actions related to sending admin emails
+ */
 export const adminEmailActions = {
+  /**
+   * Send an invitation email to a new admin user
+   */
   async sendInvitationEmail(to: string, token: string) {
     const url = new URL(
       EMAIL_LINK_REDIRECTS.INVITATION,
@@ -33,6 +39,9 @@ export const adminEmailActions = {
     });
   },
 
+  /**
+   * Send a reset password email to an admin user
+   */
   async sendResetPasswordEmail(to: string, token: string) {
     const url = new URL(
       EMAIL_LINK_REDIRECTS.RESET_PASSWORD,

@@ -11,15 +11,30 @@ import {
 import { getDB } from "@/adapters/d1/db";
 import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
-import { AUTH_APP_NAME } from "@/features/admin-auth/lib/constants";
+import {
+  AUTH_APP_NAME,
+  RESET_PASSWORD_TOKEN_EXPIRY_IN,
+} from "@/features/admin-auth/lib/constants";
 import { adminEmailActions } from "@/features/admin-email/lib";
 import { env } from "process";
 
+/**
+ * Initialize BetterAuth with D1 and Drizzle ORM
+ */
 export function getAuth(db: D1Database) {
+  const database = drizzleAdapter(getDB(db), { provider: "sqlite" });
+
   return betterAuth({
-    database: drizzleAdapter(getDB(db), { provider: "sqlite" }),
+    database,
 
     appName: AUTH_APP_NAME,
+    baseURL: env.BETTER_AUTH_URL,
+    basePath: env.BETTER_AUTH_BASE_PATH,
+
+    /**
+     * Define your models and their corresponding table/column names
+     * to match your database schema.
+     */
     user: {
       modelName: TABLE_NAMES.USERS,
       fields: {
@@ -75,16 +90,21 @@ export function getAuth(db: D1Database) {
       },
     },
 
-    plugins: [],
-
+    /**
+     * Configure authentication methods
+     */
     emailAndPassword: {
       enabled: true,
       async sendResetPassword({ token, user: { email } }) {
-        const link = `${env.NEXT_PUBLIC_BASE_URL}/auth/reset-password?token=${encodeURIComponent(token)}`;
-
-        await adminEmailActions.sendResetPasswordEmail(email, link);
+        await adminEmailActions.sendResetPasswordEmail(email, token);
       },
+      resetPasswordTokenExpiresIn: RESET_PASSWORD_TOKEN_EXPIRY_IN,
     },
+
+    /**
+     * Add any BetterAuth plugins you want to use here.
+     */
+    plugins: [],
   });
 }
 
