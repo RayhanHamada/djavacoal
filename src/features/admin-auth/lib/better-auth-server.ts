@@ -30,6 +30,7 @@ export function getAuth(db: D1Database) {
     appName: AUTH_APP_NAME,
     baseURL: env.BETTER_AUTH_URL,
     basePath: env.BETTER_AUTH_BASE_PATH,
+    secret: env.BETTER_AUTH_SECRET,
 
     /**
      * Define your models and their corresponding table/column names
