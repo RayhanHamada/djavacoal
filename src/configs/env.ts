@@ -19,11 +19,6 @@ export const env = createEnv({
     NEXT_PUBLIC_ASSET_URL: z.url().default("https://assets.djavacoal.com"),
 
     /**
-     * The secret used to sign and verify tokens for Better Auth.
-     */
-    BETTER_AUTH_SECRET: z.string(),
-
-    /**
      * The base URL of the Better Auth service. This is used for authentication requests.
      */
     BETTER_AUTH_URL: z.url(),
@@ -32,11 +27,6 @@ export const env = createEnv({
      * The base path for Better Auth routes. This is typically /api/auth.
      */
     BETTER_AUTH_BASE_PATH: z.string().default("/api/auth"),
-
-    /**
-     * The API key for Resend, used for sending emails.
-     */
-    RESEND_API_KEY: z.string(),
   },
   server: {
     /**
@@ -53,6 +43,16 @@ export const env = createEnv({
      * The Cloudflare D1 token with appropriate permissions to access the database.
      */
     CLOUDFLARE_D1_TOKEN: z.string(),
+
+    /**
+     * The secret used to sign and verify tokens for Better Auth.
+     */
+    BETTER_AUTH_SECRET: z.string(),
+
+    /**
+     * The API key for Resend, used for sending emails.
+     */
+    RESEND_API_KEY: z.string(),
   },
   client: {},
 
@@ -63,11 +63,12 @@ export const env = createEnv({
     NEXT_PUBLIC_BASE_URL:
       process.env.CF_PAGES_URL || process.env.NEXT_PUBLIC_BASE_URL,
 
-    BETTER_AUTH_SECRET: process.env.BETTER_AUTH_SECRET,
-    BETTER_AUTH_URL: process.env.CF_PAGES_URL || process.env.BETTER_AUTH_URL,
-    BETTER_AUTH_BASE_PATH: process.env.BETTER_AUTH_BASE_PATH,
+    BETTER_AUTH_URL:
+      process.env.CF_PAGES_URL ||
+      process.env.BETTER_AUTH_URL ||
+      process.env.NEXT_PUBLIC_BASE_URL,
 
-    RESEND_API_KEY: process.env.RESEND_API_KEY,
+    BETTER_AUTH_BASE_PATH: process.env.BETTER_AUTH_BASE_PATH,
   },
   emptyStringAsUndefined: true,
 });

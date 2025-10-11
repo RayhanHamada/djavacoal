@@ -2,7 +2,6 @@ import type { NextConfig } from "next";
 import createNextIntlPlugin from "next-intl/plugin";
 import { createJiti } from "jiti";
 import { initOpenNextCloudflareForDev } from "@opennextjs/cloudflare";
-import path from "node:path";
 
 /**
  * create jiti and validate env.ts file
@@ -14,7 +13,9 @@ import path from "node:path";
  * the next.js config object
  */
 const jiti = createJiti(import.meta.url);
-jiti.import(path.resolve(process.cwd(), "src/configs/env.ts"));
+jiti.import("./src/configs/env.ts");
+
+console.log(`process.env.CF_PAGES_URL: `, process.env.CF_PAGES_URL);
 
 const nextConfig: NextConfig = {
   /* config options here */
