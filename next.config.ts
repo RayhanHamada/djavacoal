@@ -15,8 +15,6 @@ import { initOpenNextCloudflareForDev } from "@opennextjs/cloudflare";
 const jiti = createJiti(import.meta.url);
 jiti.import("./src/configs/env.ts");
 
-console.log(`process.env.CF_PAGES_URL: `, process.env.CF_PAGES_URL);
-
 const nextConfig: NextConfig = {
   /* config options here */
 };
