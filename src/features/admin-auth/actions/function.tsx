@@ -1,9 +1,13 @@
 "use server";
 
-import { getDB } from "@/adapters/d1/db";
-import { OnboardingInputSchema } from "@/features/admin-auth/actions/schema";
+import { KV_KEYS } from "@/adapters/kv/constants";
+import {
+  CheckIfAlreadyOnboardedInputSchema,
+  OnboardingInputSchema,
+} from "@/features/admin-auth/actions/schema";
 import { getAuth } from "@/features/admin-auth/lib/better-auth-server";
 import { safeActionClient } from "@/lib/next-safe-action-client";
+import z from "zod";
 
 export const onboardAdmin = safeActionClient
   .inputSchema(OnboardingInputSchema)
@@ -11,9 +15,12 @@ export const onboardAdmin = safeActionClient
     clientInput: { name, email, password },
     ctx: { env },
   }) {
-    const db = getDB(env.DJAVACOAL_DB);
-    const first = await db.query.users.findFirst({ columns: { id: true } });
-    if (first) {
+    const onboarded = await env.DJAVACOAL_KV.get(
+      KV_KEYS.IS_ALREADY_ONBOARDED,
+      "json"
+    );
+
+    if (onboarded) {
       throw new Error("Admin user already exists");
     }
 
@@ -25,4 +32,22 @@ export const onboardAdmin = safeActionClient
         password,
       },
     });
+
+    await env.DJAVACOAL_KV.put(
+      KV_KEYS.IS_ALREADY_ONBOARDED,
+      JSON.stringify(true)
+    );
+  });
+
+export const checkIfAlreadyOnboarded = safeActionClient
+  .outputSchema(CheckIfAlreadyOnboardedInputSchema)
+  .action(async function ({ ctx: { env } }) {
+    const onboarded = await env.DJAVACOAL_KV.get(
+      KV_KEYS.IS_ALREADY_ONBOARDED,
+      "json"
+    );
+
+    return {
+      onboarded: Boolean(onboarded),
+    };
   });

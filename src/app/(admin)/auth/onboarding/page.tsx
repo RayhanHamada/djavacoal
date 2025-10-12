@@ -1,9 +1,12 @@
-"use client";
-
 import { Container, Paper, Title, Text } from "@mantine/core";
 import { OnboardingForm } from "@/features/admin-auth/components";
+import { checkIfAlreadyOnboarded } from "@/features/admin-auth/actions/function";
+import { redirect } from "next/navigation";
 
-export default function OnboardingPage() {
+export default async function OnboardingPage() {
+  const { data } = await checkIfAlreadyOnboarded();
+  if (data?.onboarded) return redirect("/auth/login");
+
   return (
     <div
       style={{
