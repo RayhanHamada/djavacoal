@@ -32,7 +32,7 @@ const COMMON_FIELDS = {
  * table used by better-auth to store users
  */
 
-export const user = sqliteTable(TABLE_NAMES.USERS, {
+export const users = sqliteTable(TABLE_NAMES.USERS, {
   /**
    * primary key for the user table
    */
@@ -48,7 +48,7 @@ export const user = sqliteTable(TABLE_NAMES.USERS, {
   ...COMMON_FIELDS,
 });
 
-export const session = sqliteTable(TABLE_NAMES.SESSIONS, {
+export const sessions = sqliteTable(TABLE_NAMES.SESSIONS, {
   /**
    * primary key for the session table
    */
@@ -59,7 +59,7 @@ export const session = sqliteTable(TABLE_NAMES.SESSIONS, {
    */
   [SESSION_COLUMNS.USER_ID]: text(SESSION_COLUMNS.USER_ID)
     .notNull()
-    .references(() => user.id, {
+    .references(() => users.id, {
       onDelete: "cascade",
     }),
 
@@ -73,7 +73,7 @@ export const session = sqliteTable(TABLE_NAMES.SESSIONS, {
   ...COMMON_FIELDS,
 });
 
-export const account = sqliteTable(TABLE_NAMES.ACCOUNTS, {
+export const accounts = sqliteTable(TABLE_NAMES.ACCOUNTS, {
   /**
    * primary key for the account table
    */
@@ -84,7 +84,7 @@ export const account = sqliteTable(TABLE_NAMES.ACCOUNTS, {
    */
   [ACCOUNT_COLUMNS.USER_ID]: text(ACCOUNT_COLUMNS.USER_ID)
     .notNull()
-    .references(() => user.id, { onDelete: "cascade" }),
+    .references(() => users.id, { onDelete: "cascade" }),
 
   [ACCOUNT_COLUMNS.ACCOUNT_ID]: text(ACCOUNT_COLUMNS.ACCOUNT_ID).notNull(),
   [ACCOUNT_COLUMNS.PROVIDER_ID]: text(ACCOUNT_COLUMNS.PROVIDER_ID).notNull(),
@@ -107,7 +107,7 @@ export const account = sqliteTable(TABLE_NAMES.ACCOUNTS, {
   ...COMMON_FIELDS,
 });
 
-export const verification = sqliteTable(TABLE_NAMES.VERIFICATIONS, {
+export const verifications = sqliteTable(TABLE_NAMES.VERIFICATIONS, {
   /**
    * primary key for the verification table
    */

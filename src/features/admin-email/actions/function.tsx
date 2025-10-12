@@ -1,4 +1,4 @@
-import "server-only";
+"use server";
 
 import { render } from "@react-email/components";
 import {
@@ -12,15 +12,18 @@ import {
   EMAIL_SUBJECT,
   QUERY_PARAMS,
 } from "@/features/admin-email/lib/constants";
+import { safeActionClient } from "@/lib/next-safe-action-client";
+import {
+  InvitationEmailInputSchema,
+  RequestResetPasswordEmailInputSchema,
+} from "@/features/admin-email/actions/schema";
 
 /**
- * Actions related to sending admin emails
+ * Send an invitation email to a new admin user
  */
-export const adminEmailActions = {
-  /**
-   * Send an invitation email to a new admin user
-   */
-  async sendInvitationEmail(to: string, token: string) {
+export const sendInvitationEmail = safeActionClient
+  .inputSchema(InvitationEmailInputSchema)
+  .action(async function ({ clientInput: { to, token } }) {
     const url = new URL(
       EMAIL_LINK_REDIRECTS.INVITATION,
       process.env.NEXT_PUBLIC_BASE_URL
@@ -37,12 +40,14 @@ export const adminEmailActions = {
       name: EMAIL_SENDER_NAME,
       subject: EMAIL_SUBJECT.INVITATION,
     });
-  },
+  });
 
-  /**
-   * Send a reset password email to an admin user
-   */
-  async sendResetPasswordEmail(to: string, token: string) {
+/**
+ * Send a reset password email to an admin user
+ */
+export const sendRequestResetPasswordEmail = safeActionClient
+  .inputSchema(RequestResetPasswordEmailInputSchema)
+  .action(async function ({ clientInput: { to, token } }) {
     const url = new URL(
       EMAIL_LINK_REDIRECTS.RESET_PASSWORD,
       process.env.NEXT_PUBLIC_BASE_URL
@@ -61,5 +66,4 @@ export const adminEmailActions = {
       name: EMAIL_SENDER_NAME,
       subject: EMAIL_SUBJECT.RESET_PASSWORD,
     });
-  },
-};
+  });

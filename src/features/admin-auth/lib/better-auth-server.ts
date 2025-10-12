@@ -15,8 +15,8 @@ import {
   AUTH_APP_NAME,
   RESET_PASSWORD_TOKEN_EXPIRY_IN,
 } from "@/features/admin-auth/lib/constants";
-import { adminEmailActions } from "@/features/admin-email/lib";
-import { env } from "process";
+import * as emailActions from "@/features/admin-email/actions/function";
+import { env } from "@/configs";
 
 /**
  * Initialize BetterAuth with D1 and Drizzle ORM
@@ -96,10 +96,11 @@ export function getAuth(db: D1Database) {
      */
     emailAndPassword: {
       enabled: true,
-      async sendResetPassword({ token, user: { email } }) {
-        await adminEmailActions.sendResetPasswordEmail(email, token);
+      async sendResetPassword({ token, user: { email: to } }) {
+        emailActions.sendRequestResetPasswordEmail({ to, token });
       },
       resetPasswordTokenExpiresIn: RESET_PASSWORD_TOKEN_EXPIRY_IN,
+      autoSignIn: false,
     },
 
     /**
