@@ -5,3 +5,7 @@ export const OnboardingInputSchema = z.object({
   email: z.email(),
   password: z.string().min(8).max(100),
 });
+
+export const CheckIfAlreadyOnboardedInputSchema = z.object({
+  onboarded: z.boolean(),
+});

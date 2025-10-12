@@ -50,6 +50,13 @@
 			"remote": true
 		}
 	],
+	"kv_namespaces": [
+		{
+			"binding": "DJAVACOAL_KV",
+			"id": "3c8b8d406b184518a307c1ee397d3bff",
+			"remote": true
+		}
+	]
 	/**
 	 * Smart Placement
 	 * Docs: https://developers.cloudflare.com/workers/configuration/smart-placement/#smart-placement
