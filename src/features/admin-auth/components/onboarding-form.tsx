@@ -19,7 +19,13 @@ export function OnboardingForm() {
     validate: validateOnboardingForm,
   });
 
-  const handleSubmit = form.onSubmit(handleOnboardingAdmin);
+  const handleSubmit = form.onSubmit(async function ({
+    name,
+    email,
+    password,
+  }) {
+    await handleOnboardingAdmin({ email, name, password });
+  });
 
   return (
     <form onSubmit={handleSubmit}>
