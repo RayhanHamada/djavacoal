@@ -20,6 +20,12 @@ const OnboardingFormSchema = z
     path: ["confirmPassword"],
   });
 
+export const LoginFormSchema = z.object({
+  email: z.email("Invalid email address").nonempty("Email is required"),
+  password: z.string().nonempty("Password is required"),
+});
+
 export const validateOnboardingForm = zod4Resolver(OnboardingFormSchema);
+export const validateLoginForm = zod4Resolver(LoginFormSchema);
 
 export type OnboardingFormValues = z.infer<typeof OnboardingFormSchema>;

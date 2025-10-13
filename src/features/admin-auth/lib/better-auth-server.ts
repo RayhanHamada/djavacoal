@@ -1,28 +1,27 @@
 import "server-only";
 
 import {
-  TABLE_NAMES,
   ACCOUNT_COLUMNS,
   COMMON_COLUMNS,
   SESSION_COLUMNS,
+  TABLE_NAMES,
   USER_COLUMNS,
   VERIFICATION_COLUMNS,
 } from "@/adapters/d1/constants";
-import { getDB } from "@/adapters/d1/db";
-import { betterAuth } from "better-auth";
-import { drizzleAdapter } from "better-auth/adapters/drizzle";
+import drizzle2BetterAuthAdapter from "@/adapters/drizzle2better-auth";
+import { env } from "@/configs";
 import {
   AUTH_APP_NAME,
   RESET_PASSWORD_TOKEN_EXPIRY_IN,
 } from "@/features/admin-auth/lib/constants";
 import * as emailActions from "@/features/admin-email/actions/function";
-import { env } from "@/configs";
+import { betterAuth } from "better-auth";
 
 /**
  * Initialize BetterAuth with D1 and Drizzle ORM
  */
 export function getAuth(db: D1Database) {
-  const database = drizzleAdapter(getDB(db), { provider: "sqlite" });
+  const database = drizzle2BetterAuthAdapter(db);
 
   return betterAuth({
     database,

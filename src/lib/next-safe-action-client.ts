@@ -1,10 +1,10 @@
 import { createMiddleware, createSafeActionClient } from "next-safe-action";
+import { getCloudflareContext } from "@opennextjs/cloudflare";
 
 /**
  * middlewares
  */
 const injectCFContext = createMiddleware().define(async function ({ next }) {
-  const { getCloudflareContext } = await import("@opennextjs/cloudflare");
   const context = await getCloudflareContext({ async: true });
 
   return next({
