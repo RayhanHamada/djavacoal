@@ -17,7 +17,6 @@ import {
   SimpleGrid,
   ThemeIcon,
   Divider,
-  Badge,
   Anchor,
   rem,
 } from "@mantine/core";
@@ -106,15 +105,6 @@ export default function Page() {
       icon: IconBrandProducthunt,
       tone: "teal",
     },
-  ];
-
-  const tableColumns = ["ID", "Name", "Role", "Status", "Last Active"];
-  const tableRows = [
-    ["U-1842", "Jane Cooper", "Editor", "Active", "2m ago"],
-    ["U-1033", "Wade Warren", "Author", "Idle", "14m ago"],
-    ["U-9277", "Brooklyn Simmons", "Moderator", "Active", "5m ago"],
-    ["U-5521", "Devon Lane", "Viewer", "Disabled", "—"],
-    ["U-6612", "Theresa Webb", "Admin", "Active", "1m ago"],
   ];
 
   // Component: Navigation tree
@@ -224,124 +214,12 @@ export default function Page() {
     </SimpleGrid>
   );
 
-  // Component: Placeholder data table
-  const DataTable = () => (
-    <Paper withBorder radius="md" p="0">
-      <Box p="md" pb="sm">
-        <Group justify="space-between" align="flex-end">
-          <Box>
-            <Text
-              fw={600}
-              size="sm"
-              tt="uppercase"
-              c="dimmed"
-              style={{ letterSpacing: 0.8 }}
-            >
-              Users Snapshot
-            </Text>
-            <Title order={4} mt={2} fw={600}>
-              Recent Directory
-            </Title>
-          </Box>
-          <Badge variant="outline" size="sm" radius="sm">
-            Static Preview
-          </Badge>
-        </Group>
-      </Box>
-      <Divider />
-      <Box component="div" style={{ overflowX: "auto" }}>
-        <Box
-          component="table"
-          style={{ width: "100%", borderCollapse: "collapse" }}
-        >
-          <Box
-            component="thead"
-            style={{ background: "var(--mantine-color-gray-1)" }}
-          >
-            <Box component="tr">
-              {tableColumns.map((col) => (
-                <Box
-                  component="th"
-                  key={col}
-                  style={{
-                    textAlign: "left",
-                    padding: "10px 14px",
-                    fontSize: rem(11),
-                    fontWeight: 600,
-                    letterSpacing: 0.6,
-                    textTransform: "uppercase",
-                    color: "var(--mantine-color-dimmed)",
-                    borderBottom: "1px solid var(--mantine-color-gray-3)",
-                    whiteSpace: "nowrap",
-                  }}
-                >
-                  {col}
-                </Box>
-              ))}
-            </Box>
-          </Box>
-          <Box component="tbody">
-            {tableRows.map((row, idx) => (
-              <Box
-                component="tr"
-                key={row[0]}
-                style={{
-                  backgroundColor:
-                    idx % 2 === 0
-                      ? "var(--mantine-color-body)"
-                      : "var(--mantine-color-gray-0)",
-                }}
-              >
-                {row.map((cell, ci) => (
-                  <Box
-                    component="td"
-                    key={ci}
-                    style={{
-                      padding: "10px 14px",
-                      fontSize: rem(13),
-                      borderBottom: "1px solid var(--mantine-color-gray-3)",
-                      whiteSpace: "nowrap",
-                    }}
-                  >
-                    {cell === "Disabled" ? (
-                      <Badge color="gray" variant="light" size="sm">
-                        {cell}
-                      </Badge>
-                    ) : cell === "Active" ? (
-                      <Badge color="teal" variant="light" size="sm">
-                        {cell}
-                      </Badge>
-                    ) : cell === "Idle" ? (
-                      <Badge color="yellow" variant="light" size="sm">
-                        {cell}
-                      </Badge>
-                    ) : (
-                      cell
-                    )}
-                  </Box>
-                ))}
-              </Box>
-            ))}
-          </Box>
-        </Box>
-      </Box>
-      <Box p="sm">
-        <Text size="xs" c="dimmed">
-          This table is a static design sample. Add data-fetch + pagination
-          logic externally.
-        </Text>
-      </Box>
-    </Paper>
-  );
-
   // Component: Main content assembly
   const Content = () => (
     <Stack gap="xl">
       <StatsSection />
       <SimpleGrid cols={{ base: 1, lg: 3 }} spacing="lg">
-        <Box style={{ gridColumn: "span 2" }}>
-          <DataTable />
-        </Box>
+        <Box style={{ gridColumn: "span 2" }}></Box>
       </SimpleGrid>
     </Stack>
   );
