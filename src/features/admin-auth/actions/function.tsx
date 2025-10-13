@@ -1,14 +1,10 @@
 "use server";
 
 import { KV_KEYS } from "@/adapters/kv/constants";
-import {
-  CheckIfAlreadyOnboardedOutputSchema,
-  GetAuthSessionOutputSchema,
-  OnboardingInputSchema,
-} from "@/features/admin-auth/actions/schema";
+import { OnboardingInputSchema } from "@/features/admin-auth/actions/schema";
 import { getAuth } from "@/features/admin-auth/lib/better-auth-server";
 import base from "@/lib/orpc/server";
-import { onError, onSuccess } from "@orpc/client";
+import { onSuccess } from "@orpc/client";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 
