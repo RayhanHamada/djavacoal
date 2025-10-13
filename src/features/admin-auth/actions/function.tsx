@@ -7,14 +7,17 @@ import {
   OnboardingInputSchema,
 } from "@/features/admin-auth/actions/schema";
 import { getAuth } from "@/features/admin-auth/lib/better-auth-server";
-import { safeActionClient } from "@/lib/next-safe-action-client";
+import base from "@/lib/orpc/server";
+import { onError, onSuccess } from "@orpc/client";
 import { headers } from "next/headers";
+import { redirect } from "next/navigation";
 
-export const onboardAdmin = safeActionClient
-  .inputSchema(OnboardingInputSchema)
-  .action(async function ({
-    clientInput: { name, email, password },
-    ctx: { env },
+export const onboardAdmin = base
+  .input(OnboardingInputSchema)
+  .handler(async function ({
+    context: { env },
+    input: { name, email, password },
+    errors,
   }) {
     const onboarded = await env.DJAVACOAL_KV.get(
       KV_KEYS.IS_ALREADY_ONBOARDED,
@@ -22,7 +25,9 @@ export const onboardAdmin = safeActionClient
     );
 
     if (onboarded) {
-      throw new Error("Admin user already exists");
+      throw errors.BAD_REQUEST({
+        message: "Admin user already exists",
+      });
     }
 
     const auth = getAuth(env.DJAVACOAL_DB);
@@ -38,31 +43,69 @@ export const onboardAdmin = safeActionClient
       KV_KEYS.IS_ALREADY_ONBOARDED,
       JSON.stringify(true)
     );
+  })
+  .callable()
+  .actionable({
+    interceptors: [
+      onSuccess(async function () {
+        redirect("/auth/login");
+      }),
+    ],
   });
 
-export const checkIfAlreadyOnboarded = safeActionClient
-  .outputSchema(CheckIfAlreadyOnboardedOutputSchema)
-  .action(async function ({ ctx: { env } }) {
+export const checkIfAlreadyOnboarded = base
+  .handler(async function ({ context: { env } }) {
     const onboarded = await env.DJAVACOAL_KV.get(
       KV_KEYS.IS_ALREADY_ONBOARDED,
       "json"
     );
 
     return {
-      onboarded: Boolean(onboarded),
+      onboarded: !!onboarded,
     };
+  })
+  .actionable({
+    interceptors: [
+      onSuccess(async function ({ onboarded }) {
+        if (onboarded) redirect("/auth/login");
+      }),
+    ],
   });
 
-export const getAuthSession = safeActionClient
-  .outputSchema(GetAuthSessionOutputSchema)
-  .action(async function ({ ctx: { env } }) {
+export const guardAuthenticatedRoute = base
+  .handler(async function ({ context: { env } }) {
     const auth = getAuth(env.DJAVACOAL_DB);
     const header = await headers();
 
     const session = await auth.api.getSession({ headers: header });
 
     return {
-      session,
       user: session?.user,
     };
+  })
+  .actionable({
+    interceptors: [
+      onSuccess(async function ({ user }) {
+        if (!user) redirect("/auth/login");
+      }),
+    ],
+  });
+
+export const redirectAuthenticatedUser = base
+  .handler(async function ({ context: { env } }) {
+    const auth = getAuth(env.DJAVACOAL_DB);
+    const header = await headers();
+
+    const session = await auth.api.getSession({ headers: header });
+
+    return {
+      user: session?.user,
+    };
+  })
+  .actionable({
+    interceptors: [
+      onSuccess(async function ({ user }) {
+        if (user) redirect("/dashboard");
+      }),
+    ],
   });
