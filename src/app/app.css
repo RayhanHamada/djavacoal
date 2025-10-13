@@ -3,7 +3,6 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme {
-  --color-mint-500: oklch(0.72 0.11 178);
   --color-primary: #000000;
   --color-secondary: #efa12d;
   --color-h1: #ffffff;
