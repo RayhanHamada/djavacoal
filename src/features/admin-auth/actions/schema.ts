@@ -19,3 +19,20 @@ export const GetAuthSessionOutputSchema = z.object({
     })
     .nullish(),
 });
+
+export const InviteAdminInputSchema = z.object({
+  email: z.email(),
+  name: z.string().nonempty(),
+});
+
+export const RemoveAdminInputSchema = z.object({
+  adminId: z.string().nonempty(),
+});
+
+export const ListAdminsOutputSchema = z.array(
+  z.object({
+    id: z.string(),
+    email: z.email(),
+    name: z.string(),
+  })
+);

@@ -1,7 +1,12 @@
 "use server";
 
 import { KV_KEYS } from "@/adapters/kv/constants";
-import { OnboardingInputSchema } from "@/features/admin-auth/actions/schema";
+import {
+  OnboardingInputSchema,
+  InviteAdminInputSchema,
+  RemoveAdminInputSchema,
+  ListAdminsOutputSchema,
+} from "@/features/admin-auth/actions/schema";
 import { getAuth } from "@/features/admin-auth/lib/better-auth-server";
 import base from "@/lib/orpc/server";
 import { onSuccess } from "@orpc/client";
@@ -105,3 +110,136 @@ export const redirectAuthenticatedUser = base
       }),
     ],
   });
+
+/**
+ * TODO: Implement invite admin action
+ * This action should:
+ * 1. Validate the input (email and name)
+ * 2. Check if the email is already registered
+ * 3. Generate an invitation token
+ * 4. Send invitation email using the email template (admin-invitation.tsx)
+ * 5. Store the invitation token with expiration
+ *
+ * Server-side only - email sending must be done on the server
+ */
+export const inviteAdmin = base
+  .input(InviteAdminInputSchema)
+  .handler(async function ({
+    context: { env: _env },
+    input: { name, email },
+    errors: _errors,
+  }) {
+    // TODO: Implement the following:
+    // 1. Check if user already exists in the database
+    // const existingUser = await db.select().from(users).where(eq(users.email, email));
+    // if (existingUser.length > 0) {
+    //   throw errors.BAD_REQUEST({ message: "User already exists" });
+    // }
+
+    // 2. Generate invitation token (you can use crypto.randomUUID() or similar)
+    // const invitationToken = crypto.randomUUID();
+
+    // 3. Store invitation in database with expiration (e.g., 7 days)
+    // await db.insert(invitations).values({
+    //   id: crypto.randomUUID(),
+    //   email,
+    //   name,
+    //   token: invitationToken,
+    //   expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
+    // });
+
+    // 4. Send invitation email using Plunk or your email service
+    // import { plunk } from "@/lib/plunk";
+    // import { AdminInvitationEmail } from "@/templates/emails";
+    // await plunk.emails.send({
+    //   to: email,
+    //   subject: "You've been invited to Djavacoal CMS",
+    //   body: render(AdminInvitationEmail({ name, invitationLink: `${process.env.APP_URL}/auth/accept-invitation?token=${invitationToken}` })),
+    // });
+
+    // For now, just log
+    console.log("Invite admin:", { name, email });
+
+    return { success: true };
+  })
+  .callable()
+  .actionable();
+
+/**
+ * TODO: Implement remove admin action
+ * This action should:
+ * 1. Validate the admin ID
+ * 2. Check if the admin exists
+ * 3. Prevent removing the last admin
+ * 4. Remove the admin from the database
+ * 5. Invalidate all sessions for that admin
+ */
+export const removeAdmin = base
+  .input(RemoveAdminInputSchema)
+  .handler(async function ({
+    context: { env: _env },
+    input: { adminId },
+    errors: _errors,
+  }) {
+    // TODO: Implement the following:
+    // 1. Get current authenticated user to prevent self-deletion
+    // const auth = getAuth(env);
+    // const header = await headers();
+    // const session = await auth.api.getSession({ headers: header });
+    // if (session?.user?.id === adminId) {
+    //   throw errors.BAD_REQUEST({ message: "Cannot remove yourself" });
+    // }
+
+    // 2. Check if admin exists
+    // const admin = await db.select().from(users).where(eq(users.id, adminId));
+    // if (admin.length === 0) {
+    //   throw errors.NOT_FOUND({ message: "Admin not found" });
+    // }
+
+    // 3. Check if this is the last admin (prevent removing last admin)
+    // const adminCount = await db.select({ count: count() }).from(users);
+    // if (adminCount[0].count <= 1) {
+    //   throw errors.BAD_REQUEST({ message: "Cannot remove the last admin" });
+    // }
+
+    // 4. Remove admin
+    // await db.delete(users).where(eq(users.id, adminId));
+
+    // 5. Invalidate all sessions for that admin
+    // await db.delete(sessions).where(eq(sessions.userId, adminId));
+
+    // For now, just log
+    console.log("Remove admin:", { adminId });
+
+    return { success: true };
+  })
+  .callable()
+  .actionable();
+
+/**
+ * TODO: Implement list admins action
+ * This action should:
+ * 1. Fetch all users from the database
+ * 2. Return only necessary fields (id, email, name)
+ */
+export const listAdmins = base
+  .output(ListAdminsOutputSchema)
+  .handler(async function ({ context: { env: _env } }) {
+    // TODO: Implement the following:
+    // const admins = await db
+    //   .select({
+    //     id: users.id,
+    //     email: users.email,
+    //     name: users.name,
+    //   })
+    //   .from(users)
+    //   .orderBy(users.createdAt);
+
+    // For now, return mock data
+    return [
+      { id: "1", email: "admin@example.com", name: "Admin User" },
+      { id: "2", email: "john.doe@example.com", name: "John Doe" },
+    ];
+  })
+  .callable()
+  .actionable();

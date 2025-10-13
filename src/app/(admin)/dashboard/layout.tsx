@@ -1,10 +1,11 @@
 import { guardAuthenticatedRoute } from "@/features/admin-auth/actions/function";
 import { PropsWithChildren } from "react";
+import { DashboardShell } from "@/features/dashboard/components";
 
 type Props = PropsWithChildren;
 
 export default async function Layout({ children }: Props) {
   await guardAuthenticatedRoute();
 
-  return children;
+  return <DashboardShell>{children}</DashboardShell>;
 }
