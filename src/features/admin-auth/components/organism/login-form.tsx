@@ -32,7 +32,6 @@ export const LoginForm = ({ onSuccess }: Props) => {
         <Button type="submit" fullWidth loading={isLoading} mt="md">
           Sign in
         </Button>
-        <Text>Loading {isLoading ? "..." : "complete"}</Text>
       </Stack>
     </form>
   );

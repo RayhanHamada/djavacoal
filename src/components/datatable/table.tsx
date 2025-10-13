@@ -1,4 +1,4 @@
-import { Table, Pagination, Group, Text, Box, ActionIcon } from "@mantine/core";
+import { Table, Pagination, Group, Box, ActionIcon } from "@mantine/core";
 import { IconChevronUp, IconChevronDown } from "@tabler/icons-react";
 import { useState } from "react";
 import {
@@ -83,14 +83,14 @@ export function DataTable<
                   onClick={header.column.getToggleSortingHandler()}
                 >
                   <Group gap="xs" wrap="nowrap">
-                    <Text size="sm" fw={600}>
+                    <Box size="sm" fw={600}>
                       {header.isPlaceholder
                         ? null
                         : flexRender(
                             header.column.columnDef.header,
                             header.getContext()
                           )}
-                    </Text>
+                    </Box>
                     {header.column.getIsSorted() && (
                       <ActionIcon variant="transparent" size="xs" color="gray">
                         {header.column.getIsSorted() === "asc" ? (
@@ -111,9 +111,9 @@ export function DataTable<
             <Table.Tr key={row.id}>
               {row.getVisibleCells().map((cell) => (
                 <Table.Td key={cell.id}>
-                  <Text size="sm">
+                  <Box size="sm">
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                  </Text>
+                  </Box>
                 </Table.Td>
               ))}
             </Table.Tr>

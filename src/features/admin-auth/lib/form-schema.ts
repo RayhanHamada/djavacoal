@@ -25,7 +25,28 @@ export const LoginFormSchema = z.object({
   password: z.string().nonempty("Password is required"),
 });
 
+export const InviteAdminFormSchema = z
+  .object({
+    email: z.email("Invalid email address").nonempty("Email is required"),
+    name: z
+      .string()
+      .min(1, "Name is required")
+      .min(2, "Name must be at least 2 characters")
+      .max(100, "Name must be less than 100 characters"),
+  })
+  .transform((data) => {
+    // Auto-populate name from email if not provided
+    if (!data.name.trim()) {
+      const match = data.email.match(/^([^@]+)@/);
+      data.name = match ? match[1] : data.email;
+    }
+    return data;
+  });
+
 export const validateOnboardingForm = zod4Resolver(OnboardingFormSchema);
 export const validateLoginForm = zod4Resolver(LoginFormSchema);
+export const validateInviteAdminForm = zod4Resolver(InviteAdminFormSchema);
 
 export type OnboardingFormValues = z.infer<typeof OnboardingFormSchema>;
+export type LoginFormValues = z.infer<typeof LoginFormSchema>;
+export type InviteAdminFormValues = z.infer<typeof InviteAdminFormSchema>;
