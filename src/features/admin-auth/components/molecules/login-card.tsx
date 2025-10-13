@@ -1,9 +1,9 @@
 "use client";
 
 import { Paper, Title, Container, type PaperProps } from "@mantine/core";
-import { LoginForm } from "./login-form";
+import { LoginForm } from "../organism/login-form";
 
-export type Props = {
+type Props = {
   title?: string;
   paperProps?: PaperProps;
   onSuccess?(): void;
