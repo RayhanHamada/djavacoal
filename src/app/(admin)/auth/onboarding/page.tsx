@@ -4,7 +4,8 @@ import { checkIfAlreadyOnboarded } from "@/features/admin-auth/actions/function"
 import { redirect } from "next/navigation";
 
 export default async function OnboardingPage() {
-  const { data } = await checkIfAlreadyOnboarded();
+  const [, data] = await checkIfAlreadyOnboarded();
+
   if (data?.onboarded) return redirect("/auth/login");
 
   return (
