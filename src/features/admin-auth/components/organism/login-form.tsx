@@ -3,7 +3,7 @@
 import { TextInput, PasswordInput, Button, Stack, Text } from "@mantine/core";
 import { useLogin } from "@/features/admin-auth/hooks/use-login";
 
-export type Props = {
+type Props = {
   onSuccess?: () => void;
 };
 
