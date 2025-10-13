@@ -13,14 +13,26 @@ import {
   AUTH_APP_NAME,
   RESET_PASSWORD_TOKEN_EXPIRY_IN,
 } from "@/features/admin-auth/lib/constants";
-import { sendRequestResetPasswordEmail } from "@/features/admin-email/actions/function";
+import {
+  sendInvitationEmail,
+  sendRequestResetPasswordEmail,
+} from "@/features/admin-email/actions/function";
 import { betterAuth } from "better-auth";
+import { magicLink } from "better-auth/plugins/magic-link";
 
 /**
  * Initialize BetterAuth with D1 and Drizzle ORM
  */
 export function getAuth(env: CloudflareEnv) {
   const database = betterAuthAdapter(env.DJAVACOAL_DB);
+  console.log(
+    `ENV getAuth => `,
+    env.NEXT_PUBLIC_BASE_URL,
+    ", ",
+    env.BETTER_AUTH_BASE_PATH,
+    ", ",
+    env.BETTER_AUTH_SECRET
+  );
 
   return betterAuth({
     database,
@@ -96,15 +108,22 @@ export function getAuth(env: CloudflareEnv) {
       enabled: true,
       resetPasswordTokenExpiresIn: RESET_PASSWORD_TOKEN_EXPIRY_IN,
       autoSignIn: false,
-      async sendResetPassword({ token, user: { email: to } }) {
-        sendRequestResetPasswordEmail({ to, token });
+      async sendResetPassword({ user: { email: to }, url: link }) {
+        sendRequestResetPasswordEmail({ to, link });
       },
     },
 
     /**
      * Add any BetterAuth plugins you want to use here.
      */
-    plugins: [],
+    plugins: [
+      magicLink({
+        expiresIn: 60 * 60 * 24,
+        async sendMagicLink({ email: to, url: link }) {
+          await sendInvitationEmail({ to, link });
+        },
+      }),
+    ],
   });
 }
 
