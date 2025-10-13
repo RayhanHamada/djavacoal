@@ -26,12 +26,21 @@ import { magicLink } from "better-auth/plugins/magic-link";
 export function getAuth(env: CloudflareEnv) {
   const database = betterAuthAdapter(env.DJAVACOAL_DB);
   console.log(
-    `ENV getAuth => `,
+    `ENV env => `,
     env.NEXT_PUBLIC_BASE_URL,
     ", ",
     env.BETTER_AUTH_BASE_PATH,
     ", ",
     env.BETTER_AUTH_SECRET
+  );
+
+  console.log(
+    `ENV process.env => `,
+    process.env.NEXT_PUBLIC_BASE_URL,
+    ", ",
+    process.env.BETTER_AUTH_BASE_PATH,
+    ", ",
+    process.env.BETTER_AUTH_SECRET
   );
 
   return betterAuth({
