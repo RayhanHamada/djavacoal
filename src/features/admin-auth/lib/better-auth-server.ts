@@ -8,20 +8,20 @@ import {
   USER_COLUMNS,
   VERIFICATION_COLUMNS,
 } from "@/adapters/d1/constants";
-import drizzle2BetterAuthAdapter from "@/adapters/drizzle2better-auth";
+import betterAuthAdapter from "@/adapters/better-auth";
 import { env } from "@/configs";
 import {
   AUTH_APP_NAME,
   RESET_PASSWORD_TOKEN_EXPIRY_IN,
 } from "@/features/admin-auth/lib/constants";
-import * as emailActions from "@/features/admin-email/actions/function";
+import { sendRequestResetPasswordEmail } from "@/features/admin-email/actions/function";
 import { betterAuth } from "better-auth";
 
 /**
  * Initialize BetterAuth with D1 and Drizzle ORM
  */
 export function getAuth(db: D1Database) {
-  const database = drizzle2BetterAuthAdapter(db);
+  const database = betterAuthAdapter(db);
 
   return betterAuth({
     database,
@@ -95,11 +95,11 @@ export function getAuth(db: D1Database) {
      */
     emailAndPassword: {
       enabled: true,
-      async sendResetPassword({ token, user: { email: to } }) {
-        emailActions.sendRequestResetPasswordEmail({ to, token });
-      },
       resetPasswordTokenExpiresIn: RESET_PASSWORD_TOKEN_EXPIRY_IN,
       autoSignIn: false,
+      async sendResetPassword({ token, user: { email: to } }) {
+        sendRequestResetPasswordEmail({ to, token });
+      },
     },
 
     /**
