@@ -2,12 +2,13 @@
 
 import { KV_KEYS } from "@/adapters/kv/constants";
 import {
-  CheckIfAlreadyOnboardedInputSchema,
+  CheckIfAlreadyOnboardedOutputSchema,
+  GetAuthSessionOutputSchema,
   OnboardingInputSchema,
 } from "@/features/admin-auth/actions/schema";
 import { getAuth } from "@/features/admin-auth/lib/better-auth-server";
 import { safeActionClient } from "@/lib/next-safe-action-client";
-import z from "zod";
+import { headers } from "next/headers";
 
 export const onboardAdmin = safeActionClient
   .inputSchema(OnboardingInputSchema)
@@ -40,7 +41,7 @@ export const onboardAdmin = safeActionClient
   });
 
 export const checkIfAlreadyOnboarded = safeActionClient
-  .outputSchema(CheckIfAlreadyOnboardedInputSchema)
+  .outputSchema(CheckIfAlreadyOnboardedOutputSchema)
   .action(async function ({ ctx: { env } }) {
     const onboarded = await env.DJAVACOAL_KV.get(
       KV_KEYS.IS_ALREADY_ONBOARDED,
@@ -49,5 +50,19 @@ export const checkIfAlreadyOnboarded = safeActionClient
 
     return {
       onboarded: Boolean(onboarded),
+    };
+  });
+
+export const getAuthSession = safeActionClient
+  .outputSchema(GetAuthSessionOutputSchema)
+  .action(async function ({ ctx: { env } }) {
+    const auth = getAuth(env.DJAVACOAL_DB);
+    const header = await headers();
+
+    const session = await auth.api.getSession({ headers: header });
+
+    return {
+      session,
+      user: session?.user,
     };
   });

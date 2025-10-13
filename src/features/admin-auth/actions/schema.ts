@@ -6,6 +6,16 @@ export const OnboardingInputSchema = z.object({
   password: z.string().min(8).max(100),
 });
 
-export const CheckIfAlreadyOnboardedInputSchema = z.object({
+export const CheckIfAlreadyOnboardedOutputSchema = z.object({
   onboarded: z.boolean(),
+});
+
+export const GetAuthSessionOutputSchema = z.object({
+  user: z
+    .object({
+      id: z.string(),
+      email: z.email(),
+      name: z.string(),
+    })
+    .nullish(),
 });
