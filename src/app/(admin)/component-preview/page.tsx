@@ -7,7 +7,6 @@ import { Stack, Text } from "@mantine/core";
 import { useState } from "react";
 import { CodeHighlight } from "@mantine/code-highlight";
 import Link from "next/link";
-import { env } from "@/configs";
 
 const encoder = new TextEncoder();
 
@@ -25,10 +24,7 @@ export default function ComponentPreviewPage() {
         language="text"
         code={`${encoder.encode(content).length} bytes`}
       />
-      <Link href={env.NEXT_PUBLIC_BASE_URL}>Test</Link>
-      <Link href={process.env.CF_PAGES_URL ?? ""}>
-        Test 2 {process.env.CF_PAGES_URL}
-      </Link>
+      <Link href={process.env.NEXT_PUBLIC_BASE_URL}>Test</Link>
     </Stack>
   );
 }
