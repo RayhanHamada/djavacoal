@@ -9,7 +9,6 @@ import {
   VERIFICATION_COLUMNS,
 } from "@/adapters/d1/constants";
 import betterAuthAdapter from "@/adapters/better-auth";
-import { env } from "@/configs";
 import {
   AUTH_APP_NAME,
   RESET_PASSWORD_TOKEN_EXPIRY_IN,
@@ -20,14 +19,14 @@ import { betterAuth } from "better-auth";
 /**
  * Initialize BetterAuth with D1 and Drizzle ORM
  */
-export function getAuth(db: D1Database) {
-  const database = betterAuthAdapter(db);
+export function getAuth(env: CloudflareEnv) {
+  const database = betterAuthAdapter(env.DJAVACOAL_DB);
 
   return betterAuth({
     database,
 
     appName: AUTH_APP_NAME,
-    baseURL: env.BETTER_AUTH_URL,
+    baseURL: env.NEXT_PUBLIC_BASE_URL,
     basePath: env.BETTER_AUTH_BASE_PATH,
     secret: env.BETTER_AUTH_SECRET,
 

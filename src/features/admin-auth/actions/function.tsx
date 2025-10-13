@@ -26,7 +26,7 @@ export const onboardAdmin = base
       });
     }
 
-    const auth = getAuth(env.DJAVACOAL_DB);
+    const auth = getAuth(env);
     await auth.api.signUpEmail({
       body: {
         name,
@@ -70,7 +70,7 @@ export const checkIfAlreadyOnboarded = base
 
 export const guardAuthenticatedRoute = base
   .handler(async function ({ context: { env } }) {
-    const auth = getAuth(env.DJAVACOAL_DB);
+    const auth = getAuth(env);
     const header = await headers();
 
     const session = await auth.api.getSession({ headers: header });
@@ -89,7 +89,7 @@ export const guardAuthenticatedRoute = base
 
 export const redirectAuthenticatedUser = base
   .handler(async function ({ context: { env } }) {
-    const auth = getAuth(env.DJAVACOAL_DB);
+    const auth = getAuth(env);
     const header = await headers();
 
     const session = await auth.api.getSession({ headers: header });

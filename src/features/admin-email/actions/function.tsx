@@ -5,7 +5,7 @@ import {
   AdminInvitationEmail,
   AdminResetPasswordEmail,
 } from "@/templates/emails";
-import { plunk } from "@/lib/plunk";
+import { getPlunk } from "@/lib/plunk";
 import {
   EMAIL_LINK_REDIRECTS,
   EMAIL_SENDER_NAME,
@@ -23,7 +23,7 @@ import base from "@/lib/orpc/server";
  */
 export const sendInvitationEmail = base
   .input(InvitationEmailInputSchema)
-  .handler(async function ({ input: { to, token } }) {
+  .handler(async function ({ context: { env }, input: { to, token } }) {
     const url = new URL(
       EMAIL_LINK_REDIRECTS.INVITATION,
       process.env.NEXT_PUBLIC_BASE_URL
@@ -34,6 +34,8 @@ export const sendInvitationEmail = base
     const link = url.toString();
 
     const body = await render(<AdminInvitationEmail email={to} link={link} />);
+
+    const plunk = getPlunk(env.RESEND_API_KEY);
     await plunk.emails.send({
       to,
       body,
@@ -48,7 +50,7 @@ export const sendInvitationEmail = base
  */
 export const sendRequestResetPasswordEmail = base
   .input(RequestResetPasswordEmailInputSchema)
-  .handler(async function ({ input: { to, token } }) {
+  .handler(async function ({ context: { env }, input: { to, token } }) {
     const url = new URL(
       EMAIL_LINK_REDIRECTS.RESET_PASSWORD,
       process.env.NEXT_PUBLIC_BASE_URL
@@ -61,6 +63,8 @@ export const sendRequestResetPasswordEmail = base
     const body = await render(
       <AdminResetPasswordEmail email={to} link={link} />
     );
+
+    const plunk = getPlunk(env.RESEND_API_KEY);
     await plunk.emails.send({
       to,
       body,
