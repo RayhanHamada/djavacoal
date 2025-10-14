@@ -14,6 +14,11 @@ export const RemoveAdminInputSchema = z.object({
   id: z.string().nonempty(),
 });
 
+export const InviteAdminInputSchema = z.object({
+  email: z.email(),
+  name: z.string().min(1).max(100),
+});
+
 export const InvitationEmailInputSchema = z.object({
   to: z.email(),
   link: z.url(),

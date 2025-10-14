@@ -3,8 +3,8 @@
 import { InviteAdminFormSchema } from "@/features/admin-auth/lib/form-schema";
 import { notifications } from "@mantine/notifications";
 import type { z } from "zod/v4";
-import { useQuery } from "@tanstack/react-query";
-import { rpc } from "@/lib/rpc";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { client, rpc } from "@/lib/rpc";
 import { useState, useEffect } from "react";
 import { useDebounce } from "ahooks";
 
@@ -51,56 +51,45 @@ export function useAdminList() {
 }
 
 /**
- * Hook for inviting new admin
- * Ready for TanStack Query mutation integration
+ * Hook for inviting new admin using Better Auth magic link
  */
 export function useInviteAdmin() {
-  // TODO: Import the action when ready
-  // import { inviteAdmin as inviteAdminAction } from "@/features/admin-auth/actions/function";
+  const queryClient = useQueryClient();
 
-  // TODO: Replace with TanStack Query useMutation hook
-  // Example:
-  // const mutation = useMutation({
-  //   mutationFn: async (values: InviteAdminFormValues) => {
-  //     const result = await inviteAdminAction(values);
-  //     return result;
-  //   },
-  //   onSuccess: () => {
-  //     notifications.show({
-  //       message: "Invitation sent successfully",
-  //       color: "green",
-  //     });
-  //     queryClient.invalidateQueries({ queryKey: ['admins'] });
-  //   },
-  //   onError: (error) => {
-  //     notifications.show({
-  //       message: error.message || "Failed to send invitation",
-  //       color: "red",
-  //     });
-  //   },
-  // });
-
-  async function inviteAdmin(values: InviteAdminFormValues) {
-    // TODO: Call server action here
-    // await inviteAdminAction(values);
-
-    console.log("Inviting admin:", values);
-
-    // Mock success notification
-    notifications.show({
-      message: `Invitation sent to ${values.email}`,
-      color: "green",
-    });
-
-    // TODO: Remove mock delay when backend is ready
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-  }
-
-  const isInviting = false; // TODO: Get from mutation.isPending
+  const mutation = useMutation({
+    mutationFn: async (values: InviteAdminFormValues) => {
+      const result = await client.admins.inviteAdmin({
+        email: values.email,
+        name: values.name,
+      });
+      return result;
+    },
+    onSuccess: (_, variables) => {
+      notifications.show({
+        title: "Invitation Sent",
+        message: `An invitation email has been sent to ${variables.email}`,
+        color: "green",
+      });
+      // Invalidate all admin list queries to refresh the data
+      queryClient.invalidateQueries({
+        predicate: (query) =>
+          query.queryKey[0] === "admins" &&
+          query.queryKey[1] === "listAllAdmins",
+      });
+    },
+    onError: (error) => {
+      notifications.show({
+        title: "Invitation Failed",
+        message:
+          error.message || "Failed to send invitation. Please try again.",
+        color: "red",
+      });
+    },
+  });
 
   return {
-    inviteAdmin,
-    isInviting,
+    inviteAdmin: mutation.mutateAsync,
+    isInviting: mutation.isPending,
   };
 }
 

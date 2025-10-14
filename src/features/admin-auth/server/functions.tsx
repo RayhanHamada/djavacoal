@@ -4,6 +4,7 @@ import { KV_KEYS } from "@/adapters/kv/constants";
 import { getAuth } from "@/features/admin-auth/lib/better-auth-server";
 import {
   InvitationEmailInputSchema,
+  InviteAdminInputSchema,
   ListAdminInputSchema,
   ListAdminsOutputSchema,
   OnboardingInputSchema,
@@ -11,12 +12,11 @@ import {
 } from "@/features/admin-auth/server/schema";
 import base from "@/lib/orpc/server";
 import { headers } from "next/headers";
-import { render } from "@react-email/components";
 import {
   EMAIL_SENDER_NAME,
   EMAIL_SUBJECT,
 } from "@/features/admin-auth/lib/constants";
-import { getPlunk } from "@/adapters/plunk";
+import { getResend } from "@/adapters/email-service";
 import {
   AdminInvitationEmail,
   AdminResetPasswordEmail,
@@ -102,13 +102,11 @@ export const redirectAuthenticatedUser = base
 export const sendInvitationEmail = base
   .input(InvitationEmailInputSchema)
   .handler(async function ({ context: { env }, input: { to, link } }) {
-    const body = await render(<AdminInvitationEmail email={to} link={link} />);
-
-    const plunk = getPlunk(env.RESEND_API_KEY);
-    await plunk.emails.send({
+    const emailService = getResend(env.RESEND_API_KEY);
+    await emailService.emails.send({
       to,
-      body,
-      name: EMAIL_SENDER_NAME,
+      react: <AdminInvitationEmail email={to} link={link} />,
+      from: `${EMAIL_SENDER_NAME} <${env.SENDER_EMAIL}>`,
       subject: EMAIL_SUBJECT.INVITATION,
     });
   })
@@ -120,15 +118,11 @@ export const sendInvitationEmail = base
 export const sendRequestResetPasswordEmail = base
   .input(RequestResetPasswordEmailInputSchema)
   .handler(async function ({ context: { env }, input: { to, link } }) {
-    const body = await render(
-      <AdminResetPasswordEmail email={to} link={link} />
-    );
-
-    const plunk = getPlunk(env.RESEND_API_KEY);
-    await plunk.emails.send({
+    const emailService = getResend(env.RESEND_API_KEY);
+    await emailService.emails.send({
       to,
-      body,
-      name: EMAIL_SENDER_NAME,
+      react: <AdminResetPasswordEmail email={to} link={link} />,
+      from: `${EMAIL_SENDER_NAME} <${env.SENDER_EMAIL}>`,
       subject: EMAIL_SUBJECT.RESET_PASSWORD,
     });
   })
@@ -179,5 +173,60 @@ export const listAllAdmins = base
       page,
       pageSize: limit,
     };
+  })
+  .callable();
+
+/**
+ * Invite a new admin user via magic link
+ * This will create a user account and send them an invitation email
+ */
+export const inviteAdmin = base
+  .input(InviteAdminInputSchema)
+  .handler(async function ({
+    context: { env },
+    input: { email, name },
+    errors,
+  }) {
+    const header = await headers();
+    const auth = getAuth(env);
+    const db = getDB(env.DJAVACOAL_DB);
+
+    // Check if user is authenticated
+    const session = await auth.api.getSession({ headers: header });
+    if (!session?.user) {
+      throw errors.BAD_REQUEST({
+        message: "You must be authenticated to invite admins",
+      });
+    }
+
+    // Check if user with this email already exists
+    const existingUser = await db
+      .select()
+      .from(users)
+      .where(like(sql`lower(${users.email})`, email.toLowerCase()))
+      .limit(1);
+
+    if (existingUser.length > 0) {
+      throw errors.BAD_REQUEST({
+        message: "An admin with this email already exists",
+      });
+    }
+
+    // Send magic link invitation using Better Auth
+    // The magic link plugin will create the user on first sign-in
+    try {
+      await auth.api.signInMagicLink({
+        headers: header,
+        body: {
+          email,
+          name,
+          callbackURL: "/dashboard",
+        },
+      });
+    } catch {
+      throw errors.INTERNAL_SERVER_ERROR({
+        message: "Failed to send invitation email",
+      });
+    }
   })
   .callable();

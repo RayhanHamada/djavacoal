@@ -6,6 +6,7 @@ import {
   InviteAdminFormValues,
   validateInviteAdminForm,
 } from "@/features/admin-auth/lib/form-schema";
+import { useCallback } from "react";
 
 type Props = {
   opened: boolean;
@@ -38,19 +39,24 @@ export function InviteAdminModal({
     validate: validateInviteAdminForm,
   });
 
-  function handleEmailChange(email: string) {
-    form.setFieldValue("email", email);
+  const handleEmailChange = useCallback(
+    (email: string) => {
+      // Auto-populate name from email if name is empty
+      const currentName = form.getValues().name;
+      if (
+        !currentName ||
+        currentName === extractNameFromEmail(form.getValues().email)
+      ) {
+        const extractedName = extractNameFromEmail(email);
+        form.setFieldValue("name", extractedName);
+      }
+    },
+    [form]
+  );
 
-    // Auto-populate name from email if name is empty
-    const currentName = form.getValues().name;
-    if (
-      !currentName ||
-      currentName === extractNameFromEmail(form.getValues().email)
-    ) {
-      const extractedName = extractNameFromEmail(email);
-      form.setFieldValue("name", extractedName);
-    }
-  }
+  form.watch("email", function ({ value }) {
+    handleEmailChange(value);
+  });
 
   const handleSubmit = form.onSubmit(async function (values) {
     await onInvite(values);
@@ -87,7 +93,6 @@ export function InviteAdminModal({
             type="email"
             key={form.key("email")}
             {...form.getInputProps("email")}
-            onChange={(e) => handleEmailChange(e.currentTarget.value)}
             disabled={isLoading}
           />
 
