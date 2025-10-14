@@ -5,6 +5,8 @@ import {
   redirectJoinedUser,
   onboardAdmin as setupFirstUser,
   redirectAuthenticatedUser,
+  checkNeedsPassword,
+  setPassword,
 } from "@/features/admin-auth/server/functions";
 import { onSuccess } from "@orpc/client";
 import { redirect } from "next/navigation";
@@ -42,3 +44,7 @@ export const redirectAuthenticatedUserActions =
       }),
     ],
   });
+
+export const checkNeedsPasswordActions = checkNeedsPassword.actionable();
+
+export const setPasswordActions = setPassword.actionable();

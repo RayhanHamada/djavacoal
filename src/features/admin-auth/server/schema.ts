@@ -48,3 +48,11 @@ export const ListAdminsOutputSchema = z.object({
   page: z.int(),
   pageSize: z.int(),
 });
+
+export const SetPasswordInputSchema = z.object({
+  password: z.string().min(8).max(100),
+});
+
+export const CheckNeedsPasswordOutputSchema = z.object({
+  needsPassword: z.boolean(),
+});

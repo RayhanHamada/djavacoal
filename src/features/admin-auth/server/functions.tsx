@@ -9,6 +9,8 @@ import {
   ListAdminsOutputSchema,
   OnboardingInputSchema,
   RequestResetPasswordEmailInputSchema,
+  SetPasswordInputSchema,
+  CheckNeedsPasswordOutputSchema,
 } from "@/features/admin-auth/server/schema";
 import base from "@/lib/orpc/server";
 import { headers } from "next/headers";
@@ -22,8 +24,9 @@ import {
   AdminResetPasswordEmail,
 } from "@/templates/emails";
 import { getDB } from "@/adapters/d1/db";
-import { and, count, like, ne, or, sql, SQL } from "drizzle-orm";
-import { users } from "@/adapters/d1/schema";
+import { and, count, eq, like, ne, or, sql, SQL } from "drizzle-orm";
+import { users, accounts } from "@/adapters/d1/schema";
+import { ACCOUNT_COLUMNS } from "@/adapters/d1/constants";
 
 export const onboardAdmin = base
   .input(OnboardingInputSchema)
@@ -226,6 +229,75 @@ export const inviteAdmin = base
     } catch {
       throw errors.INTERNAL_SERVER_ERROR({
         message: "Failed to send invitation email",
+      });
+    }
+  })
+  .callable();
+
+/**
+ * Check if the authenticated user needs to set a password
+ * Returns true if user doesn't have a credential account (password-based)
+ */
+export const checkNeedsPassword = base
+  .output(CheckNeedsPasswordOutputSchema)
+  .handler(async function ({ context: { env }, errors }) {
+    const header = await headers();
+    const auth = getAuth(env);
+    const session = await auth.api.getSession({ headers: header });
+
+    if (!session?.user) {
+      throw errors.BAD_REQUEST({
+        message: "You must be authenticated",
+      });
+    }
+
+    const db = getDB(env.DJAVACOAL_DB);
+
+    // Check if user has a credential account (email/password)
+    const credentialAccount = await db
+      .select()
+      .from(accounts)
+      .where(
+        and(
+          eq(accounts[ACCOUNT_COLUMNS.USER_ID], session.user.id),
+          eq(accounts[ACCOUNT_COLUMNS.PROVIDER_ID], "credential")
+        )
+      )
+      .limit(1);
+
+    return {
+      needsPassword: credentialAccount.length === 0,
+    };
+  })
+  .callable();
+
+/**
+ * Set password for the authenticated user
+ * Uses Better Auth's setPassword API
+ */
+export const setPassword = base
+  .input(SetPasswordInputSchema)
+  .handler(async function ({ context: { env }, input: { password }, errors }) {
+    const header = await headers();
+    const auth = getAuth(env);
+    const session = await auth.api.getSession({ headers: header });
+
+    if (!session?.user) {
+      throw errors.BAD_REQUEST({
+        message: "You must be authenticated",
+      });
+    }
+
+    try {
+      await auth.api.setPassword({
+        headers: header,
+        body: {
+          newPassword: password,
+        },
+      });
+    } catch {
+      throw errors.INTERNAL_SERVER_ERROR({
+        message: "Failed to set password",
       });
     }
   })

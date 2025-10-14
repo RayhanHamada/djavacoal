@@ -3,23 +3,39 @@
 import { NavLink, rem } from "@mantine/core";
 import { IconChevronRight } from "@tabler/icons-react";
 import type { NavigationItem } from "@/features/dashboard/lib/types";
+import { useState } from "react";
 
 type Props = {
   item: NavigationItem;
+  defaultOpened?: boolean;
 };
 
-export function NavigationItemComponent({ item }: Props) {
+export function NavigationItemComponent({ item, defaultOpened = true }: Props) {
   const Icon = item.icon;
+  const [opened, setOpened] = useState(defaultOpened);
 
+  // If item has no children, render as a simple link
+  if (!item.children || item.children.length === 0) {
+    return (
+      <NavLink
+        label={item.label}
+        description={item.description}
+        leftSection={<Icon size={18} stroke={1.7} />}
+        component="a"
+        href={item.href}
+      />
+    );
+  }
+
+  // If item has children, render as collapsible
   return (
     <NavLink
       label={item.label}
       description={item.description}
       leftSection={<Icon size={18} stroke={1.7} />}
-      component="a"
-      href={item.href}
       childrenOffset={rem(14)}
-      opened
+      opened={opened}
+      onChange={() => setOpened((prev) => !prev)}
     >
       {item.children?.map((child) => {
         const CIcon = child.icon;
