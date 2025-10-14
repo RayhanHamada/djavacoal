@@ -5,7 +5,6 @@ import {
   OnboardingInputSchema,
   InviteAdminInputSchema,
   RemoveAdminInputSchema,
-  ListAdminsOutputSchema,
 } from "@/features/admin-auth/actions/schema";
 import { getAuth } from "@/features/admin-auth/lib/better-auth-server";
 import base from "@/lib/orpc/server";
@@ -162,7 +161,6 @@ export const inviteAdmin = base
 
     return { success: true };
   })
-  .callable()
   .actionable();
 
 /**
@@ -178,7 +176,7 @@ export const removeAdmin = base
   .input(RemoveAdminInputSchema)
   .handler(async function ({
     context: { env: _env },
-    input: { adminId },
+    input: { id },
     errors: _errors,
   }) {
     // TODO: Implement the following:
@@ -209,37 +207,8 @@ export const removeAdmin = base
     // await db.delete(sessions).where(eq(sessions.userId, adminId));
 
     // For now, just log
-    console.log("Remove admin:", { adminId });
+    console.log("Remove admin:", { id });
 
     return { success: true };
   })
-  .callable()
-  .actionable();
-
-/**
- * TODO: Implement list admins action
- * This action should:
- * 1. Fetch all users from the database
- * 2. Return only necessary fields (id, email, name)
- */
-export const listAdmins = base
-  .output(ListAdminsOutputSchema)
-  .handler(async function ({ context: { env: _env } }) {
-    // TODO: Implement the following:
-    // const admins = await db
-    //   .select({
-    //     id: users.id,
-    //     email: users.email,
-    //     name: users.name,
-    //   })
-    //   .from(users)
-    //   .orderBy(users.createdAt);
-
-    // For now, return mock data
-    return [
-      { id: "1", email: "admin@example.com", name: "Admin User" },
-      { id: "2", email: "john.doe@example.com", name: "John Doe" },
-    ];
-  })
-  .callable()
   .actionable();

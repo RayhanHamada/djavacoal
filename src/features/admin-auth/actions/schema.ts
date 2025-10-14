@@ -26,13 +26,5 @@ export const InviteAdminInputSchema = z.object({
 });
 
 export const RemoveAdminInputSchema = z.object({
-  adminId: z.string().nonempty(),
+  id: z.string().nonempty(),
 });
-
-export const ListAdminsOutputSchema = z.array(
-  z.object({
-    id: z.string(),
-    email: z.email(),
-    name: z.string(),
-  })
-);

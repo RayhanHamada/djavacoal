@@ -2,7 +2,7 @@
 
 import { useServerAction } from "@orpc/react/hooks";
 import { notifications } from "@mantine/notifications";
-import * as actions from "@/features/admin-auth/actions/function";
+import * as actions from "@/features/admin-auth/actions";
 import { onError, onSuccess } from "@orpc/client";
 
 export function useOnboarding() {
