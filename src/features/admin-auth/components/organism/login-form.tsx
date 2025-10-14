@@ -1,6 +1,6 @@
 "use client";
 
-import { TextInput, PasswordInput, Button, Stack, Text } from "@mantine/core";
+import { TextInput, PasswordInput, Button, Stack } from "@mantine/core";
 import { useLogin } from "@/features/admin-auth/hooks/use-login";
 
 type Props = {
