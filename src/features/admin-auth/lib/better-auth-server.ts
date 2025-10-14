@@ -16,7 +16,7 @@ import {
 import {
   sendInvitationEmail,
   sendRequestResetPasswordEmail,
-} from "@/features/admin-email/actions/function";
+} from "@/features/admin-auth/server/functions";
 import { betterAuth } from "better-auth";
 import { magicLink } from "better-auth/plugins/magic-link";
 
@@ -98,8 +98,8 @@ export function getAuth(env: CloudflareEnv) {
      */
     emailAndPassword: {
       enabled: true,
-      resetPasswordTokenExpiresIn: RESET_PASSWORD_TOKEN_EXPIRY_IN,
       autoSignIn: false,
+      resetPasswordTokenExpiresIn: RESET_PASSWORD_TOKEN_EXPIRY_IN,
       async sendResetPassword({ user: { email: to }, url: link }) {
         sendRequestResetPasswordEmail({ to, link });
       },

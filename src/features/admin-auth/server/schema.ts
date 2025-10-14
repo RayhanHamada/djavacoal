@@ -10,11 +10,16 @@ export const CheckIfAlreadyOnboardedOutputSchema = z.object({
   onboarded: z.boolean(),
 });
 
-export const InviteAdminInputSchema = z.object({
-  email: z.email(),
-  name: z.string().nonempty(),
-});
-
 export const RemoveAdminInputSchema = z.object({
   id: z.string().nonempty(),
+});
+
+export const InvitationEmailInputSchema = z.object({
+  to: z.email(),
+  link: z.url(),
+});
+
+export const RequestResetPasswordEmailInputSchema = z.object({
+  to: z.email(),
+  link: z.url(),
 });
