@@ -13,12 +13,20 @@ import { createAdminColumns } from "@/features/admin-auth/components/columns";
 import { InviteAdminFormSchema } from "@/features/admin-auth/lib/form-schema";
 import type { AdminListItem } from "@/features/admin-auth/lib/types";
 import type { z } from "zod/v4";
+import { match, P } from "ts-pattern";
 
 type InviteAdminFormValues = z.infer<typeof InviteAdminFormSchema>;
 
 type AdminListTableProps = {
   admins: AdminListItem[];
+  total?: number;
+  page?: number;
+  pageSize?: number;
   isLoading?: boolean;
+  isError?: boolean;
+  searchQuery: string;
+  onSearchChange: (value: string) => void;
+  onPageChange?: (page: number) => void;
   onInvite: (values: InviteAdminFormValues) => void | Promise<void>;
   onRemove: (adminId: string) => void | Promise<void>;
   isInviting?: boolean;
@@ -27,32 +35,23 @@ type AdminListTableProps = {
 
 export function AdminListTable({
   admins,
+  total = 0,
+  page = 1,
+  pageSize = 10,
   isLoading,
+  isError,
+  searchQuery,
+  onSearchChange,
+  onPageChange,
   onInvite,
   onRemove,
   isInviting,
   isRemoving,
 }: AdminListTableProps) {
-  const [searchQuery, setSearchQuery] = useState("");
   const [inviteModalOpened, setInviteModalOpened] = useState(false);
   const [removeConfirmOpened, setRemoveConfirmOpened] = useState(false);
   const [selectedAdmin, setSelectedAdmin] = useState<AdminListItem | null>(
     null
-  );
-
-  // Filter admins based on search query
-  const filteredAdmins = useMemo(
-    function () {
-      if (!searchQuery.trim()) return admins;
-
-      const query = searchQuery.toLowerCase();
-      return admins.filter(
-        (admin) =>
-          admin.email.toLowerCase().includes(query) ||
-          admin.name.toLowerCase().includes(query)
-      );
-    },
-    [admins, searchQuery]
   );
 
   function handleRemoveClick(admin: AdminListItem) {
@@ -106,29 +105,44 @@ export function AdminListTable({
           </Group>
 
           {/* Search */}
-          <SearchAdminInput
-            value={searchQuery}
-            onChange={setSearchQuery}
-            disabled={isLoading}
-          />
+          <SearchAdminInput value={searchQuery} onChange={onSearchChange} />
 
           {/* Table */}
           <Box>
-            {filteredAdmins.length === 0 && searchQuery ? (
-              <Text ta="center" py="xl" c="dimmed">
-                No admins found matching &quot;{searchQuery}&quot;
-              </Text>
-            ) : filteredAdmins.length === 0 ? (
-              <Text ta="center" py="xl" c="dimmed">
-                No admins registered yet. Invite your first admin!
-              </Text>
-            ) : (
-              <DataTable
-                data={filteredAdmins}
-                columns={columns}
-                pageSize={10}
-              />
-            )}
+            {match({ isLoading, isError, admins, searchQuery })
+              .with({ isLoading: true }, () => (
+                <Text ta="center" py="xl" c="dimmed">
+                  Loading admins...
+                </Text>
+              ))
+              .with({ isError: true }, () => (
+                <Text ta="center" py="xl" c="red">
+                  Failed to load admins. Please try again.
+                </Text>
+              ))
+              .with({ admins: P.when((data) => data.length > 0) }, () => (
+                <DataTable
+                  columns={columns}
+                  data={admins}
+                  pageSize={pageSize}
+                  currentPage={page}
+                  totalPages={Math.ceil(total / pageSize)}
+                  onPaginationChange={(newPage) => onPageChange?.(newPage)}
+                />
+              ))
+              .otherwise(() =>
+                match(searchQuery.trim())
+                  .with(P.string.minLength(1), () => (
+                    <Text ta="center" py="xl" c="dimmed">
+                      No admins found matching &quot;{searchQuery}&quot;
+                    </Text>
+                  ))
+                  .otherwise(() => (
+                    <Text ta="center" py="xl" c="dimmed">
+                      No admins registered yet. Invite your first admin!
+                    </Text>
+                  ))
+              )}
           </Box>
         </Stack>
       </Paper>

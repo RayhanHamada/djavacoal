@@ -1,6 +1,6 @@
 import { Table, Pagination, Group, Box, ActionIcon } from "@mantine/core";
 import { IconChevronUp, IconChevronDown } from "@tabler/icons-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   useReactTable,
   getCoreRowModel,
@@ -19,6 +19,7 @@ interface Props<
   data: TData[];
   columns: TCol[];
   pageSize?: number;
+  currentPage?: number;
   onPaginationChange?: (page: number, pageSize: number) => void;
   totalPages?: number;
 }
@@ -30,14 +31,23 @@ export function DataTable<
   data,
   columns,
   pageSize = 10,
+  currentPage = 1,
   onPaginationChange,
   totalPages,
 }: Props<TData, TCol>) {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [pagination, setPagination] = useState<PaginationState>({
-    pageIndex: 0,
+    pageIndex: currentPage - 1, // Convert 1-based to 0-based
     pageSize,
   });
+
+  // Sync pagination state when currentPage changes externally
+  useEffect(() => {
+    setPagination((prev) => ({
+      ...prev,
+      pageIndex: currentPage - 1,
+    }));
+  }, [currentPage]);
 
   const table = useReactTable({
     data,

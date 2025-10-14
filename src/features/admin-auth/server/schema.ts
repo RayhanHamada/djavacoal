@@ -23,3 +23,23 @@ export const RequestResetPasswordEmailInputSchema = z.object({
   to: z.email(),
   link: z.url(),
 });
+
+export const ListAdminInputSchema = z.object({
+  search: z.string().trim().toLowerCase().max(100).optional(),
+  page: z.number().int().min(1).default(1),
+  limit: z.number().int().min(1).max(100).default(10),
+});
+
+export const ListAdminsOutputSchema = z.object({
+  admins: z.array(
+    z.object({
+      id: z.string(),
+      email: z.email(),
+      name: z.string(),
+      created_at: z.date(),
+    })
+  ),
+  total: z.int(),
+  page: z.int(),
+  pageSize: z.int(),
+});

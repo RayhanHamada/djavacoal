@@ -1,50 +1,52 @@
 "use client";
 
-import { useState } from "react";
-import type { AdminListItem } from "@/features/admin-auth/lib/types";
 import { InviteAdminFormSchema } from "@/features/admin-auth/lib/form-schema";
 import { notifications } from "@mantine/notifications";
 import type { z } from "zod/v4";
-// import { listAdmins } from "@/features/admin-auth/actions/function";
+import { useQuery } from "@tanstack/react-query";
+import { rpc } from "@/lib/rpc";
+import { useState, useEffect } from "react";
+import { useDebounce } from "ahooks";
 
 type InviteAdminFormValues = z.infer<typeof InviteAdminFormSchema>;
 
 /**
- * Hook for managing admin list with search and filtering
- * Ready for TanStack Query integration
+ * Hook for managing admin list with search and pagination
  */
 export function useAdminList() {
-  // TODO: Replace with TanStack Query useQuery hook
-  // Example:
-  // const { data: admins, isLoading, error, refetch } = useQuery({
-  //   queryKey: ['admins'],
-  //   queryFn: async () => {
-  //     const result = await listAdmins();
-  //     return result;
-  //   },
-  // });
+  const [searchQuery, setSearchQuery] = useState("");
+  const [page, setPage] = useState(1);
+  const limit = 10;
 
-  // Mock data for now - replace with actual query
-  const [admins] = useState<AdminListItem[]>([
-    // TODO: Remove mock data when backend is ready
-    {
-      id: "1",
-      email: "admin@example.com",
-      name: "Admin User",
-    },
-    {
-      id: "2",
-      email: "john.doe@example.com",
-      name: "John Doe",
-    },
-  ]);
+  const debouncedSearchQuery = useDebounce(searchQuery.trim(), { wait: 500 });
 
-  const isLoading = false; // TODO: Get from useQuery
+  // Reset page to 1 when search query changes
+  useEffect(() => {
+    setPage(1);
+  }, [debouncedSearchQuery]);
+
+  const query = useQuery(
+    rpc.admins.listAllAdmins.queryOptions({
+      input: {
+        search: debouncedSearchQuery,
+        page,
+        limit,
+      },
+    })
+  );
 
   return {
-    admins,
-    isLoading,
-    // refetch, // TODO: Uncomment when using TanStack Query
+    admins: query.data?.admins ?? [],
+    total: query.data?.total ?? 0,
+    page: query.data?.page ?? 1,
+    pageSize: query.data?.pageSize ?? limit,
+    isLoading: query.isLoading,
+    isError: query.isError,
+    error: query.error,
+    refetch: query.refetch,
+    searchQuery,
+    setSearchQuery,
+    setPage,
   };
 }
 

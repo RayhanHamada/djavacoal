@@ -14,12 +14,19 @@ export function createAdminColumns({
 }: Props): ColumnDef<AdminListItem>[] {
   return [
     {
+      accessorKey: "id",
+      header: "ID",
+      cell: ({ row }) => row.index + 1,
+    },
+    {
       accessorKey: "email",
+      accessorFn: (row) => row.email,
       header: "Email",
       cell: ({ row }) => row.original.email,
     },
     {
       accessorKey: "name",
+      accessorFn: (row) => row.name,
       header: "Name",
       cell: ({ row }) => row.original.name,
     },

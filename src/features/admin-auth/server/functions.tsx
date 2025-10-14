@@ -4,6 +4,8 @@ import { KV_KEYS } from "@/adapters/kv/constants";
 import { getAuth } from "@/features/admin-auth/lib/better-auth-server";
 import {
   InvitationEmailInputSchema,
+  ListAdminInputSchema,
+  ListAdminsOutputSchema,
   OnboardingInputSchema,
   RequestResetPasswordEmailInputSchema,
 } from "@/features/admin-auth/server/schema";
@@ -14,11 +16,14 @@ import {
   EMAIL_SENDER_NAME,
   EMAIL_SUBJECT,
 } from "@/features/admin-auth/lib/constants";
-import { getPlunk } from "@/lib/plunk";
+import { getPlunk } from "@/adapters/plunk";
 import {
   AdminInvitationEmail,
   AdminResetPasswordEmail,
 } from "@/templates/emails";
+import { getDB } from "@/adapters/d1/db";
+import { and, count, like, ne, or, sql, SQL } from "drizzle-orm";
+import { users } from "@/adapters/d1/schema";
 
 export const onboardAdmin = base
   .input(OnboardingInputSchema)
@@ -126,5 +131,53 @@ export const sendRequestResetPasswordEmail = base
       name: EMAIL_SENDER_NAME,
       subject: EMAIL_SUBJECT.RESET_PASSWORD,
     });
+  })
+  .callable();
+
+/**
+ * list all registered admin users
+ */
+export const listAllAdmins = base
+  .input(ListAdminInputSchema)
+  .output(ListAdminsOutputSchema)
+  .handler(async function ({
+    context: { env },
+    input: { search = "", page, limit },
+  }) {
+    const header = await headers();
+    const db = getDB(env.DJAVACOAL_DB);
+    const auth = getAuth(env);
+    const session = await auth.api.getSession({ headers: header });
+
+    const currentUserId = session?.user?.id ?? "";
+
+    const offset = (page - 1) * limit;
+    const condition: SQL[] = [
+      like(sql`lower(${users.email})`, `%${search}%`),
+      like(sql`lower(${users.name})`, `%${search}%`),
+    ];
+
+    const admins = await db
+      .select({
+        data: users,
+        total: count(),
+      })
+      .from(users)
+      .where(and(ne(users.id, currentUserId), or(...condition)))
+      .groupBy(users.id)
+      .offset(offset)
+      .limit(limit);
+
+    return {
+      admins: admins.map((v) => ({
+        id: v.data.id,
+        name: v.data.name,
+        email: v.data.email,
+        created_at: v.data.created_at!,
+      })),
+      total: admins.at(0)?.total ?? 0,
+      page,
+      pageSize: limit,
+    };
   })
   .callable();

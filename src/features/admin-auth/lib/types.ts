@@ -5,13 +5,13 @@ export type Admin = {
   id: string;
   name: string;
   email: string;
-  emailVerified: boolean;
+  email_verified: boolean;
   image: string | null;
-  createdAt: Date;
-  updatedAt: Date;
+  created_at: Date;
+  updated_at: Date;
 };
 
 /**
  * Admin list item type for table display
  */
-export type AdminListItem = Pick<Admin, "id" | "email" | "name">;
+export type AdminListItem = Pick<Admin, "id" | "email" | "name" | "created_at">;
