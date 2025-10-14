@@ -1,6 +1,6 @@
 import { Container, Paper, Title, Text } from "@mantine/core";
 import { OnboardingForm } from "@/features/admin-auth/components";
-import { checkIfAlreadyOnboarded } from "@/features/admin-auth/actions/function";
+import { checkIfAlreadyOnboarded } from "@/features/admin-auth/actions";
 import { redirect } from "next/navigation";
 
 export default async function OnboardingPage() {

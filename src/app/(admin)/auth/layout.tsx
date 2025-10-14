@@ -1,4 +1,4 @@
-import { redirectAuthenticatedUser } from "@/features/admin-auth/actions/function";
+import { redirectAuthenticatedUser } from "@/features/admin-auth/actions";
 import { PropsWithChildren } from "react";
 
 type Props = PropsWithChildren;

@@ -1,4 +1,4 @@
-import { guardAuthenticatedRoute } from "@/features/admin-auth/actions/function";
+import { guardAuthenticatedRoute } from "@/features/admin-auth/actions";
 import { PropsWithChildren } from "react";
 import { DashboardShell } from "@/features/dashboard/components";
 
