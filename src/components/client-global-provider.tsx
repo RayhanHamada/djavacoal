@@ -12,7 +12,7 @@ export default function ClientGlobalProvider({ children }: Props) {
   return (
     <>
       <QueryClientProvider client={queryClient}>
-        <ReactQueryDevtools initialIsOpen />
+        <ReactQueryDevtools position="left" />
         {children}
       </QueryClientProvider>
     </>
