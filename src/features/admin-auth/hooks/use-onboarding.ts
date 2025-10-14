@@ -2,12 +2,12 @@
 
 import { useServerAction } from "@orpc/react/hooks";
 import { notifications } from "@mantine/notifications";
-import * as actions from "@/features/admin-auth/actions";
+import * as actions from "@/features/admin-auth/server/actions";
 import { onError, onSuccess } from "@orpc/client";
 
 export function useOnboarding() {
-  const { execute: handleOnboardingAdmin, isPending: isOnboardingLoading } =
-    useServerAction(actions.onboardAdmin, {
+  const { execute: handleSetupFirstUser, isPending: isSetupLoading } =
+    useServerAction(actions.setupFirstUserActions, {
       interceptors: [
         onSuccess(async function () {
           notifications.show({
@@ -27,7 +27,7 @@ export function useOnboarding() {
     });
 
   return {
-    handleOnboardingAdmin,
-    isLoading: isOnboardingLoading,
+    handleSetupFirstUser,
+    isLoading: isSetupLoading,
   };
 }

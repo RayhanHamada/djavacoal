@@ -6,7 +6,7 @@ import { TextInput, PasswordInput, Button, Stack } from "@mantine/core";
 import { useForm } from "@mantine/form";
 
 export function OnboardingForm() {
-  const { handleOnboardingAdmin, isLoading } = useOnboarding();
+  const { handleSetupFirstUser, isLoading } = useOnboarding();
 
   const form = useForm({
     mode: "uncontrolled",
@@ -24,7 +24,7 @@ export function OnboardingForm() {
     email,
     password,
   }) {
-    await handleOnboardingAdmin({ email, name, password });
+    await handleSetupFirstUser({ email, name, password });
   });
 
   return (

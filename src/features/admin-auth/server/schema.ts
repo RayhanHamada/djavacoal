@@ -10,16 +10,6 @@ export const CheckIfAlreadyOnboardedOutputSchema = z.object({
   onboarded: z.boolean(),
 });
 
-export const GetAuthSessionOutputSchema = z.object({
-  user: z
-    .object({
-      id: z.string(),
-      email: z.email(),
-      name: z.string(),
-    })
-    .nullish(),
-});
-
 export const InviteAdminInputSchema = z.object({
   email: z.email(),
   name: z.string().nonempty(),

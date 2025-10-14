@@ -1,12 +1,9 @@
 import { Container, Paper, Title, Text } from "@mantine/core";
 import { OnboardingForm } from "@/features/admin-auth/components";
-import { checkIfAlreadyOnboarded } from "@/features/admin-auth/actions";
-import { redirect } from "next/navigation";
+import { redirectJoinedUserActions } from "@/features/admin-auth/server/actions";
 
 export default async function OnboardingPage() {
-  const [, data] = await checkIfAlreadyOnboarded();
-
-  if (data?.onboarded) return redirect("/auth/login");
+  await redirectJoinedUserActions();
 
   return (
     <div
@@ -19,10 +16,10 @@ export default async function OnboardingPage() {
     >
       <Container size={420}>
         <Title ta="center" className="mb-2">
-          Complete Your Onboarding
+          Welcome to Djavacoal CMS
         </Title>
         <Text c="dimmed" size="sm" ta="center" className="mb-4">
-          Set up your admin account for Djavacoal CMS
+          Lets setup your admin account to get started.
         </Text>
         <Paper withBorder shadow="md" p={30} mt={30} radius="md">
           <OnboardingForm />
