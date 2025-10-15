@@ -112,13 +112,7 @@ export function getAuth(env: CloudflareEnv) {
       magicLink({
         expiresIn: 60 * 60 * 24,
         async sendMagicLink({ email: to, url: link }) {
-          console.log(`magic link sent => `, { to, link });
-
-          try {
-            await sendInvitationEmail({ to, link });
-          } catch (error) {
-            console.log(`error sending`, error);
-          }
+          await sendInvitationEmail({ to, link });
         },
       }),
     ],
