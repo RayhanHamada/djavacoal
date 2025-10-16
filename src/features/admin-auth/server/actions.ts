@@ -3,7 +3,7 @@
 import {
   redirectUnauthenticatedUser,
   redirectJoinedUser,
-  onboardAdmin as setupFirstUser,
+  setupFirstUser as setupFirstUser,
   redirectAuthenticatedUser,
   checkNeedsPassword,
   setPassword,

@@ -11,6 +11,7 @@ import {
   RequestResetPasswordEmailInputSchema,
   SetPasswordInputSchema,
   CheckNeedsPasswordOutputSchema,
+  RemoveAdminInputSchema,
 } from "@/features/admin-auth/server/schema";
 import base from "@/lib/orpc/server";
 import { headers } from "next/headers";
@@ -28,13 +29,15 @@ import { and, count, eq, like, ne, or, sql, SQL } from "drizzle-orm";
 import { users, accounts } from "@/adapters/d1/schema";
 import { ACCOUNT_COLUMNS } from "@/adapters/d1/constants";
 
-export const onboardAdmin = base
+export const setupFirstUser = base
   .input(OnboardingInputSchema)
   .handler(async function ({
     context: { env },
     input: { name, email, password },
     errors,
   }) {
+    const auth = getAuth(env);
+
     const onboarded = await env.DJAVACOAL_KV.get(
       KV_KEYS.IS_ALREADY_ONBOARDED,
       "json"
@@ -46,12 +49,12 @@ export const onboardAdmin = base
       });
     }
 
-    const auth = getAuth(env);
-    await auth.api.signUpEmail({
+    await auth.api.createUser({
       body: {
         name,
         email,
         password,
+        role: "admin",
       },
     });
 
@@ -170,6 +173,7 @@ export const listAllAdmins = base
         id: v.data.id,
         name: v.data.name,
         email: v.data.email,
+        role: v.data.role,
         created_at: v.data.created_at!,
       })),
       total: admins.at(0)?.total ?? 0,
@@ -298,6 +302,75 @@ export const setPassword = base
     } catch {
       throw errors.INTERNAL_SERVER_ERROR({
         message: "Failed to set password",
+      });
+    }
+  })
+  .callable();
+
+/**
+ * Remove an admin user
+ * Only admins can remove other users
+ * Admins cannot remove themselves
+ */
+export const removeAdmin = base
+  .input(RemoveAdminInputSchema)
+  .handler(async function ({ context: { env }, input: { id }, errors }) {
+    const header = await headers();
+    const auth = getAuth(env);
+    const db = getDB(env.DJAVACOAL_DB);
+
+    // Check if user is authenticated
+    const session = await auth.api.getSession({ headers: header });
+    if (!session?.user) {
+      throw errors.BAD_REQUEST({
+        message: "You must be authenticated to remove users",
+      });
+    }
+
+    // Check if current user has admin role
+    const currentUser = await db
+      .select()
+      .from(users)
+      .where(eq(users.id, session.user.id))
+      .limit(1);
+
+    if (!currentUser[0] || currentUser[0].role !== "admin") {
+      throw errors.BAD_REQUEST({
+        message: "Only admins can remove other users",
+      });
+    }
+
+    // Prevent self-removal
+    if (session.user.id === id) {
+      throw errors.BAD_REQUEST({
+        message: "You cannot remove yourself",
+      });
+    }
+
+    // Check if target user exists
+    const targetUser = await db
+      .select()
+      .from(users)
+      .where(eq(users.id, id))
+      .limit(1);
+
+    if (!targetUser[0]) {
+      throw errors.NOT_FOUND({
+        message: "User not found",
+      });
+    }
+
+    // Remove the user using Better Auth API
+    try {
+      await auth.api.removeUser({
+        headers: header,
+        body: {
+          userId: id,
+        },
+      });
+    } catch {
+      throw errors.INTERNAL_SERVER_ERROR({
+        message: "Failed to remove user. Please try again.",
       });
     }
   })

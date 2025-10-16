@@ -14,6 +14,7 @@ import { client } from "@/features/admin-auth/lib/better-auth-client";
 import { notifications } from "@mantine/notifications";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { RoleBadge } from "@/features/admin-auth/components/atoms";
 
 export function NavigationFooter() {
   const { user, isLoading } = useCurrentUser();
@@ -59,13 +60,13 @@ export function NavigationFooter() {
           }}
         >
           <Group gap="sm" wrap="nowrap" px="md">
-            <Avatar radius="xl" size="md" color="indigo">
-              <IconUser size={20} />
-            </Avatar>
-            <Stack gap={0} style={{ flex: 1, minWidth: 0 }}>
-              <Text size="sm" fw={500} truncate>
-                {user?.name || "User"}
-              </Text>
+            <Stack gap={2} style={{ flex: 1, minWidth: 0 }}>
+              <RoleBadge role={user?.role} size="xs" />
+              <Group gap="xs">
+                <Text size="sm" fw={500} truncate>
+                  {user?.name || "User"}
+                </Text>
+              </Group>
               <Text size="xs" c="dimmed" truncate>
                 {user?.email || "email@example.com"}
               </Text>
