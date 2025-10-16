@@ -1,13 +1,10 @@
-import { getAuthSession } from "@/features/admin-auth/actions/function";
-import { redirect } from "next/navigation";
+import { redirectAuthenticatedUserActions } from "@/features/admin-auth/server/actions";
 import { PropsWithChildren } from "react";
 
 type Props = PropsWithChildren;
 
 export default async function Layout({ children }: Props) {
-  const { data: session } = await getAuthSession();
-
-  if (session?.session) redirect("/dashboard");
+  await redirectAuthenticatedUserActions();
 
   return children;
 }

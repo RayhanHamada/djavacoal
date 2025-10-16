@@ -8,26 +8,30 @@ import {
   USER_COLUMNS,
   VERIFICATION_COLUMNS,
 } from "@/adapters/d1/constants";
-import drizzle2BetterAuthAdapter from "@/adapters/drizzle2better-auth";
-import { env } from "@/configs";
+import betterAuthAdapter from "@/adapters/better-auth";
 import {
   AUTH_APP_NAME,
   RESET_PASSWORD_TOKEN_EXPIRY_IN,
 } from "@/features/admin-auth/lib/constants";
-import * as emailActions from "@/features/admin-email/actions/function";
+import {
+  sendInvitationEmail,
+  sendRequestResetPasswordEmail,
+} from "@/features/admin-auth/server/functions";
 import { betterAuth } from "better-auth";
+import { magicLink } from "better-auth/plugins/magic-link";
+import { admin } from "better-auth/plugins";
 
 /**
  * Initialize BetterAuth with D1 and Drizzle ORM
  */
-export function getAuth(db: D1Database) {
-  const database = drizzle2BetterAuthAdapter(db);
+export function getAuth(env: CloudflareEnv) {
+  const database = betterAuthAdapter(env.DJAVACOAL_DB);
 
   return betterAuth({
     database,
 
     appName: AUTH_APP_NAME,
-    baseURL: env.BETTER_AUTH_URL,
+    baseURL: env.NEXT_PUBLIC_BASE_URL,
     basePath: env.BETTER_AUTH_BASE_PATH,
     secret: env.BETTER_AUTH_SECRET,
 
@@ -42,6 +46,10 @@ export function getAuth(db: D1Database) {
         email: USER_COLUMNS.EMAIL,
         emailVerified: USER_COLUMNS.EMAIL_VERIFIED,
         image: USER_COLUMNS.IMAGE,
+        role: USER_COLUMNS.ROLE,
+        banned: USER_COLUMNS.BANNED,
+        banReason: USER_COLUMNS.BAN_REASON,
+        banExpires: USER_COLUMNS.BAN_EXPIRES,
 
         createdAt: COMMON_COLUMNS.CREATED_AT,
         updatedAt: COMMON_COLUMNS.UPDATED_AT,
@@ -55,6 +63,7 @@ export function getAuth(db: D1Database) {
         expiresAt: SESSION_COLUMNS.EXPIRES_AT,
         ipAddress: SESSION_COLUMNS.IP_ADDRESS,
         userAgent: SESSION_COLUMNS.USER_AGENT,
+        impersonatedBy: SESSION_COLUMNS.IMPERSONATED_BY,
 
         createdAt: COMMON_COLUMNS.CREATED_AT,
         updatedAt: COMMON_COLUMNS.UPDATED_AT,
@@ -95,17 +104,25 @@ export function getAuth(db: D1Database) {
      */
     emailAndPassword: {
       enabled: true,
-      async sendResetPassword({ token, user: { email: to } }) {
-        emailActions.sendRequestResetPasswordEmail({ to, token });
-      },
-      resetPasswordTokenExpiresIn: RESET_PASSWORD_TOKEN_EXPIRY_IN,
       autoSignIn: false,
+      resetPasswordTokenExpiresIn: RESET_PASSWORD_TOKEN_EXPIRY_IN,
+      async sendResetPassword({ user: { email: to }, url: link }) {
+        sendRequestResetPasswordEmail({ to, link });
+      },
     },
 
     /**
      * Add any BetterAuth plugins you want to use here.
      */
-    plugins: [],
+    plugins: [
+      magicLink({
+        expiresIn: 60 * 60 * 24,
+        async sendMagicLink({ email: to, url: link }) {
+          await sendInvitationEmail({ to, link });
+        },
+      }),
+      admin(),
+    ],
   });
 }
 
