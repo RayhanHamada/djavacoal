@@ -16,6 +16,10 @@ export const USER_COLUMNS = {
   EMAIL: "email",
   EMAIL_VERIFIED: "email_verified",
   IMAGE: "image",
+  ROLE: "role",
+  BANNED: "banned",
+  BAN_REASON: "ban_reason",
+  BAN_EXPIRES: "ban_expires",
 } as const;
 
 export const SESSION_COLUMNS = {
@@ -24,6 +28,7 @@ export const SESSION_COLUMNS = {
   EXPIRES_AT: "expires_at",
   IP_ADDRESS: "ip_address",
   USER_AGENT: "user_agent",
+  IMPERSONATED_BY: "impersonated_by",
 } as const;
 
 export const ACCOUNT_COLUMNS = {
