@@ -1,6 +1,6 @@
-import { ContactInput } from "../atoms/ContactInput";
-import { ContactTextarea } from "../atoms/ContactTextarea";
-import { ContactButton } from "../atoms/ContactButton";
+import { ContactInput } from "../atoms/contact-input";
+import { ContactTextarea } from "../atoms/contact-textarea";
+import { ContactButton } from "../atoms/contact-button";
 
 export function ContactForm() {
   return (
