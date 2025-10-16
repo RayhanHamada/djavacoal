@@ -1,39 +1,22 @@
-import {
-  Title,
-  Paper,
-  PasswordInput,
-  Button,
-  Center,
-  Box,
-} from "@mantine/core";
+import { ResetPasswordCard } from "@/features/admin-auth/components/molecules";
+import { Box } from "@mantine/core";
 
-export default function Page() {
+/**
+ * Reset Password Page
+ * Allows users to set a new password using the reset token from email
+ * Available at /auth/reset-password
+ */
+export default function ResetPasswordPage() {
   return (
-    <Center style={{ minHeight: "100vh" }}>
-      <Box w={420}>
-        <Title ta="center" className="mb-4">
-          Reset Password
-        </Title>
-        <Paper withBorder shadow="md" p={30} mt={30} radius="md">
-          <form>
-            <PasswordInput
-              label="New Password"
-              placeholder="Enter new password"
-              required
-              mt="sm"
-            />
-            <PasswordInput
-              label="Confirm Password"
-              placeholder="Re-enter new password"
-              required
-              mt="sm"
-            />
-            <Button type="submit" fullWidth mt="xl">
-              Update Password
-            </Button>
-          </form>
-        </Paper>
-      </Box>
-    </Center>
+    <Box
+      style={{
+        minHeight: "100vh",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+      }}
+    >
+      <ResetPasswordCard />
+    </Box>
   );
 }
