@@ -54,8 +54,6 @@ export function useAdminList() {
  * Hook for inviting new admin using Better Auth magic link
  */
 export function useInviteAdmin() {
-  const queryClient = useQueryClient();
-
   const mutation = useMutation({
     mutationFn: async (values: InviteAdminFormValues) => {
       const result = await client.admins.inviteAdmin({
