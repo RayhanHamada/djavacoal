@@ -2,12 +2,14 @@
 
 import { useServerAction } from "@orpc/react/hooks";
 import { notifications } from "@mantine/notifications";
-import * as actions from "@/features/admin-auth/actions/function";
+import * as actions from "@/features/admin-auth/server/actions";
 import { onError, onSuccess } from "@orpc/client";
+import { useRouter } from "next/navigation";
 
 export function useOnboarding() {
-  const { execute: handleOnboardingAdmin, isPending: isOnboardingLoading } =
-    useServerAction(actions.onboardAdmin, {
+  const router = useRouter();
+  const { execute: handleSetupFirstUser, isPending: isSetupLoading } =
+    useServerAction(actions.setupFirstUserActions, {
       interceptors: [
         onSuccess(async function () {
           notifications.show({
@@ -16,18 +18,22 @@ export function useOnboarding() {
             color: "green",
           });
         }),
-        onError(async function ({ message }) {
+        onError(async function ({ message, cause }) {
+          console.log(cause);
+
           notifications.show({
             title: "Error",
             message: message || "Failed to complete onboarding.",
             color: "red",
           });
+
+          router.replace("/auth/login");
         }),
       ],
     });
 
   return {
-    handleOnboardingAdmin,
-    isLoading: isOnboardingLoading,
+    handleSetupFirstUser,
+    isLoading: isSetupLoading,
   };
 }

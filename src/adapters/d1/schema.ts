@@ -44,6 +44,14 @@ export const users = sqliteTable(TABLE_NAMES.USERS, {
     mode: "boolean",
   }).default(false),
   [USER_COLUMNS.IMAGE]: text(USER_COLUMNS.IMAGE),
+  [USER_COLUMNS.ROLE]: text(USER_COLUMNS.ROLE).default("admin"),
+  [USER_COLUMNS.BANNED]: integer(USER_COLUMNS.BANNED, {
+    mode: "boolean",
+  }).default(false),
+  [USER_COLUMNS.BAN_REASON]: text(USER_COLUMNS.BAN_REASON),
+  [USER_COLUMNS.BAN_EXPIRES]: integer(USER_COLUMNS.BAN_EXPIRES, {
+    mode: "timestamp",
+  }),
 
   ...COMMON_FIELDS,
 });
@@ -69,6 +77,7 @@ export const sessions = sqliteTable(TABLE_NAMES.SESSIONS, {
   }).notNull(),
   [SESSION_COLUMNS.IP_ADDRESS]: text(SESSION_COLUMNS.IP_ADDRESS),
   [SESSION_COLUMNS.USER_AGENT]: text(SESSION_COLUMNS.USER_AGENT),
+  [SESSION_COLUMNS.IMPERSONATED_BY]: text(SESSION_COLUMNS.IMPERSONATED_BY),
 
   ...COMMON_FIELDS,
 });

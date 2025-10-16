@@ -16,32 +16,16 @@ import {
 import {
   sendInvitationEmail,
   sendRequestResetPasswordEmail,
-} from "@/features/admin-email/actions/function";
+} from "@/features/admin-auth/server/functions";
 import { betterAuth } from "better-auth";
 import { magicLink } from "better-auth/plugins/magic-link";
+import { admin } from "better-auth/plugins";
 
 /**
  * Initialize BetterAuth with D1 and Drizzle ORM
  */
 export function getAuth(env: CloudflareEnv) {
   const database = betterAuthAdapter(env.DJAVACOAL_DB);
-  console.log(
-    `ENV env => `,
-    env.NEXT_PUBLIC_BASE_URL,
-    ", ",
-    env.BETTER_AUTH_BASE_PATH,
-    ", ",
-    env.BETTER_AUTH_SECRET
-  );
-
-  console.log(
-    `ENV process.env => `,
-    process.env.NEXT_PUBLIC_BASE_URL,
-    ", ",
-    process.env.BETTER_AUTH_BASE_PATH,
-    ", ",
-    process.env.BETTER_AUTH_SECRET
-  );
 
   return betterAuth({
     database,
@@ -62,6 +46,10 @@ export function getAuth(env: CloudflareEnv) {
         email: USER_COLUMNS.EMAIL,
         emailVerified: USER_COLUMNS.EMAIL_VERIFIED,
         image: USER_COLUMNS.IMAGE,
+        role: USER_COLUMNS.ROLE,
+        banned: USER_COLUMNS.BANNED,
+        banReason: USER_COLUMNS.BAN_REASON,
+        banExpires: USER_COLUMNS.BAN_EXPIRES,
 
         createdAt: COMMON_COLUMNS.CREATED_AT,
         updatedAt: COMMON_COLUMNS.UPDATED_AT,
@@ -75,6 +63,7 @@ export function getAuth(env: CloudflareEnv) {
         expiresAt: SESSION_COLUMNS.EXPIRES_AT,
         ipAddress: SESSION_COLUMNS.IP_ADDRESS,
         userAgent: SESSION_COLUMNS.USER_AGENT,
+        impersonatedBy: SESSION_COLUMNS.IMPERSONATED_BY,
 
         createdAt: COMMON_COLUMNS.CREATED_AT,
         updatedAt: COMMON_COLUMNS.UPDATED_AT,
@@ -115,8 +104,8 @@ export function getAuth(env: CloudflareEnv) {
      */
     emailAndPassword: {
       enabled: true,
-      resetPasswordTokenExpiresIn: RESET_PASSWORD_TOKEN_EXPIRY_IN,
       autoSignIn: false,
+      resetPasswordTokenExpiresIn: RESET_PASSWORD_TOKEN_EXPIRY_IN,
       async sendResetPassword({ user: { email: to }, url: link }) {
         sendRequestResetPasswordEmail({ to, link });
       },
@@ -132,6 +121,7 @@ export function getAuth(env: CloudflareEnv) {
           await sendInvitationEmail({ to, link });
         },
       }),
+      admin(),
     ],
   });
 }
