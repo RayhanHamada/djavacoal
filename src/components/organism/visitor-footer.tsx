@@ -16,10 +16,11 @@ export default function VisitorFooter() {
 
   return (
     <footer
-      className="text-gray-200 
+      className="relative text-gray-200 
              bg-[linear-gradient(rgba(0,0,0,0.7),rgba(0,0,0,0.7)),url('/images/bg-footer.png')] 
              bg-cover bg-center "
     >
+      <div className="absolute top-0 left-0 w-full h-[2px] bg-secondary z-50"></div>
       {/* Top Section */}
       <div
         className="mx-auto px-6 py-10 
