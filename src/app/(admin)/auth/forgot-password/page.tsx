@@ -1,38 +1,22 @@
-import { TextInput, Button, Paper, Title, Container } from "@mantine/core";
+import { ForgotPasswordCard } from "@/features/admin-auth/components/molecules";
+import { Box } from "@mantine/core";
 
-export default function Page() {
+/**
+ * Forgot Password Page
+ * Allows users to request a password reset email
+ * Available at /auth/forgot-password
+ */
+export default function ForgotPasswordPage() {
   return (
-    <Container
-      size={420}
-      my={40}
+    <Box
       style={{
         minHeight: "100vh",
         display: "flex",
-        alignItems: "flex-start",
+        alignItems: "center",
         justifyContent: "center",
-        position: "relative",
       }}
     >
-      <div
-        style={{
-          width: "100%",
-          position: "absolute",
-          top: "40%",
-          transform: "translateY(-40%)",
-        }}
-      >
-        <Title ta="center" className="mb-4">
-          Change Password
-        </Title>
-        <Paper withBorder shadow="md" p={30} mt={30} radius="md">
-          <form>
-            <TextInput label="Email" placeholder="your@email.com" required />
-            <Button fullWidth mt="xl">
-              Submit
-            </Button>
-          </form>
-        </Paper>
-      </div>
-    </Container>
+      <ForgotPasswordCard />
+    </Box>
   );
 }
