@@ -70,12 +70,6 @@ export function useInviteAdmin() {
         message: `An invitation email has been sent to ${variables.email}`,
         color: "green",
       });
-      // Invalidate all admin list queries to refresh the data
-      queryClient.invalidateQueries({
-        predicate: (query) =>
-          query.queryKey[0] === "admins" &&
-          query.queryKey[1] === "listAllAdmins",
-      });
     },
     onError: (error) => {
       notifications.show({
@@ -95,54 +89,40 @@ export function useInviteAdmin() {
 
 /**
  * Hook for removing admin
- * Ready for TanStack Query mutation integration
  */
 export function useRemoveAdmin() {
-  // TODO: Import the action when ready
-  // import { removeAdmin as removeAdminAction } from "@/features/admin-auth/actions/function";
+  const queryClient = useQueryClient();
 
-  // TODO: Replace with TanStack Query useMutation hook
-  // Example:
-  // const mutation = useMutation({
-  //   mutationFn: async (adminId: string) => {
-  //     const result = await removeAdminAction({ adminId });
-  //     return result;
-  //   },
-  //   onSuccess: () => {
-  //     notifications.show({
-  //       message: "Admin removed successfully",
-  //       color: "green",
-  //     });
-  //     queryClient.invalidateQueries({ queryKey: ['admins'] });
-  //   },
-  //   onError: (error) => {
-  //     notifications.show({
-  //       message: error.message || "Failed to remove admin",
-  //       color: "red",
-  //     });
-  //   },
-  // });
+  const mutation = useMutation(
+    rpc.admins.removeAdmin.mutationOptions({
+      onSuccess() {
+        notifications.show({
+          title: "Admin Removed",
+          message: "Admin has been successfully removed",
+          color: "green",
+        });
 
-  async function removeAdmin(adminId: string) {
-    // TODO: Call server action here
-    // await removeAdminAction({ adminId });
+        // Invalidate all admin list queries to refresh the data
+        queryClient.invalidateQueries({
+          queryKey: rpc.admins.listAllAdmins.key(),
+        });
+      },
+      onError(error) {
+        notifications.show({
+          title: "Removal Failed",
+          message: error.message || "Failed to remove admin. Please try again.",
+          color: "red",
+        });
+      },
+    })
+  );
 
-    console.log("Removing admin:", adminId);
-
-    // Mock success notification
-    notifications.show({
-      message: "Admin removed successfully",
-      color: "green",
-    });
-
-    // TODO: Remove mock delay when backend is ready
-    await new Promise((resolve) => setTimeout(resolve, 1000));
+  async function removeAdmin(id: string) {
+    return mutation.mutateAsync({ id });
   }
-
-  const isRemoving = false; // TODO: Get from mutation.isPending
 
   return {
     removeAdmin,
-    isRemoving,
+    isRemoving: mutation.isPending,
   };
 }

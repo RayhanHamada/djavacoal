@@ -14,6 +14,7 @@ import { InviteAdminFormSchema } from "@/features/admin-auth/lib/form-schema";
 import type { AdminListItem } from "@/features/admin-auth/lib/types";
 import type { z } from "zod/v4";
 import { match, P } from "ts-pattern";
+import { client } from "@/features/admin-auth/lib/better-auth-client";
 
 type InviteAdminFormValues = z.infer<typeof InviteAdminFormSchema>;
 
@@ -79,9 +80,18 @@ export function AdminListTable({
     setInviteModalOpened(false);
   }
 
-  const columns = useMemo(function () {
-    return createAdminColumns({ onRemove: handleRemoveClick });
-  }, []);
+  const { data: session } = client.useSession();
+  const currentUserRole = session?.user?.role;
+
+  const columns = useMemo(
+    function () {
+      return createAdminColumns({
+        onRemove: handleRemoveClick,
+        currentUserRole,
+      });
+    },
+    [currentUserRole]
+  );
 
   return (
     <>

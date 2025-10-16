@@ -14,4 +14,9 @@ export type Admin = {
 /**
  * Admin list item type for table display
  */
-export type AdminListItem = Pick<Admin, "id" | "email" | "name" | "created_at">;
+export type AdminListItem = Pick<
+  Admin,
+  "id" | "email" | "name" | "created_at"
+> & {
+  role: string | null;
+};

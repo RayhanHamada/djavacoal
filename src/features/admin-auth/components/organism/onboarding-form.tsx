@@ -9,7 +9,7 @@ export function OnboardingForm() {
   const { handleSetupFirstUser, isLoading } = useOnboarding();
 
   const form = useForm({
-    mode: "uncontrolled",
+    mode: "controlled",
     initialValues: {
       name: "",
       email: "",
@@ -31,22 +31,22 @@ export function OnboardingForm() {
     <form onSubmit={handleSubmit}>
       <Stack gap="md">
         <TextInput
-          label="Name"
-          placeholder="John Doe"
-          type="text"
-          required
-          key={form.key("name")}
-          {...form.getInputProps("name")}
-          disabled={isLoading}
-        />
-
-        <TextInput
           label="Email"
           placeholder="your@email.com"
           type="email"
           required
           key={form.key("email")}
           {...form.getInputProps("email")}
+          disabled={isLoading}
+        />
+
+        <TextInput
+          label="Name"
+          placeholder="John Doe"
+          type="text"
+          required
+          key={form.key("name")}
+          {...form.getInputProps("name")}
           disabled={isLoading}
         />
 
@@ -69,7 +69,7 @@ export function OnboardingForm() {
         />
 
         <Button type="submit" fullWidth mt="md" loading={isLoading}>
-          Complete Onboarding
+          Setup Your Account
         </Button>
       </Stack>
     </form>

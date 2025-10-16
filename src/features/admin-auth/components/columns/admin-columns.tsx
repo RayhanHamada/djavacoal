@@ -4,14 +4,18 @@ import { ColumnDef } from "@tanstack/react-table";
 import { AdminListItem } from "@/features/admin-auth/lib/types";
 import { ActionIcon, Menu } from "@mantine/core";
 import { IconDots, IconTrash } from "@tabler/icons-react";
+import { RoleBadge } from "@/features/admin-auth/components/atoms";
 
 type Props = {
   onRemove: (admin: AdminListItem) => void;
+  currentUserRole: string | null | undefined;
 };
 
 export function createAdminColumns({
   onRemove,
+  currentUserRole,
 }: Props): ColumnDef<AdminListItem>[] {
+  const isAdmin = currentUserRole === "admin";
   return [
     {
       accessorKey: "id",
@@ -31,6 +35,12 @@ export function createAdminColumns({
       cell: ({ row }) => row.original.name,
     },
     {
+      accessorKey: "role",
+      accessorFn: (row) => row.role,
+      header: "Role",
+      cell: ({ row }) => <RoleBadge role={row.original.role} />,
+    },
+    {
       id: "actions",
       header: "Actions",
       cell: ({ row }) => (
@@ -42,14 +52,21 @@ export function createAdminColumns({
           </Menu.Target>
           <Menu.Dropdown>
             <Menu.Label>Actions</Menu.Label>
-            {/* TODO: Add more actions here in the future (e.g., Edit, Reset Password, etc.) */}
-            <Menu.Item
-              color="red"
-              leftSection={<IconTrash size={16} />}
-              onClick={() => onRemove(row.original)}
-            >
-              Remove Admin
-            </Menu.Item>
+            {/* Only admins can remove other admins */}
+            {isAdmin && (
+              <Menu.Item
+                color="red"
+                leftSection={<IconTrash size={16} />}
+                onClick={() => onRemove(row.original)}
+              >
+                Remove Admin
+              </Menu.Item>
+            )}
+            {!isAdmin && (
+              <Menu.Item disabled color="gray">
+                No actions available
+              </Menu.Item>
+            )}
           </Menu.Dropdown>
         </Menu>
       ),
