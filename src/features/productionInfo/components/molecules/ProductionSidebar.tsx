@@ -6,8 +6,8 @@ import Image from "next/image";
 
 const ITEMS = [
   { id: "process", label: "Production Process" },
-  { id: "shipment", label: "Shipment Terms" },
   { id: "moq", label: "MOQ & Payment Terms" },
+  { id: "shipment", label: "Shipment Terms" },
   { id: "packaging", label: "Packaging Info" },
   { id: "faq", label: "FAQ" },
 ];
