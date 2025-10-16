@@ -1,6 +1,7 @@
 "use client";
 
 import "@mantine/tiptap/styles.css";
+import "tiptap-extension-resizable-image/styles.css";
 import "./custom-rich-text-editor.css";
 
 import { RichTextEditor, Link } from "@mantine/tiptap";
@@ -12,6 +13,7 @@ import TextAlign from "@tiptap/extension-text-align";
 import { Dispatch } from "react";
 import { useDebouncedCallback } from "@mantine/hooks";
 import { TextDirection } from "tiptap-text-direction";
+import { ResizableImage } from "tiptap-extension-resizable-image";
 
 const DEFAULT_CONTENT = "";
 
@@ -47,6 +49,10 @@ export function CustomRichTextEditor({
       TextDirection.configure({ defaultDirection: rtl ? "rtl" : "ltr" }),
       Link,
       Highlight,
+      ResizableImage.configure({
+        defaultHeight: 200,
+        defaultWidth: 300,
+      }),
     ],
   });
 
