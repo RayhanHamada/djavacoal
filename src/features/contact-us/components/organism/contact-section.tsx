@@ -1,6 +1,6 @@
 import Image from "next/image";
-import { ContactInfoItem } from "../molecules/ContactInfoItem";
-import { ContactSocial } from "../molecules/ContactSocial";
+import { ContactInfoItem } from "../molecules/contact-info-item";
+import { ContactSocial } from "../molecules/contact-social";
 import { FaEnvelope, FaPhoneAlt, FaMapMarkerAlt } from "react-icons/fa";
 
 export default function ContactSection() {
