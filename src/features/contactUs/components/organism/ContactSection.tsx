@@ -1,23 +1,32 @@
 import Image from "next/image";
-import { SectionTitle } from "../atoms/SectionTitle";
 import { ContactInfoItem } from "../molecules/ContactInfoItem";
 import { ContactSocial } from "../molecules/ContactSocial";
 import { FaEnvelope, FaPhoneAlt, FaMapMarkerAlt } from "react-icons/fa";
 
 export default function ContactSection() {
   return (
-    <section className="bg-[#1C1C1C] text-white">
-      {/* Hero Section */}
-      <div className="relative w-full h-48 md:h-72 ">
-        <Image
-          src="/images/bg-banner-header.png"
-          alt="Contact Us"
-          fill
-          className="object-cover"
-        />
-        <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
-          <SectionTitle text="Contact Us" />
+    <section className="relative bg-[#1C1C1C] text-white">
+      {/* Header Section */}
+      <div className="relative w-full bg-[#1C1C1C] text-white overflow-hidden">
+        {/* Background Image */}
+        <div className="relative w-full h-48 md:h-72">
+          <Image
+            src="/images/bg-banner-header.png"
+            alt="Production Info Banner"
+            fill
+            className="object-cover object-center"
+            priority
+          />
+
+          {/* Overlay */}
+          <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
+            <h1 className="text-2xl md:text-4xl font-semibold italic">
+              Contact Us
+            </h1>
+          </div>
         </div>
+        {/* Garis atas oranye */}
+        <div className="absolute top-0 left-0 w-full h-[2px] bg-secondary"></div>
       </div>
 
       {/* Content Section */}
