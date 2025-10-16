@@ -14,7 +14,7 @@ export default function VisitorNavbar({}: Props) {
   const {} = useAppLocale();
 
   return (
-    <nav className="fixed min-h-24 w-full bg-primary border-b-secondary border-2 border-gray-200 flex items-center justify-between z-50 opacity-90 backdrop-blur-xl">
+    <nav className="fixed min-h-24 w-full bg-primary border-b-secondary flex items-center justify-between z-50 opacity-90 backdrop-blur-xl">
       <Link href="/" className="font-semibold text-lg px-6 py-2">
         <Image
           className="w-34 h-auto"
