@@ -1,7 +1,15 @@
 "use client";
 
-import { TextInput, PasswordInput, Button, Stack } from "@mantine/core";
+import {
+  TextInput,
+  PasswordInput,
+  Button,
+  Stack,
+  Anchor,
+  Group,
+} from "@mantine/core";
 import { useLogin } from "@/features/admin-auth/hooks/use-login";
+import Link from "next/link";
 
 type Props = {
   onSuccess?: () => void;
@@ -29,7 +37,12 @@ export const LoginForm = ({ onSuccess }: Props) => {
           {...form.getInputProps("password")}
           disabled={isLoading}
         />
-        <Button type="submit" fullWidth loading={isLoading} mt="md">
+        <Group justify="flex-end">
+          <Anchor component={Link} href="/auth/forgot-password" size="sm">
+            Forgot password?
+          </Anchor>
+        </Group>
+        <Button type="submit" fullWidth loading={isLoading}>
           Sign in
         </Button>
       </Stack>
