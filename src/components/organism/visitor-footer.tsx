@@ -16,10 +16,11 @@ export default function VisitorFooter() {
 
   return (
     <footer
-      className="text-gray-200 
+      className="relative text-gray-200 
              bg-[linear-gradient(rgba(0,0,0,0.7),rgba(0,0,0,0.7)),url('/images/bg-footer.png')] 
              bg-cover bg-center "
     >
+      <div className="absolute top-0 left-0 w-full h-[2px] bg-secondary z-50"></div>
       {/* Top Section */}
       <div
         className="mx-auto px-6 py-10 
@@ -152,7 +153,7 @@ export default function VisitorFooter() {
                 href="https://maps.app.goo.gl/cAjob1UgJrb42iwj8"
                 className="flex items-start gap-2"
               >
-                <FaMapMarkerAlt className="size-8 md:size-12 mt-1 self-center" />
+                <FaMapMarkerAlt className="size-8 md:size-6 mt-1 self-center" />
                 <span className="text-xs md:text-base">
                   PT TAIBA COCOCHA INDONESIA Jl. PWRI No.53, RT.1/RW.6, Tonjong,
                   Tajur Halang, Bogor, Jawa Barat 16320, Indonesia
@@ -170,7 +171,7 @@ export default function VisitorFooter() {
                 href="mailto:marketing@djavacoal.com"
                 className="flex items-center gap-2"
               >
-                <HiMail className="size-6 md:size-6" /> marketing@djavacoal.com
+                <HiMail className="size-4 md:size-6" /> marketing@djavacoal.com
               </Link>
             </div>
           </div>
