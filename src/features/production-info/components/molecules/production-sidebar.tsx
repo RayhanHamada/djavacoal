@@ -130,29 +130,35 @@ export default function ProductionSidebar({ idPrefix = "" }: Props) {
             </div>
 
             {/* DESKTOP */}
-            <nav className="sticky top-[120px] hidden h-fit w-[260px] self-start border-r border-[#2a2a2a] bg-[#222222] lg:block">
+            <nav className="sticky top-[120px] hidden h-fit w-[260px] self-start border-y border-[#2a2a2a] bg-[#222222] lg:block">
                 <div className="scrollbar-none max-h-[calc(100vh-120px)] overflow-y-auto">
-                    {ITEMS.map(({ id, label }) => (
-                        <button
-                            key={id}
-                            onClick={() => handleClick(id)}
-                            className={`flex w-full items-center justify-between border-b border-[#2a2a2a] px-5 py-4 text-sm font-medium transition-all duration-200 ${
-                                active === id
-                                    ? "bg-[#9D7B19] text-white"
-                                    : "text-gray-300 hover:text-[#EFA12D]"
-                            }`}
-                        >
-                            <span>{label}</span>
-                            <IoMdArrowDropright
-                                size={12}
-                                className={
-                                    active === id
-                                        ? "text-white"
-                                        : "text-gray-400"
-                                }
-                            />
-                        </button>
-                    ))}
+                    <div className="flex flex-col space-y-[3px]">
+                        {ITEMS.map(({ id, label }) => (
+                            <div
+                                key={id}
+                                className="relative after:absolute after:bottom-0 after:left-0 after:h-[1px] after:w-full after:bg-[#2a2a2a]/60 after:content-[''] last:after:hidden"
+                            >
+                                <button
+                                    onClick={() => handleClick(id)}
+                                    className={`my-2 flex w-full items-center justify-between px-5 py-4 text-sm font-medium transition-all duration-200 ${
+                                        active === id
+                                            ? "bg-[#9D7B19] font-semibold text-white"
+                                            : "bg-[#222222] text-gray-300 hover:bg-[#3B5952] hover:font-bold hover:text-white"
+                                    }`}
+                                >
+                                    <span>{label}</span>
+                                    <IoMdArrowDropright
+                                        size={12}
+                                        className={
+                                            active === id
+                                                ? "text-white"
+                                                : "text-gray-400"
+                                        }
+                                    />
+                                </button>
+                            </div>
+                        ))}
+                    </div>
                 </div>
             </nav>
         </>

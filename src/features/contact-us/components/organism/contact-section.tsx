@@ -27,8 +27,6 @@ export default function ContactSection() {
                         </h1>
                     </div>
                 </div>
-                {/* Garis atas oranye */}
-                <div className="bg-secondary absolute top-0 left-0 h-[2px] w-full"></div>
             </div>
 
             {/* Content Section */}

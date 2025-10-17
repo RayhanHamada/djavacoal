@@ -24,86 +24,94 @@ export default function MOQSection() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, amount: 0.2 }}
                 transition={{ duration: 0.4 }}
-                className="px-4 pb-6 md:px-6"
+                className="px-4 pb-6 md:px-6 lg:px-0"
             >
-                {/* Subheading */}
-                <h3 className="mb-2 text-base font-semibold text-[#EFA12D] md:text-lg">
-                    T/T (Telegraph Transfer)
-                </h3>
+                {/* === BAGIAN GRID === */}
+                <div className="grid grid-cols-1 items-start lg:grid-cols-2 lg:gap-12 lg:px-6">
+                    {/* === KIRI: Deskripsi === */}
+                    <div>
+                        <h3 className="mb-2 text-base font-semibold md:text-lg">
+                            <span className="text-white">T/T</span>{" "}
+                            <span className="text-[#EFA12D]">
+                                (Telegraph Transfer)
+                            </span>
+                        </h3>
 
-                {/* Description */}
-                <p className="mb-6 text-sm leading-relaxed text-[#CCCCCC] md:text-base">
-                    At Djavacoal Indonesia, we keep our business terms simple
-                    and transparent to build long-term trust with our partners.
-                    We apply a minimum order quantity (MOQ) of one container (20
-                    ft or 40 ft), and we accept payments only through T/T
-                    (Telegraphic Transfer). These terms ensure smooth
-                    processing, secure transactions, and reliable export
-                    handling for our global buyers.
-                </p>
+                        <p className="mb-6 text-sm leading-relaxed text-[#CCCCCC] md:text-base">
+                            At Djavacoal Indonesia, we keep our business terms
+                            simple and transparent to build long-term trust with
+                            our partners. We apply a minimum order quantity
+                            (MOQ) of one container (20 ft or 40 ft), and we
+                            accept payments only through T/T (Telegraphic
+                            Transfer). These terms ensure smooth processing,
+                            secure transactions, and reliable export handling
+                            for our global buyers.
+                        </p>
+                    </div>
 
-                {/* Table */}
-                <div className="overflow-x-auto">
-                    <table className="w-full border-collapse border border-[#848484] text-sm md:text-base">
-                        <tbody>
-                            <tr className="border border-[#848484] bg-[#262626]">
-                                <td className="w-44 border border-[#848484] p-3 text-[#FFFFFF] md:w-56 md:p-4">
-                                    MOQ:
-                                </td>
-                                <td className="border border-[#848484] p-3 text-[#CCCCCC] md:p-4">
-                                    20&quot; Container (18 Tons) / 40&quot;
-                                    Container (26 Tons)
-                                </td>
-                            </tr>
+                    {/* === KANAN: Tabel === */}
+                    <div className="overflow-x-auto">
+                        <table className="w-full border-collapse border border-[#848484] text-sm md:text-base">
+                            <tbody>
+                                <tr className="border border-[#848484] bg-[#262626]">
+                                    <td className="w-44 border border-[#848484] p-3 text-[#FFFFFF] md:w-56 md:p-4">
+                                        MOQ:
+                                    </td>
+                                    <td className="border border-[#848484] p-3 text-[#CCCCCC] md:p-4">
+                                        20&quot; Container (18 Tons) / 40&quot;
+                                        Container (26 Tons)
+                                    </td>
+                                </tr>
 
-                            <tr className="border border-[#848484] bg-[#323232]">
-                                <td className="border border-[#848484] p-3 text-[#FFFFFF] md:p-4">
-                                    Payment Method:
-                                </td>
-                                <td className="border border-[#848484] p-3 text-[#CCCCCC] md:p-4">
-                                    T/T (Telegraph Transfer)
-                                </td>
-                            </tr>
+                                <tr className="border border-[#848484] bg-[#323232]">
+                                    <td className="border border-[#848484] p-3 text-[#FFFFFF] md:p-4">
+                                        Payment Method:
+                                    </td>
+                                    <td className="border border-[#848484] p-3 text-[#CCCCCC] md:p-4">
+                                        T/T (Telegraph Transfer)
+                                    </td>
+                                </tr>
 
-                            <tr className="border border-[#848484] bg-[#262626]">
-                                <td className="border border-[#848484] p-3 text-[#FFFFFF] md:p-4">
-                                    Payment Structure:
-                                </td>
-                                <td className="border border-[#848484] p-3 text-[#CCCCCC] md:p-4">
-                                    50% Advance Payment, 50% Balance Before
-                                    Shipment (Can Be Discussed)
-                                </td>
-                            </tr>
+                                <tr className="border border-[#848484] bg-[#262626]">
+                                    <td className="border border-[#848484] p-3 text-[#FFFFFF] md:p-4">
+                                        Payment Structure:
+                                    </td>
+                                    <td className="border border-[#848484] p-3 text-[#CCCCCC] md:p-4">
+                                        50% Advance Payment, 50% Balance Before
+                                        Shipment (Can Be Discussed)
+                                    </td>
+                                </tr>
 
-                            <tr className="border border-[#848484] bg-[#323232]">
-                                <td className="border border-[#848484] p-3 text-[#FFFFFF] md:p-4">
-                                    Shipment Terms:
-                                </td>
-                                <td className="border border-[#848484] p-3 text-[#CCCCCC] md:p-4">
-                                    Freight On Board (FOB)
-                                </td>
-                            </tr>
+                                <tr className="border border-[#848484] bg-[#323232]">
+                                    <td className="border border-[#848484] p-3 text-[#FFFFFF] md:p-4">
+                                        Shipment Terms:
+                                    </td>
+                                    <td className="border border-[#848484] p-3 text-[#CCCCCC] md:p-4">
+                                        Freight On Board (FOB)
+                                    </td>
+                                </tr>
 
-                            <tr className="border border-[#848484] bg-[#262626]">
-                                <td className="border border-[#848484] p-3 text-[#FFFFFF] md:p-4">
-                                    Currency:
-                                </td>
-                                <td className="border border-[#848484] p-3 text-[#CCCCCC] md:p-4">
-                                    $USD
-                                </td>
-                            </tr>
+                                <tr className="border border-[#848484] bg-[#262626]">
+                                    <td className="border border-[#848484] p-3 text-[#FFFFFF] md:p-4">
+                                        Currency:
+                                    </td>
+                                    <td className="border border-[#848484] p-3 text-[#CCCCCC] md:p-4">
+                                        $USD
+                                    </td>
+                                </tr>
 
-                            <tr className="border border-[#848484] bg-[#323232]">
-                                <td className="border border-[#848484] p-3 text-[#FFFFFF] md:p-4">
-                                    Lead Time:
-                                </td>
-                                <td className="border border-[#848484] p-3 text-[#CCCCCC] md:p-4">
-                                    Approx. 4–6 Weeks After Confirmation & Down
-                                    Payment
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
+                                <tr className="border border-[#848484] bg-[#323232]">
+                                    <td className="border border-[#848484] p-3 text-[#FFFFFF] md:p-4">
+                                        Lead Time:
+                                    </td>
+                                    <td className="border border-[#848484] p-3 text-[#CCCCCC] md:p-4">
+                                        Approx. 4–6 Weeks After Confirmation &
+                                        Down Payment
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </motion.div>
         </section>
