@@ -1,5 +1,5 @@
 import React from "react";
-import { SocialButton } from "../atoms/SocialButton";
+import { SocialButton } from "../atoms/social-button";
 import { FaFacebookF, FaInstagram, FaLinkedinIn } from "react-icons/fa";
 
 export const ContactSocial = () => (

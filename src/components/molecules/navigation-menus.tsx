@@ -87,7 +87,7 @@ export function NavigationMenus() {
         label="News & Articles"
         href="/news"
       />
-      <NavigationMenuButton key="contact" label="Contact" href="/contactUs" />
+      <NavigationMenuButton key="contact" label="Contact" href="/contact-us" />
     </div>
   );
 }
