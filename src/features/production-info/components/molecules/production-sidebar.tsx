@@ -128,25 +128,32 @@ export default function ProductionSidebar({ idPrefix = "" }: Props) {
       </div>
 
       {/* DESKTOP */}
-      <nav className="hidden lg:block sticky top-[120px] h-fit bg-[#222222] border-r border-[#2a2a2a] w-[260px] self-start">
+      <nav className="hidden lg:block sticky top-[120px] h-fit bg-[#222222] border-y border-[#2a2a2a] w-[260px] self-start">
         <div className="overflow-y-auto max-h-[calc(100vh-120px)] scrollbar-none">
-          {ITEMS.map(({ id, label }) => (
-            <button
-              key={id}
-              onClick={() => handleClick(id)}
-              className={`flex items-center justify-between w-full px-5 py-4 text-sm font-medium border-b border-[#2a2a2a] transition-all duration-200 ${
+          <div className="flex flex-col space-y-[3px]">
+            {ITEMS.map(({ id, label }) => (
+              <div
+                key={id}
+                className="relative after:content-[''] after:absolute after:bottom-0 after:left-0 after:w-full after:h-[1px] after:bg-[#2a2a2a]/60 last:after:hidden"
+              >
+                <button
+                  onClick={() => handleClick(id)}
+                  className={`flex items-center justify-between w-full px-5 py-4 my-2 text-sm font-medium transition-all duration-200
+              ${
                 active === id
-                  ? "bg-[#9D7B19] text-white"
-                  : "text-gray-300 hover:text-[#EFA12D]"
+                  ? "bg-[#9D7B19] text-white font-semibold"
+                  : "bg-[#222222] text-gray-300 hover:text-white hover:bg-[#3B5952] hover:font-bold"
               }`}
-            >
-              <span>{label}</span>
-              <IoMdArrowDropright
-                size={12}
-                className={active === id ? "text-white" : "text-gray-400"}
-              />
-            </button>
-          ))}
+                >
+                  <span>{label}</span>
+                  <IoMdArrowDropright
+                    size={12}
+                    className={active === id ? "text-white" : "text-gray-400"}
+                  />
+                </button>
+              </div>
+            ))}
+          </div>
         </div>
       </nav>
     </>

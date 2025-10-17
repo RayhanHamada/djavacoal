@@ -20,9 +20,6 @@ export default function HeaderSection() {
           </h1>
         </div>
       </div>
-
-      {/* Garis atas oranye */}
-      <div className="absolute top-0 left-0 w-full h-[2px] bg-secondary"></div>
     </section>
   );
 }
