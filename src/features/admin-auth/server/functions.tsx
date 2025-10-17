@@ -1,311 +1,317 @@
 import "server-only";
 
+import { headers } from "next/headers";
+
+import { and, count, eq, like, ne, or, sql, SQL } from "drizzle-orm";
+
+import { ACCOUNT_COLUMNS } from "@/adapters/d1/constants";
+import { getDB } from "@/adapters/d1/db";
+import { users, accounts } from "@/adapters/d1/schema";
+import { getResend } from "@/adapters/email-service";
 import { KV_KEYS } from "@/adapters/kv/constants";
 import { getAuth } from "@/features/admin-auth/lib/better-auth-server";
 import {
-  InvitationEmailInputSchema,
-  InviteAdminInputSchema,
-  ListAdminInputSchema,
-  ListAdminsOutputSchema,
-  OnboardingInputSchema,
-  RequestResetPasswordEmailInputSchema,
-  SetPasswordInputSchema,
-  CheckNeedsPasswordOutputSchema,
-  RemoveAdminInputSchema,
+    EMAIL_SENDER_NAME,
+    EMAIL_SUBJECT,
+} from "@/features/admin-auth/lib/constants";
+import {
+    InvitationEmailInputSchema,
+    InviteAdminInputSchema,
+    ListAdminInputSchema,
+    ListAdminsOutputSchema,
+    OnboardingInputSchema,
+    RequestResetPasswordEmailInputSchema,
+    SetPasswordInputSchema,
+    CheckNeedsPasswordOutputSchema,
+    RemoveAdminInputSchema,
 } from "@/features/admin-auth/server/schema";
 import base from "@/lib/orpc/server";
-import { headers } from "next/headers";
 import {
-  EMAIL_SENDER_NAME,
-  EMAIL_SUBJECT,
-} from "@/features/admin-auth/lib/constants";
-import { getResend } from "@/adapters/email-service";
-import {
-  AdminInvitationEmail,
-  AdminResetPasswordEmail,
+    AdminInvitationEmail,
+    AdminResetPasswordEmail,
 } from "@/templates/emails";
-import { getDB } from "@/adapters/d1/db";
-import { and, count, eq, like, ne, or, sql, SQL } from "drizzle-orm";
-import { users, accounts } from "@/adapters/d1/schema";
-import { ACCOUNT_COLUMNS } from "@/adapters/d1/constants";
 
 export const setupFirstUser = base
-  .input(OnboardingInputSchema)
-  .handler(async function ({
-    context: { env },
-    input: { name, email, password },
-    errors,
-  }) {
-    const auth = getAuth(env);
+    .input(OnboardingInputSchema)
+    .handler(async function ({
+        context: { env },
+        input: { name, email, password },
+        errors,
+    }) {
+        const auth = getAuth(env);
 
-    const onboarded = await env.DJAVACOAL_KV.get(
-      KV_KEYS.IS_ALREADY_ONBOARDED,
-      "json"
-    );
+        const onboarded = await env.DJAVACOAL_KV.get(
+            KV_KEYS.IS_ALREADY_ONBOARDED,
+            "json"
+        );
 
-    if (onboarded) {
-      throw errors.BAD_REQUEST({
-        message: "Admin user already exists",
-      });
-    }
+        if (onboarded) {
+            throw errors.BAD_REQUEST({
+                message: "Admin user already exists",
+            });
+        }
 
-    await auth.api.createUser({
-      body: {
-        name,
-        email,
-        password,
-        role: "admin",
-      },
-    });
+        await auth.api.createUser({
+            body: {
+                name,
+                email,
+                password,
+                role: "admin",
+            },
+        });
 
-    await env.DJAVACOAL_KV.put(
-      KV_KEYS.IS_ALREADY_ONBOARDED,
-      JSON.stringify(true)
-    );
-  })
-  .callable();
+        await env.DJAVACOAL_KV.put(
+            KV_KEYS.IS_ALREADY_ONBOARDED,
+            JSON.stringify(true)
+        );
+    })
+    .callable();
 
 export const redirectJoinedUser = base
-  .handler(async function ({ context: { env } }) {
-    const onboarded = await env.DJAVACOAL_KV.get(
-      KV_KEYS.IS_ALREADY_ONBOARDED,
-      "json"
-    );
+    .handler(async function ({ context: { env } }) {
+        const onboarded = await env.DJAVACOAL_KV.get(
+            KV_KEYS.IS_ALREADY_ONBOARDED,
+            "json"
+        );
 
-    return {
-      onboarded: !!onboarded,
-    };
-  })
-  .callable();
+        return {
+            onboarded: !!onboarded,
+        };
+    })
+    .callable();
 
 export const redirectUnauthenticatedUser = base
-  .handler(async function ({ context: { env } }) {
-    const auth = getAuth(env);
-    const header = await headers();
-    const session = await auth.api.getSession({ headers: header });
+    .handler(async function ({ context: { env } }) {
+        const auth = getAuth(env);
+        const header = await headers();
+        const session = await auth.api.getSession({ headers: header });
 
-    return {
-      user: session?.user,
-    };
-  })
-  .callable();
+        return {
+            user: session?.user,
+        };
+    })
+    .callable();
 
 export const redirectAuthenticatedUser = base
-  .handler(async function ({ context: { env } }) {
-    const auth = getAuth(env);
-    const header = await headers();
-    const session = await auth.api.getSession({ headers: header });
+    .handler(async function ({ context: { env } }) {
+        const auth = getAuth(env);
+        const header = await headers();
+        const session = await auth.api.getSession({ headers: header });
 
-    return {
-      user: session?.user,
-    };
-  })
-  .callable();
+        return {
+            user: session?.user,
+        };
+    })
+    .callable();
 
 /**
  * Send an invitation email to a new admin user
  */
 export const sendInvitationEmail = base
-  .input(InvitationEmailInputSchema)
-  .handler(async function ({ context: { env }, input: { to, link } }) {
-    const emailService = getResend(env.RESEND_API_KEY);
-    await emailService.emails.send({
-      to,
-      react: <AdminInvitationEmail email={to} link={link} />,
-      from: `${EMAIL_SENDER_NAME} <${env.SENDER_EMAIL}>`,
-      subject: EMAIL_SUBJECT.INVITATION,
-    });
-  })
-  .callable();
+    .input(InvitationEmailInputSchema)
+    .handler(async function ({ context: { env }, input: { to, link } }) {
+        const emailService = getResend(env.RESEND_API_KEY);
+        await emailService.emails.send({
+            to,
+            react: <AdminInvitationEmail email={to} link={link} />,
+            from: `${EMAIL_SENDER_NAME} <${env.SENDER_EMAIL}>`,
+            subject: EMAIL_SUBJECT.INVITATION,
+        });
+    })
+    .callable();
 
 /**
  * Send a reset password email to an admin user
  */
 export const sendRequestResetPasswordEmail = base
-  .input(RequestResetPasswordEmailInputSchema)
-  .handler(async function ({ context: { env }, input: { to, link } }) {
-    const emailService = getResend(env.RESEND_API_KEY);
-    await emailService.emails.send({
-      to,
-      react: <AdminResetPasswordEmail email={to} link={link} />,
-      from: `${EMAIL_SENDER_NAME} <${env.SENDER_EMAIL}>`,
-      subject: EMAIL_SUBJECT.RESET_PASSWORD,
-    });
-  })
-  .callable();
+    .input(RequestResetPasswordEmailInputSchema)
+    .handler(async function ({ context: { env }, input: { to, link } }) {
+        const emailService = getResend(env.RESEND_API_KEY);
+        await emailService.emails.send({
+            to,
+            react: <AdminResetPasswordEmail email={to} link={link} />,
+            from: `${EMAIL_SENDER_NAME} <${env.SENDER_EMAIL}>`,
+            subject: EMAIL_SUBJECT.RESET_PASSWORD,
+        });
+    })
+    .callable();
 
 /**
  * list all registered admin users
  */
 export const listAllAdmins = base
-  .input(ListAdminInputSchema)
-  .output(ListAdminsOutputSchema)
-  .handler(async function ({
-    context: { env },
-    input: { search = "", page, limit },
-  }) {
-    const header = await headers();
-    const db = getDB(env.DJAVACOAL_DB);
-    const auth = getAuth(env);
-    const session = await auth.api.getSession({ headers: header });
+    .input(ListAdminInputSchema)
+    .output(ListAdminsOutputSchema)
+    .handler(async function ({
+        context: { env },
+        input: { search = "", page, limit },
+    }) {
+        const header = await headers();
+        const db = getDB(env.DJAVACOAL_DB);
+        const auth = getAuth(env);
+        const session = await auth.api.getSession({ headers: header });
 
-    const currentUserId = session?.user?.id ?? "";
+        const currentUserId = session?.user?.id ?? "";
 
-    const offset = (page - 1) * limit;
-    const condition: SQL[] = [
-      like(sql`lower(${users.email})`, `%${search}%`),
-      like(sql`lower(${users.name})`, `%${search}%`),
-    ];
+        const offset = (page - 1) * limit;
+        const condition: SQL[] = [
+            like(sql`lower(${users.email})`, `%${search}%`),
+            like(sql`lower(${users.name})`, `%${search}%`),
+        ];
 
-    const admins = await db
-      .select({
-        data: users,
-        total: count(),
-      })
-      .from(users)
-      .where(and(ne(users.id, currentUserId), or(...condition)))
-      .groupBy(users.id)
-      .offset(offset)
-      .limit(limit);
+        const admins = await db
+            .select({
+                data: users,
+                total: count(),
+            })
+            .from(users)
+            .where(and(ne(users.id, currentUserId), or(...condition)))
+            .groupBy(users.id)
+            .offset(offset)
+            .limit(limit);
 
-    return {
-      admins: admins.map((v) => ({
-        id: v.data.id,
-        name: v.data.name,
-        email: v.data.email,
-        role: v.data.role,
-        created_at: v.data.created_at!,
-      })),
-      total: admins.at(0)?.total ?? 0,
-      page,
-      pageSize: limit,
-    };
-  })
-  .callable();
+        return {
+            admins: admins.map((v) => ({
+                id: v.data.id,
+                name: v.data.name,
+                email: v.data.email,
+                role: v.data.role,
+                created_at: v.data.created_at!,
+            })),
+            total: admins.at(0)?.total ?? 0,
+            page,
+            pageSize: limit,
+        };
+    })
+    .callable();
 
 /**
  * Invite a new admin user via magic link
  * This will create a user account and send them an invitation email
  */
 export const inviteAdmin = base
-  .input(InviteAdminInputSchema)
-  .handler(async function ({
-    context: { env },
-    input: { email, name },
-    errors,
-  }) {
-    const header = await headers();
-    const auth = getAuth(env);
-    const db = getDB(env.DJAVACOAL_DB);
+    .input(InviteAdminInputSchema)
+    .handler(async function ({
+        context: { env },
+        input: { email, name },
+        errors,
+    }) {
+        const header = await headers();
+        const auth = getAuth(env);
+        const db = getDB(env.DJAVACOAL_DB);
 
-    // Check if user is authenticated
-    const session = await auth.api.getSession({ headers: header });
-    if (!session?.user) {
-      throw errors.BAD_REQUEST({
-        message: "You must be authenticated to invite admins",
-      });
-    }
+        // Check if user is authenticated
+        const session = await auth.api.getSession({ headers: header });
+        if (!session?.user) {
+            throw errors.BAD_REQUEST({
+                message: "You must be authenticated to invite admins",
+            });
+        }
 
-    // Check if user with this email already exists
-    const existingUser = await db
-      .select()
-      .from(users)
-      .where(like(sql`lower(${users.email})`, email.toLowerCase()))
-      .limit(1);
+        // Check if user with this email already exists
+        const existingUser = await db
+            .select()
+            .from(users)
+            .where(like(sql`lower(${users.email})`, email.toLowerCase()))
+            .limit(1);
 
-    if (existingUser.length > 0) {
-      throw errors.BAD_REQUEST({
-        message: "An admin with this email already exists",
-      });
-    }
+        if (existingUser.length > 0) {
+            throw errors.BAD_REQUEST({
+                message: "An admin with this email already exists",
+            });
+        }
 
-    // Send magic link invitation using Better Auth
-    // The magic link plugin will create the user on first sign-in
-    try {
-      await auth.api.signInMagicLink({
-        headers: header,
-        body: {
-          email,
-          name,
-          callbackURL: "/dashboard",
-        },
-      });
-    } catch {
-      throw errors.INTERNAL_SERVER_ERROR({
-        message: "Failed to send invitation email",
-      });
-    }
-  })
-  .callable();
+        // Send magic link invitation using Better Auth
+        // The magic link plugin will create the user on first sign-in
+        try {
+            await auth.api.signInMagicLink({
+                headers: header,
+                body: {
+                    email,
+                    name,
+                    callbackURL: "/dashboard",
+                },
+            });
+        } catch {
+            throw errors.INTERNAL_SERVER_ERROR({
+                message: "Failed to send invitation email",
+            });
+        }
+    })
+    .callable();
 
 /**
  * Check if the authenticated user needs to set a password
  * Returns true if user doesn't have a credential account (password-based)
  */
 export const checkNeedsPassword = base
-  .output(CheckNeedsPasswordOutputSchema)
-  .handler(async function ({ context: { env }, errors }) {
-    const header = await headers();
-    const auth = getAuth(env);
-    const session = await auth.api.getSession({ headers: header });
+    .output(CheckNeedsPasswordOutputSchema)
+    .handler(async function ({ context: { env }, errors }) {
+        const header = await headers();
+        const auth = getAuth(env);
+        const session = await auth.api.getSession({ headers: header });
 
-    if (!session?.user) {
-      throw errors.BAD_REQUEST({
-        message: "You must be authenticated",
-      });
-    }
+        if (!session?.user) {
+            throw errors.BAD_REQUEST({
+                message: "You must be authenticated",
+            });
+        }
 
-    const db = getDB(env.DJAVACOAL_DB);
+        const db = getDB(env.DJAVACOAL_DB);
 
-    // Check if user has a credential account (email/password)
-    const credentialAccount = await db
-      .select()
-      .from(accounts)
-      .where(
-        and(
-          eq(accounts[ACCOUNT_COLUMNS.USER_ID], session.user.id),
-          eq(accounts[ACCOUNT_COLUMNS.PROVIDER_ID], "credential")
-        )
-      )
-      .limit(1);
+        // Check if user has a credential account (email/password)
+        const credentialAccount = await db
+            .select()
+            .from(accounts)
+            .where(
+                and(
+                    eq(accounts[ACCOUNT_COLUMNS.USER_ID], session.user.id),
+                    eq(accounts[ACCOUNT_COLUMNS.PROVIDER_ID], "credential")
+                )
+            )
+            .limit(1);
 
-    return {
-      needsPassword: credentialAccount.length === 0,
-    };
-  })
-  .callable();
+        return {
+            needsPassword: credentialAccount.length === 0,
+        };
+    })
+    .callable();
 
 /**
  * Set password for the authenticated user
  * Uses Better Auth's setPassword API
  */
 export const setPassword = base
-  .input(SetPasswordInputSchema)
-  .handler(async function ({ context: { env }, input: { password }, errors }) {
-    const header = await headers();
-    const auth = getAuth(env);
-    const session = await auth.api.getSession({ headers: header });
+    .input(SetPasswordInputSchema)
+    .handler(async function ({
+        context: { env },
+        input: { password },
+        errors,
+    }) {
+        const header = await headers();
+        const auth = getAuth(env);
+        const session = await auth.api.getSession({ headers: header });
 
-    if (!session?.user) {
-      throw errors.BAD_REQUEST({
-        message: "You must be authenticated",
-      });
-    }
+        if (!session?.user) {
+            throw errors.BAD_REQUEST({
+                message: "You must be authenticated",
+            });
+        }
 
-    try {
-      await auth.api.setPassword({
-        headers: header,
-        body: {
-          newPassword: password,
-        },
-      });
-    } catch {
-      throw errors.INTERNAL_SERVER_ERROR({
-        message: "Failed to set password",
-      });
-    }
-  })
-  .callable();
+        try {
+            await auth.api.setPassword({
+                headers: header,
+                body: {
+                    newPassword: password,
+                },
+            });
+        } catch {
+            throw errors.INTERNAL_SERVER_ERROR({
+                message: "Failed to set password",
+            });
+        }
+    })
+    .callable();
 
 /**
  * Remove an admin user
@@ -313,65 +319,65 @@ export const setPassword = base
  * Admins cannot remove themselves
  */
 export const removeAdmin = base
-  .input(RemoveAdminInputSchema)
-  .handler(async function ({ context: { env }, input: { id }, errors }) {
-    const header = await headers();
-    const auth = getAuth(env);
-    const db = getDB(env.DJAVACOAL_DB);
+    .input(RemoveAdminInputSchema)
+    .handler(async function ({ context: { env }, input: { id }, errors }) {
+        const header = await headers();
+        const auth = getAuth(env);
+        const db = getDB(env.DJAVACOAL_DB);
 
-    // Check if user is authenticated
-    const session = await auth.api.getSession({ headers: header });
-    if (!session?.user) {
-      throw errors.BAD_REQUEST({
-        message: "You must be authenticated to remove users",
-      });
-    }
+        // Check if user is authenticated
+        const session = await auth.api.getSession({ headers: header });
+        if (!session?.user) {
+            throw errors.BAD_REQUEST({
+                message: "You must be authenticated to remove users",
+            });
+        }
 
-    // Check if current user has admin role
-    const currentUser = await db
-      .select()
-      .from(users)
-      .where(eq(users.id, session.user.id))
-      .limit(1);
+        // Check if current user has admin role
+        const currentUser = await db
+            .select()
+            .from(users)
+            .where(eq(users.id, session.user.id))
+            .limit(1);
 
-    if (!currentUser[0] || currentUser[0].role !== "admin") {
-      throw errors.BAD_REQUEST({
-        message: "Only admins can remove other users",
-      });
-    }
+        if (!currentUser[0] || currentUser[0].role !== "admin") {
+            throw errors.BAD_REQUEST({
+                message: "Only admins can remove other users",
+            });
+        }
 
-    // Prevent self-removal
-    if (session.user.id === id) {
-      throw errors.BAD_REQUEST({
-        message: "You cannot remove yourself",
-      });
-    }
+        // Prevent self-removal
+        if (session.user.id === id) {
+            throw errors.BAD_REQUEST({
+                message: "You cannot remove yourself",
+            });
+        }
 
-    // Check if target user exists
-    const targetUser = await db
-      .select()
-      .from(users)
-      .where(eq(users.id, id))
-      .limit(1);
+        // Check if target user exists
+        const targetUser = await db
+            .select()
+            .from(users)
+            .where(eq(users.id, id))
+            .limit(1);
 
-    if (!targetUser[0]) {
-      throw errors.NOT_FOUND({
-        message: "User not found",
-      });
-    }
+        if (!targetUser[0]) {
+            throw errors.NOT_FOUND({
+                message: "User not found",
+            });
+        }
 
-    // Remove the user using Better Auth API
-    try {
-      await auth.api.removeUser({
-        headers: header,
-        body: {
-          userId: id,
-        },
-      });
-    } catch {
-      throw errors.INTERNAL_SERVER_ERROR({
-        message: "Failed to remove user. Please try again.",
-      });
-    }
-  })
-  .callable();
+        // Remove the user using Better Auth API
+        try {
+            await auth.api.removeUser({
+                headers: header,
+                body: {
+                    userId: id,
+                },
+            });
+        } catch {
+            throw errors.INTERNAL_SERVER_ERROR({
+                message: "Failed to remove user. Please try again.",
+            });
+        }
+    })
+    .callable();
