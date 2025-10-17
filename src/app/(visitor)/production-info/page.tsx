@@ -1,13 +1,13 @@
 import type { Metadata } from "next";
-import HeaderSection from "@/features/productionInfo/components/organism/HeaderSection";
-import ProductionSidebar from "@/features/productionInfo/components/molecules/ProductionSidebar";
+import HeaderSection from "@/features/production-info/components/organism/header-section";
+import ProductionSidebar from "@/features/production-info/components/molecules/production-sidebar";
 import {
   ProcessSection,
   MOQSection,
   ShipmentSection,
   PackagingSection,
   FAQSection,
-} from "@/features/productionInfo/components/organism";
+} from "@/features/production-info/components/organism";
 
 export const metadata: Metadata = {
   title: "Production Info | CV Djavacoal Indonesia",
@@ -17,7 +17,7 @@ export const metadata: Metadata = {
     title: "Production Info | CV Djavacoal Indonesia",
     description:
       "Premium coconut shell charcoal briquettes — production process, MOQ & payment terms, shipment terms, and packaging options.",
-    url: "https://www.djavacoal.com/productioninfo",
+    url: "https://www.djavacoal.com/production-info",
     siteName: "CV Djavacoal Indonesia",
     type: "website",
   },
@@ -36,7 +36,7 @@ export default function ProductionInfoPage() {
     name: "Production Info - CV Djavacoal Indonesia",
     description:
       "Learn how we craft premium coconut shell charcoal briquettes for global markets, including MOQ, shipment terms, and packaging.",
-    url: "https://www.djavacoal.com/productioninfo",
+    url: "https://www.djavacoal.com/production-info",
     publisher: {
       "@type": "Organization",
       name: "CV Djavacoal Indonesia",

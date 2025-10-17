@@ -1,5 +1,5 @@
-import { ContactMap } from "../molecules/ContactMap";
-import { ContactForm } from "../molecules/ContactForm";
+import { ContactMap } from "../molecules/contact-map";
+import { ContactForm } from "../molecules/contact-form";
 
 export function ContactFormSection() {
   return (
