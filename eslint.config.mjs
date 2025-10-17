@@ -26,6 +26,7 @@ const eslintConfig = [
             "dist/**",
             "public/**",
             ".open-next/**",
+            ".eslintcache",
         ],
     },
     js.configs.recommended,
