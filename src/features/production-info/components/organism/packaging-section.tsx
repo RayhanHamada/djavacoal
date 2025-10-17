@@ -14,33 +14,41 @@ function PackagingCard({
   type: "Full" | "Bulk" | "Loose";
 }) {
   return (
-    <article className="bg-[#2222222]  rounded-xl text-left">
+    <article className="bg-[#222222] rounded-xl text-left">
       {/* Title */}
-      <h3 className="text-[#EFA12D] font-semibold text-base md:text-lg mb-2">
+      <h3 className="text-[#EFA12D] font-semibold text-base md:text-lg mb-2 px-1 md:px-0 lg:px-0">
         <span className="text-[#EFA12D] font-bold">{type}</span>{" "}
         <span className="text-[#FFFFFF] font-bold">Packaging:</span>
       </h3>
 
-      {/* Image + Overlay radial gradient (gambar tetap full kiri-kanan, tapi scale lebih kecil di tengah) */}
-      <div className="relative w-full overflow-hidden rounded-xl mb-4">
-        {/* Gambar utama — full width tapi sedikit dikecilin dengan scale */}
-        <div className="relative w-full h-56 md:h-64 flex items-center justify-center">
+      {/* Image */}
+      <div className="relative w-full overflow-hidden rounded-xl mb-4 flex justify-center">
+        <div
+          className="
+      relative aspect-square overflow-hidden rounded-xl
+      w-full max-w-none max-h-none   /* mobile */
+
+      transition-all duration-300
+    "
+        >
           <Image
             src={image}
             alt={title}
-            width={480}
-            height={320}
-            className="object-contain w-full h-full scale-90 rounded-xl transition-transform duration-300"
+            fill
+            className="
+        object-contain rounded-xl transition-transform duration-300
+        scale-85 lg:scale-90  /* sedikit kecil di desktop */
+      "
           />
 
-          {/* Overlay radial gradient (tengah hitam, pinggir putih terang) */}
+          {/* Overlay radial gradient */}
           <div
             className="absolute inset-0 rounded-xl z-10 
       bg-[radial-gradient(circle_at_center,rgba(0,0,0,0.45)_0%,rgba(90,90,90,0.3)_30%,rgba(210,210,210,0.65)_70%,rgba(255,255,255,0.98)_100%)]
       mix-blend-overlay"
           />
 
-          {/* Watermark di atas gradient */}
+          {/* Watermark */}
           <div className="absolute top-4 left-1/2 -translate-x-1/2 z-20">
             <Image
               src="/svgs/logo.svg"
@@ -53,8 +61,13 @@ function PackagingCard({
         </div>
       </div>
 
-      {/* Description */}
-      <p className="text-[#CCCCCC] text-sm md:text-base leading-relaxed">
+      {/* Description (align sejajar batas gambar) */}
+      <p
+        className="
+          text-[#CCCCCC] text-sm md:text-base leading-relaxed
+          px-1 md:px-2 lg:px-0 /* biar di desktop sejajar dengan gambar */
+        "
+      >
         {desc}
       </p>
     </article>
@@ -100,7 +113,7 @@ export default function PackagingSection() {
         />
         <PackagingCard
           type="Loose"
-          title="Bulk Loose"
+          title="Loose Packaging"
           image="/images/pack-loose.png"
           desc="Ideal for high-volume and cost-sensitive shipments, this option uses only inner plastic (10 kg) packed directly into the master box without inner boxes. It maximizes container space and efficiency, making it the most economical choice."
         />
