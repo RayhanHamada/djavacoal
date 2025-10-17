@@ -1,5 +1,10 @@
-import { redirect } from "next/navigation";
+import { redirectAuthenticatedUserActions } from "@/features/admin-auth/server/actions";
+import { PropsWithChildren } from "react";
 
-export default function Layout() {
-  redirect("/admin/auth/login");
+type Props = PropsWithChildren;
+
+export default async function Layout({ children }: Props) {
+  await redirectAuthenticatedUserActions();
+
+  return children;
 }

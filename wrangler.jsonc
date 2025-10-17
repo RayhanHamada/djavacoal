@@ -3,67 +3,59 @@
  * https://developers.cloudflare.com/workers/wrangler/configuration/
  */
 {
-	"$schema": "node_modules/wrangler/config-schema.json",
-	"name": "djavacoal",
-	"main": ".open-next/worker.js",
-	"compatibility_date": "2025-09-15",
-	"compatibility_flags": [
-		"nodejs_compat",
-		"global_fetch_strictly_public"
-	],
-	"assets": {
-		"binding": "ASSETS",
-		"directory": ".open-next/assets"
-	},
-	"env": {
-		"production": {
-			"vars": {
-				"NODE_ENV": "production"
-			}
-		},
-		"staging": {
-			"vars": {
-				"NODE_ENV": "development"
-			}
-		}
-	},
-	"observability": {
-		"enabled": true
-	},
-	"r2_buckets": [
-		{
-			"binding": "DJAVACOAL_BUCKET",
-			"bucket_name": "djavacoal",
-		}
-	],
-	/**
-	 * Smart Placement
-	 * Docs: https://developers.cloudflare.com/workers/configuration/smart-placement/#smart-placement
-	 */
-	// "placement": { "mode": "smart" }
-	/**
-	 * Bindings
-	 * Bindings allow your Worker to interact with resources on the Cloudflare Developer Platform, including
-	 * databases, object storage, AI inference, real-time communication and more.
-	 * https://developers.cloudflare.com/workers/runtime-apis/bindings/
-	 */
-	/**
-	 * Environment Variables
-	 * https://developers.cloudflare.com/workers/wrangler/configuration/#environment-variables
-	 */
-	// "vars": { "MY_VARIABLE": "production_value" }
-	/**
-	 * Note: Use secrets to store sensitive data.
-	 * https://developers.cloudflare.com/workers/configuration/secrets/
-	 */
-	/**
-	 * Static Assets
-	 * https://developers.cloudflare.com/workers/static-assets/binding/
-	 */
-	// "assets": { "directory": "./public/", "binding": "ASSETS" }
-	/**
-	 * Service Bindings (communicate between multiple Workers)
-	 * https://developers.cloudflare.com/workers/wrangler/configuration/#service-bindings
-	 */
-	// "services": [{ "binding": "MY_SERVICE", "service": "my-service" }]
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "djavacoal",
+  "main": ".open-next/worker.js",
+  "compatibility_date": "2025-09-15",
+  "build": {
+    "watch_dir": "./src",
+    "command": "bun build:cf",
+  },
+  "compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public"],
+  "assets": {
+    "binding": "ASSETS",
+    "directory": ".open-next/assets",
+  },
+  "env": {
+    "production": {
+      "observability": {
+        "enabled": true,
+        "head_sampling_rate": 1,
+      },
+      "vars": {
+        "NODE_ENV": "production",
+      },
+    },
+    "staging": {
+      "vars": {
+        "NODE_ENV": "development",
+      },
+    },
+  },
+  "d1_databases": [
+    {
+      "binding": "DJAVACOAL_DB",
+      "database_id": "9f19f668-bed8-4339-9517-189faef8bbf5",
+      "database_name": "djavacoal",
+      "migrations_dir": "./src/adapters/d1/migrations",
+      "remote": false,
+    },
+  ],
+  "r2_buckets": [
+    {
+      "binding": "DJAVACOAL_BUCKET",
+      "bucket_name": "djavacoal",
+      "remote": false,
+    },
+  ],
+  "kv_namespaces": [
+    {
+      "binding": "DJAVACOAL_KV",
+      "id": "3c8b8d406b184518a307c1ee397d3bff",
+      "remote": false,
+    },
+  ],
+  "vars": {
+    "BUN_VERSION": "1.3.0",
+  },
 }
