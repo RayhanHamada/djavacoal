@@ -20,27 +20,27 @@ export default function ShipmentSection() {
                 <div className="mt-4 h-[1px] bg-[#3A3A3A]" />
             </header>
 
-            {/* Content: image + text side by side on md */}
+            {/* Content */}
             <motion.div
                 initial={{ opacity: 0, y: 12 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, amount: 0.2 }}
                 transition={{ duration: 0.4 }}
-                className="flex flex-col items-start gap-6 px-4 pb-6 md:flex-row md:px-6 lg:items-start"
+                className="flex flex-col items-start gap-6 px-4 pb-6 md:grid md:grid-cols-[minmax(0,309px)_1fr] md:gap-6 md:px-6 lg:grid-cols-[minmax(0,500px)_1fr] lg:gap-8"
             >
-                {/* Left: Image with watermark */}
-                <div className="relative w-full overflow-hidden rounded-lg md:w-1/2">
+                {/* LEFT: IMAGE */}
+                <div className="relative h-72 w-full overflow-hidden rounded-lg md:aspect-[4/3] md:max-h-[350px] lg:aspect-square lg:h-auto lg:max-h-[500px] lg:max-w-[500px]">
                     <Image
                         src="/images/shipment.png"
                         alt="Shipment"
-                        width={1000}
-                        height={600}
-                        className="h-72 w-full rounded-lg object-cover lg:h-[36rem]"
+                        fill
+                        className="rounded-lg object-cover"
                     />
 
                     {/* Gradient overlay */}
                     <div className="absolute top-0 left-0 z-10 h-1/3 w-full rounded-t-lg bg-gradient-to-b from-black/80 to-transparent" />
-                    {/* Watermark logo (center top) */}
+
+                    {/* Watermark logo */}
                     <div className="absolute top-3 left-1/2 z-20 -translate-x-1/2">
                         <Image
                             src="/svgs/logo.svg"
@@ -52,11 +52,15 @@ export default function ShipmentSection() {
                     </div>
                 </div>
 
-                {/* Right: Text content */}
-                <div className="w-full text-sm leading-relaxed text-[#CCCCCC] md:w-1/2 md:text-base">
-                    <h3 className="mb-2 font-semibold text-[#EFA12D]">
-                        FOB (Freight On Board)
+                {/* RIGHT: TEXT */}
+                <div className="w-full text-sm leading-relaxed text-[#CCCCCC] md:text-base">
+                    <h3 className="mb-2 font-semibold text-white">
+                        <span>FOB</span>{" "}
+                        <span className="text-[#EFA12D]">
+                            (Freight On Board)
+                        </span>
                     </h3>
+
                     <p>
                         At Djavacoal Indonesia, all international shipments are
                         provided under{" "}
