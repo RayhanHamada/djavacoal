@@ -1,0 +1,43 @@
+# Dependencies
+node_modules
+.pnp
+.pnp.js
+
+# Build outputs
+.next
+out
+build
+dist
+.wrangler
+
+# Type definitions
+next-env.d.ts
+cloudflare-env.d.ts
+*.d.ts
+
+# Logs
+*.log
+
+# Lock files
+package-lock.json
+yarn.lock
+bun.lockb
+
+# Environment files
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Cache
+.cache
+.turbo
+
+# Editor
+.vscode
+.idea
+
+# OS
+.DS_Store
+Thumbs.db
