@@ -1,17 +1,17 @@
 import React from "react";
 
 export const ContactIcon = ({
-  icon,
-  color,
+    icon,
+    color,
 }: {
-  icon: React.ReactNode;
-  color?: string;
+    icon: React.ReactNode;
+    color?: string;
 }) => (
-  <div
-    className={`flex items-center justify-center text-lg ${
-      color || "text-secondary"
-    }`}
-  >
-    {icon}
-  </div>
+    <div
+        className={`flex items-center justify-center text-lg ${
+            color || "text-secondary"
+        }`}
+    >
+        {icon}
+    </div>
 );

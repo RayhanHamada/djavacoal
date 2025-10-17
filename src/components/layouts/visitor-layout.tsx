@@ -1,21 +1,22 @@
-import { VisitorFooter, VisitorNavbar } from "@/components/organism";
 import { PropsWithChildren } from "react";
+
+import { VisitorFooter, VisitorNavbar } from "@/components/organism";
 
 type Props = PropsWithChildren;
 
 export default function VisitorLayout({ children }: Props) {
-  return (
-    <div className="flex flex-col min-h-screen">
-      <VisitorNavbar />
+    return (
+        <div className="flex min-h-screen flex-col">
+            <VisitorNavbar />
 
-      {/* main contents */}
-      <main className="pt-24 w-full flex flex-col">{children}</main>
+            {/* main contents */}
+            <main className="flex w-full flex-col pt-24">{children}</main>
 
-      {/* spacer */}
-      <div className="flex-1" />
+            {/* spacer */}
+            <div className="flex-1" />
 
-      {/* footer */}
-      <VisitorFooter />
-    </div>
-  );
+            {/* footer */}
+            <VisitorFooter />
+        </div>
+    );
 }

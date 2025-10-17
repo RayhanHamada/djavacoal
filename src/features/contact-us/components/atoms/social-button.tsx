@@ -1,18 +1,19 @@
-import Link from "next/link";
 import React from "react";
 
+import Link from "next/link";
+
 export const SocialButton = ({
-  href,
-  icon,
+    href,
+    icon,
 }: {
-  href: string;
-  icon: React.ReactNode;
+    href: string;
+    icon: React.ReactNode;
 }) => (
-  <Link
-    href={href}
-    target="_blank"
-    className="p-2 bg-gray-700 hover:bg-orange-500 text-white rounded transition"
-  >
-    {icon}
-  </Link>
+    <Link
+        href={href}
+        target="_blank"
+        className="rounded bg-gray-700 p-2 text-white transition hover:bg-orange-500"
+    >
+        {icon}
+    </Link>
 );
