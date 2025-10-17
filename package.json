@@ -6,7 +6,7 @@
         "dev": "next dev --turbopack",
         "start": "next start",
         "build": "next build",
-        "lint": "eslint . --fix",
+        "lint": "eslint . --fix --cache",
         "cf:build": "opennextjs-cloudflare build",
         "cf:deploy": "opennextjs-cloudflare deploy",
         "cf:preview": "opennextjs-cloudflare preview",
