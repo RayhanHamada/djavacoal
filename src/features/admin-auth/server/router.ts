@@ -1,11 +1,11 @@
 import {
-  inviteAdmin,
-  listAllAdmins,
-  removeAdmin,
+    inviteAdmin,
+    listAllAdmins,
+    removeAdmin,
 } from "@/features/admin-auth/server/functions";
 
 export const router = {
-  listAllAdmins,
-  inviteAdmin,
-  removeAdmin,
+    listAllAdmins,
+    inviteAdmin,
+    removeAdmin,
 };

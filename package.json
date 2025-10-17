@@ -7,15 +7,15 @@
         "start": "next start",
         "build": "next build",
         "lint": "eslint . --fix",
-        "build:cf": "opennextjs-cloudflare build",
-        "deploy": "opennextjs-cloudflare deploy",
-        "preview": "opennextjs-cloudflare preview",
-        "cf-typegen": "wrangler types --env-interface CloudflareEnv ./cloudflare-env.d.ts",
+        "cf:build": "opennextjs-cloudflare build",
+        "cf:deploy": "opennextjs-cloudflare deploy",
+        "cf:preview": "opennextjs-cloudflare preview",
+        "cf:typegen": "wrangler types --env-interface CloudflareEnv ./cloudflare-env.d.ts",
         "d1:generate": "drizzle-kit generate --config src/adapters/d1/drizzle.config.ts",
         "d1:studio": "drizzle-kit studio --config src/adapters/d1/drizzle.config.ts",
         "d1:migrate:djavacoal": "wrangler d1 migrations apply djavacoal",
-        "dev:email": "email dev -d ./src/templates/emails",
-        "build:email": "email build -d ./src/templates/emails"
+        "email:dev": "email dev -d ./src/templates/emails",
+        "email:build": "email build -d ./src/templates/emails"
     },
     "dependencies": {
         "@faker-js/faker": "^10.0.0",

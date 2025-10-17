@@ -1,0 +1,24 @@
+{
+    "languages": {
+        "TypeScript": {
+            "code_actions_on_format": {
+                "source.fixAll.eslint": true
+            }
+        },
+        "JavaScript": {
+            "code_actions_on_format": {
+                "source.fixAll.eslint": true
+            }
+        },
+        "JSON": {
+            "code_actions_on_format": {
+                "source.fixAll.eslint": true
+            }
+        },
+        "JSONC": {
+            "code_actions_on_format": {
+                "source.fixAll.eslint": true
+            }
+        }
+    }
+}
