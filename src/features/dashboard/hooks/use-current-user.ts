@@ -7,10 +7,10 @@ import { client } from "@/features/admin-auth/lib/better-auth-client";
  * Uses Better Auth's useSession hook
  */
 export function useCurrentUser() {
-  const session = client.useSession();
+    const session = client.useSession();
 
-  return {
-    user: session.data?.user,
-    isLoading: session.isPending,
-  };
+    return {
+        user: session.data?.user,
+        isLoading: session.isPending,
+    };
 }

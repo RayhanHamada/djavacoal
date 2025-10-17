@@ -24,6 +24,8 @@ const eslintConfig = [
             "next-env.d.ts",
             ".wrangler/**",
             "dist/**",
+            "public/**",
+            ".open-next/**",
         ],
     },
     js.configs.recommended,
