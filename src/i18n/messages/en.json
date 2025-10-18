@@ -7,5 +7,74 @@
             "ourProducts": "Our Products",
             "contact": "Contact Us"
         }
+    },
+    "Gallery": {
+        "title": "Photo Gallery",
+        "subtitle": "Manage your photo assets",
+        "searchPlaceholder": "Search photos by name...",
+        "noPhotos": "No photos yet. Drag and drop files to upload.",
+        "noResults": "No photos found matching your search",
+        "uploadModal": {
+            "title": "Prepare Upload",
+            "subtitle": "Give each photo a unique name (8-100 characters)",
+            "photoLabel": "Photo",
+            "namePlaceholder": "Enter photo name",
+            "uploadButton": "Upload {count} Photo(s)",
+            "cancel": "Cancel",
+            "errors": {
+                "lengthInvalid": "Name must be 8-100 characters",
+                "nameTaken": "Name already taken",
+                "validationError": "Please fix all errors before uploading",
+                "uploadFailed": "Upload Failed"
+            },
+            "success": "Uploaded {count} photo(s)"
+        },
+        "renameModal": {
+            "title": "Rename Photo",
+            "subtitle": "Enter a new name for this photo (8-100 characters)",
+            "label": "New Name",
+            "placeholder": "Enter new photo name",
+            "button": "Rename",
+            "cancel": "Cancel",
+            "success": "Photo renamed successfully",
+            "error": "Rename Failed"
+        },
+        "deleteModal": {
+            "title": "Delete Photo",
+            "message": "Are you sure you want to delete {name}? This action cannot be undone.",
+            "button": "Delete",
+            "cancel": "Cancel",
+            "success": "Photo deleted successfully",
+            "error": "Delete Failed"
+        },
+        "bulkDelete": {
+            "barLabel": "{count} photo(s) selected",
+            "buttonLabel": "Delete Selected",
+            "modalTitle": "Delete Photos",
+            "message": "Are you sure you want to delete {count} photo(s)? This action cannot be undone.",
+            "button": "Delete All",
+            "cancel": "Cancel",
+            "success": "Deleted {count} photo(s)",
+            "error": "Delete Failed"
+        },
+        "sort": {
+            "nameAsc": "Sort by name (ascending)",
+            "nameDesc": "Sort by name (descending)",
+            "dateAsc": "Sort by date (oldest first)",
+            "dateDesc": "Sort by date (newest first)",
+            "notActive": "not active"
+        },
+        "actions": {
+            "refresh": "Refresh",
+            "rename": "Rename",
+            "delete": "Delete",
+            "tryAgain": "Try Again"
+        },
+        "dragDrop": {
+            "message": "Drop to prepare upload"
+        },
+        "errors": {
+            "loadingFailed": "Error loading photos"
+        }
     }
 }

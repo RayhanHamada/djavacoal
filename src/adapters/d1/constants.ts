@@ -3,6 +3,7 @@ export const TABLE_NAMES = {
     SESSIONS: "sessions",
     ACCOUNTS: "accounts",
     VERIFICATIONS: "verifications",
+    GALLERY_PHOTOS: "gallery_photos",
 } as const;
 
 export const COMMON_COLUMNS = {
@@ -48,4 +49,11 @@ export const VERIFICATION_COLUMNS = {
     IDENTIFIER: "identifier",
     VALUE: "value",
     EXPIRES_AT: "expires_at",
+} as const;
+
+export const GALLERY_PHOTO_COLUMNS = {
+    NAME: "name",
+    KEY: "key",
+    SIZE: "size",
+    MIME_TYPE: "mime_type",
 } as const;

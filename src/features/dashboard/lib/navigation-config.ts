@@ -8,6 +8,7 @@ import {
     IconBrandProducthunt,
     IconPlus,
     IconList,
+    IconPhoto,
 } from "@tabler/icons-react";
 
 export const navigationConfig: NavigationItem[] = [
@@ -18,21 +19,10 @@ export const navigationConfig: NavigationItem[] = [
         description: "Back to Dashboard Home",
     },
     {
-        label: "Products",
-        icon: IconBrandProducthunt,
-        description: "Product management",
-        children: [
-            {
-                label: "Manage Products",
-                icon: IconList,
-                href: "/dashboard/products",
-            },
-            {
-                label: "Create Product",
-                icon: IconPlus,
-                href: "/dashboard/products/create",
-            },
-        ],
+        label: "Gallery",
+        icon: IconPhoto,
+        href: "/dashboard/gallery",
+        description: "Photo Gallery Management",
     },
     {
         label: "Articles",
@@ -52,12 +42,27 @@ export const navigationConfig: NavigationItem[] = [
         ],
     },
     {
+        label: "Products",
+        icon: IconBrandProducthunt,
+        description: "Product management",
+        children: [
+            {
+                label: "Manage Products",
+                icon: IconList,
+                href: "/dashboard/products",
+            },
+            {
+                label: "Create Product",
+                icon: IconPlus,
+                href: "/dashboard/products/create",
+            },
+        ],
+    },
+    {
         label: "Admin",
         icon: IconUser,
         description: "Administrative panels",
-        children: [
-            { label: "Users", icon: IconUser, href: "/dashboard/admins" },
-        ],
+        href: "/dashboard/admins",
     },
     {
         label: "Page Settings",

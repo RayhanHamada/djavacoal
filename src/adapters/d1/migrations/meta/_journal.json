@@ -8,6 +8,20 @@
             "when": 1759742039341,
             "tag": "0000_init-better-auth",
             "breakpoints": true
+        },
+        {
+            "idx": 1,
+            "version": "6",
+            "when": 1760766021672,
+            "tag": "0001_add-admin-plugin-fields",
+            "breakpoints": true
+        },
+        {
+            "idx": 2,
+            "version": "6",
+            "when": 1760778427000,
+            "tag": "0002_add-gallery-photos",
+            "breakpoints": true
         }
     ]
 }
