@@ -4,6 +4,7 @@ import { sqliteTable, text, integer } from "drizzle-orm/sqlite-core";
 import {
     ACCOUNT_COLUMNS,
     COMMON_COLUMNS,
+    GALLERY_PHOTO_COLUMNS,
     SESSION_COLUMNS,
     TABLE_NAMES,
     USER_COLUMNS,
@@ -132,6 +133,45 @@ export const verifications = sqliteTable(TABLE_NAMES.VERIFICATIONS, {
         {
             mode: "timestamp",
         }
+    ).notNull(),
+
+    ...COMMON_FIELDS,
+});
+
+/**
+ * table for storing gallery photo metadata
+ * actual photos are stored in Cloudflare R2
+ */
+export const galleryPhotos = sqliteTable(TABLE_NAMES.GALLERY_PHOTOS, {
+    /**
+     * primary key for the gallery_photos table
+     */
+    [COMMON_COLUMNS.ID]: text(COMMON_COLUMNS.ID).primaryKey(),
+
+    /**
+     * unique human-readable name for the photo (8-100 characters)
+     */
+    [GALLERY_PHOTO_COLUMNS.NAME]: text(GALLERY_PHOTO_COLUMNS.NAME)
+        .notNull()
+        .unique(),
+
+    /**
+     * R2 object key (path in the bucket)
+     */
+    [GALLERY_PHOTO_COLUMNS.KEY]: text(GALLERY_PHOTO_COLUMNS.KEY)
+        .notNull()
+        .unique(),
+
+    /**
+     * file size in bytes
+     */
+    [GALLERY_PHOTO_COLUMNS.SIZE]: integer(GALLERY_PHOTO_COLUMNS.SIZE).notNull(),
+
+    /**
+     * MIME type of the photo (e.g., image/jpeg, image/png)
+     */
+    [GALLERY_PHOTO_COLUMNS.MIME_TYPE]: text(
+        GALLERY_PHOTO_COLUMNS.MIME_TYPE
     ).notNull(),
 
     ...COMMON_FIELDS,
