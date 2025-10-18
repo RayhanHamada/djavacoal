@@ -32,6 +32,8 @@ export default function VisitorNavbar(_: Props) {
             <div className={cn("hidden px-6 py-4", "md:block")}>
                 <LanguageSwitch />
             </div>
+            {/* Garis bawah oranye */}
+            <div className="bg-secondary absolute bottom-0 left-0 h-[2px] w-full"></div>
         </nav>
     );
 }
