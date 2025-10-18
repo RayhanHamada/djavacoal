@@ -13,11 +13,13 @@
         "cf:typegen": "wrangler types --env-interface CloudflareEnv ./cloudflare-env.d.ts",
         "d1:generate": "drizzle-kit generate --config src/adapters/d1/drizzle.config.ts",
         "d1:studio": "drizzle-kit studio --config src/adapters/d1/drizzle.config.ts",
-        "d1:migrate:djavacoal": "wrangler d1 migrations apply djavacoal",
+        "d1:migrate:djavacoal": "wrangler d1 migrations apply djavacoal --remote",
         "email:dev": "email dev -d ./src/templates/emails",
         "email:build": "email build -d ./src/templates/emails"
     },
     "dependencies": {
+        "@aws-sdk/client-s3": "^3.913.0",
+        "@aws-sdk/s3-request-presigner": "^3.913.0",
         "@faker-js/faker": "^10.0.0",
         "@hookform/resolvers": "^5.2.2",
         "@mantine/carousel": "^8.3.4",
