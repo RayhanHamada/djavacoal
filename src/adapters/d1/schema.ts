@@ -205,9 +205,9 @@ export const news = sqliteTable(TABLE_NAMES.NEWS, {
     [NEWS_COLUMNS.SLUG]: text().notNull().unique(),
 
     /**
-     * image URL for the news article
+     * R2 object key for the news image (stored in R2)
      */
-    [NEWS_COLUMNS.IMAGE_URL]: text(),
+    [NEWS_COLUMNS.IMAGE_KEY]: text(),
 
     /**
      * title for SEO

@@ -69,7 +69,7 @@ export const GALLERY_PHOTO_COLUMNS = {
 
 export const NEWS_COLUMNS = {
     SLUG: "slug",
-    IMAGE_URL: "image_url",
+    IMAGE_KEY: "image_key",
 
     METADATA_TITLE: "metadata_title",
     METADATA_DESCRIPTION: "metadata_description",

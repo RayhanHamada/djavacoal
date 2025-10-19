@@ -3,6 +3,7 @@ import "server-only";
 import { RPCHandler } from "@orpc/server/fetch";
 
 import { router as admins } from "@/features/admin-auth/server/router";
+import { dashboardNews } from "@/features/dashboard-news/server";
 import { router as gallery } from "@/features/gallery/server/router";
 
 const router = {
@@ -11,6 +12,7 @@ const router = {
      */
     admins,
     gallery,
+    dashboardNews,
 };
 
 const handler = new RPCHandler(router);

@@ -13,6 +13,12 @@ export const DEFAULT_BUCKET_NAME = "djavacoal";
 export const GALLERY_PHOTOS_PREFIX = "gallery";
 
 /**
+ * News folder prefixes in R2
+ */
+export const NEWS_IMAGES_PREFIX = "news/images";
+export const NEWS_CONTENT_PREFIX = "news/content";
+
+/**
  * Presigned URL expiration time in seconds (1 hour)
  */
 export const PRESIGNED_URL_EXPIRATION = 3600;
