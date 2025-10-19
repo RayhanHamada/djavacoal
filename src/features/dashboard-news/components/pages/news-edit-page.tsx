@@ -18,7 +18,7 @@ import { notifications } from "@mantine/notifications";
 import { IconAlertCircle, IconCheck, IconLoader } from "@tabler/icons-react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
-import { NewsForm } from "..";
+import { NewsForm, NewsFormValues } from "..";
 import { client, rpc } from "@/lib/rpc";
 
 interface NewsEditPageProps {
@@ -50,7 +50,7 @@ export function NewsEditPage({ newsId }: NewsEditPageProps) {
             data: formData,
             publish,
         }: {
-            data: any;
+            data: NewsFormValues;
             publish: boolean;
         }) => {
             return await client.dashboardNews.updateNews({
@@ -100,7 +100,7 @@ export function NewsEditPage({ newsId }: NewsEditPageProps) {
         },
     });
 
-    const handleSubmit = (formData: any, publish: boolean) => {
+    const handleSubmit = (formData: NewsFormValues, publish: boolean) => {
         updateMutation.mutate({ data: formData, publish });
     };
 

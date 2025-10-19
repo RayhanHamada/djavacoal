@@ -54,21 +54,29 @@ export function BilingualContentEditor({
                 disabled={disabled}
             />
 
-            {activeLanguage === "en" ? (
+            {/* Render both editors but show only the active one */}
+            <div
+                style={{ display: activeLanguage === "en" ? "block" : "none" }}
+            >
                 <NewsRichTextEditor
+                    key="en-editor"
                     content={enContent}
                     onChange={onEnChange}
                     rtl={false}
                     placeholder="Write your news content in English..."
                 />
-            ) : (
+            </div>
+            <div
+                style={{ display: activeLanguage === "ar" ? "block" : "none" }}
+            >
                 <NewsRichTextEditor
+                    key="ar-editor"
                     content={arContent}
                     onChange={onArChange}
                     rtl={true}
                     placeholder="اكتب محتوى الأخبار باللغة العربية..."
                 />
-            )}
+            </div>
         </Stack>
     );
 }
