@@ -7,7 +7,10 @@ import {
     PHOTO_NAME_MAX_LENGTH,
     PHOTO_NAME_MIN_LENGTH,
 } from "./constants";
-import { MAX_FILE_SIZE } from "@/adapters/r2/constants";
+import {
+    ALLOWED_IMAGE_MIME_TYPES,
+    MAX_FILE_SIZE,
+} from "@/adapters/r2/constants";
 
 /**
  * Input schema for listing photos with pagination, search, and sorting
@@ -89,7 +92,7 @@ export const ConfirmUploadInputSchema = z.object({
     /** File size in bytes */
     size: z.number().int().min(1),
     /** MIME type */
-    mimeType: z.string(),
+    mimeType: z.enum(ALLOWED_IMAGE_MIME_TYPES),
 });
 
 /**
