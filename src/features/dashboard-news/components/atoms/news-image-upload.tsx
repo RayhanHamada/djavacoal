@@ -6,7 +6,6 @@ import {
     ActionIcon,
     AspectRatio,
     Box,
-    Group,
     Image,
     Loader,
     Stack,
@@ -137,8 +136,8 @@ export function NewsImageUpload({
     const isUploading = uploadMutation.isPending;
 
     return (
-        <Box>
-            <AspectRatio ratio={4 / 3}>
+        <Box display="flex" style={{ justifyContent: "center" }}>
+            <AspectRatio ratio={16 / 9} maw={600}>
                 {currentImageUrl ? (
                     // Image preview
                     <Box pos="relative" w="100%" h="100%">
@@ -168,7 +167,7 @@ export function NewsImageUpload({
                                 }}
                             >
                                 <Stack align="center" gap="xs">
-                                    <Loader size="lg" color="white" />
+                                    <Loader size="md" color="white" />
                                     <Text size="sm" c="white" fw={500}>
                                         Uploading...
                                     </Text>
@@ -186,9 +185,9 @@ export function NewsImageUpload({
                                 variant="filled"
                                 onClick={handleRemove}
                                 aria-label="Remove image"
-                                size="lg"
+                                size="md"
                             >
-                                <IconTrash size={18} />
+                                <IconTrash size={16} />
                             </ActionIcon>
                         )}
                     </Box>
@@ -200,35 +199,32 @@ export function NewsImageUpload({
                         maxSize={MAX_FILE_SIZE}
                         maxFiles={1}
                         disabled={disabled || isUploading}
-                        style={{ height: "100%", border: "2px dashed" }}
                     >
-                        <Group
+                        <Stack
                             justify="center"
-                            gap="xl"
-                            style={{ minHeight: 220, pointerEvents: "none" }}
+                            align="center"
+                            gap="md"
+                            style={{ minHeight: 120, pointerEvents: "none" }}
                         >
                             <Dropzone.Accept>
-                                <IconUpload size={52} stroke={1.5} />
+                                <IconUpload size={32} stroke={1.5} />
                             </Dropzone.Accept>
                             <Dropzone.Reject>
-                                <IconX size={52} stroke={1.5} />
+                                <IconX size={32} stroke={1.5} />
                             </Dropzone.Reject>
                             <Dropzone.Idle>
-                                <IconPhoto size={52} stroke={1.5} />
+                                <IconPhoto size={32} stroke={1.5} />
                             </Dropzone.Idle>
 
-                            <Stack gap={0} align="center">
-                                <Text size="xl" inline>
+                            <Stack gap={4} align="center">
+                                <Text size="sm" inline fw={500}>
                                     Drop image here or click to select
                                 </Text>
-                                <Text size="sm" c="dimmed" inline mt={7}>
-                                    Image will be displayed in 4:3 ratio
-                                </Text>
-                                <Text size="sm" c="dimmed" inline>
+                                <Text size="xs" c="dimmed" inline>
                                     Maximum file size: 10MB
                                 </Text>
                             </Stack>
-                        </Group>
+                        </Stack>
                     </Dropzone>
                 )}
             </AspectRatio>

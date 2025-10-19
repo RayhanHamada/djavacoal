@@ -15,6 +15,7 @@ import TextAlign from "@tiptap/extension-text-align";
 import { EditorEvents, useEditor } from "@tiptap/react";
 import { BubbleMenu } from "@tiptap/react/menus";
 import StarterKit from "@tiptap/starter-kit";
+import { useDebounceFn } from "ahooks";
 import { ResizableImage } from "tiptap-extension-resizable-image";
 import { TextDirection } from "tiptap-text-direction";
 
@@ -31,11 +32,18 @@ export function NewsRichTextEditor({
     onChange,
     placeholder,
 }: Props) {
-    const editor = useEditor({
-        content,
-        onUpdate: ({ editor }: EditorEvents["update"]) => {
+    const { run: onUpdate } = useDebounceFn(
+        ({ editor }: EditorEvents["update"]) => {
             onChange(editor.getHTML());
         },
+        {
+            wait: 1000,
+        }
+    );
+
+    const editor = useEditor({
+        content,
+        onUpdate,
         immediatelyRender: false,
         shouldRerenderOnTransaction: false,
         extensions: [

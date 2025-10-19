@@ -6,7 +6,7 @@ import { Container, Paper, Title } from "@mantine/core";
 import { notifications } from "@mantine/notifications";
 import { useMutation } from "@tanstack/react-query";
 
-import { NewsForm } from "..";
+import { NewsForm, NewsFormValues } from "..";
 import { client } from "@/lib/rpc";
 
 /**
@@ -51,7 +51,7 @@ export function NewsCreatePage() {
         },
     });
 
-    const handleSubmit = (formData: any, publish: boolean) => {
+    const handleSubmit = (formData: NewsFormValues, publish: boolean) => {
         createMutation.mutate({
             data: {
                 slug: formData.slug,
