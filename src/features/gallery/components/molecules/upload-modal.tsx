@@ -158,6 +158,7 @@ export function UploadModal({
                     name,
                     key,
                     size: file.size,
+                    // @ts-expect-error - mimeType is missing in the generated types
                     mimeType: file.type,
                 });
             }
