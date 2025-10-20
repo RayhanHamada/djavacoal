@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { memo, useState } from "react";
 
 import { SegmentedControl, Stack, Text } from "@mantine/core";
 
@@ -13,6 +13,10 @@ interface BilingualContentEditorProps {
     arContent: string;
     /** Callback when English content changes */
     onEnChange: (content: string) => void;
+    /**
+     * Callback when the first paragraph of English content changes
+     */
+    onEnFirstParagraphChange?(firstParagraph: string): void;
     /** Callback when Arabic content changes */
     onArChange: (content: string) => void;
     /** Label for the editor */
@@ -25,10 +29,11 @@ interface BilingualContentEditorProps {
  * BilingualContentEditor component for English and Arabic rich text content
  * Allows switching between languages with proper text direction
  */
-export function BilingualContentEditor({
+export const BilingualContentEditor = memo(function BilingualContentEditor({
     enContent,
     arContent,
     onEnChange,
+    onEnFirstParagraphChange,
     onArChange,
     label,
     disabled = false,
@@ -62,6 +67,9 @@ export function BilingualContentEditor({
                     key="en-editor"
                     content={enContent}
                     onChange={onEnChange}
+                    onFirstParagraphChange={onEnFirstParagraphChange}
+                    maxCharacters={10000}
+                    minCharacters={100}
                     rtl={false}
                     placeholder="Write your news content in English..."
                 />
@@ -73,10 +81,12 @@ export function BilingualContentEditor({
                     key="ar-editor"
                     content={arContent}
                     onChange={onArChange}
+                    maxCharacters={10000}
+                    minCharacters={100}
                     rtl={true}
                     placeholder="اكتب محتوى الأخبار باللغة العربية..."
                 />
             </div>
         </Stack>
     );
-}
+});

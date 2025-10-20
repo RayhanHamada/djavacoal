@@ -60,6 +60,15 @@ export const UpdateNewsInputSchema = z.object({
 export type UpdateNewsInput = z.infer<typeof UpdateNewsInputSchema>;
 
 /**
+ * Output schema for updating a news article
+ */
+export const UpdateNewsOutputSchema = z.object({
+    id: z.number(),
+});
+
+export type UpdateNewsOutput = z.infer<typeof UpdateNewsOutputSchema>;
+
+/**
  * Schema for listing news with pagination and filters
  */
 export const ListNewsInputSchema = z.object({
@@ -68,7 +77,7 @@ export const ListNewsInputSchema = z.object({
 
     // Filters
     titleSearch: z.string().optional(),
-    tags: z.array(z.string()).optional(),
+    tags: z.array(z.string()).default([]),
     status: z.enum(["published", "unpublished", "all"]).default("all"),
     dateFrom: z.date().optional(),
     dateTo: z.date().optional(),
@@ -95,9 +104,9 @@ export const NewsArticleSchema = z.object({
     publishedAt: z.date().nullable(),
     publishedBy: z.string().nullable(),
 
-    createdAt: z.date().nullable(),
+    createdAt: z.date(),
     createdBy: z.string(),
-    updatedAt: z.date().nullable(),
+    updatedAt: z.date(),
     updatedBy: z.string(),
 });
 
