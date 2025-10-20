@@ -1,4 +1,4 @@
-import { relations, sql } from "drizzle-orm";
+import { relations } from "drizzle-orm";
 import { sqliteTable, text, int } from "drizzle-orm/sqlite-core";
 
 import {
@@ -24,9 +24,6 @@ const ALLOWED_IMAGE_MIME_TYPES = [
 /**
  * default values used in the schema
  */
-const DEFAULTS = {
-    CURRENT_TIMESTAMP: sql`CURRENT_TIMESTAMP`,
-} as const;
 
 /**
  * common fields for all tables
@@ -34,11 +31,16 @@ const DEFAULTS = {
 const COMMON_FIELDS = {
     [COMMON_COLUMNS.CREATED_AT]: int({
         mode: "timestamp",
-    }).default(DEFAULTS.CURRENT_TIMESTAMP),
+    })
+        .notNull()
+        .$default(() => new Date()),
     [COMMON_COLUMNS.UPDATED_AT]: int({
         mode: "timestamp",
-    }).default(DEFAULTS.CURRENT_TIMESTAMP),
-};
+    })
+        .notNull()
+        .$default(() => new Date())
+        .$onUpdateFn(() => new Date()),
+} as const;
 
 /**
  * common authored fields for all tables
@@ -54,13 +56,14 @@ const COMMON_AUTHORED_FIELDS = {
         .references(() => users.id, {
             onDelete: "cascade",
         }),
-};
+} as const;
 
 /**
- * table used by better-auth to store users
+ * table definitions
  */
+const USER_COLUMN_FIELDS = {
+    ...COMMON_FIELDS,
 
-export const users = sqliteTable(TABLE_NAMES.USERS, {
     /**
      * primary key for the user table
      */
@@ -80,11 +83,11 @@ export const users = sqliteTable(TABLE_NAMES.USERS, {
     [USER_COLUMNS.BAN_EXPIRES]: int({
         mode: "timestamp",
     }),
+} as const;
 
+const SESSION_COLUMN_FIELDS = {
     ...COMMON_FIELDS,
-});
 
-export const sessions = sqliteTable(TABLE_NAMES.SESSIONS, {
     /**
      * primary key for the session table
      */
@@ -104,11 +107,11 @@ export const sessions = sqliteTable(TABLE_NAMES.SESSIONS, {
     [SESSION_COLUMNS.IP_ADDRESS]: text(),
     [SESSION_COLUMNS.USER_AGENT]: text(),
     [SESSION_COLUMNS.IMPERSONATED_BY]: text(),
+} as const;
 
+const ACCOUNT_COLUMN_FIELDS = {
     ...COMMON_FIELDS,
-});
 
-export const accounts = sqliteTable(TABLE_NAMES.ACCOUNTS, {
     /**
      * primary key for the account table
      */
@@ -136,11 +139,11 @@ export const accounts = sqliteTable(TABLE_NAMES.ACCOUNTS, {
     [ACCOUNT_COLUMNS.SCOPE]: text(),
     [ACCOUNT_COLUMNS.ID_TOKEN]: text(),
     [ACCOUNT_COLUMNS.PASSWORD]: text(),
+} as const;
 
+const VERIFICATION_COLUMN_FIELDS = {
     ...COMMON_FIELDS,
-});
 
-export const verifications = sqliteTable(TABLE_NAMES.VERIFICATIONS, {
     /**
      * primary key for the verification table
      */
@@ -151,15 +154,11 @@ export const verifications = sqliteTable(TABLE_NAMES.VERIFICATIONS, {
     [VERIFICATION_COLUMNS.EXPIRES_AT]: int({
         mode: "timestamp",
     }).notNull(),
+} as const;
 
+const GALLERY_COLUMN_FIELDS = {
     ...COMMON_FIELDS,
-});
 
-/**
- * table for storing gallery photo metadata
- * actual photos are stored in Cloudflare R2
- */
-export const galleryPhotos = sqliteTable(TABLE_NAMES.GALLERY_PHOTOS, {
     /**
      * primary key for the gallery_photos table
      */
@@ -186,14 +185,12 @@ export const galleryPhotos = sqliteTable(TABLE_NAMES.GALLERY_PHOTOS, {
     [GALLERY_PHOTO_COLUMNS.MIME_TYPE]: text({
         enum: ALLOWED_IMAGE_MIME_TYPES,
     }).notNull(),
+} as const;
 
+const NEWS_COLUMN_FIELDS = {
+    ...COMMON_AUTHORED_FIELDS,
     ...COMMON_FIELDS,
-});
 
-/**
- * table for storing news articles
- */
-export const news = sqliteTable(TABLE_NAMES.NEWS, {
     /**
      * primary key for the news table
      */
@@ -222,9 +219,13 @@ export const news = sqliteTable(TABLE_NAMES.NEWS, {
     /**
      * keywords for SEO and tags
      */
-    [NEWS_COLUMNS.METADATA_TAG_LIST]: text({ mode: "json" })
+    [NEWS_COLUMNS.METADATA_TAG_LIST]: text({
+        mode: "json",
+    })
+        .notNull()
+        .default([])
         .$type<string[]>()
-        .default([]),
+        .$default(() => []),
 
     /**
      * Arabic data (for now will be mandatory)
@@ -243,7 +244,9 @@ export const news = sqliteTable(TABLE_NAMES.NEWS, {
      */
     [NEWS_COLUMNS.IS_PUBLISHED]: int({
         mode: "boolean",
-    }).default(false),
+    })
+        .notNull()
+        .$default(() => false),
 
     /**
      * publication timestamp and author
@@ -253,12 +256,11 @@ export const news = sqliteTable(TABLE_NAMES.NEWS, {
     }),
     // keep published_by typed to users.id
     [NEWS_COLUMNS.PUBLISHED_BY]: text().references(() => users.id),
+} as const;
 
-    ...COMMON_AUTHORED_FIELDS,
+const TAG_COLUMN_FIELDS = {
     ...COMMON_FIELDS,
-});
 
-export const tags = sqliteTable(TABLE_NAMES.TAGS, {
     /**
      * primary key for the tags table
      */
@@ -273,9 +275,56 @@ export const tags = sqliteTable(TABLE_NAMES.TAGS, {
      * slug for the tag (used in URLs)
      */
     [TAG_COLUMNS.SLUG]: text().notNull().unique(),
+} as const;
 
-    ...COMMON_FIELDS,
-});
+/**
+ * table used by better-auth to store users
+ */
+
+export const users = sqliteTable(TABLE_NAMES.USERS, USER_COLUMN_FIELDS);
+
+/**
+ * table for storing user sessions
+ */
+export const sessions = sqliteTable(
+    TABLE_NAMES.SESSIONS,
+    SESSION_COLUMN_FIELDS
+);
+
+/**
+ * table for storing accounts, a user can have multiple accounts (google, github, username, etc.)
+ */
+export const accounts = sqliteTable(
+    TABLE_NAMES.ACCOUNTS,
+    ACCOUNT_COLUMN_FIELDS
+);
+
+/**
+ * table for storing verifications (e.g., email verification, password reset)
+ */
+export const verifications = sqliteTable(
+    TABLE_NAMES.VERIFICATIONS,
+    VERIFICATION_COLUMN_FIELDS
+);
+
+/**
+ * table for storing gallery photo metadata
+ * actual photos are stored in Cloudflare R2
+ */
+export const galleryPhotos = sqliteTable(
+    TABLE_NAMES.GALLERY_PHOTOS,
+    GALLERY_COLUMN_FIELDS
+);
+
+/**
+ * table for storing news articles
+ */
+export const news = sqliteTable(TABLE_NAMES.NEWS, NEWS_COLUMN_FIELDS);
+
+/**
+ * for storing news tags
+ */
+export const tags = sqliteTable(TABLE_NAMES.TAGS, TAG_COLUMN_FIELDS);
 
 /**
  * relations between tables
