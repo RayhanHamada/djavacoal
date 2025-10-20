@@ -1,31 +1,29 @@
 import "server-only";
 
-import { and, count, desc, eq, gte, like, lte, or } from "drizzle-orm";
+import { headers } from "next/headers";
+
+import { and, count, desc, eq, gte, like, lte } from "drizzle-orm";
 import { nanoid } from "nanoid";
 
 import {
     BulkCreateTagsInputSchema,
     CheckSlugAvailabilityInputSchema,
-    CheckSlugAvailabilityOutput,
     CheckSlugAvailabilityOutputSchema,
     CreateNewsInputSchema,
     CreateTagInputSchema,
     DeleteNewsInputSchema,
     GenerateImageUploadUrlInputSchema,
-    GenerateImageUploadUrlOutput,
     GenerateImageUploadUrlOutputSchema,
     GetNewsByIdInputSchema,
     ListNewsInputSchema,
-    ListNewsOutput,
     ListNewsOutputSchema,
     ListTagsInputSchema,
-    ListTagsOutput,
     ListTagsOutputSchema,
-    NewsArticleWithContent,
     NewsArticleWithContentSchema,
     TagSchema,
     TogglePublishInputSchema,
     UpdateNewsInputSchema,
+    UpdateNewsOutputSchema,
 } from "./schemas";
 import {
     COMMON_COLUMNS,
@@ -43,6 +41,7 @@ import {
     NEWS_IMAGES_PREFIX,
     uploadTextContent,
 } from "@/adapters/r2";
+import { getAuth } from "@/features/admin-auth/lib/better-auth-server";
 import base from "@/lib/orpc/server";
 
 /**
@@ -51,19 +50,22 @@ import base from "@/lib/orpc/server";
 export const listNews = base
     .input(ListNewsInputSchema)
     .output(ListNewsOutputSchema)
-    .handler(async function ({
-        context: { env },
-        input,
-    }): Promise<ListNewsOutput> {
-        // TODO: Implement authentication check
-        // if (!user) throw errors.UNAUTHORIZED();
-
+    .handler(async function ({ context: { env }, errors, input }) {
         const db = getDB(env.DJAVACOAL_DB);
+        const auth = getAuth(env);
+
+        const header = await headers();
+        const user = await auth.api.getSession({
+            headers: header,
+        });
+
+        if (!user) throw errors.UNAUTHORIZED();
+
         const {
             page,
             limit,
             titleSearch,
-            tags: _tagFilter,
+            tags: _tags,
             status,
             dateFrom,
             dateTo,
@@ -94,11 +96,9 @@ export const listNews = base
             whereConditions.push(lte(news[NEWS_COLUMNS.PUBLISHED_AT], dateTo));
         }
 
-        // TODO: Implement tag filtering
-        // This requires a more complex query or JSON manipulation
-
-        const whereClause =
-            whereConditions.length > 0 ? and(...whereConditions) : undefined;
+        const whereClause = whereConditions.length
+            ? and(...whereConditions)
+            : undefined;
 
         // Get total count
         const [{ total }] = await db
@@ -135,9 +135,13 @@ export const listNews = base
             items: items.map((item) => ({
                 ...item,
                 isPublished: item.isPublished ?? false,
+                publishedAt: item.publishedAt,
                 metadataTags: Array.isArray(item.metadataTags)
                     ? item.metadataTags
                     : [],
+
+                createdAt: item.createdAt,
+                updatedAt: item.updatedAt,
             })),
             total,
             page,
@@ -153,41 +157,26 @@ export const listNews = base
 export const getNewsById = base
     .input(GetNewsByIdInputSchema)
     .output(NewsArticleWithContentSchema)
-    .handler(async function ({
-        context: { env },
-        input,
-    }): Promise<NewsArticleWithContent> {
-        // TODO: Implement authentication check
-        // if (!user) throw errors.UNAUTHORIZED();
-
+    .handler(async function ({ context: { env }, errors, input: { id } }) {
         const db = getDB(env.DJAVACOAL_DB);
-        const { id } = input;
+        const auth = getAuth(env);
 
-        const [article] = await db
-            .select({
-                id: news[COMMON_COLUMNS.ID],
-                slug: news[NEWS_COLUMNS.SLUG],
-                imageKey: news[NEWS_COLUMNS.IMAGE_KEY],
-                metadataTitle: news[NEWS_COLUMNS.METADATA_TITLE],
-                metadataDescription: news[NEWS_COLUMNS.METADATA_DESCRIPTION],
-                metadataTags: news[NEWS_COLUMNS.METADATA_TAG_LIST],
-                enTitle: news[NEWS_COLUMNS.EN_TITLE],
-                enContentKey: news[NEWS_COLUMNS.EN_CONTENT_KEY],
-                arTitle: news[NEWS_COLUMNS.AR_TITLE],
-                arContentKey: news[NEWS_COLUMNS.AR_CONTENT_KEY],
-                isPublished: news[NEWS_COLUMNS.IS_PUBLISHED],
-                publishedAt: news[NEWS_COLUMNS.PUBLISHED_AT],
-                publishedBy: news[NEWS_COLUMNS.PUBLISHED_BY],
-                createdAt: news[COMMON_COLUMNS.CREATED_AT],
-                createdBy: news[COMMON_COLUMNS.CREATED_BY],
-                updatedAt: news[COMMON_COLUMNS.UPDATED_AT],
-                updatedBy: news[COMMON_COLUMNS.UPDATED_BY],
-            })
-            .from(news)
-            .where(eq(news[COMMON_COLUMNS.ID], id));
+        const header = await headers();
+        const user = await auth.api.getSession({
+            headers: header,
+        });
 
-        // TODO: Implement not found error
-        // if (!article) throw errors.NOT_FOUND({ message: "News article not found" });
+        if (!user) throw errors.UNAUTHORIZED();
+
+        const article = await db.query.news.findFirst({
+            where(fields, operators) {
+                return operators.eq(fields[COMMON_COLUMNS.ID], id);
+            },
+        });
+
+        if (!article) {
+            throw errors.NOT_FOUND({ message: "News article not found" });
+        }
 
         // Get content from R2
         const r2Client = getR2Client({
@@ -197,30 +186,28 @@ export const getNewsById = base
         });
 
         const [enContent, arContent] = await Promise.all([
-            getTextContent(r2Client, article.enContentKey),
-            getTextContent(r2Client, article.arContentKey),
+            getTextContent(r2Client, article.en_content_key),
+            getTextContent(r2Client, article.ar_content_key),
         ]);
 
         return {
             id: article.id,
             slug: article.slug,
-            imageKey: article.imageKey,
-            metadataTitle: article.metadataTitle,
-            metadataDescription: article.metadataDescription,
-            metadataTags: Array.isArray(article.metadataTags)
-                ? article.metadataTags
-                : [],
-            enTitle: article.enTitle,
+            imageKey: article.image_key,
+            metadataTitle: article.metadata_title,
+            metadataDescription: article.metadata_description,
+            metadataTags: article.metadata_tag_list ?? [],
+            enTitle: article.en_title,
             enContent,
-            arTitle: article.arTitle,
+            arTitle: article.ar_title,
             arContent,
-            isPublished: article.isPublished ?? false,
-            publishedAt: article.publishedAt,
-            publishedBy: article.publishedBy,
-            createdAt: article.createdAt,
-            createdBy: article.createdBy,
-            updatedAt: article.updatedAt,
-            updatedBy: article.updatedBy,
+            isPublished: article.is_published ?? false,
+            publishedAt: article.published_at,
+            publishedBy: article.published_by,
+            createdAt: article.created_at,
+            createdBy: article.created_by,
+            updatedAt: article.updated_at,
+            updatedBy: article.updated_by,
         };
     })
     .callable();
@@ -232,22 +219,28 @@ export const createNews = base
     .input(CreateNewsInputSchema)
     .handler(async function ({
         context: { env },
+        errors,
         input,
     }): Promise<{ id: number }> {
-        // TODO: Implement authentication check
-        // if (!user) throw errors.UNAUTHORIZED();
-
         const db = getDB(env.DJAVACOAL_DB);
+        const auth = getAuth(env);
+        const header = await headers();
+
+        const user = await auth.api.getSession({
+            headers: header,
+        });
+
+        if (!user) throw errors.UNAUTHORIZED();
 
         // Check if slug is available
-        const [_existing] = await db
-            .select()
-            .from(news)
-            .where(eq(news[NEWS_COLUMNS.SLUG], input.slug))
-            .limit(1);
+        const existing = await db.query.news.findFirst({
+            where(fields, operators) {
+                return operators.eq(fields.slug, input.slug);
+            },
+        });
 
-        // TODO: Implement conflict error
-        // if (existing) throw errors.CONFLICT({ message: "Slug already exists" });
+        if (existing)
+            throw errors.BAD_REQUEST({ message: "Slug already exists" });
 
         // Generate R2 keys for content
         const enContentKey = `${NEWS_CONTENT_PREFIX}/${nanoid()}-en.html`;
@@ -266,8 +259,7 @@ export const createNews = base
         ]);
 
         // Insert into database
-        const userId = "user-id-placeholder"; // TODO: Get from user context
-
+        const userId = user.user.id;
         const [inserted] = await db
             .insert(news)
             .values({
@@ -288,7 +280,9 @@ export const createNews = base
                 [COMMON_COLUMNS.CREATED_BY]: userId,
                 [COMMON_COLUMNS.UPDATED_BY]: userId,
             })
-            .returning({ id: news[COMMON_COLUMNS.ID] });
+            .returning({
+                id: news[COMMON_COLUMNS.ID],
+            });
 
         return { id: inserted.id };
     })
@@ -299,26 +293,26 @@ export const createNews = base
  */
 export const updateNews = base
     .input(UpdateNewsInputSchema)
-    .handler(async function ({
-        context: { env },
-        input,
-    }): Promise<{ id: number }> {
-        // TODO: Implement authentication check
-        // if (!user) throw errors.UNAUTHORIZED();
-
+    .output(UpdateNewsOutputSchema)
+    .handler(async function ({ context: { env }, input, errors }) {
         const db = getDB(env.DJAVACOAL_DB);
+        const auth = getAuth(env);
+        const header = await headers();
+        const user = await auth.api.getSession({
+            headers: header,
+        });
+
+        if (!user) throw errors.UNAUTHORIZED();
 
         // Get existing article
-        const [_existing] = await db
-            .select({
-                enContentKey: news[NEWS_COLUMNS.EN_CONTENT_KEY],
-                arContentKey: news[NEWS_COLUMNS.AR_CONTENT_KEY],
-            })
-            .from(news)
-            .where(eq(news[COMMON_COLUMNS.ID], input.id));
+        const existing = await db.query.news.findFirst({
+            where(fields, operators) {
+                return operators.eq(fields.id, input.id);
+            },
+        });
 
-        // TODO: Implement not found error
-        // if (!existing) throw errors.NOT_FOUND({ message: "News article not found" });
+        if (!existing)
+            throw errors.NOT_FOUND({ message: "News article not found" });
 
         // Update content in R2
         const r2Client = getR2Client({
@@ -330,18 +324,18 @@ export const updateNews = base
         await Promise.all([
             uploadTextContent(
                 r2Client,
-                _existing.enContentKey,
+                existing[NEWS_COLUMNS.EN_CONTENT_KEY],
                 input.enContent
             ),
             uploadTextContent(
                 r2Client,
-                _existing.arContentKey,
+                existing[NEWS_COLUMNS.AR_CONTENT_KEY],
                 input.arContent
             ),
         ]);
 
         // Update database
-        const userId = "user-id-placeholder"; // TODO: Get from user context
+        const userId = user.user.id;
 
         await db
             .update(news)
@@ -361,7 +355,9 @@ export const updateNews = base
             })
             .where(eq(news[COMMON_COLUMNS.ID], input.id));
 
-        return { id: input.id };
+        return {
+            id: input.id,
+        };
     })
     .callable();
 
@@ -370,24 +366,27 @@ export const updateNews = base
  */
 export const deleteNews = base
     .input(DeleteNewsInputSchema)
-    .handler(async function ({ context: { env }, input }): Promise<void> {
-        // TODO: Implement authentication check
-        // if (!user) throw errors.UNAUTHORIZED();
-
+    .handler(async function ({ context: { env }, errors, input }) {
         const db = getDB(env.DJAVACOAL_DB);
+        const auth = getAuth(env);
+
+        const header = await headers();
+        const user = await auth.api.getSession({
+            headers: header,
+        });
+
+        if (!user) throw errors.UNAUTHORIZED();
 
         // Get article to delete R2 objects
-        const [article] = await db
-            .select({
-                imageKey: news[NEWS_COLUMNS.IMAGE_KEY],
-                enContentKey: news[NEWS_COLUMNS.EN_CONTENT_KEY],
-                arContentKey: news[NEWS_COLUMNS.AR_CONTENT_KEY],
-            })
-            .from(news)
-            .where(eq(news[COMMON_COLUMNS.ID], input.id));
+        const article = await db.query.news.findFirst({
+            where(fields, operators) {
+                return operators.eq(fields[COMMON_COLUMNS.ID], input.id);
+            },
+        });
 
-        // TODO: Implement not found error
-        // if (!article) throw errors.NOT_FOUND({ message: "News article not found" });
+        if (!article) {
+            throw errors.NOT_FOUND({ message: "News article not found" });
+        }
 
         // Delete from R2
         const r2Client = getR2Client({
@@ -397,12 +396,12 @@ export const deleteNews = base
         });
 
         const deletePromises = [
-            deleteObject(r2Client, article.enContentKey),
-            deleteObject(r2Client, article.arContentKey),
+            deleteObject(r2Client, article.en_content_key),
+            deleteObject(r2Client, article.ar_content_key),
         ];
 
-        if (article.imageKey) {
-            deletePromises.push(deleteObject(r2Client, article.imageKey));
+        if (article.image_key) {
+            deletePromises.push(deleteObject(r2Client, article.image_key));
         }
 
         await Promise.all(deletePromises);
@@ -417,12 +416,18 @@ export const deleteNews = base
  */
 export const togglePublish = base
     .input(TogglePublishInputSchema)
-    .handler(async function ({ context: { env }, input }): Promise<void> {
-        // TODO: Implement authentication check
-        // if (!user) throw errors.UNAUTHORIZED();
-
+    .handler(async function ({ context: { env }, errors, input }) {
         const db = getDB(env.DJAVACOAL_DB);
-        const userId = "user-id-placeholder"; // TODO: Get from user context
+        const auth = getAuth(env);
+
+        const header = await headers();
+        const user = await auth.api.getSession({
+            headers: header,
+        });
+
+        if (!user) throw errors.UNAUTHORIZED();
+
+        const userId = user.user.id;
 
         await db
             .update(news)
@@ -445,11 +450,16 @@ export const togglePublish = base
 export const checkSlugAvailability = base
     .input(CheckSlugAvailabilityInputSchema)
     .output(CheckSlugAvailabilityOutputSchema)
-    .handler(async function ({
-        context: { env },
-        input,
-    }): Promise<CheckSlugAvailabilityOutput> {
+    .handler(async function ({ context: { env }, errors, input }) {
         const db = getDB(env.DJAVACOAL_DB);
+        const auth = getAuth(env);
+
+        const header = await headers();
+        const user = await auth.api.getSession({
+            headers: header,
+        });
+
+        if (!user) throw errors.UNAUTHORIZED();
 
         const whereConditions = [eq(news[NEWS_COLUMNS.SLUG], input.slug)];
 
@@ -457,16 +467,14 @@ export const checkSlugAvailability = base
             whereConditions.push(eq(news[COMMON_COLUMNS.ID], input.excludeId));
         }
 
-        const [_existing] = await db
-            .select()
-            .from(news)
-            .where(
-                input.excludeId ? or(...whereConditions) : whereConditions[0]
-            )
-            .limit(1);
+        const existing = await db.query.news.findFirst({
+            where() {
+                return and(...whereConditions);
+            },
+        });
 
         return {
-            available: !_existing,
+            available: !existing,
         };
     })
     .callable();
@@ -477,12 +485,14 @@ export const checkSlugAvailability = base
 export const generateImageUploadUrl = base
     .input(GenerateImageUploadUrlInputSchema)
     .output(GenerateImageUploadUrlOutputSchema)
-    .handler(async function ({
-        context: { env },
-        input,
-    }): Promise<GenerateImageUploadUrlOutput> {
-        // TODO: Implement authentication check
-        // if (!user) throw errors.UNAUTHORIZED();
+    .handler(async function ({ context: { env }, errors, input }) {
+        const auth = getAuth(env);
+        const header = await headers();
+        const user = await auth.api.getSession({
+            headers: header,
+        });
+
+        if (!user) throw errors.UNAUTHORIZED();
 
         const r2Client = getR2Client({
             endpoint: env.S3_API,
@@ -491,7 +501,6 @@ export const generateImageUploadUrl = base
         });
 
         const key = `${NEWS_IMAGES_PREFIX}/${nanoid()}-${input.fileName}`;
-
         const uploadUrl = await generatePresignedUploadUrl(r2Client, {
             key,
             contentType: input.contentType,
@@ -510,10 +519,7 @@ export const generateImageUploadUrl = base
 export const listTags = base
     .input(ListTagsInputSchema)
     .output(ListTagsOutputSchema)
-    .handler(async function ({
-        context: { env },
-        input: { limit },
-    }): Promise<ListTagsOutput> {
+    .handler(async function ({ context: { env }, input: { limit } }) {
         const db = getDB(env.DJAVACOAL_DB);
 
         const items = await db
@@ -538,32 +544,37 @@ export const listTags = base
 export const createTag = base
     .input(CreateTagInputSchema)
     .output(TagSchema)
-    .handler(async function ({ context: { env }, input }) {
-        // TODO: Implement authentication check
-        // if (!user) throw errors.UNAUTHORIZED();
-
+    .handler(async function ({ context: { env }, errors, input: { name } }) {
         const db = getDB(env.DJAVACOAL_DB);
+        const auth = getAuth(env);
+        const header = await headers();
+        const user = await auth.api.getSession({
+            headers: header,
+        });
+
+        if (!user) throw errors.UNAUTHORIZED();
 
         // Generate slug from name
-        const slug = input.name
+        const slug = name
             .toLowerCase()
             .replace(/[^a-z0-9]+/g, "-")
             .replace(/^-|-$/g, "");
 
         // Check if slug already exists
-        const [_existing] = await db
-            .select()
-            .from(tags)
-            .where(eq(tags[TAG_COLUMNS.SLUG], slug))
-            .limit(1);
+        const existing = await db.query.tags.findFirst({
+            where(fields, operators) {
+                return operators.eq(fields[TAG_COLUMNS.SLUG], slug);
+            },
+        });
 
-        // TODO: Implement conflict error
-        // if (existing) throw errors.CONFLICT({ message: "Tag already exists" });
+        if (existing) {
+            throw errors.BAD_REQUEST({ message: "Tag already exists" });
+        }
 
         const [inserted] = await db
             .insert(tags)
             .values({
-                name: input.name,
+                name,
                 slug,
             })
             .returning({
@@ -584,53 +595,42 @@ export const createTag = base
 export const bulkCreateTags = base
     .input(BulkCreateTagsInputSchema)
     .output(ListTagsOutputSchema)
-    .handler(async function ({
-        context: { env },
-        input,
-    }): Promise<ListTagsOutput> {
-        // TODO: Implement authentication check
-        // if (!user) throw errors.UNAUTHORIZED();
+    .handler(async function ({ context: { env }, errors, input: { names } }) {
+        const auth = getAuth(env);
+        const header = await headers();
+        const user = await auth.api.getSession({
+            headers: header,
+        });
+
+        if (!user) throw errors.UNAUTHORIZED();
 
         const db = getDB(env.DJAVACOAL_DB);
 
-        const created = [];
+        // const created = [];
 
-        for (const name of input.names) {
-            const slug = name
+        function sluggify(name: string) {
+            return name
                 .toLowerCase()
                 .replace(/[^a-z0-9]+/g, "-")
                 .replace(/^-|-$/g, "");
-
-            // Check if exists
-            const [_existing] = await db
-                .select()
-                .from(tags)
-                .where(eq(tags[TAG_COLUMNS.SLUG], slug))
-                .limit(1);
-
-            if (!_existing) {
-                const [inserted] = await db
-                    .insert(tags)
-                    .values({ name, slug })
-                    .returning({
-                        id: tags[COMMON_COLUMNS.ID],
-                        name: tags[TAG_COLUMNS.NAME],
-                        slug: tags[TAG_COLUMNS.SLUG],
-                        createdAt: tags[COMMON_COLUMNS.CREATED_AT],
-                        updatedAt: tags[COMMON_COLUMNS.UPDATED_AT],
-                    });
-                created.push(inserted);
-            } else {
-                // Map snake_case DB fields to camelCase
-                created.push({
-                    id: _existing.id,
-                    name: _existing.name,
-                    slug: _existing.slug,
-                    createdAt: _existing.created_at,
-                    updatedAt: _existing.updated_at,
-                });
-            }
         }
+
+        const nameSlugPairs = names.map((name) => ({
+            name,
+            slug: sluggify(name),
+        }));
+
+        const created = await db
+            .insert(tags)
+            .values(nameSlugPairs)
+            .onConflictDoNothing()
+            .returning({
+                id: tags[COMMON_COLUMNS.ID],
+                name: tags[TAG_COLUMNS.NAME],
+                slug: tags[TAG_COLUMNS.SLUG],
+                createdAt: tags[COMMON_COLUMNS.CREATED_AT],
+                updatedAt: tags[COMMON_COLUMNS.UPDATED_AT],
+            });
 
         return { items: created };
     })

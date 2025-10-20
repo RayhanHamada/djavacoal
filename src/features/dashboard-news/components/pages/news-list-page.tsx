@@ -40,16 +40,10 @@ function NewsListContent() {
                 page,
                 limit: ITEMS_PER_PAGE,
                 titleSearch: filters.title || undefined,
-                tags: filters.tags.length > 0 ? filters.tags : undefined,
-                status:
-                    filters.status === "all"
-                        ? "all"
-                        : (filters.status as
-                              | "published"
-                              | "unpublished"
-                              | "all"),
-                dateFrom: filters.dateFrom || undefined,
-                dateTo: filters.dateTo || undefined,
+                tags: filters.tags,
+                status: filters.status,
+                dateFrom: filters.dateFrom ?? undefined,
+                dateTo: filters.dateTo ?? undefined,
             },
         })
     );

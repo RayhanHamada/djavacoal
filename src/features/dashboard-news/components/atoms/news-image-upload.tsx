@@ -2,18 +2,18 @@
 
 import { useCallback, useState } from "react";
 
-import {
-    ActionIcon,
-    AspectRatio,
-    Box,
-    Image,
-    Loader,
-    Stack,
-    Text,
-} from "@mantine/core";
+import Image from "next/image";
+
+import { ActionIcon, Box, Loader, Stack, Text } from "@mantine/core";
 import { Dropzone, IMAGE_MIME_TYPE } from "@mantine/dropzone";
 import { notifications } from "@mantine/notifications";
-import { IconPhoto, IconTrash, IconUpload, IconX } from "@tabler/icons-react";
+import {
+    IconEdit,
+    IconPhoto,
+    IconTrash,
+    IconUpload,
+    IconX,
+} from "@tabler/icons-react";
 import { useMutation } from "@tanstack/react-query";
 
 import { client } from "@/lib/rpc";
@@ -44,10 +44,9 @@ export function NewsImageUpload({
     const [previewUrl, setPreviewUrl] = useState<string | null>(null);
 
     // Get R2 public URL for image key
-    const getImageUrl = (key: string) => {
-        // TODO: Replace with actual R2 public URL pattern
-        return `${process.env.NEXT_PUBLIC_ASSET_URL}/r2/${key}`;
-    };
+    function getImageUrl(key: string) {
+        return `${process.env.NEXT_PUBLIC_ASSET_URL}/${key}`;
+    }
 
     // Upload mutation
     const uploadMutation = useMutation({
@@ -99,9 +98,8 @@ export function NewsImageUpload({
 
     const handleDrop = useCallback(
         (files: File[]) => {
-            if (files.length === 0) return;
-
-            const file = files[0];
+            const file = files.at(0);
+            if (!file) return;
 
             // Validate file size
             if (file.size > MAX_FILE_SIZE) {
@@ -134,21 +132,65 @@ export function NewsImageUpload({
     const currentImageUrl =
         previewUrl || (imageKey ? getImageUrl(imageKey) : null);
     const isUploading = uploadMutation.isPending;
+    const [isHovered, setIsHovered] = useState(false);
 
     return (
-        <Box display="flex" style={{ justifyContent: "center" }}>
-            <AspectRatio ratio={16 / 9} maw={600}>
-                {currentImageUrl ? (
-                    // Image preview
-                    <Box pos="relative" w="100%" h="100%">
+        <Box w="100%">
+            {currentImageUrl ? (
+                // Image preview with hover overlay
+                <Dropzone
+                    onDrop={handleDrop}
+                    accept={IMAGE_MIME_TYPE}
+                    maxSize={MAX_FILE_SIZE}
+                    maxFiles={1}
+                    disabled={disabled || isUploading}
+                    style={{
+                        border: "2px dashed var(--mantine-color-gray-4)",
+                        borderRadius: "var(--mantine-radius-md)",
+                        padding: 0,
+                        minHeight: "auto",
+                    }}
+                    onMouseEnter={() => setIsHovered(true)}
+                    onMouseLeave={() => setIsHovered(false)}
+                >
+                    <Box pos="relative" w="100%">
                         <Image
                             src={currentImageUrl}
                             alt="News article image"
-                            fit="cover"
-                            w="100%"
-                            h="100%"
-                            radius="md"
+                            objectFit="contain"
+                            height={768}
+                            width={1024}
+                            style={{ margin: "0 auto", display: "block" }}
                         />
+
+                        {/* Hover overlay with change image hint */}
+                        {isHovered && !isUploading && !disabled && (
+                            <Box
+                                pos="absolute"
+                                top={0}
+                                left={0}
+                                right={0}
+                                bottom={0}
+                                style={{
+                                    backgroundColor: "rgba(0, 0, 0, 0.6)",
+                                    display: "flex",
+                                    alignItems: "center",
+                                    justifyContent: "center",
+                                    borderRadius: "var(--mantine-radius-md)",
+                                    cursor: "pointer",
+                                }}
+                            >
+                                <Stack align="center" gap="xs">
+                                    <IconEdit size={48} color="white" />
+                                    <Text size="lg" c="white" fw={600}>
+                                        Click or drop to change image
+                                    </Text>
+                                    <Text size="sm" c="white">
+                                        Maximum: 1024×768 pixels, 10MB
+                                    </Text>
+                                </Stack>
+                            </Box>
+                        )}
 
                         {/* Loading overlay */}
                         {isUploading && (
@@ -159,7 +201,7 @@ export function NewsImageUpload({
                                 right={0}
                                 bottom={0}
                                 style={{
-                                    backgroundColor: "rgba(0, 0, 0, 0.5)",
+                                    backgroundColor: "rgba(0, 0, 0, 0.7)",
                                     display: "flex",
                                     alignItems: "center",
                                     justifyContent: "center",
@@ -167,8 +209,8 @@ export function NewsImageUpload({
                                 }}
                             >
                                 <Stack align="center" gap="xs">
-                                    <Loader size="md" color="white" />
-                                    <Text size="sm" c="white" fw={500}>
+                                    <Loader size="lg" color="white" />
+                                    <Text size="md" c="white" fw={500}>
                                         Uploading...
                                     </Text>
                                 </Stack>
@@ -179,55 +221,66 @@ export function NewsImageUpload({
                         {!isUploading && !disabled && (
                             <ActionIcon
                                 pos="absolute"
-                                top={8}
-                                right={8}
+                                top={12}
+                                right={12}
                                 color="red"
                                 variant="filled"
-                                onClick={handleRemove}
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    handleRemove();
+                                }}
                                 aria-label="Remove image"
-                                size="md"
+                                size="lg"
+                                style={{ zIndex: 1 }}
                             >
-                                <IconTrash size={16} />
+                                <IconTrash size={18} />
                             </ActionIcon>
                         )}
                     </Box>
-                ) : (
-                    // Dropzone
-                    <Dropzone
-                        onDrop={handleDrop}
-                        accept={IMAGE_MIME_TYPE}
-                        maxSize={MAX_FILE_SIZE}
-                        maxFiles={1}
-                        disabled={disabled || isUploading}
+                </Dropzone>
+            ) : (
+                // Empty dropzone
+                <Dropzone
+                    onDrop={handleDrop}
+                    accept={IMAGE_MIME_TYPE}
+                    maxSize={MAX_FILE_SIZE}
+                    maxFiles={1}
+                    disabled={disabled || isUploading}
+                    style={{
+                        minHeight: 300,
+                        border: "2px dashed var(--mantine-color-gray-4)",
+                    }}
+                >
+                    <Stack
+                        justify="center"
+                        align="center"
+                        gap="md"
+                        style={{ minHeight: 280, pointerEvents: "none" }}
                     >
-                        <Stack
-                            justify="center"
-                            align="center"
-                            gap="md"
-                            style={{ minHeight: 120, pointerEvents: "none" }}
-                        >
-                            <Dropzone.Accept>
-                                <IconUpload size={32} stroke={1.5} />
-                            </Dropzone.Accept>
-                            <Dropzone.Reject>
-                                <IconX size={32} stroke={1.5} />
-                            </Dropzone.Reject>
-                            <Dropzone.Idle>
-                                <IconPhoto size={32} stroke={1.5} />
-                            </Dropzone.Idle>
+                        <Dropzone.Accept>
+                            <IconUpload size={52} stroke={1.5} />
+                        </Dropzone.Accept>
+                        <Dropzone.Reject>
+                            <IconX size={52} stroke={1.5} />
+                        </Dropzone.Reject>
+                        <Dropzone.Idle>
+                            <IconPhoto size={52} stroke={1.5} />
+                        </Dropzone.Idle>
 
-                            <Stack gap={4} align="center">
-                                <Text size="sm" inline fw={500}>
-                                    Drop image here or click to select
-                                </Text>
-                                <Text size="xs" c="dimmed" inline>
-                                    Maximum file size: 10MB
-                                </Text>
-                            </Stack>
+                        <Stack gap={4} align="center">
+                            <Text size="lg" inline fw={600}>
+                                Drop image here or click to select
+                            </Text>
+                            <Text size="sm" c="dimmed" inline>
+                                Recommended: 1024×768 pixels
+                            </Text>
+                            <Text size="sm" c="dimmed" inline>
+                                Maximum file size: 10MB
+                            </Text>
                         </Stack>
-                    </Dropzone>
-                )}
-            </AspectRatio>
+                    </Stack>
+                </Dropzone>
+            )}
         </Box>
     );
 }

@@ -5,6 +5,13 @@ import createNextIntlPlugin from "next-intl/plugin";
 
 const nextConfig: NextConfig = {
     /* config options here */
+    images: {
+        remotePatterns: [
+            {
+                hostname: new URL(process.env.NEXT_PUBLIC_ASSET_URL).hostname,
+            },
+        ],
+    },
 };
 
 /**

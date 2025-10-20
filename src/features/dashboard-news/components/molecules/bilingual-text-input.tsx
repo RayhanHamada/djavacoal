@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { memo, useState } from "react";
 
 import { SegmentedControl, Stack, TextInput } from "@mantine/core";
 
@@ -33,7 +33,7 @@ interface BilingualTextInputProps {
  * BilingualTextInput component for English and Arabic text input
  * Allows switching between languages with proper text direction
  */
-export function BilingualTextInput({
+export const BilingualTextInput = memo(function BilingualTextInput({
     enValue,
     arValue,
     onEnChange,
@@ -86,4 +86,4 @@ export function BilingualTextInput({
             )}
         </Stack>
     );
-}
+});

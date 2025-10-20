@@ -1,9 +1,8 @@
 "use client";
 
-import { useEffect } from "react";
+import { useCallback, useEffect } from "react";
 
 import {
-    Box,
     Button,
     Divider,
     Grid,
@@ -17,16 +16,12 @@ import {
 import { DateTimePicker } from "@mantine/dates";
 import { useForm } from "@mantine/form";
 import { useLocalStorage } from "@mantine/hooks";
-import { useDebounce } from "ahooks";
-import { zodResolver } from "mantine-form-zod-resolver";
+import { useDebounce, useDebounceFn } from "ahooks";
+import dayjs from "dayjs";
 
 import { NewsImageUpload } from "../atoms/news-image-upload";
 import { NewsTagsSelect } from "../atoms/news-tags-select";
-import {
-    getInitialNewsFormValues,
-    newsFormSchema,
-    NewsFormValues,
-} from "../lib/form-schemas";
+import { validateNewsForm, type NewsFormValues } from "../lib/form-schemas";
 import { BilingualContentEditor } from "../molecules/bilingual-content-editor";
 import { BilingualTextInput } from "../molecules/bilingual-text-input";
 
@@ -44,31 +39,14 @@ interface NewsFormProps {
 }
 
 /**
- * Extract first paragraph text from HTML content (plain text only, max 160 chars)
- */
-function extractFirstParagraph(html: string): string {
-    // Create a temporary div to parse HTML
-    const div = document.createElement("div");
-    div.innerHTML = html;
-
-    // Find first paragraph
-    const firstP = div.querySelector("p");
-    const text = firstP?.textContent || "";
-
-    // Return max 160 characters
-    return text.slice(0, 160);
-}
-
-/**
  * Generate slug from title
  */
-function generateSlug(title: string): string {
+function generateSlug(title: string) {
     return title
         .toLowerCase()
         .trim()
         .replace(/[^a-z0-9\s-]/g, "")
-        .replace(/\s+/g, "-")
-        .replace(/-+/g, "-")
+        .replace(/\s+|-+/g, "-")
         .replace(/^-|-$/g, "");
 }
 
@@ -82,82 +60,104 @@ export function NewsForm({
     isEditMode = false,
     isSubmitting = false,
     onSubmit,
-    // storageKey,
 }: NewsFormProps) {
     // Local storage for persistence
-    const [storedData, setStoredData, removeStoredData] = useLocalStorage<
-        Partial<NewsFormValues>
-    >({
+    const [storedData, setStoredData, removeStoredData] = useLocalStorage({
         key: storageKey,
-        defaultValue: initialData || {},
+        defaultValue: initialData,
+    });
+
+    const { run: debouncedSetStoredData } = useDebounceFn(setStoredData, {
+        wait: 500,
     });
 
     // Initialize form with Mantine's useForm
-    const form = useForm<NewsFormValues>({
-        mode: "controlled",
-        initialValues: getInitialNewsFormValues({
+    const form = useForm({
+        mode: "uncontrolled",
+        initialValues: {
+            slug: "",
+            imageKey: undefined,
+            enTitle: "",
+            arTitle: "",
+            enContent: "",
+            arContent: "",
+            metadataTitle: "",
+            metadataDescription: "",
+            metadataTags: [],
+            publishedAt: new Date(),
+            useAutoMetadataDescription: true,
             ...storedData,
             ...initialData,
-        }),
-        validate: zodResolver(newsFormSchema),
+        },
+        validate: validateNewsForm,
+        onValuesChange(values) {
+            debouncedSetStoredData(values);
+        },
     });
 
-    // Get current form values
-    const values = form.values;
-    const debouncedValue = useDebounce(values, { wait: 500 });
-
-    // Update local storage when form values change
-    useEffect(() => {
-        setStoredData(values);
-
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [values]);
+    // Get current form values with debounce for auto-generation
+    const values = form.getValues();
+    const debouncedEnTitle = useDebounce(values.enTitle, { wait: 500 });
 
     // Auto-generate slug from English title
     useEffect(() => {
         if (isEditMode) return;
 
-        const newSlug = generateSlug(debouncedValue.enTitle);
+        const newSlug = generateSlug(debouncedEnTitle);
         form.setFieldValue("slug", newSlug);
-
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [debouncedValue.enTitle, isEditMode]);
+    }, [debouncedEnTitle, isEditMode]);
 
     // Auto-copy English title to metadata title
     useEffect(() => {
-        form.setFieldValue("metadataTitle", debouncedValue.enTitle);
-
+        form.setFieldValue("metadataTitle", debouncedEnTitle);
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [debouncedValue.enTitle]);
+    }, [debouncedEnTitle]);
 
-    // Auto-generate metadata description from first paragraph
-    useEffect(() => {
-        if (
-            debouncedValue.useAutoMetadataDescription &&
-            debouncedValue.enContent
-        ) {
-            const description = extractFirstParagraph(debouncedValue.enContent);
+    const handleEnFirstParagraphChange = useCallback(
+        (firstParagraph: string) => {
+            if (!form.getValues().useAutoMetadataDescription) return;
+
+            const description = firstParagraph.slice(0, 160);
             form.setFieldValue("metadataDescription", description);
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [debouncedValue.enContent, debouncedValue.useAutoMetadataDescription]);
+        },
 
-    const handleSubmit = (values: NewsFormValues, publish: boolean) => {
-        onSubmit(values, publish);
-        // Clear local storage on successful submit
-        removeStoredData();
-    };
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        []
+    );
+
+    const handleSubmit = useCallback(
+        (values: NewsFormValues, publish: boolean) => {
+            console.log("should be handled");
+            onSubmit(values, publish);
+            // Clear local storage on successful submit
+            removeStoredData();
+        },
+        [onSubmit, removeStoredData]
+    );
+
+    const handleSaveUnpublished = form.onSubmit((values) =>
+        handleSubmit(values, false)
+    );
+
+    const handleSavePublished = form.onSubmit((values) =>
+        handleSubmit(values, true)
+    );
 
     return (
-        <form onSubmit={form.onSubmit((values) => handleSubmit(values, true))}>
+        <form onSubmit={handleSavePublished}>
             <Stack gap="xl">
                 {/* Image Upload */}
-                <Box>
-                    <Text size="sm" fw={500} mb="xs">
-                        News Image (4:3 ratio)
+                <Stack gap="xs">
+                    <Text size="sm" fw={500}>
+                        News Image
+                    </Text>
+                    <Text size="xs" c="dimmed">
+                        Upload a cover image for your news article. Recommended
+                        size: 1024×768 pixels (4:3 ratio)
                     </Text>
                     <NewsImageUpload
-                        imageKey={values.imageKey}
+                        imageKey={form.getValues().imageKey}
                         onImageUploaded={(key) =>
                             form.setFieldValue("imageKey", key)
                         }
@@ -166,15 +166,15 @@ export function NewsForm({
                         }
                         disabled={isSubmitting}
                     />
-                </Box>
+                </Stack>
 
                 <Divider />
 
                 {/* Titles */}
                 <BilingualTextInput
                     label="News Title"
-                    enValue={values.enTitle}
-                    arValue={values.arTitle}
+                    enValue={form.getValues().enTitle}
+                    arValue={form.getValues().arTitle}
                     onEnChange={(value) => form.setFieldValue("enTitle", value)}
                     onArChange={(value) => form.setFieldValue("arTitle", value)}
                     required
@@ -185,23 +185,32 @@ export function NewsForm({
                 />
 
                 {/* Slug (editable in create, readonly in edit) */}
-                <TextInput
-                    label="URL Slug"
-                    description="Auto-generated from English title, URL-safe"
-                    key={form.key("slug")}
-                    {...form.getInputProps("slug")}
-                    required
-                    disabled
-                    readOnly
-                />
+                <Stack>
+                    <TextInput
+                        label="URL Slug"
+                        description="Permanent and auto-generated from English title, URL-safe"
+                        key={form.key("slug")}
+                        {...form.getInputProps("slug")}
+                        required
+                        readOnly
+                    />
+                    <Text size="xs" c="dimmed">
+                        Will be accessible at:{" "}
+                        <Text component="span" fw={500}>
+                            {process.env.NEXT_PUBLIC_BASE_URL}news/
+                            {form.getValues().slug}
+                        </Text>
+                    </Text>
+                </Stack>
 
                 <Divider />
 
                 {/* Content */}
                 <BilingualContentEditor
                     label="News Content"
-                    enContent={values.enContent}
-                    arContent={values.arContent}
+                    enContent={form.getValues().enContent}
+                    onEnFirstParagraphChange={handleEnFirstParagraphChange}
+                    arContent={form.getValues().arContent}
                     onEnChange={(content) =>
                         form.setFieldValue("enContent", content)
                     }
@@ -232,7 +241,7 @@ export function NewsForm({
                     {/* Metadata Title (readonly, copy of English title) */}
                     <TextInput
                         label="Metadata Title"
-                        value={values.metadataTitle}
+                        value={form.getValues().metadataTitle}
                         readOnly
                         description="Automatically copied from English title"
                         disabled={isSubmitting}
@@ -242,7 +251,7 @@ export function NewsForm({
                     <Stack gap="xs">
                         <Radio.Group
                             value={
-                                values.useAutoMetadataDescription
+                                form.getValues().useAutoMetadataDescription
                                     ? "auto"
                                     : "manual"
                             }
@@ -277,19 +286,21 @@ export function NewsForm({
                             required
                             disabled={
                                 isSubmitting ||
-                                values.useAutoMetadataDescription
+                                form.getValues().useAutoMetadataDescription
                             }
-                            readOnly={values.useAutoMetadataDescription}
-                        />
+                            readOnly={
+                                form.getValues().useAutoMetadataDescription
+                            }
+                        ></Textarea>
                         <Text size="xs" c="dimmed" ta="right">
-                            {values.metadataDescription.length}/160
+                            {form.getValues().metadataDescription.length}/160
                         </Text>
                     </Stack>
 
                     {/* Tags */}
                     <NewsTagsSelect
                         label="Tags"
-                        value={values.metadataTags}
+                        value={form.getValues().metadataTags}
                         onChange={(tags) =>
                             form.setFieldValue("metadataTags", tags)
                         }
@@ -308,13 +319,24 @@ export function NewsForm({
 
                     <DateTimePicker
                         label="Publication Date & Time"
-                        description="Set the publication date and time"
+                        valueFormat="dddd, DD MMMM YYYY HH:mm"
+                        locale="id-ID"
+                        description="Set the publication date and time."
                         key={form.key("publishedAt")}
                         {...form.getInputProps("publishedAt")}
+                        onChange={(v) =>
+                            form.setFieldValue("publishedAt", dayjs(v).toDate())
+                        }
                         required
                         disabled={isSubmitting}
                         clearable={false}
                     />
+                    {dayjs(form.getValues().publishedAt).isAfter(dayjs()) && (
+                        <Text size="xs" c="blue">
+                            <b>Future date is set.</b> News will be listed on
+                            the selected date and time.
+                        </Text>
+                    )}
                 </Stack>
 
                 <Divider />
@@ -326,7 +348,7 @@ export function NewsForm({
                             fullWidth
                             type="submit"
                             loading={isSubmitting}
-                            size="lg"
+                            size="md"
                         >
                             Submit & Publish
                         </Button>
@@ -335,19 +357,17 @@ export function NewsForm({
                         <Button
                             fullWidth
                             variant="light"
-                            onClick={() =>
-                                form.onSubmit((values) =>
-                                    handleSubmit(values, false)
-                                )()
-                            }
+                            onClick={() => handleSaveUnpublished()}
                             disabled={isSubmitting}
-                            size="lg"
+                            size="md"
                         >
                             Save as Unpublished
                         </Button>
+                        <Text>{isSubmitting}</Text>
                     </Grid.Col>
                 </Grid>
             </Stack>
+            {JSON.stringify(form.errors)}
         </form>
     );
 }

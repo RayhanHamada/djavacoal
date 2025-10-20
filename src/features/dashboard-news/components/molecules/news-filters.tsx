@@ -12,9 +12,10 @@ import {
 import { DatePickerInput } from "@mantine/dates";
 import { useDisclosure } from "@mantine/hooks";
 import { IconFilter, IconX } from "@tabler/icons-react";
+import dayjs from "dayjs";
 import {
     parseAsArrayOf,
-    parseAsIsoDateTime,
+    parseAsIsoDate,
     parseAsString,
     parseAsStringEnum,
     useQueryStates,
@@ -23,6 +24,9 @@ import {
 import { NewsTagsSelect } from "../atoms";
 
 type StatusFilter = "all" | "published" | "unpublished";
+
+const DEFAULT_DATE_FROM = dayjs().subtract(1, "month").toDate();
+const DEFAULT_DATE_TO = dayjs().toDate();
 
 /**
  * News filters state management using nuqs
@@ -37,8 +41,8 @@ export function useNewsFilters() {
                 "published",
                 "unpublished",
             ]).withDefault("all"),
-            dateFrom: parseAsIsoDateTime,
-            dateTo: parseAsIsoDateTime,
+            dateFrom: parseAsIsoDate.withDefault(DEFAULT_DATE_FROM),
+            dateTo: parseAsIsoDate.withDefault(DEFAULT_DATE_TO),
         },
         {
             history: "push",
@@ -106,14 +110,14 @@ export function NewsFilters({
                 type="range"
                 label="Publication Date Range"
                 placeholder="Select date range"
-                value={[
-                    filters.dateFrom ? new Date(filters.dateFrom) : null,
-                    filters.dateTo ? new Date(filters.dateTo) : null,
-                ]}
-                onChange={([from, to]) => {
+                value={[filters.dateFrom, filters.dateTo]}
+                onChange={([f, t]) => {
+                    const dateFrom = dayjs(f, "YYYY-MM-DD");
+                    const dateTo = dayjs(t, "YYYY-MM-DD");
+
                     setFilters({
-                        dateFrom: from as any,
-                        dateTo: to as any,
+                        dateFrom: dateFrom.isValid() ? dateFrom.toDate() : null,
+                        dateTo: dateTo.isValid() ? dateTo.toDate() : null,
                     });
                 }}
                 clearable
