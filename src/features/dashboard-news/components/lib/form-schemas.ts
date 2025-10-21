@@ -2,6 +2,20 @@ import { zod4Resolver } from "mantine-form-zod-resolver";
 import { z } from "zod/v4";
 
 /**
+ * Creation mode enum
+ * - fresh: typical article creation with draft/publish flow
+ * - migration: allows manual publication date setting for re-creating existing articles
+ */
+export const CreationModeEnum = z.enum(["fresh", "migration"]);
+export type CreationMode = z.infer<typeof CreationModeEnum>;
+
+/**
+ * News status enum
+ */
+export const NewsStatusEnum = z.enum(["draft", "published", "unpublished"]);
+export type NewsStatus = z.infer<typeof NewsStatusEnum>;
+
+/**
  * Schema for news form data
  */
 const NEWS_FORM_SCHEMA = z.object({
@@ -17,7 +31,16 @@ const NEWS_FORM_SCHEMA = z.object({
         .min(1, "Metadata description is required")
         .max(160, "Metadata description must be 160 characters or less"),
     metadataTags: z.array(z.string()).default([]),
-    publishedAt: z.date(),
+
+    // Creation mode: fresh or migration
+    mode: CreationModeEnum.default("fresh"),
+
+    // Status: draft, published, or unpublished
+    status: NewsStatusEnum.default("draft"),
+
+    // Publication date (optional, required only when publishing)
+    publishedAt: z.date().optional(),
+
     useAutoMetadataDescription: z.boolean(),
 });
 
@@ -29,7 +52,7 @@ export type NewsFormValues = z.infer<typeof NEWS_FORM_SCHEMA>;
 const NEWS_FILTER_SCHEMA = z.object({
     title: z.string(),
     tags: z.array(z.string()),
-    status: z.enum(["all", "published", "unpublished"]),
+    status: z.enum(["all", "draft", "published", "unpublished"]),
     dateFrom: z.string().nullable(),
     dateTo: z.string().nullable(),
 });

@@ -240,13 +240,16 @@ const NEWS_COLUMN_FIELDS = {
     [NEWS_COLUMNS.EN_CONTENT_KEY]: text().notNull(),
 
     /**
-     * publication status fields (single publication status)
+     * publication status: draft, published, or unpublished
+     * - draft: article is incomplete or in progress, not yet ready for public view
+     * - published: article is live and visible to users
+     * - unpublished: article was live but is now hidden, retaining data for potential re-publishing
      */
-    [NEWS_COLUMNS.IS_PUBLISHED]: int({
-        mode: "boolean",
+    [NEWS_COLUMNS.STATUS]: text({
+        enum: ["draft", "published", "unpublished"],
     })
         .notNull()
-        .$default(() => false),
+        .$default(() => "draft"),
 
     /**
      * publication timestamp and author

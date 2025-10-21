@@ -72,16 +72,24 @@ export function NewsTitleCell({ enTitle, arTitle, onClick }: TitleCellProps) {
 }
 
 interface StatusCellProps {
-    isPublished: boolean;
+    status: "draft" | "published" | "unpublished";
 }
 
 /**
  * Status badge cell component
  */
-export function NewsStatusCell({ isPublished }: StatusCellProps) {
+export function NewsStatusCell({ status }: StatusCellProps) {
+    const statusConfig = {
+        draft: { color: "gray", label: "Draft" },
+        published: { color: "green", label: "Published" },
+        unpublished: { color: "orange", label: "Unpublished" },
+    };
+
+    const config = statusConfig[status];
+
     return (
-        <Badge color={isPublished ? "green" : "gray"} variant="light">
-            {isPublished ? "Published" : "Unpublished"}
+        <Badge color={config.color} variant="light">
+            {config.label}
         </Badge>
     );
 }

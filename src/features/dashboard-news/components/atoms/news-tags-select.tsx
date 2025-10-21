@@ -20,6 +20,8 @@ interface NewsTagsSelectProps {
     error?: string;
     /** Label */
     label?: string;
+    /** Description */
+    description?: string;
     /** Placeholder */
     placeholder?: string;
     /** Required field */
@@ -36,6 +38,7 @@ export function NewsTagsSelect({
     disabled = false,
     error,
     label = "Tags",
+    description,
     placeholder = "Select or create tags (press Enter to create new)",
     required = false,
 }: NewsTagsSelectProps) {
@@ -66,6 +69,7 @@ export function NewsTagsSelect({
     return (
         <MultiSelect
             label={label}
+            description={description}
             leftSection={<TagsIcon size={16} />}
             placeholder={placeholder}
             value={value}

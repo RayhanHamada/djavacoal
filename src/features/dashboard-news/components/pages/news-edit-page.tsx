@@ -46,13 +46,7 @@ export function NewsEditPage({ newsId }: NewsEditPageProps) {
 
     // Update mutation
     const updateMutation = useMutation({
-        mutationFn: async ({
-            data: formData,
-            publish,
-        }: {
-            data: NewsFormValues;
-            publish: boolean;
-        }) => {
+        mutationFn: async (formData: NewsFormValues) => {
             return await client.dashboardNews.updateNews({
                 id: newsId,
                 imageKey: formData.imageKey,
@@ -62,25 +56,24 @@ export function NewsEditPage({ newsId }: NewsEditPageProps) {
                 arContent: formData.arContent,
                 metadataDescription: formData.metadataDescription,
                 metadataTags: formData.metadataTags,
+                status: formData.status,
                 publishedAt: formData.publishedAt,
-                isPublished: publish,
             });
         },
         onSuccess: (_, variables) => {
-            if (variables.publish) {
-                notifications.show({
-                    title: "Success",
-                    message: "News article updated and republished",
-                    color: "green",
-                });
-            } else {
-                notifications.show({
-                    title: "Saved",
-                    message: "News article updated",
-                    color: "green",
-                    icon: <IconCheck size={18} />,
-                });
-            }
+            const statusMessages = {
+                draft: "News article saved as draft",
+                published: "News article published successfully",
+                unpublished: "News article saved as unpublished",
+            };
+            const message =
+                statusMessages[variables.status] || "News article updated";
+            notifications.show({
+                title: "Success",
+                message,
+                color: "green",
+                icon: <IconCheck size={18} />,
+            });
             setHasUnsavedChanges(false);
             setIsAutoSaving(false);
             queryClient.invalidateQueries({
@@ -100,8 +93,8 @@ export function NewsEditPage({ newsId }: NewsEditPageProps) {
         },
     });
 
-    const handleSubmit = (formData: NewsFormValues, publish: boolean) => {
-        updateMutation.mutate({ data: formData, publish });
+    const handleSubmit = (formData: NewsFormValues) => {
+        updateMutation.mutate(formData);
     };
 
     // Auto-save is handled by detecting changes in form data
@@ -157,7 +150,7 @@ export function NewsEditPage({ newsId }: NewsEditPageProps) {
                 </Group>
 
                 {/* Unsaved changes alert for published articles */}
-                {hasUnsavedChanges && data.isPublished && (
+                {hasUnsavedChanges && data.status === "published" && (
                     <Alert
                         icon={<IconAlertCircle size={18} />}
                         title="Unsaved Changes"
@@ -179,7 +172,8 @@ export function NewsEditPage({ newsId }: NewsEditPageProps) {
                                     );
                                     if (stored) {
                                         const formData = JSON.parse(stored);
-                                        handleSubmit(formData, true);
+                                        formData.status = "published";
+                                        handleSubmit(formData);
                                     }
                                 }}
                                 loading={updateMutation.isPending}
@@ -201,9 +195,11 @@ export function NewsEditPage({ newsId }: NewsEditPageProps) {
                         metadataTitle: data.metadataTitle,
                         metadataDescription: data.metadataDescription,
                         metadataTags: data.metadataTags,
+                        mode: "fresh", // Edit mode always uses fresh mode
+                        status: data.status,
                         publishedAt: data.publishedAt
                             ? new Date(data.publishedAt)
-                            : new Date(),
+                            : undefined,
                         useAutoMetadataDescription: false,
                     }}
                     isEditMode={true}
