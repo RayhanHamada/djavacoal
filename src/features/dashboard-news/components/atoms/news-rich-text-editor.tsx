@@ -7,6 +7,7 @@ import "tiptap-extension-resizable-image/styles.css";
 import { Dispatch, useCallback } from "react";
 
 import { Box, Group, Text } from "@mantine/core";
+import { notifications } from "@mantine/notifications";
 import { RichTextEditor } from "@mantine/tiptap";
 import {
     IconColumnInsertLeft,
@@ -22,12 +23,16 @@ import CharacterCount from "@tiptap/extension-character-count";
 import Highlight from "@tiptap/extension-highlight";
 import { TableKit } from "@tiptap/extension-table";
 import TextAlign from "@tiptap/extension-text-align";
+import { TextStyleKit } from "@tiptap/extension-text-style";
 import { EditorEvents, useEditor } from "@tiptap/react";
 import { BubbleMenu } from "@tiptap/react/menus";
 import StarterKit from "@tiptap/starter-kit";
 import { useDebounceFn } from "ahooks";
+import { nanoid } from "nanoid";
 import { ResizableImage } from "tiptap-extension-resizable-image";
 import { TextDirection } from "tiptap-text-direction";
+
+import { client } from "@/lib/rpc";
 
 type Props = {
     content?: string;
@@ -82,17 +87,18 @@ export function NewsRichTextEditor({
         immediatelyRender: false,
         shouldRerenderOnTransaction: false,
         extensions: [
+            Highlight,
             StarterKit.configure({
                 heading: {
                     levels: [2, 3, 4, 5, 6],
                 },
             }),
+            TextStyleKit,
             TableKit.configure({
                 table: {
                     resizable: true,
                 },
             }),
-            Highlight,
             TextAlign.configure({
                 types: ["heading", "paragraph"],
             }),
@@ -100,29 +106,76 @@ export function NewsRichTextEditor({
                 defaultWidth: 200,
                 defaultHeight: 200,
                 async onUpload(file) {
-                    const base64 = await new Promise<string>(
-                        (resolve, reject) => {
-                            const reader = new FileReader();
-                            reader.onloadend = () =>
-                                resolve(reader.result as string);
-                            reader.onerror = reject;
-                            reader.readAsDataURL(file);
-                        }
-                    );
+                    // Generate unique name using nanoid
+                    const uniqueName = `editor-${nanoid()}`;
+                    notifications.show({
+                        color: "blue",
+                        title: "Uploading Pasted Image",
+                        message: `Uploading ${file.name}...`,
+                    });
+
+                    // Get presigned upload URL from gallery server
+                    const { uploadUrl, key, photoId } =
+                        await client.gallery.createPresignedUrl({
+                            name: uniqueName,
+                            mimeType: file.type,
+                            size: file.size,
+                        });
+
+                    // Upload file to R2
+                    const uploadResponse = await fetch(uploadUrl, {
+                        method: "PUT",
+                        body: file,
+                        headers: {
+                            "Content-Type": file.type,
+                        },
+                    });
+
+                    if (!uploadResponse.ok) {
+                        throw new Error("Failed to upload image to R2");
+                    }
+
+                    // Confirm upload and save metadata to gallery table
+                    await client.gallery.confirmUpload({
+                        photoId,
+                        name: uniqueName,
+                        key,
+                        mimeType: file.type as
+                            | "image/jpeg"
+                            | "image/png"
+                            | "image/gif"
+                            | "image/webp"
+                            | "image/svg+xml",
+                        size: file.size,
+                    });
+
+                    // Return public URL
+                    const url = `${process.env.NEXT_PUBLIC_ASSET_URL}/${key}`;
+
+                    notifications.show({
+                        color: "green",
+                        title: "Finish Uploading Pasted Image",
+                        message: `photo uploaded`,
+                        loading: true,
+                        autoClose: 1000,
+                    });
 
                     return {
-                        src: base64,
+                        src: url,
                         alt: file.name,
                         title: file.name,
                         "data-keep-ratio": true,
                     };
                 },
             }),
+
             CharacterCount.configure({
                 limit: maxCharacters,
             }),
             // @ts-expect-error - TextDirection has version incompatibility with @tiptap/core
-            TextDirection.configure({ defaultDirection: rtl ? "rtl" : "ltr" }),
+            TextDirection.configure({
+                defaultDirection: rtl ? "rtl" : "ltr",
+            }),
         ],
         editorProps: {
             attributes: {
@@ -136,7 +189,7 @@ export function NewsRichTextEditor({
     const characterCount = editor?.storage.characterCount.characters() || 0;
     const wordCount = editor?.storage.characterCount.words() || 0;
 
-    // Extracted onClick handlers
+    // Table handlers
     const handleInsertTable = useCallback(() => {
         editor
             ?.chain()
@@ -187,6 +240,27 @@ export function NewsRichTextEditor({
                     <RichTextEditor.Strikethrough />
                     <RichTextEditor.ClearFormatting />
                     <RichTextEditor.Highlight />
+                </RichTextEditor.ControlsGroup>
+
+                <RichTextEditor.ControlsGroup>
+                    <RichTextEditor.ColorPicker
+                        colors={[
+                            "#25262b",
+                            "#868e96",
+                            "#fa5252",
+                            "#e64980",
+                            "#be4bdb",
+                            "#7950f2",
+                            "#4c6ef5",
+                            "#228be6",
+                            "#15aabf",
+                            "#12b886",
+                            "#40c057",
+                            "#82c91e",
+                            "#fab005",
+                            "#fd7e14",
+                        ]}
+                    />
                 </RichTextEditor.ControlsGroup>
 
                 <RichTextEditor.ControlsGroup>
@@ -301,6 +375,9 @@ export function NewsRichTextEditor({
                         <RichTextEditor.Bold />
                         <RichTextEditor.Italic />
                         <RichTextEditor.Underline />
+                        <RichTextEditor.AlignLeft />
+                        <RichTextEditor.AlignCenter />
+                        <RichTextEditor.AlignRight />
                         <RichTextEditor.Link />
                         <RichTextEditor.Unlink />
                     </RichTextEditor.ControlsGroup>

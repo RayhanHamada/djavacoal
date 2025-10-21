@@ -265,6 +265,23 @@ export const createNews = base
 
         if (!user) throw errors.UNAUTHORIZED();
 
+        // Auto-create tags if they don't exist (insert or ignore)
+        if (input.metadataTags.length > 0) {
+            function sluggify(name: string) {
+                return name
+                    .toLowerCase()
+                    .replace(/[^a-z0-9]+/g, "-")
+                    .replace(/^-|-$/g, "");
+            }
+
+            const nameSlugPairs = input.metadataTags.map((name) => ({
+                name,
+                slug: sluggify(name),
+            }));
+
+            await db.insert(tags).values(nameSlugPairs).onConflictDoNothing();
+        }
+
         // Check if slug is available
         const existing = await db.query.news.findFirst({
             where(fields, operators) {
@@ -352,6 +369,23 @@ export const updateNews = base
         });
 
         if (!user) throw errors.UNAUTHORIZED();
+
+        // Auto-create tags if they don't exist (insert or ignore)
+        if (input.metadataTags.length > 0) {
+            function sluggify(name: string) {
+                return name
+                    .toLowerCase()
+                    .replace(/[^a-z0-9]+/g, "-")
+                    .replace(/^-|-$/g, "");
+            }
+
+            const nameSlugPairs = input.metadataTags.map((name) => ({
+                name,
+                slug: sluggify(name),
+            }));
+
+            await db.insert(tags).values(nameSlugPairs).onConflictDoNothing();
+        }
 
         // Get existing article
         const existing = await db.query.news.findFirst({
