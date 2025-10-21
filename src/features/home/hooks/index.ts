@@ -1,1 +1,1 @@
-export * from "@/features/home/hooks/use-example";
+export * from "./use-example";

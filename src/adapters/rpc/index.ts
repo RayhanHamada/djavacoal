@@ -1,8 +1,12 @@
 import "server-only";
 
+import { onError, ORPCError } from "@orpc/client";
+import { ValidationError } from "@orpc/server";
 import { RPCHandler } from "@orpc/server/fetch";
+import z from "zod/v4";
 
 import { router as admins } from "@/features/admin-auth/server/router";
+import { dashboardNews } from "@/features/dashboard-news/server";
 import { router as gallery } from "@/features/gallery/server/router";
 
 const router = {
@@ -11,9 +15,50 @@ const router = {
      */
     admins,
     gallery,
+    dashboardNews,
 };
 
-const handler = new RPCHandler(router);
+const handler = new RPCHandler(router, {
+    clientInterceptors: [
+        onError(async function (error) {
+            if (error instanceof ORPCError) {
+                if (
+                    error.code === "BAD_REQUEST" &&
+                    error.cause instanceof ValidationError
+                ) {
+                    const zodError = new z.ZodError(
+                        error.cause.issues as z.core.$ZodIssue[]
+                    );
+
+                    throw new ORPCError("INPUT_VALIDATION_ERROR", {
+                        status: 422,
+                        message: z.prettifyError(zodError),
+                        data: z.flattenError(zodError),
+                        cause: error.cause,
+                    });
+                }
+
+                if (
+                    error.code === "INTERNAL_SERVER_ERROR" &&
+                    error.cause instanceof ValidationError
+                ) {
+                    const zodError = new z.ZodError(
+                        error.cause.issues as z.core.$ZodIssue[]
+                    );
+
+                    throw new ORPCError("OUTPUT_VALIDATION_ERROR", {
+                        status: 500,
+                        message: z.prettifyError(zodError),
+                        data: z.flattenError(zodError),
+                        cause: error.cause,
+                    });
+                }
+            }
+
+            console.log(error);
+        }),
+    ],
+});
 export default async function getHandler(request: Request) {
     return handler
         .handle(request, {

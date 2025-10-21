@@ -25,21 +25,10 @@ export const navigationConfig: NavigationItem[] = [
         description: "Photo Gallery Management",
     },
     {
-        label: "Articles",
+        label: "News and Articles",
         icon: IconArticle,
-        description: "Content management",
-        children: [
-            {
-                label: "Manage Article",
-                icon: IconList,
-                href: "/dashboard/articles",
-            },
-            {
-                label: "Create Article",
-                icon: IconPlus,
-                href: "/dashboard/articles/create",
-            },
-        ],
+        description: "News Content management",
+        href: "/dashboard/news",
     },
     {
         label: "Products",

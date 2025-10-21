@@ -4,12 +4,21 @@ export const TABLE_NAMES = {
     ACCOUNTS: "accounts",
     VERIFICATIONS: "verifications",
     GALLERY_PHOTOS: "gallery_photos",
+
+    NEWS: "news",
+    NEWS_METADATA: "news_metadatas",
+    NEWS_TITLE: "news_titles",
+    NEWS_CONTENT: "news_contents",
+
+    TAGS: "tags",
 } as const;
 
 export const COMMON_COLUMNS = {
     ID: "id",
     CREATED_AT: "created_at",
     UPDATED_AT: "updated_at",
+    CREATED_BY: "created_by",
+    UPDATED_BY: "updated_by",
 } as const;
 
 export const USER_COLUMNS = {
@@ -56,4 +65,34 @@ export const GALLERY_PHOTO_COLUMNS = {
     KEY: "key",
     SIZE: "size",
     MIME_TYPE: "mime_type",
+} as const;
+
+export const NEWS_COLUMNS = {
+    SLUG: "slug",
+    IMAGE_KEY: "image_key",
+
+    METADATA_TITLE: "metadata_title",
+    METADATA_DESCRIPTION: "metadata_description",
+    METADATA_TAG_LIST: "metadata_tag_list",
+
+    AR_TITLE: "ar_title",
+    AR_CONTENT_KEY: "ar_content_key",
+
+    EN_TITLE: "en_title",
+    EN_CONTENT_KEY: "en_content_key",
+
+    STATUS: "status",
+    PUBLISHED_AT: "published_at",
+    PUBLISHED_BY: "published_by",
+} as const;
+
+export const NEWS_STATUS = {
+    DRAFT: "draft",
+    PUBLISHED: "published",
+    UNPUBLISHED: "unpublished",
+} as const;
+
+export const TAG_COLUMNS = {
+    NAME: "name",
+    SLUG: "slug",
 } as const;
