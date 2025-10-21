@@ -2,7 +2,7 @@ import "server-only";
 
 import { headers } from "next/headers";
 
-import { and, count, desc, eq, gte, like, lte } from "drizzle-orm";
+import { and, count, desc, eq, gte, like, lte, or, sql } from "drizzle-orm";
 import { nanoid } from "nanoid";
 
 import {
@@ -65,7 +65,7 @@ export const listNews = base
             page,
             limit,
             titleSearch,
-            tags: _tags,
+            tags: filterTags,
             status,
             dateFrom,
             dateTo,
@@ -94,6 +94,20 @@ export const listNews = base
 
         if (dateTo) {
             whereConditions.push(lte(news[NEWS_COLUMNS.PUBLISHED_AT], dateTo));
+        }
+
+        // Add tag filter using SQL
+        if (filterTags.length) {
+            // Use SQLite JSON functions to check if any tag exists in the JSON array
+            // json_each() expands the JSON array, and we check if the value matches any filter tag
+            const conditions = filterTags.map(
+                (tag) =>
+                    sql`EXISTS (
+                    SELECT 1 FROM json_each(${news[NEWS_COLUMNS.METADATA_TAG_LIST]})
+                    WHERE json_each.value = ${tag}
+                )`
+            );
+            whereConditions.push(or(...conditions));
         }
 
         const whereClause = whereConditions.length
@@ -519,8 +533,13 @@ export const generateImageUploadUrl = base
 export const listTags = base
     .input(ListTagsInputSchema)
     .output(ListTagsOutputSchema)
-    .handler(async function ({ context: { env }, input: { limit } }) {
+    .handler(async function ({ context: { env }, input: { limit, search } }) {
         const db = getDB(env.DJAVACOAL_DB);
+
+        // Build where condition for search
+        const whereCondition = search
+            ? like(tags[TAG_COLUMNS.NAME], `%${search}%`)
+            : undefined;
 
         const items = await db
             .select({
@@ -531,6 +550,7 @@ export const listTags = base
                 updatedAt: tags[COMMON_COLUMNS.UPDATED_AT],
             })
             .from(tags)
+            .where(whereCondition)
             .limit(limit)
             .orderBy(tags[TAG_COLUMNS.NAME]);
 

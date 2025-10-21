@@ -3,7 +3,9 @@
 import { useState } from "react";
 
 import { MultiSelect } from "@mantine/core";
+import { useDebouncedValue } from "@mantine/hooks";
 import { useQuery } from "@tanstack/react-query";
+import { TagsIcon } from "lucide-react";
 
 import { rpc } from "@/lib/rpc";
 
@@ -38,12 +40,15 @@ export function NewsTagsSelect({
     required = false,
 }: NewsTagsSelectProps) {
     const [searchValue, setSearchValue] = useState("");
+    const [debouncedSearch] = useDebouncedValue(searchValue, 300);
 
-    // Fetch existing tags
-    const { data, isLoading } = useQuery(
+    // Fetch existing tags with search
+    const { data } = useQuery(
         rpc.dashboardNews.listTags.queryOptions({
             staleTime: 5 * 60 * 1000, // 5 minutes
-            input: {},
+            input: {
+                search: debouncedSearch || undefined,
+            },
         })
     );
 
@@ -61,6 +66,7 @@ export function NewsTagsSelect({
     return (
         <MultiSelect
             label={label}
+            leftSection={<TagsIcon size={16} />}
             placeholder={placeholder}
             value={value}
             onChange={onChange}
@@ -68,7 +74,7 @@ export function NewsTagsSelect({
             searchable
             searchValue={searchValue}
             onSearchChange={setSearchValue}
-            disabled={disabled || isLoading}
+            disabled={disabled}
             error={error}
             required={required}
             maxDropdownHeight={200}

@@ -33,33 +33,32 @@ function NewsListContent() {
         "page",
         parseAsInteger.withDefault(1)
     );
+
     // Fetch news list
     const { data, isLoading, error } = useQuery(
         rpc.dashboardNews.listNews.queryOptions({
             input: {
                 page,
                 limit: ITEMS_PER_PAGE,
-                titleSearch: filters.title || undefined,
+                titleSearch: filters.title,
                 tags: filters.tags,
                 status: filters.status,
-                dateFrom: filters.dateFrom ?? undefined,
-                dateTo: filters.dateTo ?? undefined,
+                dateFrom: filters.dateFrom,
+                dateTo: filters.dateTo,
             },
         })
     );
 
     const hasActiveFilters =
-        filters.title !== "" ||
-        filters.tags.length > 0 ||
-        filters.status !== "all" ||
-        filters.dateFrom !== null ||
-        filters.dateTo !== null;
+        typeof window !== "undefined"
+            ? new URLSearchParams(window.location.search).toString().length > 0
+            : false;
 
-    const handleResetFilters = () => {
+    function handleResetFilters() {
         // Reset all filters to default
         window.history.pushState({}, "", window.location.pathname);
         setPage(1);
-    };
+    }
 
     if (error) {
         return (
