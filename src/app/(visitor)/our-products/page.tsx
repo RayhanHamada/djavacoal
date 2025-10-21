@@ -1,6 +1,7 @@
-import OurProductsSidebar from "@/features/our-products/components/molecules/our-product-sidebar";
+import { OurProductsSidebar } from "@/features/our-products/components/molecules";
 import { ProductPage } from "@/features/our-products/components/organism";
-export default function OurProducts() {
+
+export default function OurProductsPage() {
     return (
         <main className="bg-[#161616] text-white">
             <section className="mx-auto max-w-7xl px-6 py-10 md:px-10 md:py-16 lg:mx-0 lg:mr-10 lg:max-w-none lg:px-0 lg:py-0">

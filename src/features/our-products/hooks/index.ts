@@ -1,1 +1,2 @@
-export * from "@/features/home/hooks/use-example";
+// Custom hooks will be added here as needed
+// Example: export * from "./use-product-gallery";

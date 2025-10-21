@@ -1,21 +1,45 @@
 "use client";
-import React, { useState, useRef, useEffect } from "react";
+import type { VideoItem } from "../../lib";
+
+import { useEffect, useRef, useState } from "react";
 
 import Image from "next/image";
 
-import { X, Play } from "lucide-react";
+import { Play, X } from "lucide-react";
+
+// Component Props Interfaces
+interface VideoThumbnailProps {
+    videoSrc: string;
+    thumbnailSrc: string;
+    onOpenModal: () => void;
+}
+
+interface AutoCarouselProps {
+    items: VideoItem[];
+    onThumbnailClick: (item: VideoItem) => void;
+}
+
+interface VideoModalProps {
+    isOpen: boolean;
+    onClose: () => void;
+    videoSrc: string;
+}
 
 // Main Video Component
-const VideoThumbnail = ({ videoSrc, thumbnailSrc, onOpenModal }) => {
+function VideoThumbnail({
+    videoSrc,
+    thumbnailSrc,
+    onOpenModal,
+}: VideoThumbnailProps) {
     const [isHovering, setIsHovering] = useState(false);
-    const videoRef = useRef(null);
+    const videoRef = useRef<HTMLVideoElement>(null);
 
     useEffect(() => {
         if (videoRef.current) {
             if (isHovering) {
                 videoRef.current
                     .play()
-                    .catch((err) => console.log("Play prevented:", err));
+                    .catch((err: Error) => console.log("Play prevented:", err));
             } else {
                 videoRef.current.pause();
                 videoRef.current.currentTime = 0;
@@ -32,22 +56,14 @@ const VideoThumbnail = ({ videoSrc, thumbnailSrc, onOpenModal }) => {
         >
             {/* Thumbnail */}
             <Image
-                src="image/logo.png"
+                src={thumbnailSrc}
                 alt="Video thumbnail"
-                width="620"
-                height="320"
+                width={620}
+                height={320}
                 className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-300 ${
                     isHovering ? "opacity-0" : "opacity-100"
                 }`}
             />
-
-            {/* <img
-                src={thumbnailSrc}
-                alt="Video thumbnail"
-                className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-300 ${
-                    isHovering ? "opacity-0" : "opacity-100"
-                }`}
-            /> */}
 
             {/* Video Preview on Hover */}
             <video
@@ -73,23 +89,23 @@ const VideoThumbnail = ({ videoSrc, thumbnailSrc, onOpenModal }) => {
             </div>
 
             {/* Djavacoal Logo Overlay */}
-            <div className="absolute items-start justify-center text-white">
+            <div className="absolute top-4 left-4 text-white">
                 <Image
-                    src="image/logo.png"
+                    src="/images/logo.png"
                     alt="Djavacoal Logo"
-                    width="600"
-                    height="380"
-                    className="h-48 w-full object-cover md:h-56"
+                    width={120}
+                    height={60}
+                    className="h-auto w-24 object-contain opacity-80"
                 />
             </div>
         </div>
     );
-};
+}
 
 // Auto-Sliding Carousel Component
-const AutoCarousel = ({ items, onThumbnailClick }) => {
+function AutoCarousel({ items, onThumbnailClick }: AutoCarouselProps) {
     const [position, setPosition] = useState(0);
-    const carouselRef = useRef(null);
+    const carouselRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
         const interval = setInterval(() => {
@@ -124,17 +140,21 @@ const AutoCarousel = ({ items, onThumbnailClick }) => {
                     >
                         <div className="relative h-full w-full">
                             <Image
-                                src="item.thumbnail"
+                                src={item.thumbnail}
                                 alt={`Thumbnail ${index}`}
+                                width={128}
+                                height={128}
                                 className="h-full w-full object-cover"
                             />
                             {/* Djavacoal Logo on Thumbnail */}
                             <div className="absolute top-2 left-2 text-[8px] font-bold tracking-wider text-white opacity-80">
                                 DJAVACOAL
                             </div>
-                            {/* Play icon on hover */}
-                            <div className="flex h-16 w-16 items-center justify-center rounded-full bg-orange-500 transition-transform group-hover:scale-110">
-                                <Play className="ml-1 h-8 w-8 fill-white text-white" />
+                            {/* Play icon overlay */}
+                            <div className="absolute inset-0 flex items-center justify-center bg-black/30 opacity-0 transition-opacity group-hover:opacity-100">
+                                <div className="flex h-12 w-12 items-center justify-center rounded-full bg-[#EFA12D]">
+                                    <Play className="ml-1 h-6 w-6 fill-white text-white" />
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -142,17 +162,17 @@ const AutoCarousel = ({ items, onThumbnailClick }) => {
             </div>
         </div>
     );
-};
+}
 
 // Video Modal Component
-const VideoModal = ({ isOpen, onClose, videoSrc }) => {
-    const videoRef = useRef(null);
+function VideoModal({ isOpen, onClose, videoSrc }: VideoModalProps) {
+    const videoRef = useRef<HTMLVideoElement>(null);
 
     useEffect(() => {
         if (isOpen && videoRef.current) {
             videoRef.current
                 .play()
-                .catch((err) => console.log("Play prevented:", err));
+                .catch((err: Error) => console.log("Play prevented:", err));
         }
     }, [isOpen]);
 
@@ -165,7 +185,8 @@ const VideoModal = ({ isOpen, onClose, videoSrc }) => {
         >
             <button
                 onClick={onClose}
-                className="absolute top-6 right-6 z-10 text-white transition-colors hover:text-orange-500"
+                className="absolute top-6 right-6 z-10 text-white transition-colors hover:text-[#EFA12D]"
+                aria-label="Close video modal"
             >
                 <X size={32} />
             </button>
@@ -184,7 +205,7 @@ const VideoModal = ({ isOpen, onClose, videoSrc }) => {
             </div>
         </div>
     );
-};
+}
 
 // Main Component
 export default function VideoGallerySection() {
@@ -192,47 +213,40 @@ export default function VideoGallerySection() {
     const [currentVideo, setCurrentVideo] = useState("");
 
     // Sample video data - replace with your actual video sources
-    const videoData = {
+    const videoData: { main: VideoItem; carousel: VideoItem[] } = {
         main: {
-            video: "/api/placeholder/video",
-            thumbnail:
-                "https://images.unsplash.com/photo-1611906832764-5b74e5a8c45f?w=800&h=450&fit=crop",
+            video: "/videos/main-product.mp4",
+            thumbnail: "/images/logo.png",
         },
         carousel: [
             {
-                video: "/api/placeholder/video",
-                thumbnail:
-                    "https://images.unsplash.com/photo-1611906832764-5b74e5a8c45f?w=400&h=400&fit=crop",
+                video: "/videos/product-1.mp4",
+                thumbnail: "/images/logo.png",
             },
             {
-                video: "/api/placeholder/video",
-                thumbnail:
-                    "https://images.unsplash.com/photo-1611906832764-5b74e5a8c45f?w=400&h=400&fit=crop",
+                video: "/videos/product-2.mp4",
+                thumbnail: "/images/logo.png",
             },
             {
-                video: "/api/placeholder/video",
-                thumbnail:
-                    "https://images.unsplash.com/photo-1611906832764-5b74e5a8c45f?w=400&h=400&fit=crop",
+                video: "/videos/product-3.mp4",
+                thumbnail: "/images/logo.png",
             },
             {
-                video: "/api/placeholder/video",
-                thumbnail:
-                    "https://images.unsplash.com/photo-1611906832764-5b74e5a8c45f?w=400&h=400&fit=crop",
+                video: "/videos/product-4.mp4",
+                thumbnail: "/images/logo.png",
             },
             {
-                video: "/api/placeholder/video",
-                thumbnail:
-                    "https://images.unsplash.com/photo-1611906832764-5b74e5a8c45f?w=400&h=400&fit=crop",
+                video: "/videos/product-5.mp4",
+                thumbnail: "/images/logo.png",
             },
             {
-                video: "/api/placeholder/video",
-                thumbnail:
-                    "https://images.unsplash.com/photo-1611906832764-5b74e5a8c45f?w=400&h=400&fit=crop",
+                video: "/videos/product-6.mp4",
+                thumbnail: "/images/logo.png",
             },
         ],
     };
 
-    const handleOpenModal = (videoSrc) => {
+    const handleOpenModal = (videoSrc: string) => {
         setCurrentVideo(videoSrc);
         setModalOpen(true);
     };
@@ -247,10 +261,6 @@ export default function VideoGallerySection() {
             <div className="container mx-auto space-y-8 px-4">
                 {/* Main Video Section */}
                 <div className="mx-auto max-w-4xl">
-                    {/* <h2 className="mb-6 text-3xl font-bold text-white">
-                        <span className="text-orange-500">Product</span>{" "}
-                        Showcase
-                    </h2> */}
                     <VideoThumbnail
                         videoSrc={videoData.main.video}
                         thumbnailSrc={videoData.main.thumbnail}
@@ -262,27 +272,11 @@ export default function VideoGallerySection() {
 
                 {/* Auto-Sliding Carousel */}
                 <div className="w-full">
-                    {/* <h3 className="mb-4 px-4 text-xl font-semibold text-white">
-                        More Videos
-                    </h3> */}
                     <AutoCarousel
                         items={videoData.carousel}
                         onThumbnailClick={(item) => handleOpenModal(item.video)}
                     />
                 </div>
-
-                {/* Sample Content Below */}
-                {/* <div className="mx-auto max-w-4xl rounded-lg bg-gray-800/50 p-8 text-white">
-                    <h3 className="mb-4 text-2xl font-bold">
-                        About Our Products
-                    </h3>
-                    <p className="leading-relaxed text-gray-300">
-                        Discover our premium coconut shell charcoal briquettes.
-                        Hover over the video to preview, click to watch in full
-                        screen. Browse more videos in the auto-sliding carousel
-                        below.
-                    </p>
-                </div> */}
             </div>
 
             {/* Video Modal */}
