@@ -3,59 +3,114 @@ import "server-only";
 import { z } from "zod";
 
 /**
+ * News status enum
+ */
+export const NewsStatusEnum = z.enum(["draft", "published", "unpublished"]);
+export type NewsStatus = z.infer<typeof NewsStatusEnum>;
+
+/**
+ * Creation mode enum
+ * - fresh: typical article creation with draft/publish flow, supports scheduled publishing
+ * - migration: allows manual publication date setting for re-creating existing articles
+ */
+export const CreationModeEnum = z.enum(["fresh", "migration"]);
+export type CreationMode = z.infer<typeof CreationModeEnum>;
+
+/**
  * Schema for creating a new news article
  */
-export const CreateNewsInputSchema = z.object({
-    slug: z
-        .string()
-        .min(1, "Slug is required")
-        .regex(
-            /^[a-z0-9]+(?:-[a-z0-9]+)*$/,
-            "Slug must be kebab-case (lowercase letters, numbers, and hyphens only)"
-        ),
-    imageKey: z.string().optional(),
+export const CreateNewsInputSchema = z
+    .object({
+        slug: z
+            .string()
+            .min(1, "Slug is required")
+            .regex(
+                /^[a-z0-9]+(?:-[a-z0-9]+)*$/,
+                "Slug must be kebab-case (lowercase letters, numbers, and hyphens only)"
+            ),
+        imageKey: z.string().optional(),
 
-    metadataTitle: z.string().min(1, "Metadata title is required"),
-    metadataDescription: z
-        .string()
-        .min(1, "Metadata description is required")
-        .max(160, "Metadata description must be 160 characters or less"),
-    metadataTags: z.array(z.string()).default([]),
+        metadataTitle: z.string().min(1, "Metadata title is required"),
+        metadataDescription: z
+            .string()
+            .min(1, "Metadata description is required")
+            .max(160, "Metadata description must be 160 characters or less"),
+        metadataTags: z.array(z.string()).default([]),
 
-    enTitle: z.string().min(1, "English title is required"),
-    enContent: z.string().min(1, "English content is required"),
+        enTitle: z.string().min(1, "English title is required"),
+        enContent: z.string().min(1, "English content is required"),
 
-    arTitle: z.string().min(1, "Arabic title is required"),
-    arContent: z.string().min(1, "Arabic content is required"),
+        arTitle: z.string().min(1, "Arabic title is required"),
+        arContent: z.string().min(1, "Arabic content is required"),
 
-    publishedAt: z.date(),
-    isPublished: z.boolean().default(false),
-});
+        // Creation mode determines how publication date is handled
+        mode: CreationModeEnum.default("fresh"),
+
+        // Status can be draft or published (not unpublished on create)
+        status: NewsStatusEnum.refine(
+            (val) => val !== "unpublished",
+            "Cannot create article with unpublished status"
+        ).default("draft"),
+
+        // Publication date: for fresh mode (future dates allowed for scheduling)
+        // or migration mode (any past/future date)
+        publishedAt: z.date().optional(),
+    })
+    .refine(
+        (data) => {
+            // If status is published, publishedAt is required
+            if (data.status === "published" && !data.publishedAt) {
+                return false;
+            }
+            return true;
+        },
+        {
+            message: "Publication date is required when status is published",
+            path: ["publishedAt"],
+        }
+    );
 
 export type CreateNewsInput = z.infer<typeof CreateNewsInputSchema>;
 
 /**
  * Schema for updating an existing news article
  */
-export const UpdateNewsInputSchema = z.object({
-    id: z.number(),
-    imageKey: z.string().optional(),
+export const UpdateNewsInputSchema = z
+    .object({
+        id: z.number(),
+        imageKey: z.string().optional(),
 
-    metadataDescription: z
-        .string()
-        .min(1, "Metadata description is required")
-        .max(160, "Metadata description must be 160 characters or less"),
-    metadataTags: z.array(z.string()).default([]),
+        metadataDescription: z
+            .string()
+            .min(1, "Metadata description is required")
+            .max(160, "Metadata description must be 160 characters or less"),
+        metadataTags: z.array(z.string()).default([]),
 
-    enTitle: z.string().min(1, "English title is required"),
-    enContent: z.string().min(1, "English content is required"),
+        enTitle: z.string().min(1, "English title is required"),
+        enContent: z.string().min(1, "English content is required"),
 
-    arTitle: z.string().min(1, "Arabic title is required"),
-    arContent: z.string().min(1, "Arabic content is required"),
+        arTitle: z.string().min(1, "Arabic title is required"),
+        arContent: z.string().min(1, "Arabic content is required"),
 
-    publishedAt: z.date(),
-    isPublished: z.boolean().default(false),
-});
+        // Status can be updated to any state
+        status: NewsStatusEnum.default("draft"),
+
+        // Publication date is optional in update (can be cleared)
+        publishedAt: z.date().optional(),
+    })
+    .refine(
+        (data) => {
+            // If status is published, publishedAt is required
+            if (data.status === "published" && !data.publishedAt) {
+                return false;
+            }
+            return true;
+        },
+        {
+            message: "Publication date is required when status is published",
+            path: ["publishedAt"],
+        }
+    );
 
 export type UpdateNewsInput = z.infer<typeof UpdateNewsInputSchema>;
 
@@ -78,9 +133,31 @@ export const ListNewsInputSchema = z.object({
     // Filters
     titleSearch: z.string().optional(),
     tags: z.array(z.string()).default([]),
-    status: z.enum(["published", "unpublished", "all"]).default("all"),
-    dateFrom: z.date().optional(),
-    dateTo: z.date().optional(),
+    status: z.enum(["draft", "published", "unpublished", "all"]).default("all"),
+    // Published date filters (apply when status is published or unpublished)
+    // Nullable to handle cleared filters from the UI (null is coerced to undefined)
+    publishedFrom: z
+        .date()
+        .nullable()
+        .optional()
+        .transform((val) => val ?? undefined),
+    publishedTo: z
+        .date()
+        .nullable()
+        .optional()
+        .transform((val) => val ?? undefined),
+    // Created date filters (apply when status is all or draft)
+    // Nullable to handle cleared filters from the UI (null is coerced to undefined)
+    createdFrom: z
+        .date()
+        .nullable()
+        .optional()
+        .transform((val) => val ?? undefined),
+    createdTo: z
+        .date()
+        .nullable()
+        .optional()
+        .transform((val) => val ?? undefined),
 });
 
 export type ListNewsInput = z.infer<typeof ListNewsInputSchema>;
@@ -100,7 +177,7 @@ export const NewsArticleSchema = z.object({
     enTitle: z.string(),
     arTitle: z.string(),
 
-    isPublished: z.boolean(),
+    status: NewsStatusEnum,
     publishedAt: z.date().nullable(),
     publishedBy: z.string().nullable(),
 
@@ -156,14 +233,25 @@ export const DeleteNewsInputSchema = z.object({
 export type DeleteNewsInput = z.infer<typeof DeleteNewsInputSchema>;
 
 /**
- * Schema for toggling publish status
+ * Schema for changing article status
+ * Transitions:
+ * - draft -> published (publish the article)
+ * - published -> unpublished (hide the article)
+ * - unpublished -> published (re-publish the article)
+ * - draft -> unpublished (not allowed, article must be published first)
  */
-export const TogglePublishInputSchema = z.object({
+export const ChangeStatusInputSchema = z.object({
     id: z.number(),
-    isPublished: z.boolean(),
+    status: NewsStatusEnum,
 });
 
-export type TogglePublishInput = z.infer<typeof TogglePublishInputSchema>;
+export type ChangeStatusInput = z.infer<typeof ChangeStatusInputSchema>;
+
+/**
+ * @deprecated Use ChangeStatusInputSchema instead
+ */
+export const TogglePublishInputSchema = ChangeStatusInputSchema;
+export type TogglePublishInput = ChangeStatusInput;
 
 /**
  * Schema for checking slug availability

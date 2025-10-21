@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo } from "react";
+import React from "react";
 
 import {
     Box,
@@ -32,19 +32,13 @@ import {
 
 import { NewsTagsSelect } from "../atoms";
 
-type StatusFilter = "all" | "published" | "unpublished";
+type StatusFilter = "all" | "draft" | "published" | "unpublished";
 
 /**
  * News filters state management using nuqs
  */
 export function useNewsFilters() {
-    // Memoize default dates to prevent creating new Date objects on every render
-    const defaultDates = useMemo(() => {
-        const now = new Date();
-        const oneMonthAgo = new Date(now);
-        oneMonthAgo.setMonth(oneMonthAgo.getMonth() - 1);
-        return { oneMonthAgo, now };
-    }, []);
+    // no default dates — filters are optional
 
     return useQueryStates(
         {
@@ -52,11 +46,16 @@ export function useNewsFilters() {
             tags: parseAsArrayOf(parseAsString).withDefault([]),
             status: parseAsStringEnum<StatusFilter>([
                 "all",
+                "draft",
                 "published",
                 "unpublished",
             ]).withDefault("all"),
-            dateFrom: parseAsIsoDate.withDefault(defaultDates.oneMonthAgo),
-            dateTo: parseAsIsoDate.withDefault(defaultDates.now),
+            // Published date filters (only meaningful for published/unpublished)
+            publishedFrom: parseAsIsoDate,
+            publishedTo: parseAsIsoDate,
+            // Created date filters (only meaningful for all/draft)
+            createdFrom: parseAsIsoDate,
+            createdTo: parseAsIsoDate,
         },
         {
             history: "push",
@@ -82,6 +81,26 @@ export function NewsFilters({
     const [opened, { open, close }] = useDisclosure(false);
     const [filters, setFilters] = useNewsFilters();
 
+    // When status changes, clear the date filters that are not relevant
+    const handleStatusChange = (value: StatusFilter) => {
+        // If switching to published/unpublished, clear created filters
+        if (value === "published" || value === "unpublished") {
+            setFilters({
+                status: value,
+                createdFrom: null,
+                createdTo: null,
+            });
+            return;
+        }
+
+        // If switching to draft or all, clear published filters
+        setFilters({
+            status: value,
+            publishedFrom: null,
+            publishedTo: null,
+        });
+    };
+
     const filterContent = (
         <Stack gap="md">
             {/* Title Search */}
@@ -103,10 +122,11 @@ export function NewsFilters({
                     label="Publication Status"
                     value={filters.status}
                     onChange={(value) =>
-                        setFilters({ status: (value as StatusFilter) || "all" })
+                        handleStatusChange((value as StatusFilter) || "all")
                     }
                     data={[
                         { value: "all", label: "All" },
+                        { value: "draft", label: "Draft" },
                         { value: "published", label: "Published" },
                         { value: "unpublished", label: "Unpublished" },
                     ]}
@@ -125,34 +145,81 @@ export function NewsFilters({
                 </Box>
             </Flex>
 
-            {/* Date Range */}
-            <Flex direction="row" justify="space-between " gap="md">
-                <DatePickerInput
-                    leftSection={<IconCalendar size={18} stroke={1.5} />}
-                    w="100%"
-                    valueFormat="DD MMMM YYYY"
-                    label="Published From"
-                    placeholder="Select date range"
-                    value={filters.dateFrom}
-                    onChange={(d) => {
-                        setFilters({ dateFrom: d ? dayjs(d).toDate() : null });
-                    }}
-                    clearable
-                />
-                <DatePickerInput
-                    leftSection={<IconCalendar size={18} stroke={1.5} />}
-                    w="100%"
-                    excludeDate={(d) => dayjs(d).isBefore(filters.dateFrom)}
-                    valueFormat="DD MMMM YYYY"
-                    label="Published To"
-                    placeholder="Select date range"
-                    value={filters.dateTo}
-                    onChange={(d) => {
-                        setFilters({ dateTo: d ? dayjs(d).toDate() : null });
-                    }}
-                    clearable
-                />
-            </Flex>
+            {/* Date Range - show either published or created filters depending on status */}
+            {filters.status === "published" ||
+            filters.status === "unpublished" ? (
+                <Flex direction="row" justify="space-between " gap="md">
+                    <DatePickerInput
+                        leftSection={<IconCalendar size={18} stroke={1.5} />}
+                        w="100%"
+                        valueFormat="DD MMMM YYYY"
+                        label="Published From"
+                        placeholder="Select date"
+                        value={filters.publishedFrom}
+                        onChange={(d) => {
+                            setFilters({
+                                publishedFrom: d ? dayjs(d).toDate() : null,
+                            });
+                        }}
+                        clearable
+                    />
+                    <DatePickerInput
+                        leftSection={<IconCalendar size={18} stroke={1.5} />}
+                        w="100%"
+                        excludeDate={(d) =>
+                            filters.publishedFrom
+                                ? dayjs(d).isBefore(filters.publishedFrom)
+                                : false
+                        }
+                        valueFormat="DD MMMM YYYY"
+                        label="Published To"
+                        placeholder="Select date"
+                        value={filters.publishedTo}
+                        onChange={(d) => {
+                            setFilters({
+                                publishedTo: d ? dayjs(d).toDate() : null,
+                            });
+                        }}
+                        clearable
+                    />
+                </Flex>
+            ) : (
+                <Flex direction="row" justify="space-between " gap="md">
+                    <DatePickerInput
+                        leftSection={<IconCalendar size={18} stroke={1.5} />}
+                        w="100%"
+                        valueFormat="DD MMMM YYYY"
+                        label="Created From"
+                        placeholder="Select date"
+                        value={filters.createdFrom}
+                        onChange={(d) => {
+                            setFilters({
+                                createdFrom: d ? dayjs(d).toDate() : null,
+                            });
+                        }}
+                        clearable
+                    />
+                    <DatePickerInput
+                        leftSection={<IconCalendar size={18} stroke={1.5} />}
+                        w="100%"
+                        excludeDate={(d) =>
+                            filters.createdFrom
+                                ? dayjs(d).isBefore(filters.createdFrom)
+                                : false
+                        }
+                        valueFormat="DD MMMM YYYY"
+                        label="Created To"
+                        placeholder="Select date"
+                        value={filters.createdTo}
+                        onChange={(d) => {
+                            setFilters({
+                                createdTo: d ? dayjs(d).toDate() : null,
+                            });
+                        }}
+                        clearable
+                    />
+                </Flex>
+            )}
 
             {/* Reset Button */}
             {hasActiveFilters && (

@@ -22,6 +22,7 @@ import dayjs from "dayjs";
 import { NewsImageUpload } from "../atoms/news-image-upload";
 import { NewsTagsSelect } from "../atoms/news-tags-select";
 import { validateNewsForm, type NewsFormValues } from "../lib/form-schemas";
+import { CreationMode } from "../lib/form-schemas";
 import { BilingualContentEditor } from "../molecules/bilingual-content-editor";
 import { BilingualTextInput } from "../molecules/bilingual-text-input";
 
@@ -32,8 +33,8 @@ interface NewsFormProps {
     isEditMode?: boolean;
     /** Whether the form is submitting */
     isSubmitting?: boolean;
-    /** Callback when form is submitted (publish) */
-    onSubmit: (data: NewsFormValues, publish: boolean) => void;
+    /** Callback when form is submitted */
+    onSubmit: (data: NewsFormValues) => void;
     /** Local storage key for persistence */
     storageKey: string;
 }
@@ -72,7 +73,7 @@ export function NewsForm({
     });
 
     // Initialize form with Mantine's useForm
-    const form = useForm({
+    const form = useForm<NewsFormValues>({
         mode: "uncontrolled",
         initialValues: {
             slug: "",
@@ -84,7 +85,9 @@ export function NewsForm({
             metadataTitle: "",
             metadataDescription: "",
             metadataTags: [],
-            publishedAt: new Date(),
+            mode: "fresh",
+            status: "draft",
+            publishedAt: undefined,
             useAutoMetadataDescription: true,
             ...storedData,
             ...initialData,
@@ -127,25 +130,41 @@ export function NewsForm({
     );
 
     const handleSubmit = useCallback(
-        (values: NewsFormValues, publish: boolean) => {
-            console.log("should be handled");
-            onSubmit(values, publish);
+        (
+            values: NewsFormValues,
+            status: "draft" | "published" | "preserve"
+        ) => {
+            const submittedValues = {
+                ...values,
+                // If status is 'preserve', keep the existing status from values
+                status: status === "preserve" ? values.status : status,
+                // For published status, ensure publishedAt is set
+                publishedAt:
+                    status === "published"
+                        ? values.publishedAt || new Date()
+                        : values.publishedAt,
+            };
+            onSubmit(submittedValues);
             // Clear local storage on successful submit
             removeStoredData();
         },
         [onSubmit, removeStoredData]
     );
 
-    const handleSaveUnpublished = form.onSubmit((values) =>
-        handleSubmit(values, false)
+    const handleSaveDraft = form.onSubmit((values) =>
+        handleSubmit(values, "draft")
     );
 
-    const handleSavePublished = form.onSubmit((values) =>
-        handleSubmit(values, true)
+    const handleSave = form.onSubmit((values) =>
+        handleSubmit(values, "preserve")
+    );
+
+    const handlePublish = form.onSubmit((values) =>
+        handleSubmit(values, "published")
     );
 
     return (
-        <form onSubmit={handleSavePublished}>
+        <form onSubmit={handlePublish}>
             <Stack gap="xl">
                 {/* Image Upload */}
                 <Stack gap="xs">
@@ -291,15 +310,16 @@ export function NewsForm({
                             readOnly={
                                 form.getValues().useAutoMetadataDescription
                             }
-                        ></Textarea>
+                        />
                         <Text size="xs" c="dimmed" ta="right">
                             {form.getValues().metadataDescription.length}/160
                         </Text>
                     </Stack>
 
-                    {/* Tags */}
+                    {/* Keywords/Tags */}
                     <NewsTagsSelect
-                        label="Tags"
+                        label="Keywords/Tags"
+                        description="Add relevant keywords to categorize your news article"
                         value={form.getValues().metadataTags}
                         onChange={(tags) =>
                             form.setFieldValue("metadataTags", tags)
@@ -317,26 +337,89 @@ export function NewsForm({
                         Publication Settings
                     </Text>
 
-                    <DateTimePicker
-                        label="Publication Date & Time"
-                        valueFormat="dddd, DD MMMM YYYY HH:mm"
-                        locale="id-ID"
-                        description="Set the publication date and time."
-                        key={form.key("publishedAt")}
-                        {...form.getInputProps("publishedAt")}
-                        onChange={(v) =>
-                            form.setFieldValue("publishedAt", dayjs(v).toDate())
-                        }
-                        required
-                        disabled={isSubmitting}
-                        clearable={false}
-                    />
-                    {dayjs(form.getValues().publishedAt).isAfter(dayjs()) && (
-                        <Text size="xs" c="blue">
-                            <b>Future date is set.</b> News will be listed on
-                            the selected date and time.
-                        </Text>
+                    {!isEditMode && (
+                        <Radio.Group
+                            value={form.getValues().mode}
+                            onChange={(value) =>
+                                form.setFieldValue(
+                                    "mode",
+                                    value as CreationMode
+                                )
+                            }
+                            label="Creation Mode"
+                            description="Choose how to handle publication date"
+                        >
+                            <Stack mt="xs" gap="xs">
+                                <Radio
+                                    value="fresh"
+                                    label="Fresh Create - Draft and publish workflow with optional scheduling"
+                                    disabled={isSubmitting}
+                                />
+                                <Radio
+                                    value="migration"
+                                    label="Migration - Set custom publication date for migrating existing articles"
+                                    disabled={isSubmitting}
+                                />
+                            </Stack>
+                        </Radio.Group>
                     )}
+
+                    {(form.getValues().mode === "migration" || isEditMode) && (
+                        <DateTimePicker
+                            label="Publication Date & Time"
+                            valueFormat="dddd, DD MMMM YYYY HH:mm"
+                            locale="id-ID"
+                            description={
+                                form.getValues().mode === "migration"
+                                    ? "Set the original publication date for this migrated article"
+                                    : "Set or update the publication date"
+                            }
+                            excludeDate={
+                                form.getValues().mode === "migration"
+                                    ? (d) => dayjs(d).isAfter(dayjs())
+                                    : undefined
+                            }
+                            value={form.getValues().publishedAt}
+                            onChange={(v) =>
+                                form.setFieldValue(
+                                    "publishedAt",
+                                    v ? dayjs(v).toDate() : undefined
+                                )
+                            }
+                            disabled={isSubmitting}
+                            clearable
+                            required={form.getValues().mode === "migration"}
+                        />
+                    )}
+
+                    {form.getValues().mode === "fresh" && !isEditMode && (
+                        <DateTimePicker
+                            label="Scheduled Publication Date (Optional)"
+                            valueFormat="dddd, DD MMMM YYYY HH:mm"
+                            locale="id-ID"
+                            description="Leave empty to publish immediately, or set a future date to schedule"
+                            value={form.getValues().publishedAt}
+                            onChange={(v) =>
+                                form.setFieldValue(
+                                    "publishedAt",
+                                    v ? dayjs(v).toDate() : undefined
+                                )
+                            }
+                            disabled={isSubmitting}
+                            clearable
+                            minDate={new Date()}
+                        />
+                    )}
+
+                    {form.getValues().publishedAt &&
+                        dayjs(form.getValues().publishedAt).isAfter(
+                            dayjs()
+                        ) && (
+                            <Text size="xs" c="blue">
+                                <b>Future date is set.</b> Article will be
+                                visible on the selected date and time.
+                            </Text>
+                        )}
                 </Stack>
 
                 <Divider />
@@ -350,24 +433,33 @@ export function NewsForm({
                             loading={isSubmitting}
                             size="md"
                         >
-                            Submit & Publish
+                            {isEditMode
+                                ? "Save & Publish"
+                                : form.getValues().mode === "migration"
+                                  ? "Save & Publish"
+                                  : form.getValues().publishedAt &&
+                                      dayjs(
+                                          form.getValues().publishedAt
+                                      ).isAfter(dayjs())
+                                    ? "Schedule for Publication"
+                                    : "Publish Now"}
                         </Button>
                     </Grid.Col>
                     <Grid.Col span={{ base: 12, sm: 6 }}>
                         <Button
                             fullWidth
                             variant="light"
-                            onClick={() => handleSaveUnpublished()}
+                            onClick={() =>
+                                isEditMode ? handleSave() : handleSaveDraft()
+                            }
                             disabled={isSubmitting}
                             size="md"
                         >
-                            Save as Unpublished
+                            {isEditMode ? "Save" : "Save as Draft"}
                         </Button>
-                        <Text>{isSubmitting}</Text>
                     </Grid.Col>
                 </Grid>
             </Stack>
-            {JSON.stringify(form.errors)}
         </form>
     );
 }

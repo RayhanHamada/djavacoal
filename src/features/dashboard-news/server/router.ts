@@ -2,6 +2,7 @@ import "server-only";
 
 import {
     bulkCreateTags,
+    changeStatus,
     checkSlugAvailability,
     createNews,
     createTag,
@@ -20,7 +21,8 @@ export const dashboardNews = {
     createNews,
     updateNews,
     deleteNews,
-    togglePublish,
+    changeStatus,
+    togglePublish, // deprecated, kept for backwards compatibility
     checkSlugAvailability,
     generateImageUploadUrl,
     listTags,

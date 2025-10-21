@@ -21,11 +21,18 @@ export function NewsCreatePage() {
     const createMutation = useMutation(
         rpc.dashboardNews.createNews.mutationOptions({
             onSuccess: (_, variables) => {
+                const statusMessages = {
+                    draft: "News article saved as draft",
+                    published: "News article published successfully",
+                    unpublished: "News article saved as unpublished",
+                };
+                const message =
+                    variables.status && statusMessages[variables.status]
+                        ? statusMessages[variables.status]
+                        : "News article created";
                 notifications.show({
                     title: "Success",
-                    message: variables.isPublished
-                        ? "News article created and published"
-                        : "News article created as draft",
+                    message,
                     color: "green",
                 });
                 router.push(`/dashboard/news`);
@@ -44,7 +51,7 @@ export function NewsCreatePage() {
     );
 
     const handleSubmit = useCallback(
-        (formData: NewsFormValues, publish: boolean) => {
+        (formData: NewsFormValues) => {
             createMutation.mutate({
                 slug: formData.slug,
                 imageKey: formData.imageKey,
@@ -55,8 +62,9 @@ export function NewsCreatePage() {
                 metadataTitle: formData.metadataTitle,
                 metadataDescription: formData.metadataDescription,
                 metadataTags: formData.metadataTags,
+                mode: formData.mode,
+                status: formData.status,
                 publishedAt: formData.publishedAt,
-                isPublished: publish,
             });
         },
         [createMutation]

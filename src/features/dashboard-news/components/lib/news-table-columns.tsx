@@ -15,7 +15,7 @@ export interface NewsArticle {
     metadataTitle: string;
     enTitle: string;
     arTitle: string;
-    isPublished: boolean;
+    status: "draft" | "published" | "unpublished";
     publishedAt: Date | null;
     createdAt: Date | null;
     updatedAt: Date | null;
@@ -46,12 +46,10 @@ export const createNewsTableColumns = (onEdit: (id: number) => void) => [
             />
         ),
     }),
-    columnHelper.accessor("isPublished", {
+    columnHelper.accessor("status", {
         id: "status",
         header: "Status",
-        cell: ({ row }) => (
-            <NewsStatusCell isPublished={row.original.isPublished} />
-        ),
+        cell: ({ row }) => <NewsStatusCell status={row.original.status} />,
         size: 120,
     }),
     columnHelper.accessor("publishedAt", {
@@ -68,7 +66,7 @@ export const createNewsTableColumns = (onEdit: (id: number) => void) => [
                 id={row.original.id}
                 slug={row.original.slug}
                 title={row.original.enTitle}
-                isPublished={row.original.isPublished}
+                status={row.original.status}
                 onEdit={() => onEdit(row.original.id)}
             />
         ),

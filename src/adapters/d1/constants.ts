@@ -81,9 +81,15 @@ export const NEWS_COLUMNS = {
     EN_TITLE: "en_title",
     EN_CONTENT_KEY: "en_content_key",
 
-    IS_PUBLISHED: "is_published",
+    STATUS: "status",
     PUBLISHED_AT: "published_at",
     PUBLISHED_BY: "published_by",
+} as const;
+
+export const NEWS_STATUS = {
+    DRAFT: "draft",
+    PUBLISHED: "published",
+    UNPUBLISHED: "unpublished",
 } as const;
 
 export const TAG_COLUMNS = {

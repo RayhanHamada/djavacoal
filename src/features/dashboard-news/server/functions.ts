@@ -7,6 +7,7 @@ import { nanoid } from "nanoid";
 
 import {
     BulkCreateTagsInputSchema,
+    ChangeStatusInputSchema,
     CheckSlugAvailabilityInputSchema,
     CheckSlugAvailabilityOutputSchema,
     CreateNewsInputSchema,
@@ -21,13 +22,13 @@ import {
     ListTagsOutputSchema,
     NewsArticleWithContentSchema,
     TagSchema,
-    TogglePublishInputSchema,
     UpdateNewsInputSchema,
     UpdateNewsOutputSchema,
 } from "./schemas";
 import {
     COMMON_COLUMNS,
     NEWS_COLUMNS,
+    NEWS_STATUS,
     TAG_COLUMNS,
 } from "@/adapters/d1/constants";
 import { getDB } from "@/adapters/d1/db";
@@ -67,8 +68,10 @@ export const listNews = base
             titleSearch,
             tags: filterTags,
             status,
-            dateFrom,
-            dateTo,
+            publishedFrom,
+            publishedTo,
+            createdFrom,
+            createdTo,
         } = input;
 
         // Build where conditions
@@ -81,19 +84,35 @@ export const listNews = base
         }
 
         if (status !== "all") {
-            whereConditions.push(
-                eq(news[NEWS_COLUMNS.IS_PUBLISHED], status === "published")
-            );
+            whereConditions.push(eq(news[NEWS_COLUMNS.STATUS], status));
         }
 
-        if (dateFrom) {
-            whereConditions.push(
-                gte(news[NEWS_COLUMNS.PUBLISHED_AT], dateFrom)
-            );
-        }
+        // Apply published date filters only when status is published/unpublished
+        if (status === "published" || status === "unpublished") {
+            if (publishedFrom) {
+                whereConditions.push(
+                    gte(news[NEWS_COLUMNS.PUBLISHED_AT], publishedFrom)
+                );
+            }
 
-        if (dateTo) {
-            whereConditions.push(lte(news[NEWS_COLUMNS.PUBLISHED_AT], dateTo));
+            if (publishedTo) {
+                whereConditions.push(
+                    lte(news[NEWS_COLUMNS.PUBLISHED_AT], publishedTo)
+                );
+            }
+        } else {
+            // For "all" and "draft", apply created date filters if provided
+            if (createdFrom) {
+                whereConditions.push(
+                    gte(news[COMMON_COLUMNS.CREATED_AT], createdFrom)
+                );
+            }
+
+            if (createdTo) {
+                whereConditions.push(
+                    lte(news[COMMON_COLUMNS.CREATED_AT], createdTo)
+                );
+            }
         }
 
         // Add tag filter using SQL
@@ -131,7 +150,7 @@ export const listNews = base
                 metadataTags: news[NEWS_COLUMNS.METADATA_TAG_LIST],
                 enTitle: news[NEWS_COLUMNS.EN_TITLE],
                 arTitle: news[NEWS_COLUMNS.AR_TITLE],
-                isPublished: news[NEWS_COLUMNS.IS_PUBLISHED],
+                status: news[NEWS_COLUMNS.STATUS],
                 publishedAt: news[NEWS_COLUMNS.PUBLISHED_AT],
                 publishedBy: news[NEWS_COLUMNS.PUBLISHED_BY],
                 createdAt: news[COMMON_COLUMNS.CREATED_AT],
@@ -148,7 +167,7 @@ export const listNews = base
         return {
             items: items.map((item) => ({
                 ...item,
-                isPublished: item.isPublished ?? false,
+                status: item.status ?? NEWS_STATUS.DRAFT,
                 publishedAt: item.publishedAt,
                 metadataTags: Array.isArray(item.metadataTags)
                     ? item.metadataTags
@@ -215,7 +234,7 @@ export const getNewsById = base
             enContent,
             arTitle: article.ar_title,
             arContent,
-            isPublished: article.is_published ?? false,
+            status: article.status ?? NEWS_STATUS.DRAFT,
             publishedAt: article.published_at,
             publishedBy: article.published_by,
             createdAt: article.created_at,
@@ -274,6 +293,24 @@ export const createNews = base
 
         // Insert into database
         const userId = user.user.id;
+
+        // For fresh mode with draft status, publishedAt should be null
+        // For fresh mode with published status, use provided publishedAt (for scheduling) or current time
+        // For migration mode, always use provided publishedAt
+        let publishedAt: Date | null = null;
+        let publishedBy: string | null = null;
+
+        if (input.status === NEWS_STATUS.PUBLISHED) {
+            if (input.mode === "migration") {
+                // Migration mode: use provided date (can be past)
+                publishedAt = input.publishedAt ?? new Date();
+            } else {
+                // Fresh mode: use provided date (can be future for scheduling) or current time
+                publishedAt = input.publishedAt ?? new Date();
+            }
+            publishedBy = userId;
+        }
+
         const [inserted] = await db
             .insert(news)
             .values({
@@ -286,11 +323,9 @@ export const createNews = base
                 [NEWS_COLUMNS.EN_CONTENT_KEY]: enContentKey,
                 [NEWS_COLUMNS.AR_TITLE]: input.arTitle,
                 [NEWS_COLUMNS.AR_CONTENT_KEY]: arContentKey,
-                [NEWS_COLUMNS.IS_PUBLISHED]: input.isPublished,
-                [NEWS_COLUMNS.PUBLISHED_AT]: input.isPublished
-                    ? input.publishedAt
-                    : null,
-                [NEWS_COLUMNS.PUBLISHED_BY]: input.isPublished ? userId : null,
+                [NEWS_COLUMNS.STATUS]: input.status,
+                [NEWS_COLUMNS.PUBLISHED_AT]: publishedAt,
+                [NEWS_COLUMNS.PUBLISHED_BY]: publishedBy,
                 [COMMON_COLUMNS.CREATED_BY]: userId,
                 [COMMON_COLUMNS.UPDATED_BY]: userId,
             })
@@ -351,6 +386,21 @@ export const updateNews = base
         // Update database
         const userId = user.user.id;
 
+        // Handle publication status changes
+        let publishedAt: Date | null = input.publishedAt ?? null;
+        let publishedBy: string | null = existing[NEWS_COLUMNS.PUBLISHED_BY];
+
+        if (input.status === NEWS_STATUS.PUBLISHED) {
+            // If changing to published, set published date and user
+            publishedAt = input.publishedAt ?? new Date();
+            publishedBy = userId;
+        } else if (input.status === NEWS_STATUS.DRAFT) {
+            // If changing to draft, clear published date and user
+            publishedAt = null;
+            publishedBy = null;
+        }
+        // For unpublished status, keep existing published date and user
+
         await db
             .update(news)
             .set({
@@ -359,11 +409,9 @@ export const updateNews = base
                 [NEWS_COLUMNS.METADATA_TAG_LIST]: input.metadataTags,
                 [NEWS_COLUMNS.EN_TITLE]: input.enTitle,
                 [NEWS_COLUMNS.AR_TITLE]: input.arTitle,
-                [NEWS_COLUMNS.IS_PUBLISHED]: input.isPublished,
-                [NEWS_COLUMNS.PUBLISHED_AT]: input.isPublished
-                    ? input.publishedAt
-                    : null,
-                [NEWS_COLUMNS.PUBLISHED_BY]: input.isPublished ? userId : null,
+                [NEWS_COLUMNS.STATUS]: input.status,
+                [NEWS_COLUMNS.PUBLISHED_AT]: publishedAt,
+                [NEWS_COLUMNS.PUBLISHED_BY]: publishedBy,
                 [COMMON_COLUMNS.UPDATED_BY]: userId,
                 [COMMON_COLUMNS.UPDATED_AT]: new Date(),
             })
@@ -426,10 +474,11 @@ export const deleteNews = base
     .callable();
 
 /**
- * Toggle publish status of a news article
+ * Change the status of a news article
+ * Handles transitions: draft -> published, published -> unpublished, unpublished -> published
  */
-export const togglePublish = base
-    .input(TogglePublishInputSchema)
+export const changeStatus = base
+    .input(ChangeStatusInputSchema)
     .handler(async function ({ context: { env }, errors, input }) {
         const db = getDB(env.DJAVACOAL_DB);
         const auth = getAuth(env);
@@ -443,20 +492,61 @@ export const togglePublish = base
 
         const userId = user.user.id;
 
+        // Get current article to check existing status
+        const existing = await db.query.news.findFirst({
+            where(fields, operators) {
+                return operators.eq(fields.id, input.id);
+            },
+        });
+
+        if (!existing) {
+            throw errors.NOT_FOUND({ message: "News article not found" });
+        }
+
+        // Validate status transitions
+        if (
+            existing.status === NEWS_STATUS.DRAFT &&
+            input.status === NEWS_STATUS.UNPUBLISHED
+        ) {
+            throw errors.BAD_REQUEST({
+                message:
+                    "Cannot unpublish a draft article. Article must be published first.",
+            });
+        }
+
+        let publishedAt: Date | null = existing.published_at;
+        let publishedBy: string | null = existing.published_by;
+
+        if (input.status === NEWS_STATUS.PUBLISHED) {
+            // Publishing: set published date and user if not already set
+            if (!publishedAt) {
+                publishedAt = new Date();
+                publishedBy = userId;
+            }
+        } else if (input.status === NEWS_STATUS.DRAFT) {
+            // Back to draft: clear published info
+            publishedAt = null;
+            publishedBy = null;
+        }
+        // For unpublished: keep existing published date/user
+
         await db
             .update(news)
             .set({
-                [NEWS_COLUMNS.IS_PUBLISHED]: input.isPublished,
-                [NEWS_COLUMNS.PUBLISHED_AT]: input.isPublished
-                    ? new Date()
-                    : null,
-                [NEWS_COLUMNS.PUBLISHED_BY]: input.isPublished ? userId : null,
+                [NEWS_COLUMNS.STATUS]: input.status,
+                [NEWS_COLUMNS.PUBLISHED_AT]: publishedAt,
+                [NEWS_COLUMNS.PUBLISHED_BY]: publishedBy,
                 [COMMON_COLUMNS.UPDATED_BY]: userId,
                 [COMMON_COLUMNS.UPDATED_AT]: new Date(),
             })
             .where(eq(news[COMMON_COLUMNS.ID], input.id));
     })
     .callable();
+
+/**
+ * @deprecated Use changeStatus instead
+ */
+export const togglePublish = changeStatus;
 
 /**
  * Check if a slug is available

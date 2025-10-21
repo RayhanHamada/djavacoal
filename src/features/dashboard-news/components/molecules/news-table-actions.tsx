@@ -21,7 +21,7 @@ interface NewsTableActionsProps {
     id: number;
     slug: string;
     title: string;
-    isPublished: boolean;
+    status: "draft" | "published" | "unpublished";
     onEdit: () => void;
 }
 
@@ -32,7 +32,7 @@ export function NewsTableActions({
     id,
     slug,
     title,
-    isPublished,
+    status,
     onEdit,
 }: NewsTableActionsProps) {
     const queryClient = useQueryClient();
@@ -60,21 +60,24 @@ export function NewsTableActions({
         },
     });
 
-    // Toggle publish mutation
-    const togglePublishMutation = useMutation({
+    // Change status mutation
+    const changeStatusMutation = useMutation({
         mutationFn: ({
             id,
-            isPublished,
+            status,
         }: {
             id: number;
-            isPublished: boolean;
-        }) => client.dashboardNews.togglePublish({ id, isPublished }),
+            status: "draft" | "published" | "unpublished";
+        }) => client.dashboardNews.changeStatus({ id, status }),
         onSuccess: (_, variables) => {
+            const statusMessages = {
+                draft: "News article saved as draft",
+                published: "News article published",
+                unpublished: "News article unpublished",
+            };
             notifications.show({
                 title: "Success",
-                message: variables.isPublished
-                    ? "News article published"
-                    : "News article unpublished",
+                message: statusMessages[variables.status],
                 color: "green",
             });
             queryClient.invalidateQueries({
@@ -109,8 +112,8 @@ export function NewsTableActions({
         });
     };
 
-    const handleTogglePublish = () => {
-        togglePublishMutation.mutate({ id, isPublished: !isPublished });
+    const handleChangeStatus = (newStatus: typeof status) => {
+        changeStatusMutation.mutate({ id, status: newStatus });
     };
 
     return (
@@ -129,30 +132,46 @@ export function NewsTableActions({
                 </Menu.Target>
 
                 <Menu.Dropdown>
-                    {/* Toggle Publish/Unpublish */}
-                    <Menu.Item
-                        leftSection={
-                            isPublished ? (
-                                <IconWorldOff size={16} />
-                            ) : (
-                                <IconWorld size={16} />
-                            )
-                        }
-                        onClick={handleTogglePublish}
-                        disabled={togglePublishMutation.isPending}
-                    >
-                        {isPublished ? "Unpublish" : "Publish"}
-                    </Menu.Item>
-
-                    {/* View on Site (only if published) */}
-                    {isPublished && (
+                    {/* Status transitions based on current status */}
+                    {status === "draft" && (
                         <Menu.Item
-                            leftSection={<IconEye size={16} />}
-                            component={Link}
-                            href={`${process.env.NEXT_PUBLIC_BASE_URL}news/${slug}`}
-                            target="_blank"
+                            leftSection={<IconWorld size={16} />}
+                            onClick={() => handleChangeStatus("published")}
+                            disabled={changeStatusMutation.isPending}
                         >
-                            View on Site
+                            Publish
+                        </Menu.Item>
+                    )}
+
+                    {status === "published" && (
+                        <>
+                            <Menu.Item
+                                leftSection={<IconWorldOff size={16} />}
+                                onClick={() =>
+                                    handleChangeStatus("unpublished")
+                                }
+                                disabled={changeStatusMutation.isPending}
+                            >
+                                Unpublish
+                            </Menu.Item>
+                            <Menu.Item
+                                leftSection={<IconEye size={16} />}
+                                component={Link}
+                                href={`${process.env.NEXT_PUBLIC_BASE_URL}news/${slug}`}
+                                target="_blank"
+                            >
+                                View on Site
+                            </Menu.Item>
+                        </>
+                    )}
+
+                    {status === "unpublished" && (
+                        <Menu.Item
+                            leftSection={<IconWorld size={16} />}
+                            onClick={() => handleChangeStatus("published")}
+                            disabled={changeStatusMutation.isPending}
+                        >
+                            Re-publish
                         </Menu.Item>
                     )}
 
