@@ -4,6 +4,7 @@ import {
     Box,
     Button,
     Drawer,
+    Flex,
     Group,
     Select,
     Stack,
@@ -11,7 +12,7 @@ import {
 } from "@mantine/core";
 import { DatePickerInput } from "@mantine/dates";
 import { useDisclosure } from "@mantine/hooks";
-import { IconFilter, IconX } from "@tabler/icons-react";
+import { IconCalendar, IconFilter, IconX } from "@tabler/icons-react";
 import dayjs from "dayjs";
 import {
     parseAsArrayOf,
@@ -25,13 +26,13 @@ import { NewsTagsSelect } from "../atoms";
 
 type StatusFilter = "all" | "published" | "unpublished";
 
-const DEFAULT_DATE_FROM = dayjs().subtract(1, "month").toDate();
-const DEFAULT_DATE_TO = dayjs().toDate();
-
 /**
  * News filters state management using nuqs
  */
 export function useNewsFilters() {
+    const now = dayjs();
+    const oneMonthAgo = now.subtract(1, "month");
+
     return useQueryStates(
         {
             title: parseAsString.withDefault(""),
@@ -41,8 +42,8 @@ export function useNewsFilters() {
                 "published",
                 "unpublished",
             ]).withDefault("all"),
-            dateFrom: parseAsIsoDate.withDefault(DEFAULT_DATE_FROM),
-            dateTo: parseAsIsoDate.withDefault(DEFAULT_DATE_TO),
+            dateFrom: parseAsIsoDate.withDefault(oneMonthAgo.toDate()),
+            dateTo: parseAsIsoDate.withDefault(now.toDate()),
         },
         {
             history: "push",
@@ -106,22 +107,33 @@ export function NewsFilters({
             />
 
             {/* Date Range */}
-            <DatePickerInput
-                type="range"
-                label="Publication Date Range"
-                placeholder="Select date range"
-                value={[filters.dateFrom, filters.dateTo]}
-                onChange={([f, t]) => {
-                    const dateFrom = dayjs(f, "YYYY-MM-DD");
-                    const dateTo = dayjs(t, "YYYY-MM-DD");
-
-                    setFilters({
-                        dateFrom: dateFrom.isValid() ? dateFrom.toDate() : null,
-                        dateTo: dateTo.isValid() ? dateTo.toDate() : null,
-                    });
-                }}
-                clearable
-            />
+            <Flex direction="row" justify="space-between " gap="md">
+                <DatePickerInput
+                    leftSection={<IconCalendar size={18} stroke={1.5} />}
+                    w="100%"
+                    valueFormat="DD MMMM YYYY"
+                    label="Published From"
+                    placeholder="Select date range"
+                    value={filters.dateFrom}
+                    onChange={(d) => {
+                        setFilters({ dateFrom: d ? dayjs(d).toDate() : null });
+                    }}
+                    clearable
+                />
+                <DatePickerInput
+                    leftSection={<IconCalendar size={18} stroke={1.5} />}
+                    w="100%"
+                    excludeDate={(d) => dayjs(d).isBefore(filters.dateFrom)}
+                    valueFormat="DD MMMM YYYY"
+                    label="Published To"
+                    placeholder="Select date range"
+                    value={filters.dateTo}
+                    onChange={(d) => {
+                        setFilters({ dateTo: d ? dayjs(d).toDate() : null });
+                    }}
+                    clearable
+                />
+            </Flex>
 
             {/* Reset Button */}
             {hasActiveFilters && (
