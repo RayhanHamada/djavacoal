@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect } from "react";
+import { useCallback, useEffect, useRef } from "react";
 
 import {
     Button,
@@ -16,10 +16,11 @@ import {
 import { DateTimePicker } from "@mantine/dates";
 import { useForm } from "@mantine/form";
 import { useLocalStorage } from "@mantine/hooks";
+import { notifications } from "@mantine/notifications";
 import { useDebounce, useDebounceFn } from "ahooks";
 import dayjs from "dayjs";
 
-import { NewsImageUpload } from "../atoms/news-image-upload";
+import { NewsImageUpload, type NewsImageUploadRef } from "../atoms";
 import { NewsTagsSelect } from "../atoms/news-tags-select";
 import { validateNewsForm, type NewsFormValues } from "../lib/form-schemas";
 import { CreationMode } from "../lib/form-schemas";
@@ -62,6 +63,9 @@ export function NewsForm({
     isSubmitting = false,
     onSubmit,
 }: NewsFormProps) {
+    // Ref for image upload component
+    const imageUploadRef = useRef<NewsImageUploadRef>(null);
+
     // Local storage for persistence
     const [storedData, setStoredData, removeStoredData] = useLocalStorage({
         key: storageKey,
@@ -130,38 +134,56 @@ export function NewsForm({
     );
 
     const handleSubmit = useCallback(
-        (
+        async (
             values: NewsFormValues,
             status: "draft" | "published" | "preserve"
         ) => {
-            const submittedValues = {
-                ...values,
-                // If status is 'preserve', keep the existing status from values
-                status: status === "preserve" ? values.status : status,
-                // For published status, ensure publishedAt is set
-                publishedAt:
-                    status === "published"
-                        ? values.publishedAt || new Date()
-                        : values.publishedAt,
-            };
-            onSubmit(submittedValues);
-            // Clear local storage on successful submit
-            removeStoredData();
+            try {
+                // Upload image if there's a pending file
+                const imageKey =
+                    await imageUploadRef.current?.uploadImageFile();
+
+                const submittedValues = {
+                    ...values,
+                    // Use the uploaded image key if available, otherwise keep existing
+                    imageKey: imageKey || values.imageKey,
+                    // If status is 'preserve', keep the existing status from values
+                    status: status === "preserve" ? values.status : status,
+                    // For published status, ensure publishedAt is set
+                    publishedAt:
+                        status === "published"
+                            ? values.publishedAt || new Date()
+                            : values.publishedAt,
+                };
+                onSubmit(submittedValues);
+                // Clear local storage on successful submit
+                removeStoredData();
+            } catch (error) {
+                console.error("Failed to submit form:", error);
+                notifications.show({
+                    title: "Submission Failed",
+                    message:
+                        error instanceof Error
+                            ? error.message
+                            : "Failed to submit. Please try again.",
+                    color: "red",
+                });
+            }
         },
         [onSubmit, removeStoredData]
     );
 
-    const handleSaveDraft = form.onSubmit((values) =>
-        handleSubmit(values, "draft")
-    );
+    const handleSaveDraft = form.onSubmit(async (values) => {
+        await handleSubmit(values, "draft");
+    });
 
-    const handleSave = form.onSubmit((values) =>
-        handleSubmit(values, "preserve")
-    );
+    const handleSave = form.onSubmit(async (values) => {
+        await handleSubmit(values, "preserve");
+    });
 
-    const handlePublish = form.onSubmit((values) =>
-        handleSubmit(values, "published")
-    );
+    const handlePublish = form.onSubmit(async (values) => {
+        await handleSubmit(values, "published");
+    });
 
     return (
         <form onSubmit={handlePublish}>
@@ -176,8 +198,9 @@ export function NewsForm({
                         size: 1024×768 pixels (4:3 ratio)
                     </Text>
                     <NewsImageUpload
+                        ref={imageUploadRef}
                         imageKey={form.getValues().imageKey}
-                        onImageUploaded={(key) =>
+                        onImageUploaded={(key: string) =>
                             form.setFieldValue("imageKey", key)
                         }
                         onImageRemoved={() =>

@@ -84,6 +84,10 @@ export function NewsTagsSelect({
             maxDropdownHeight={200}
             clearable
             hidePickedOptions
+            comboboxProps={{
+                position: "bottom",
+                middlewares: { flip: false },
+            }}
             onKeyDown={(event) => {
                 // Allow creating new tags by pressing Enter
                 if (

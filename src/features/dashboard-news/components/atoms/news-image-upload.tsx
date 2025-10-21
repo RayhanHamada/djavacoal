@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useState } from "react";
+import { forwardRef, useCallback, useImperativeHandle, useState } from "react";
 
 import Image from "next/image";
 
@@ -14,7 +14,6 @@ import {
     IconUpload,
     IconX,
 } from "@tabler/icons-react";
-import { useMutation } from "@tanstack/react-query";
 
 import { client } from "@/lib/rpc";
 
@@ -29,110 +28,128 @@ interface NewsImageUploadProps {
     disabled?: boolean;
 }
 
+export interface NewsImageUploadRef {
+    /** Upload the currently held file. Returns the R2 key or null if no pending file */
+    uploadImageFile: () => Promise<string | null>;
+}
+
 const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
 
 /**
  * NewsImageUpload component for uploading news article images
  * Displays preview in 4:3 aspect ratio
+ * Now defers upload until parent calls uploadImageFile()
  */
-export function NewsImageUpload({
-    imageKey,
-    onImageUploaded,
-    onImageRemoved,
-    disabled = false,
-}: NewsImageUploadProps) {
+export const NewsImageUpload = forwardRef<
+    NewsImageUploadRef,
+    NewsImageUploadProps
+>(function NewsImageUpload(
+    { imageKey, onImageUploaded, onImageRemoved, disabled = false },
+    ref
+) {
     const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+    const [pendingFile, setPendingFile] = useState<File | null>(null);
+    const [isUploading, setIsUploading] = useState(false);
+    const [isHovered, setIsHovered] = useState(false);
 
     // Get R2 public URL for image key
     function getImageUrl(key: string) {
         return `${process.env.NEXT_PUBLIC_ASSET_URL}/${key}`;
     }
 
-    // Upload mutation
-    const uploadMutation = useMutation({
-        mutationFn: async (file: File) => {
-            // Step 1: Get presigned URL
-            const { uploadUrl, key } =
-                await client.dashboardNews.generateImageUploadUrl({
-                    fileName: file.name,
-                    contentType: file.type,
-                    fileSize: file.size,
-                });
-
-            // Step 2: Upload to R2
-            const uploadResponse = await fetch(uploadUrl, {
-                method: "PUT",
-                body: file,
-                headers: {
-                    "Content-Type": file.type,
-                },
-            });
-
-            if (!uploadResponse.ok) {
-                throw new Error("Failed to upload image");
+    // Expose upload function to parent via ref
+    useImperativeHandle(ref, () => ({
+        uploadImageFile: async () => {
+            if (!pendingFile) {
+                // If no new file, return existing key
+                return imageKey || null;
             }
 
-            return key;
-        },
-        onSuccess: (key) => {
-            notifications.show({
-                title: "Success",
-                message: "Image uploaded successfully",
-                color: "green",
-            });
-            onImageUploaded(key);
-        },
-        onError: (error) => {
-            console.error("Upload error:", error);
-            notifications.show({
-                title: "Upload Failed",
-                message:
-                    error instanceof Error
-                        ? error.message
-                        : "An error occurred",
-                color: "red",
-            });
-            setPreviewUrl(null);
-        },
-    });
+            try {
+                setIsUploading(true);
 
-    const handleDrop = useCallback(
-        (files: File[]) => {
-            const file = files.at(0);
-            if (!file) return;
+                // Step 1: Get presigned URL
+                const { uploadUrl, key } =
+                    await client.dashboardNews.generateImageUploadUrl({
+                        fileName: pendingFile.name,
+                        contentType: pendingFile.type,
+                        fileSize: pendingFile.size,
+                    });
 
-            // Validate file size
-            if (file.size > MAX_FILE_SIZE) {
+                // Step 2: Upload to R2
+                const uploadResponse = await fetch(uploadUrl, {
+                    method: "PUT",
+                    body: pendingFile,
+                    headers: {
+                        "Content-Type": pendingFile.type,
+                    },
+                });
+
+                if (!uploadResponse.ok) {
+                    throw new Error("Failed to upload image");
+                }
+
+                // Clean up preview URL
+                if (previewUrl) {
+                    URL.revokeObjectURL(previewUrl);
+                }
+
+                // Update state
+                onImageUploaded(key);
+                setPreviewUrl(null);
+                setPendingFile(null);
+
+                return key;
+            } catch (error) {
+                console.error("Image upload failed:", error);
                 notifications.show({
-                    title: "File too large",
-                    message: "Image must be less than 10MB",
+                    title: "Upload Failed",
+                    message:
+                        error instanceof Error
+                            ? error.message
+                            : "An error occurred",
                     color: "red",
                 });
-                return;
+                throw error;
+            } finally {
+                setIsUploading(false);
             }
-
-            // Create preview
-            const url = URL.createObjectURL(file);
-            setPreviewUrl(url);
-
-            // Upload file
-            uploadMutation.mutate(file);
         },
-        [uploadMutation]
-    );
+    }));
+
+    const handleDrop = useCallback((files: File[]) => {
+        const file = files.at(0);
+        if (!file) return;
+
+        // Validate file size
+        if (file.size > MAX_FILE_SIZE) {
+            notifications.show({
+                title: "File too large",
+                message: "Image must be less than 10MB",
+                color: "red",
+            });
+            return;
+        }
+
+        // Create local preview immediately
+        const url = URL.createObjectURL(file);
+        setPreviewUrl(url);
+
+        // Hold file for later upload
+        setPendingFile(file);
+    }, []);
 
     const handleRemove = useCallback(() => {
         if (previewUrl) {
             URL.revokeObjectURL(previewUrl);
             setPreviewUrl(null);
         }
+        setPendingFile(null);
         onImageRemoved();
     }, [previewUrl, onImageRemoved]);
 
     const currentImageUrl =
         previewUrl || (imageKey ? getImageUrl(imageKey) : null);
-    const isUploading = uploadMutation.isPending;
-    const [isHovered, setIsHovered] = useState(false);
 
     return (
         <Box w="100%">
@@ -283,4 +300,4 @@ export function NewsImageUpload({
             )}
         </Box>
     );
-}
+});
