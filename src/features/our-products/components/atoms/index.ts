@@ -1,1 +1,1 @@
-export * from "./banner-button";
+export { default as VideoGallerySection } from "./image-carousel";

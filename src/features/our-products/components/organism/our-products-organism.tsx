@@ -4,6 +4,9 @@ import React, { useState } from "react";
 
 import { Download, MessageCircle, MapPin, Phone, Mail } from "lucide-react";
 
+import VideoGallerySection from "@/features/our-products/components/atoms/image-carousel";
+import ProductDescription from "@/features/our-products/components/molecules/product-description";
+
 export function ProductPage() {
     const [_mobileMenuOpen, _setMobileMenuOpen] = useState(false);
     const [selectedImage, setSelectedImage] = useState(0);
@@ -63,7 +66,8 @@ export function ProductPage() {
                     </h1>
                 </div>
             </div>
-
+            <ProductDescription />
+            <VideoGallerySection />
             {/* Product Section */}
             <div className="container mx-auto px-4 py-8 lg:py-12">
                 <div className="grid gap-8 lg:grid-cols-2 lg:gap-12">
