@@ -4,7 +4,7 @@ import "@mantine/tiptap/styles.css";
 import "./news-rich-text-editor.css";
 import "tiptap-extension-resizable-image/styles.css";
 
-import { Dispatch, useCallback } from "react";
+import { Dispatch, useCallback, useState } from "react";
 
 import { Box, Group, Text } from "@mantine/core";
 import { notifications } from "@mantine/notifications";
@@ -13,6 +13,7 @@ import {
     IconColumnInsertLeft,
     IconColumnInsertRight,
     IconColumnRemove,
+    IconPhoto,
     IconRowInsertBottom,
     IconRowInsertTop,
     IconRowRemove,
@@ -32,6 +33,7 @@ import { nanoid } from "nanoid";
 import { ResizableImage } from "tiptap-extension-resizable-image";
 import { TextDirection } from "tiptap-text-direction";
 
+import { GalleryPickerModal } from "../molecules/gallery-picker-modal";
 import { client } from "@/lib/rpc";
 
 type Props = {
@@ -53,6 +55,8 @@ export function NewsRichTextEditor({
     minCharacters,
     maxCharacters,
 }: Props) {
+    const [galleryModalOpened, setGalleryModalOpened] = useState(false);
+
     const { run: onUpdate } = useDebounceFn(
         ({ editor }: EditorEvents["update"]) => {
             onChange(editor.getHTML());
@@ -230,6 +234,32 @@ export function NewsRichTextEditor({
         editor?.chain().focus().deleteTable().run();
     }, [editor]);
 
+    const handleGallerySelect = useCallback(
+        (photo: { id: string; name: string; key: string; url: string }) => {
+            if (!editor) return;
+
+            // Insert image at current cursor position
+            editor
+                .chain()
+                .focus()
+                .setResizableImage({
+                    src: photo.url,
+                    alt: photo.name,
+                    title: photo.name,
+                    width: 400,
+                    height: 300,
+                })
+                .run();
+
+            notifications.show({
+                color: "green",
+                title: "Image Inserted",
+                message: `${photo.name} has been added to the editor`,
+            });
+        },
+        [editor]
+    );
+
     return (
         <RichTextEditor editor={editor}>
             <RichTextEditor.Toolbar sticky stickyOffset={60} mb="lg">
@@ -288,6 +318,16 @@ export function NewsRichTextEditor({
                     <RichTextEditor.AlignCenter />
                     <RichTextEditor.AlignJustify />
                     <RichTextEditor.AlignRight />
+                </RichTextEditor.ControlsGroup>
+
+                <RichTextEditor.ControlsGroup>
+                    <RichTextEditor.Control
+                        onClick={() => setGalleryModalOpened(true)}
+                        aria-label="Insert image from gallery"
+                        title="Insert image from gallery"
+                    >
+                        <IconPhoto size={16} stroke={1.5} />
+                    </RichTextEditor.Control>
                 </RichTextEditor.ControlsGroup>
 
                 <RichTextEditor.ControlsGroup>
@@ -425,6 +465,13 @@ export function NewsRichTextEditor({
                     </Text>
                 </Group>
             </Box>
+
+            {/* Gallery Picker Modal */}
+            <GalleryPickerModal
+                opened={galleryModalOpened}
+                onClose={() => setGalleryModalOpened(false)}
+                onSelect={handleGallerySelect}
+            />
         </RichTextEditor>
     );
 }

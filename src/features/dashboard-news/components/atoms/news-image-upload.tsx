@@ -4,7 +4,7 @@ import { forwardRef, useCallback, useImperativeHandle, useState } from "react";
 
 import Image from "next/image";
 
-import { ActionIcon, Box, Loader, Stack, Text } from "@mantine/core";
+import { ActionIcon, Box, Button, Loader, Stack, Text } from "@mantine/core";
 import { Dropzone, IMAGE_MIME_TYPE } from "@mantine/dropzone";
 import { notifications } from "@mantine/notifications";
 import {
@@ -15,6 +15,7 @@ import {
     IconX,
 } from "@tabler/icons-react";
 
+import { GalleryPickerModal } from "../molecules/gallery-picker-modal";
 import { client } from "@/lib/rpc";
 
 interface NewsImageUploadProps {
@@ -51,6 +52,7 @@ export const NewsImageUpload = forwardRef<
     const [pendingFile, setPendingFile] = useState<File | null>(null);
     const [isUploading, setIsUploading] = useState(false);
     const [isHovered, setIsHovered] = useState(false);
+    const [galleryModalOpened, setGalleryModalOpened] = useState(false);
 
     // Get R2 public URL for image key
     function getImageUrl(key: string) {
@@ -147,6 +149,21 @@ export const NewsImageUpload = forwardRef<
         setPendingFile(null);
         onImageRemoved();
     }, [previewUrl, onImageRemoved]);
+
+    const handleGallerySelect = useCallback(
+        (photo: { id: string; name: string; key: string; url: string }) => {
+            // Clear any pending file/preview
+            if (previewUrl) {
+                URL.revokeObjectURL(previewUrl);
+                setPreviewUrl(null);
+            }
+            setPendingFile(null);
+
+            // Set the selected gallery image key
+            onImageUploaded(photo.key);
+        },
+        [previewUrl, onImageUploaded]
+    );
 
     const currentImageUrl =
         previewUrl || (imageKey ? getImageUrl(imageKey) : null);
@@ -297,6 +314,27 @@ export const NewsImageUpload = forwardRef<
                         </Stack>
                     </Stack>
                 </Dropzone>
+            )}
+
+            {/* Gallery Picker Modal */}
+            <GalleryPickerModal
+                opened={galleryModalOpened}
+                onClose={() => setGalleryModalOpened(false)}
+                onSelect={handleGallerySelect}
+            />
+
+            {/* Choose from Gallery Button (shown when no image) */}
+            {!currentImageUrl && !isUploading && (
+                <Button
+                    variant="light"
+                    leftSection={<IconPhoto size={16} />}
+                    onClick={() => setGalleryModalOpened(true)}
+                    disabled={disabled}
+                    fullWidth
+                    mt="md"
+                >
+                    Choose from Gallery
+                </Button>
             )}
         </Box>
     );
