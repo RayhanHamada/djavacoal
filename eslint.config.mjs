@@ -27,6 +27,7 @@ const eslintConfig = [
             "public/**",
             ".open-next/**",
             ".eslintcache",
+            "src/adapters/d1/migrations/meta/**",
         ],
     },
     js.configs.recommended,
