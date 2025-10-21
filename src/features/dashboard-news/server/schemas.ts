@@ -229,7 +229,8 @@ export const TagSchema = z.object({
 export type Tag = z.infer<typeof TagSchema>;
 
 export const ListTagsInputSchema = z.object({
-    limit: z.number().min(1).max(100).default(10),
+    limit: z.number().min(1).default(100),
+    search: z.string().optional(),
 });
 
 export type ListTagsInput = z.infer<typeof ListTagsInputSchema>;

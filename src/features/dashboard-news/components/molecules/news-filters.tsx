@@ -1,5 +1,7 @@
 "use client";
 
+import { useMemo } from "react";
+
 import {
     Box,
     Button,
@@ -12,7 +14,13 @@ import {
 } from "@mantine/core";
 import { DatePickerInput } from "@mantine/dates";
 import { useDisclosure } from "@mantine/hooks";
-import { IconCalendar, IconFilter, IconX } from "@tabler/icons-react";
+import {
+    IconAlphabetLatin,
+    IconCalendar,
+    IconFilter,
+    IconGlobe,
+    IconX,
+} from "@tabler/icons-react";
 import dayjs from "dayjs";
 import {
     parseAsArrayOf,
@@ -30,8 +38,13 @@ type StatusFilter = "all" | "published" | "unpublished";
  * News filters state management using nuqs
  */
 export function useNewsFilters() {
-    const now = dayjs();
-    const oneMonthAgo = now.subtract(1, "month");
+    // Memoize default dates to prevent creating new Date objects on every render
+    const defaultDates = useMemo(() => {
+        const now = new Date();
+        const oneMonthAgo = new Date(now);
+        oneMonthAgo.setMonth(oneMonthAgo.getMonth() - 1);
+        return { oneMonthAgo, now };
+    }, []);
 
     return useQueryStates(
         {
@@ -42,8 +55,8 @@ export function useNewsFilters() {
                 "published",
                 "unpublished",
             ]).withDefault("all"),
-            dateFrom: parseAsIsoDate.withDefault(oneMonthAgo.toDate()),
-            dateTo: parseAsIsoDate.withDefault(now.toDate()),
+            dateFrom: parseAsIsoDate.withDefault(defaultDates.oneMonthAgo),
+            dateTo: parseAsIsoDate.withDefault(defaultDates.now),
         },
         {
             history: "push",
@@ -73,38 +86,44 @@ export function NewsFilters({
         <Stack gap="md">
             {/* Title Search */}
             <TextInput
+                leftSection={<IconAlphabetLatin size={16} />}
                 label="Search by Title"
                 placeholder="Search in English titles..."
                 value={filters.title}
                 onChange={(e) =>
                     setFilters({ title: e.currentTarget.value || null })
                 }
-                leftSection={<IconFilter size={16} />}
             />
 
-            {/* Tags */}
-            <NewsTagsSelect
-                label="Filter by Tags"
-                value={filters.tags}
-                onChange={(tags) =>
-                    setFilters({ tags: tags.length > 0 ? tags : null })
-                }
-                placeholder="Select tags to filter"
-            />
+            <Flex direction="row" gap="md">
+                {/* Status */}
+                <Select
+                    leftSection={<IconGlobe size={16} />}
+                    w="100%"
+                    label="Publication Status"
+                    value={filters.status}
+                    onChange={(value) =>
+                        setFilters({ status: (value as StatusFilter) || "all" })
+                    }
+                    data={[
+                        { value: "all", label: "All" },
+                        { value: "published", label: "Published" },
+                        { value: "unpublished", label: "Unpublished" },
+                    ]}
+                />
 
-            {/* Status */}
-            <Select
-                label="Publication Status"
-                value={filters.status}
-                onChange={(value) =>
-                    setFilters({ status: (value as StatusFilter) || "all" })
-                }
-                data={[
-                    { value: "all", label: "All" },
-                    { value: "published", label: "Published" },
-                    { value: "unpublished", label: "Unpublished" },
-                ]}
-            />
+                {/* Tags */}
+                <Box w="100%">
+                    <NewsTagsSelect
+                        label="Filter by Tags"
+                        value={filters.tags}
+                        onChange={(tags) =>
+                            setFilters({ tags: tags.length > 0 ? tags : null })
+                        }
+                        placeholder="Select tags to filter"
+                    />
+                </Box>
+            </Flex>
 
             {/* Date Range */}
             <Flex direction="row" justify="space-between " gap="md">
