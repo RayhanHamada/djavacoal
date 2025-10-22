@@ -1,20 +1,34 @@
-import { OurProductsSidebar } from "@/features/our-products/components/molecules";
 import { ProductPage } from "@/features/our-products/components/organism";
 
 export default function OurProductsPage() {
     return (
-        <main className="bg-[#161616] text-white">
-            <section className="mx-auto max-w-7xl px-6 py-10 md:px-10 md:py-16 lg:mx-0 lg:mr-10 lg:max-w-none lg:px-0 lg:py-0">
-                <div className="grid grid-cols-1 gap-10 lg:grid-cols-[260px_1fr]">
-                    <div className="bg-[#222222] lg:py-16">
-                        <OurProductsSidebar />
-                    </div>
+        <main className="min-h-screen bg-[#161616] text-white">
+            {/* Hero Section */}
+            <div className="relative flex min-h-[350px] items-center justify-center overflow-hidden">
+                {/* Background with gradient overlay */}
+                <div
+                    className="absolute inset-0 bg-cover bg-center"
+                    style={{
+                        backgroundImage: `
+                            radial-gradient(circle at 50% -18%, rgba(21, 21, 21, 0.3) 39%, rgba(219, 172, 102, 1) 72%),
+                            url('/images/bg-banner-header.png')
+                        `,
+                    }}
+                />
 
-                    <div className="space-y-12 lg:py-16">
-                        <ProductPage />
-                    </div>
+                {/* Content */}
+                <div className="relative z-10 flex flex-col items-center gap-[214px] px-4 py-[125px]">
+                    <h1 className="text-center text-4xl leading-[46px] font-bold text-white md:text-5xl lg:text-[36px]">
+                        Products
+                    </h1>
                 </div>
-            </section>
+
+                {/* Bottom decorative line */}
+                <div className="absolute bottom-0 h-[2px] w-full bg-[#474747]" />
+            </div>
+
+            {/* Main Content */}
+            <ProductPage />
         </main>
     );
 }

@@ -1,81 +1,171 @@
-/* eslint-disable @next/next/no-img-element */
 "use client";
 
-import { COCONUT_SHELL_PRODUCT } from "../../lib";
+import { useState } from "react";
+
+import Image from "next/image";
+
 import {
-    ProductDescriptionCard,
-    ProductHeader,
-    ProductImageGallery,
-    ProductShapes,
-    ProductSpecifications,
+    ProductCategoryDropdown,
+    ProductHeroSection,
+    ProductDetailTable,
+    ShapesList,
 } from "../molecules";
-import ProductDescription from "../molecules/product-description";
+
+const PRODUCT_CATEGORIES = [
+    "Coconut Shell Charcoal Briquette",
+    "Barbeque Charcoal Briquette",
+    "Sawdust Charcoal",
+    "Natural Wood Charcoal",
+    "Djavacoal's Brand",
+];
+
+const PRODUCT_DATA = {
+    "Coconut Shell Charcoal Briquette": {
+        name: "Coconut Shell Charcoal Briquette",
+        image: "/images/product-main-image.svg",
+        description:
+            "Coconut Shell Charcoal Briquette is an eco-friendly, sustainable fuel made from the natural byproduct of coconut shells. Known for its high calorific value, long burn time, and low ash content, it is ideal for grilling, barbecues, shisha, and industrial applications. This charcoal briquette burns cleanly without emitting harmful chemicals, making it a healthier alternative to traditional wood charcoal. Additionally, it's produced using a renewable resource, contributing to environmental conservation while delivering efficient and consistent heat, making it a popular choice for both domestic and commercial uses globally, especially in the shisha market.",
+        specifications: [
+            { image: "/images/product-spec-1.png" },
+            { image: "/images/product-spec-2.png" },
+        ],
+        shapes: [
+            {
+                name: "CUBE",
+                image: "/images/shape-cube.png",
+                sizes: [
+                    "22x22x22 - (96 pcs/kg)",
+                    "25x25x25 - (72 pcs/kg)",
+                    "26x26x26 - (64 pcs/kg)",
+                    "27x27x27 - (54 pcs/kg)",
+                    "28x28x28 - (50 pcs/kg)",
+                ],
+            },
+            {
+                name: "Flat",
+                image: "/images/shape-flat.png",
+                sizes: [
+                    "25x25x17 -  (108 pcs/kg)",
+                    "25x25x15 - (120 pcs/kg)",
+                    "20x20x20 - (192 pcs/kg)",
+                ],
+            },
+            {
+                name: "Hexa",
+                image: "/images/shape-hexa.png",
+                sizes: [
+                    "18x50 -  (72 pcs/kg)",
+                    "20x35 - (96 pcs/kg)",
+                    "20x50 - (64 pcs/kg)",
+                ],
+            },
+            {
+                name: "Stick",
+                image: "/images/shape-stick.png",
+                sizes: [
+                    "18x50 -  (72 pcs/kg)",
+                    "20x35 - (96 pcs/kg)",
+                    "20x50 - (64 pcs/kg)",
+                ],
+            },
+        ],
+        details: [
+            { label: "MOQ:", value: '20" Container (18 Tons)' },
+            { label: "Packaging:", value: "Full / Bulk / Bulk Loose" },
+            { label: "Payment Terms:", value: "Telegraphic Transfer (T/T)" },
+            { label: "Shipment Terms:", value: "Freight on Board (FOB)" },
+            { label: "Production Capacity:", value: "250 Tons/Month" },
+        ],
+    },
+};
 
 export function ProductPage() {
+    const [selectedCategory, setSelectedCategory] = useState(
+        PRODUCT_CATEGORIES[0]
+    );
+
+    const currentProduct =
+        PRODUCT_DATA[selectedCategory as keyof typeof PRODUCT_DATA] ||
+        PRODUCT_DATA["Coconut Shell Charcoal Briquette"];
+
+    const handleDownloadCatalogue = () => {
+        console.log("Download catalogue");
+    };
+
+    const handleAskMore = () => {
+        window.open("https://wa.me/6282122859318", "_blank");
+    };
+
     return (
-        <div className="min-h-screen bg-gradient-to-b from-gray-900 to-black text-white">
-            {/* Hero Section */}
-            <div className="bg-gradient-to-r from-gray-900 to-gray-800 pt-20 pb-8">
-                <div className="container mx-auto px-4">
-                    <h1 className="text-center text-4xl font-bold lg:text-5xl">
-                        Products
-                    </h1>
-                </div>
+        <div className="flex flex-col gap-10 px-5 py-0 md:gap-10 md:px-10 lg:gap-0 lg:px-10 lg:py-10">
+            {/* Filter Dropdown (Mobile/Tablet) */}
+            <div className="lg:hidden">
+                <ProductCategoryDropdown
+                    categories={PRODUCT_CATEGORIES}
+                    selectedCategory={selectedCategory}
+                    onCategoryChange={setSelectedCategory}
+                />
             </div>
 
-            {/* Video Gallery Section */}
-            <ProductDescription />
+            {/* Product Content */}
+            <div className="flex flex-col gap-10">
+                <ProductHeroSection
+                    productName={currentProduct.name}
+                    productImage={currentProduct.image}
+                    onDownloadCatalogue={handleDownloadCatalogue}
+                    onAskMore={handleAskMore}
+                />
 
-            {/* Product Section */}
-            <div className="container mx-auto px-4 py-8 lg:py-12">
-                <div className="grid gap-8 lg:grid-cols-2 lg:gap-12">
-                    {/* Left Column - Images */}
-                    <ProductImageGallery
-                        images={COCONUT_SHELL_PRODUCT.images}
-                    />
+                {/* Divider */}
+                <div className="h-[1px] w-full bg-[#393939]" />
 
-                    {/* Right Column - Details */}
-                    <div className="space-y-6">
-                        <ProductHeader
-                            productName="Charcoal Briquette"
-                            highlightedName="Coconut Shell"
-                        />
+                {/* Description Section */}
+                <div className="flex flex-col gap-3">
+                    <h3 className="text-xl font-bold text-white">
+                        Description:
+                    </h3>
+                    <p className="text-justify text-base leading-[23px] text-[#B3B3B3]">
+                        {currentProduct.description}
+                    </p>
+                </div>
 
-                        <ProductDescriptionCard
-                            description={COCONUT_SHELL_PRODUCT.description}
-                        />
+                {/* Divider */}
+                <div className="h-[1px] w-full bg-[#393939]" />
 
-                        {/* Specifications */}
-                        <div className="rounded-lg bg-gray-800/50 p-6">
-                            <h3 className="mb-4 text-xl font-semibold text-[#EFA12D]">
-                                Specification & Lab. Test:
-                            </h3>
-                            <div className="grid gap-4 sm:grid-cols-2">
-                                <img
-                                    src="/api/placeholder/300/400"
-                                    alt="Diamond Grade Specification"
-                                    className="w-full rounded-lg"
-                                />
-                                <img
-                                    src="/api/placeholder/300/400"
-                                    alt="Certificate of Analysis"
-                                    className="w-full rounded-lg"
-                                />
-                            </div>
-                        </div>
+                {/* Specifications Section */}
+                <div className="flex flex-col gap-5">
+                    <h3 className="text-xl font-bold text-white">
+                        Specification & Lab. Test:
+                    </h3>
+                    <div className="flex flex-col gap-5 md:flex-row md:gap-5">
+                        {currentProduct.specifications.map((spec, idx) => (
+                            <Image
+                                key={idx}
+                                src={spec.image}
+                                alt={`Specification ${idx + 1}`}
+                                width={744}
+                                height={1054}
+                                className="h-auto w-full"
+                            />
+                        ))}
                     </div>
                 </div>
 
-                {/* Shape & Size Section */}
-                <div className="mt-12">
-                    <ProductShapes shapes={COCONUT_SHELL_PRODUCT.shapes} />
-                </div>
+                {/* Divider */}
+                <div className="h-[1px] w-full bg-[#393939]" />
 
-                {/* Detail Information */}
-                <div className="mt-12">
-                    <ProductSpecifications
-                        specifications={COCONUT_SHELL_PRODUCT.specifications}
-                    />
+                {/* Shapes Section */}
+                <ShapesList shapes={currentProduct.shapes} />
+
+                {/* Divider */}
+                <div className="h-[1px] w-full bg-[#393939]" />
+
+                {/* Detail Information Section */}
+                <div className="flex flex-col gap-5">
+                    <h3 className="text-xl font-bold text-white">
+                        Detail Information:
+                    </h3>
+                    <ProductDetailTable rows={currentProduct.details} />
                 </div>
             </div>
         </div>
