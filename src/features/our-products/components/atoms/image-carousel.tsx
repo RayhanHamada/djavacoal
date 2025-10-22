@@ -102,63 +102,121 @@ function VideoThumbnail({
     );
 }
 
-// Auto-Sliding Carousel Component
+// Static Carousel Component with Navigation
 function AutoCarousel({ items, onThumbnailClick }: AutoCarouselProps) {
-    const [position, setPosition] = useState(0);
-    const carouselRef = useRef<HTMLDivElement>(null);
+    const [currentIndex, setCurrentIndex] = useState(0);
+    const itemsPerPage = 4;
+    const totalPages = Math.ceil(items.length / itemsPerPage);
 
-    useEffect(() => {
-        const interval = setInterval(() => {
-            setPosition((prev) => {
-                const newPosition = prev - 1;
-                // Reset when we've scrolled one full set
-                if (Math.abs(newPosition) >= items.length * 140) {
-                    return 0;
-                }
-                return newPosition;
-            });
-        }, 30); // Adjust speed here (lower = faster)
+    const handlePrevious = () => {
+        setCurrentIndex((prev) => Math.max(0, prev - itemsPerPage));
+    };
 
-        return () => clearInterval(interval);
-    }, [items.length]);
+    const handleNext = () => {
+        setCurrentIndex((prev) =>
+            Math.min(items.length - itemsPerPage, prev + itemsPerPage)
+        );
+    };
 
-    // Duplicate items for infinite scroll effect
-    const duplicatedItems = [...items, ...items, ...items];
+    const visibleItems = items.slice(currentIndex, currentIndex + itemsPerPage);
+    const canGoPrevious = currentIndex > 0;
+    const canGoNext = currentIndex + itemsPerPage < items.length;
 
     return (
-        <div className="relative w-full overflow-hidden bg-gray-900/50 py-4">
-            <div
-                ref={carouselRef}
-                className="flex gap-4 transition-transform duration-0"
-                style={{ transform: `translateX(${position}px)` }}
-            >
-                {duplicatedItems.map((item, index) => (
-                    <div
-                        key={index}
-                        className="group h-32 w-32 flex-shrink-0 cursor-pointer overflow-hidden rounded-lg bg-gray-800 transition-all hover:ring-2 hover:ring-orange-500"
-                        onClick={() => onThumbnailClick(item)}
+        <div className="relative w-full bg-gray-900/50 py-4">
+            <div className="container mx-auto px-12">
+                <div className="relative flex items-center">
+                    {/* Previous Button */}
+                    <button
+                        onClick={handlePrevious}
+                        disabled={!canGoPrevious}
+                        className={`absolute left-0 z-10 flex h-12 w-12 items-center justify-center rounded-full bg-[#EFA12D] text-white transition-all hover:bg-[#D68F1F] disabled:cursor-not-allowed disabled:opacity-30 disabled:hover:bg-[#EFA12D]`}
+                        aria-label="Previous videos"
                     >
-                        <div className="relative h-full w-full">
-                            <Image
-                                src={item.thumbnail}
-                                alt={`Thumbnail ${index}`}
-                                width={128}
-                                height={128}
-                                className="h-full w-full object-cover"
-                            />
-                            {/* Djavacoal Logo on Thumbnail */}
-                            <div className="absolute top-2 left-2 text-[8px] font-bold tracking-wider text-white opacity-80">
-                                DJAVACOAL
-                            </div>
-                            {/* Play icon overlay */}
-                            <div className="absolute inset-0 flex items-center justify-center bg-black/30 opacity-0 transition-opacity group-hover:opacity-100">
-                                <div className="flex h-12 w-12 items-center justify-center rounded-full bg-[#EFA12D]">
-                                    <Play className="ml-1 h-6 w-6 fill-white text-white" />
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="24"
+                            height="24"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="2"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                        >
+                            <polyline points="15 18 9 12 15 6" />
+                        </svg>
+                    </button>
+
+                    {/* Carousel Content */}
+                    <div className="mx-auto flex gap-4 overflow-hidden">
+                        {visibleItems.map((item, index) => (
+                            <div
+                                key={currentIndex + index}
+                                className="group h-32 w-32 flex-shrink-0 cursor-pointer overflow-hidden rounded-lg bg-gray-800 transition-all hover:ring-2 hover:ring-[#EFA12D]"
+                                onClick={() => onThumbnailClick(item)}
+                            >
+                                <div className="relative h-full w-full">
+                                    <Image
+                                        src={item.thumbnail}
+                                        alt={`Thumbnail ${currentIndex + index + 1}`}
+                                        width={128}
+                                        height={128}
+                                        className="h-full w-full object-cover"
+                                    />
+                                    {/* Djavacoal Logo on Thumbnail */}
+                                    <div className="absolute top-2 left-2 text-[8px] font-bold tracking-wider text-white opacity-80">
+                                        DJAVACOAL
+                                    </div>
+                                    {/* Play icon overlay */}
+                                    <div className="absolute inset-0 flex items-center justify-center bg-black/30 opacity-0 transition-opacity group-hover:opacity-100">
+                                        <div className="flex h-12 w-12 items-center justify-center rounded-full bg-[#EFA12D]">
+                                            <Play className="ml-1 h-6 w-6 fill-white text-white" />
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
+                        ))}
                     </div>
-                ))}
+
+                    {/* Next Button */}
+                    <button
+                        onClick={handleNext}
+                        disabled={!canGoNext}
+                        className={`absolute right-0 z-10 flex h-12 w-12 items-center justify-center rounded-full bg-[#EFA12D] text-white transition-all hover:bg-[#D68F1F] disabled:cursor-not-allowed disabled:opacity-30 disabled:hover:bg-[#EFA12D]`}
+                        aria-label="Next videos"
+                    >
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="24"
+                            height="24"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="2"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                        >
+                            <polyline points="9 18 15 12 9 6" />
+                        </svg>
+                    </button>
+                </div>
+
+                {/* Page Indicator */}
+                <div className="mt-4 flex justify-center gap-2">
+                    {Array.from({ length: totalPages }).map((_, idx) => (
+                        <button
+                            key={idx}
+                            onClick={() => setCurrentIndex(idx * itemsPerPage)}
+                            className={`h-2 w-2 rounded-full transition-all ${
+                                Math.floor(currentIndex / itemsPerPage) === idx
+                                    ? "w-8 bg-[#EFA12D]"
+                                    : "bg-gray-600 hover:bg-gray-500"
+                            }`}
+                            aria-label={`Go to page ${idx + 1}`}
+                        />
+                    ))}
+                </div>
             </div>
         </div>
     );
