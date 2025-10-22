@@ -33,13 +33,13 @@ export function LogoSlideSection() {
     ];
 
     return (
-        <section className="w-full bg-gradient-to-b from-[#151515] to-transparent py-10 md:py-12 lg:py-16">
+        <section className="w-full bg-gradient-to-b from-[#0D0D0D] to-[#1A1A1A] py-12 md:py-16 lg:py-20">
             <div className="container mx-auto px-5 md:px-10 lg:px-20">
-                <div className="flex flex-wrap items-center justify-center gap-8 md:gap-12 lg:gap-16">
+                <div className="flex flex-wrap items-center justify-center gap-8 md:gap-10 lg:gap-14">
                     {certificates.map((cert, index) => (
                         <div
                             key={index}
-                            className="bg-gradient-radial flex flex-col items-center justify-center gap-2 rounded-lg border border-[#4F4F4F] from-[#151515] to-white/10 p-4 md:p-6"
+                            className="bg-gradient-radial group flex min-h-[180px] min-w-[180px] flex-col items-center justify-center gap-3 rounded-[20px] border-2 border-[#2A2A2A] from-[#0D0D0D] to-white/5 p-6 backdrop-blur-md transition-all duration-300 hover:border-[#EFA12D] hover:shadow-lg hover:shadow-[#EFA12D]/10 md:min-h-[200px] md:min-w-[200px] md:p-8"
                         >
                             <div className="relative flex items-center justify-center">
                                 <Image
@@ -49,16 +49,16 @@ export function LogoSlideSection() {
                                     }
                                     width={cert.width}
                                     height={cert.height}
-                                    className="object-contain"
+                                    className="object-contain transition-transform duration-300 group-hover:scale-110"
                                 />
                             </div>
                             {cert.title && (
                                 <div className="flex flex-col items-center gap-0">
-                                    <p className="text-center font-['Poppins'] text-[14px] leading-[1.5em] text-white md:text-[17px]">
+                                    <p className="text-center font-['Poppins'] text-[13px] leading-[1.4em] text-white md:text-[15px]">
                                         {cert.title}
                                     </p>
                                     {cert.subtitle && (
-                                        <p className="text-center font-['Poppins'] text-[10px] leading-[1.5em] text-white md:text-[12px]">
+                                        <p className="text-center font-['Poppins'] text-[10px] leading-[1.4em] text-[#B0B0B0] md:text-[11px]">
                                             {cert.subtitle}
                                         </p>
                                     )}
