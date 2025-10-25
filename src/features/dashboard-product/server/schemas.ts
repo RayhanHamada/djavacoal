@@ -159,3 +159,243 @@ export const GenerateImageUploadUrlOutputSchema = z.object({
     /** Object key in R2 */
     key: z.string(),
 });
+
+/**
+ * Product-related schemas
+ */
+
+/**
+ * Schema for product media items
+ */
+export const ProductMediaItemSchema = z.discriminatedUnion("media_type", [
+    z.object({
+        id: z.number().optional(),
+        media_type: z.literal("image"),
+        image_key: z.string(),
+        order_index: z.number(),
+    }),
+    z.object({
+        id: z.number().optional(),
+        media_type: z.literal("youtube"),
+        youtube_video_id: z.string(),
+        video_custom_thumbnail_key: z.string().optional(),
+        order_index: z.number(),
+    }),
+]);
+
+export type ProductMediaItem = z.infer<typeof ProductMediaItemSchema>;
+
+/**
+ * Schema for product specification items
+ */
+export const ProductSpecificationItemSchema = z.object({
+    id: z.number().optional(),
+    spec_photo_key: z.string(),
+    order_index: z.number(),
+});
+
+export type ProductSpecificationItem = z.infer<
+    typeof ProductSpecificationItemSchema
+>;
+
+/**
+ * Schema for product variant items
+ */
+export const ProductVariantItemSchema = z.object({
+    id: z.number().optional(),
+    en_variant_name: z.string().min(1, "English variant name is required"),
+    ar_variant_name: z.string().min(1, "Arabic variant name is required"),
+    en_description: z.string().optional(),
+    ar_description: z.string().optional(),
+    variant_photo_key: z.string(),
+    order_index: z.number(),
+});
+
+export type ProductVariantItem = z.infer<typeof ProductVariantItemSchema>;
+
+/**
+ * Schema for creating a product
+ */
+export const CreateProductInputSchema = z.object({
+    en_name: z.string().min(1, "English product name is required"),
+    ar_name: z.string().min(1, "Arabic product name is required"),
+    en_description_key: z.string().min(1, "English description is required"),
+    ar_description_key: z.string().min(1, "Arabic description is required"),
+    medias: z.array(ProductMediaItemSchema).default([]),
+    specifications: z.array(ProductSpecificationItemSchema).default([]),
+    variants: z.array(ProductVariantItemSchema).default([]),
+    moq: z.string().min(1, "MOQ is required"),
+    production_capacity: z.string().min(1, "Production capacity is required"),
+    packaging_option_ids: z.array(z.number()).default([]),
+    is_hidden: z.boolean().default(false),
+    order_index: z.number().default(0),
+});
+
+export type CreateProductInput = z.infer<typeof CreateProductInputSchema>;
+
+export const CreateProductOutputSchema = z.object({
+    id: z.number(),
+});
+
+export type CreateProductOutput = z.infer<typeof CreateProductOutputSchema>;
+
+/**
+ * Schema for updating a product
+ */
+export const UpdateProductInputSchema = z.object({
+    id: z.number(),
+    en_name: z.string().min(1, "English product name is required"),
+    ar_name: z.string().min(1, "Arabic product name is required"),
+    en_description_key: z.string().min(1, "English description is required"),
+    ar_description_key: z.string().min(1, "Arabic description is required"),
+    medias: z.array(ProductMediaItemSchema).default([]),
+    specifications: z.array(ProductSpecificationItemSchema).default([]),
+    variants: z.array(ProductVariantItemSchema).default([]),
+    moq: z.string().min(1, "MOQ is required"),
+    production_capacity: z.string().min(1, "Production capacity is required"),
+    packaging_option_ids: z.array(z.number()).default([]),
+    is_hidden: z.boolean().default(false),
+    order_index: z.number().default(0),
+});
+
+export type UpdateProductInput = z.infer<typeof UpdateProductInputSchema>;
+
+/**
+ * Schema for listing products
+ */
+export const ListProductsInputSchema = z.object({
+    page: z.number().int().positive().default(1),
+    limit: z
+        .number()
+        .int()
+        .positive()
+        .max(MAX_PAGE_SIZE)
+        .default(DEFAULT_PAGE_SIZE),
+    name_search: z.string().optional(),
+});
+
+export type ListProductsInput = z.infer<typeof ListProductsInputSchema>;
+
+/**
+ * Schema for product list item
+ */
+export const ProductListItemSchema = z.object({
+    id: z.number(),
+    en_name: z.string(),
+    ar_name: z.string(),
+    first_media_key: z.string().nullable(),
+    first_media_type: z.enum(["image", "youtube"]).nullable(),
+    youtube_video_id: z.string().nullable(),
+    is_hidden: z.boolean(),
+    order_index: z.number(),
+    created_at: z.date(),
+    updated_at: z.date(),
+});
+
+export type ProductListItem = z.infer<typeof ProductListItemSchema>;
+
+/**
+ * Schema for list products output
+ */
+export const ListProductsOutputSchema = z.object({
+    products: z.array(ProductListItemSchema),
+    total: z.number(),
+    page: z.number(),
+    limit: z.number(),
+    totalPages: z.number(),
+});
+
+export type ListProductsOutput = z.infer<typeof ListProductsOutputSchema>;
+
+/**
+ * Schema for getting product by ID
+ */
+export const GetProductByIdInputSchema = z.object({
+    id: z.number(),
+});
+
+export type GetProductByIdInput = z.infer<typeof GetProductByIdInputSchema>;
+
+/**
+ * Schema for product detail
+ */
+export const ProductDetailSchema = z.object({
+    id: z.number(),
+    en_name: z.string(),
+    ar_name: z.string(),
+    en_description_key: z.string(),
+    ar_description_key: z.string(),
+    moq: z.string(),
+    production_capacity: z.string(),
+    medias: z.array(ProductMediaItemSchema),
+    specifications: z.array(ProductSpecificationItemSchema),
+    variants: z.array(ProductVariantItemSchema),
+    packaging_option_ids: z.array(z.number()),
+    is_hidden: z.boolean(),
+    order_index: z.number(),
+    created_at: z.date(),
+    updated_at: z.date(),
+});
+
+export type ProductDetail = z.infer<typeof ProductDetailSchema>;
+
+/**
+ * Schema for deleting a product
+ */
+export const DeleteProductInputSchema = z.object({
+    id: z.number(),
+});
+
+export type DeleteProductInput = z.infer<typeof DeleteProductInputSchema>;
+
+/**
+ * Schema for toggling product visibility
+ */
+export const ToggleProductVisibilityInputSchema = z.object({
+    id: z.number(),
+});
+
+export type ToggleProductVisibilityInput = z.infer<
+    typeof ToggleProductVisibilityInputSchema
+>;
+
+/**
+ * Schema for reordering products
+ */
+export const ReorderProductsInputSchema = z.object({
+    product_orders: z.array(
+        z.object({
+            id: z.number(),
+            order_index: z.number(),
+        })
+    ),
+});
+
+export type ReorderProductsInput = z.infer<typeof ReorderProductsInputSchema>;
+
+/**
+ * Schema for generating presigned upload URL for product assets
+ */
+export const GenerateProductUploadUrlInputSchema = z.object({
+    file_name: z.string(),
+    mime_type: z.string().regex(/^image\/(jpeg|png|gif|webp|svg\+xml)$/),
+    upload_type: z.enum([
+        "media",
+        "specification",
+        "variant",
+        "video-thumbnail",
+    ]),
+});
+
+export type GenerateProductUploadUrlInput = z.infer<
+    typeof GenerateProductUploadUrlInputSchema
+>;
+
+export const GenerateProductUploadUrlOutputSchema = z.object({
+    upload_url: z.string(),
+    key: z.string(),
+});
+
+export type GenerateProductUploadUrlOutput = z.infer<
+    typeof GenerateProductUploadUrlOutputSchema
+>;
