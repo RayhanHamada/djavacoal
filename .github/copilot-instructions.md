@@ -323,7 +323,7 @@ bun cf:typegen
 
 ## Integration Points
 
-- **Email Service**: `src/adapters/email-service/` provides Resend/Plunk clients
+- **Email Service**: `src/adapters/email-service/` provides Resendclients
     - Use `getResend(env.RESEND_API_KEY)` to send emails
     - Sender email configured via `env.SENDER_EMAIL`
 - **Email Templates**: React components in `src/templates/emails/`
