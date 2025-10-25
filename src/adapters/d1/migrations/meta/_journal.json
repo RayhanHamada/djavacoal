@@ -64,6 +64,20 @@
       "when": 1761038050155,
       "tag": "0008_brief_medusa",
       "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "6",
+      "when": 1761307077119,
+      "tag": "0009_hard_zuras",
+      "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "6",
+      "when": 1761332778155,
+      "tag": "0010_burly_ozymandias",
+      "breakpoints": true
     }
   ]
 }

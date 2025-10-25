@@ -70,5 +70,71 @@
         "errors": {
             "loadingFailed": "خطأ في تحميل الصور"
         }
+    },
+    "PackagingOptions": {
+        "title": "خيارات التعبئة",
+        "subtitle": "إدارة خيارات تعبئة المنتجات",
+        "searchPlaceholder": "البحث بالاسم الإنجليزي...",
+        "noOptions": "لا توجد خيارات تعبئة بعد. قم بإنشاء الأول!",
+        "noResults": "لم يتم العثور على خيارات تعبئة مطابقة لبحثك",
+        "createButton": "إنشاء خيار تعبئة",
+        "editTitle": "تعديل خيار التعبئة",
+        "createTitle": "إنشاء خيار تعبئة",
+        "form": {
+            "enName": "الاسم بالإنجليزية",
+            "enNamePlaceholder": "أدخل اسم التعبئة بالإنجليزية",
+            "arName": "الاسم بالعربية",
+            "arNamePlaceholder": "أدخل اسم التعبئة بالعربية",
+            "enDescription": "الوصف بالإنجليزية",
+            "enDescriptionPlaceholder": "أدخل الوصف بالإنجليزية",
+            "arDescription": "الوصف بالعربية",
+            "arDescriptionPlaceholder": "أدخل الوصف بالعربية",
+            "image": "صورة التعبئة",
+            "imageHint": "اسحب صورة أو انقر للاختيار (الحد الأقصى 10 ميجابايت)",
+            "imagePreview": "معاينة الصورة",
+            "removeImage": "إزالة الصورة",
+            "submitCreate": "إنشاء خيار التعبئة",
+            "submitEdit": "حفظ التغييرات",
+            "cancel": "إلغاء",
+            "uploading": "جارٍ التحميل...",
+            "errors": {
+                "enNameRequired": "الاسم بالإنجليزية مطلوب",
+                "enNameLength": "يجب أن يكون الاسم 3-100 حرف",
+                "arNameRequired": "الاسم بالعربية مطلوب",
+                "arNameLength": "يجب أن يكون الاسم 3-100 حرف",
+                "enDescriptionRequired": "الوصف بالإنجليزية مطلوب",
+                "enDescriptionLength": "يجب أن يكون الوصف 10-500 حرف",
+                "arDescriptionRequired": "الوصف بالعربية مطلوب",
+                "arDescriptionLength": "يجب أن يكون الوصف 10-500 حرف",
+                "imageRequired": "الصورة مطلوبة",
+                "imageSize": "يجب أن تكون الصورة أقل من 10 ميجابايت",
+                "imageType": "فقط صور JPEG و PNG و GIF و WebP و SVG مسموح بها",
+                "createFailed": "فشل إنشاء خيار التعبئة",
+                "updateFailed": "فشل تحديث خيار التعبئة",
+                "uploadFailed": "فشل تحميل الصورة"
+            },
+            "success": {
+                "created": "تم إنشاء خيار التعبئة بنجاح",
+                "updated": "تم تحديث خيار التعبئة بنجاح"
+            }
+        },
+        "deleteModal": {
+            "title": "حذف خيار التعبئة",
+            "message": "هل أنت متأكد أنك تريد حذف \"{name}\"؟ لا يمكن التراجع عن هذا الإجراء.",
+            "button": "حذف",
+            "cancel": "إلغاء",
+            "success": "تم حذف خيار التعبئة بنجاح",
+            "error": "فشل حذف خيار التعبئة"
+        },
+        "actions": {
+            "edit": "تعديل",
+            "delete": "حذف",
+            "view": "عرض"
+        },
+        "pagination": {
+            "previous": "السابق",
+            "next": "التالي",
+            "page": "صفحة {current} من {total}"
+        }
     }
 }

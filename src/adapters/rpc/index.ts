@@ -7,6 +7,7 @@ import z from "zod/v4";
 
 import { router as admins } from "@/features/admin-auth/server/router";
 import { dashboardNews } from "@/features/dashboard-news/server";
+import { dashboardProduct } from "@/features/dashboard-product/server";
 import { router as gallery } from "@/features/gallery/server/router";
 
 const router = {
@@ -16,6 +17,7 @@ const router = {
     admins,
     gallery,
     dashboardNews,
+    dashboardProduct,
 };
 
 const handler = new RPCHandler(router, {

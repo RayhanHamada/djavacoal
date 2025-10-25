@@ -95,7 +95,7 @@ export function NewsTagsSelect({
                     searchValue &&
                     !value.includes(searchValue)
                 ) {
-                    onChange([...value, searchValue]);
+                    onChange([...value, searchValue.replaceAll(",", "")]);
                     setSearchValue("");
                     event.preventDefault();
                 }

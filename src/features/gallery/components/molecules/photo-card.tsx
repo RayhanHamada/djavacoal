@@ -1,16 +1,12 @@
 "use client";
 
+import "react-photo-view/dist/react-photo-view.css";
+
 import { useState } from "react";
 
-import {
-    ActionIcon,
-    Box,
-    Card,
-    Checkbox,
-    Image,
-    Menu,
-    Text,
-} from "@mantine/core";
+import Image from "next/image";
+
+import { ActionIcon, Box, Card, Checkbox, Menu, Text } from "@mantine/core";
 import { notifications } from "@mantine/notifications";
 import {
     IconCopy,
@@ -18,6 +14,7 @@ import {
     IconEdit,
     IconTrash,
 } from "@tabler/icons-react";
+import { PhotoView } from "react-photo-view";
 
 interface PhotoCardProps {
     /** Photo ID */
@@ -143,7 +140,14 @@ export function PhotoCard({
                 }}
                 onDoubleClick={onDoubleClick}
             >
-                <Image src={url} alt={name} fit="contain" h="100%" w="100%" />
+                <PhotoView src={url}>
+                    <Image
+                        src={url}
+                        alt={name}
+                        layout="fill"
+                        objectFit="cover"
+                    />
+                </PhotoView>
             </Box>
 
             {/* Photo name below image */}

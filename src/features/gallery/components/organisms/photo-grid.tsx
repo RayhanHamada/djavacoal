@@ -2,6 +2,8 @@
 
 import type { Photo, PhotoWithUrl } from "../../hooks";
 
+import { Fragment } from "react";
+
 import {
     Box,
     Button,
@@ -11,6 +13,7 @@ import {
     Stack,
     Text,
 } from "@mantine/core";
+import { PhotoProvider } from "react-photo-view";
 
 import { PhotoCard } from "../molecules";
 
@@ -103,40 +106,60 @@ export function PhotoGrid({
                     </Text>
                 </Center>
             ) : (
-                <SimpleGrid
-                    cols={{ base: 1, sm: 2, md: 3, lg: 4 }}
-                    spacing="md"
+                <PhotoProvider
+                    maskOpacity={0.5}
+                    toolbarRender={({ onScale, onRotate, rotate, scale }) => (
+                        <Fragment>
+                            <svg
+                                className="PhotoView-Slider__toolbarIcon"
+                                onClick={() => onScale(scale + 1)}
+                            />
+                            <svg
+                                className="PhotoView-Slider__toolbarIcon"
+                                onClick={() => onScale(scale - 1)}
+                            />
+                            <svg
+                                className="PhotoView-Slider__toolbarIcon"
+                                onClick={() => onRotate(rotate + 90)}
+                            />
+                        </Fragment>
+                    )}
                 >
-                    {photos.map((photo) => (
-                        <PhotoCard
-                            key={photo.id}
-                            id={photo.id}
-                            name={photo.name}
-                            url={photo.url}
-                            checked={selectedPhotoIds.has(photo.id)}
-                            onCheckedChange={() => onPhotoToggle(photo.id)}
-                            onRename={() =>
-                                onPhotoRename({
-                                    id: photo.id,
-                                    name: photo.name,
-                                })
-                            }
-                            onDelete={() =>
-                                onPhotoDelete({
-                                    id: photo.id,
-                                    name: photo.name,
-                                })
-                            }
-                            onDoubleClick={() =>
-                                onPhotoPreview({
-                                    id: photo.id,
-                                    name: photo.name,
-                                    url: photo.url,
-                                })
-                            }
-                        />
-                    ))}
-                </SimpleGrid>
+                    <SimpleGrid
+                        cols={{ base: 1, sm: 2, md: 3, lg: 4 }}
+                        spacing="md"
+                    >
+                        {photos.map((photo) => (
+                            <PhotoCard
+                                key={photo.id}
+                                id={photo.id}
+                                name={photo.name}
+                                url={photo.url}
+                                checked={selectedPhotoIds.has(photo.id)}
+                                onCheckedChange={() => onPhotoToggle(photo.id)}
+                                onRename={() =>
+                                    onPhotoRename({
+                                        id: photo.id,
+                                        name: photo.name,
+                                    })
+                                }
+                                onDelete={() =>
+                                    onPhotoDelete({
+                                        id: photo.id,
+                                        name: photo.name,
+                                    })
+                                }
+                                onDoubleClick={() =>
+                                    onPhotoPreview({
+                                        id: photo.id,
+                                        name: photo.name,
+                                        url: photo.url,
+                                    })
+                                }
+                            />
+                        ))}
+                    </SimpleGrid>
+                </PhotoProvider>
             )}
         </Box>
     );
