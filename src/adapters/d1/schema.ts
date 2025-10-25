@@ -322,19 +322,6 @@ const PRODUCT_COLUMN_FIELDS = {
 
     [PRODUCT_COLUMNS.MOQ]: int().notNull(),
     [PRODUCT_COLUMNS.PRODUCTION_CAPACITY]: text().notNull(),
-
-    [PRODUCT_COLUMNS.PAYMENT_TERMS]: text({
-        mode: "json",
-    })
-        .notNull()
-        .$type<string[]>()
-        .$default(() => []),
-    [PRODUCT_COLUMNS.SHIPMENT_TERMS]: text({
-        mode: "json",
-    })
-        .notNull()
-        .$type<string[]>()
-        .$default(() => []),
 } as const;
 
 /**

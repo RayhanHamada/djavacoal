@@ -111,8 +111,6 @@ export const PRODUCT_COLUMNS = {
     AR_DESCRIPTION: "ar_description",
     MOQ: "moq",
     PRODUCTION_CAPACITY: "production_capacity",
-    PAYMENT_TERMS: "payment_terms",
-    SHIPMENT_TERMS: "shipment_terms",
 } as const;
 
 export const PRODUCT_MEDIA_COLUMNS = {
