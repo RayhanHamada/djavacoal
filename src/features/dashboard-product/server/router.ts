@@ -2,22 +2,20 @@ import "server-only";
 
 import {
     createPackagingOption,
-    deletePackagingOption,
-    generateImageUploadUrl,
-    getPackagingOptionById,
-    listPackagingOptions,
-    updatePackagingOption,
-} from "./functions";
-import {
     createProduct,
+    deletePackagingOption,
     deleteProduct,
+    generateImageUploadUrl,
     generateProductUploadUrl,
+    getPackagingOptionById,
     getProductById,
+    listPackagingOptions,
     listProducts,
     reorderProducts,
     toggleProductVisibility,
+    updatePackagingOption,
     updateProduct,
-} from "./product-functions";
+} from "./functions";
 
 export const dashboardProduct = {
     // Packaging options

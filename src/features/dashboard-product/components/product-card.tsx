@@ -4,6 +4,8 @@ import type { ProductListItem } from "../server/schemas";
 
 import { useState } from "react";
 
+import Link from "next/link";
+
 import {
     ActionIcon,
     Badge,
@@ -23,82 +25,82 @@ import {
 } from "@tabler/icons-react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
-import { client } from "@/lib/rpc";
+import { rpc } from "@/lib/rpc";
 
 interface ProductCardProps {
     product: ProductListItem;
-    onEdit: () => void;
 }
 
 /**
  * ProductCard component displays a single product with actions
  */
-export function ProductCard({ product, onEdit }: ProductCardProps) {
+export function ProductCard({ product }: ProductCardProps) {
     const [imageError, setImageError] = useState(false);
     const queryClient = useQueryClient();
 
-    const toggleVisibilityMutation = useMutation({
-        mutationFn: async (id: number) => {
-            return await client.dashboardProduct.toggleProductVisibility({
-                id,
-            });
-        },
-        onSuccess: () => {
-            queryClient.invalidateQueries({
-                queryKey: ["dashboardProduct", "listProducts"],
-            });
-            notifications.show({
-                title: "Success",
-                message: "Product visibility updated",
-                color: "green",
-            });
-        },
-        onError: (error: Error) => {
-            notifications.show({
-                title: "Error",
-                message: error.message,
-                color: "red",
-            });
-        },
-    });
+    const toggleVisibilityMutation = useMutation(
+        rpc.dashboardProduct.toggleProductVisibility.mutationOptions({
+            onSuccess() {
+                queryClient.invalidateQueries({
+                    queryKey: rpc.dashboardProduct.listProducts.key(),
+                });
 
-    const deleteMutation = useMutation({
-        mutationFn: async (id: number) => {
-            return await client.dashboardProduct.deleteProduct({ id });
-        },
-        onSuccess: () => {
-            queryClient.invalidateQueries({
-                queryKey: ["dashboardProduct", "listProducts"],
-            });
-            notifications.show({
-                title: "Success",
-                message: "Product deleted successfully",
-                color: "green",
-            });
-        },
-        onError: (error: Error) => {
-            notifications.show({
-                title: "Error",
-                message: error.message,
-                color: "red",
-            });
-        },
-    });
+                notifications.show({
+                    title: "Success",
+                    message: "Product visibility updated",
+                    color: "green",
+                });
+            },
+            onError(error: Error) {
+                notifications.show({
+                    title: "Error",
+                    message: error.message,
+                    color: "red",
+                });
+            },
+        })
+    );
+
+    const deleteMutation = useMutation(
+        rpc.dashboardProduct.deleteProduct.mutationOptions({
+            onSuccess() {
+                queryClient.invalidateQueries({
+                    queryKey: rpc.dashboardProduct.listProducts.key(),
+                });
+                notifications.show({
+                    title: "Success",
+                    message: "Product deleted successfully",
+                    color: "green",
+                });
+            },
+            onError(error: Error) {
+                notifications.show({
+                    title: "Error",
+                    message: error.message,
+                    color: "red",
+                });
+            },
+        })
+    );
 
     const handleToggleVisibility = () => {
-        toggleVisibilityMutation.mutate(product.id);
+        toggleVisibilityMutation.mutate({
+            id: product.id,
+        });
     };
 
     const handleDelete = () => {
         if (confirm("Are you sure you want to delete this product?")) {
-            deleteMutation.mutate(product.id);
+            deleteMutation.mutate({
+                id: product.id,
+            });
         }
     };
 
     // Determine image source
     let imageSrc = "/images/placeholder-product.jpg";
     if (product.first_media_type === "image" && product.first_media_key) {
-        imageSrc = `${process.env.NEXT_PUBLIC_ASSET_URL}/${product.first_media_key}`;
+        imageSrc = `${process.env.NEXT_PUBLIC_ASSET_URL}${product.first_media_key}`;
     } else if (
         product.first_media_type === "youtube" &&
         product.youtube_video_id
@@ -108,7 +110,10 @@ export function ProductCard({ product, onEdit }: ProductCardProps) {
 
     return (
         <Card shadow="sm" padding="lg" radius="md" withBorder>
-            <Card.Section>
+            <Card.Section
+                component={Link}
+                href={`/dashboard/products/${product.id}/edit`}
+            >
                 <Image
                     src={
                         imageError
@@ -134,7 +139,6 @@ export function ProductCard({ product, onEdit }: ProductCardProps) {
                         </Menu.Target>
 
                         <Menu.Dropdown>
-                            <Menu.Item onClick={onEdit}>Edit</Menu.Item>
                             <Menu.Item
                                 leftSection={
                                     product.is_hidden ? (

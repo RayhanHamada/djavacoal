@@ -219,8 +219,14 @@ export type ProductVariantItem = z.infer<typeof ProductVariantItemSchema>;
 export const CreateProductInputSchema = z.object({
     en_name: z.string().min(1, "English product name is required"),
     ar_name: z.string().min(1, "Arabic product name is required"),
-    en_description_key: z.string().min(1, "English description is required"),
-    ar_description_key: z.string().min(1, "Arabic description is required"),
+    en_description: z
+        .string()
+        .min(1, "English description is required")
+        .max(1000, "English description must be 1000 characters or less"),
+    ar_description: z
+        .string()
+        .min(1, "Arabic description is required")
+        .max(1000, "Arabic description must be 1000 characters or less"),
     medias: z.array(ProductMediaItemSchema).default([]),
     specifications: z.array(ProductSpecificationItemSchema).default([]),
     variants: z.array(ProductVariantItemSchema).default([]),
@@ -246,8 +252,14 @@ export const UpdateProductInputSchema = z.object({
     id: z.number(),
     en_name: z.string().min(1, "English product name is required"),
     ar_name: z.string().min(1, "Arabic product name is required"),
-    en_description_key: z.string().min(1, "English description is required"),
-    ar_description_key: z.string().min(1, "Arabic description is required"),
+    en_description: z
+        .string()
+        .min(1, "English description is required")
+        .max(1000, "English description must be 1000 characters or less"),
+    ar_description: z
+        .string()
+        .min(1, "Arabic description is required")
+        .max(1000, "Arabic description must be 1000 characters or less"),
     medias: z.array(ProductMediaItemSchema).default([]),
     specifications: z.array(ProductSpecificationItemSchema).default([]),
     variants: z.array(ProductVariantItemSchema).default([]),
@@ -323,8 +335,8 @@ export const ProductDetailSchema = z.object({
     id: z.number(),
     en_name: z.string(),
     ar_name: z.string(),
-    en_description_key: z.string(),
-    ar_description_key: z.string(),
+    en_description: z.string(),
+    ar_description: z.string(),
     moq: z.string(),
     production_capacity: z.string(),
     medias: z.array(ProductMediaItemSchema),

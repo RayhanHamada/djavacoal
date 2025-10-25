@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 
-import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 import { Box, Button, Grid, Group, TextInput, Title } from "@mantine/core";
 import { useDebouncedValue } from "@mantine/hooks";
@@ -17,7 +17,6 @@ import { rpc } from "@/lib/rpc";
  * ProductListView component displays a grid of products with search and reorder functionality
  */
 export function ProductListView() {
-    const router = useRouter();
     const [searchQuery, setSearchQuery] = useState("");
     const [debouncedSearch] = useDebouncedValue(searchQuery, 300);
 
@@ -32,14 +31,6 @@ export function ProductListView() {
         })
     );
 
-    const handleCreateProduct = () => {
-        router.push("/dashboard/products/create");
-    };
-
-    const handleEditProduct = (id: number) => {
-        router.push(`/dashboard/products/${id}/edit`);
-    };
-
     return (
         <Box>
             {/* Header with search and create button */}
@@ -47,7 +38,8 @@ export function ProductListView() {
                 <Title order={2}>Products</Title>
                 <Button
                     leftSection={<IconPlus size={16} />}
-                    onClick={handleCreateProduct}
+                    component={Link}
+                    href="/dashboard/products/create"
                 >
                     Create Product
                 </Button>
@@ -82,10 +74,7 @@ export function ProductListView() {
                             key={product.id}
                             span={{ base: 12, sm: 6, md: 4, lg: 3 }}
                         >
-                            <ProductCard
-                                product={product}
-                                onEdit={() => handleEditProduct(product.id)}
-                            />
+                            <ProductCard product={product} />
                         </Grid.Col>
                     ))}
                 </Grid>
