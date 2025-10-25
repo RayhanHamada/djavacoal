@@ -76,5 +76,71 @@
         "errors": {
             "loadingFailed": "Error loading photos"
         }
+    },
+    "PackagingOptions": {
+        "title": "Packaging Options",
+        "subtitle": "Manage product packaging options",
+        "searchPlaceholder": "Search by English name...",
+        "noOptions": "No packaging options yet. Create your first one!",
+        "noResults": "No packaging options found matching your search",
+        "createButton": "Create Packaging Option",
+        "editTitle": "Edit Packaging Option",
+        "createTitle": "Create Packaging Option",
+        "form": {
+            "enName": "English Name",
+            "enNamePlaceholder": "Enter packaging name in English",
+            "arName": "Arabic Name",
+            "arNamePlaceholder": "Enter packaging name in Arabic",
+            "enDescription": "English Description",
+            "enDescriptionPlaceholder": "Enter description in English",
+            "arDescription": "Arabic Description",
+            "arDescriptionPlaceholder": "Enter description in Arabic",
+            "image": "Packaging Image",
+            "imageHint": "Drop an image or click to select (Max 10MB)",
+            "imagePreview": "Image Preview",
+            "removeImage": "Remove Image",
+            "submitCreate": "Create Packaging Option",
+            "submitEdit": "Save Changes",
+            "cancel": "Cancel",
+            "uploading": "Uploading...",
+            "errors": {
+                "enNameRequired": "English name is required",
+                "enNameLength": "Name must be 3-100 characters",
+                "arNameRequired": "Arabic name is required",
+                "arNameLength": "Name must be 3-100 characters",
+                "enDescriptionRequired": "English description is required",
+                "enDescriptionLength": "Description must be 10-500 characters",
+                "arDescriptionRequired": "Arabic description is required",
+                "arDescriptionLength": "Description must be 10-500 characters",
+                "imageRequired": "Image is required",
+                "imageSize": "Image must be less than 10MB",
+                "imageType": "Only JPEG, PNG, GIF, WebP, and SVG images are allowed",
+                "createFailed": "Failed to create packaging option",
+                "updateFailed": "Failed to update packaging option",
+                "uploadFailed": "Failed to upload image"
+            },
+            "success": {
+                "created": "Packaging option created successfully",
+                "updated": "Packaging option updated successfully"
+            }
+        },
+        "deleteModal": {
+            "title": "Delete Packaging Option",
+            "message": "Are you sure you want to delete \"{name}\"? This action cannot be undone.",
+            "button": "Delete",
+            "cancel": "Cancel",
+            "success": "Packaging option deleted successfully",
+            "error": "Failed to delete packaging option"
+        },
+        "actions": {
+            "edit": "Edit",
+            "delete": "Delete",
+            "view": "View"
+        },
+        "pagination": {
+            "previous": "Previous",
+            "next": "Next",
+            "page": "Page {current} of {total}"
+        }
     }
 }

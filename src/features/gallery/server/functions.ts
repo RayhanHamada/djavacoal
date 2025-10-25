@@ -132,8 +132,8 @@ export const createPresignedUrl = base
         // Create S3 client for R2
         const r2Client = getR2Client({
             endpoint: env.S3_API,
-            accessKeyId: env.R2_ACCESS_KEY_ID,
-            secretAccessKey: env.R2_SECRET_ACCESS_KEY,
+            accessKeyId: env.R2_ACCESS_KEY_ID!,
+            secretAccessKey: env.R2_SECRET_ACCESS_KEY!,
         });
 
         // Generate presigned URL for PUT operation

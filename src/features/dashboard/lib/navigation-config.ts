@@ -9,6 +9,7 @@ import {
     IconPlus,
     IconList,
     IconPhoto,
+    IconPackage,
 } from "@tabler/icons-react";
 
 export const navigationConfig: NavigationItem[] = [
@@ -35,6 +36,11 @@ export const navigationConfig: NavigationItem[] = [
         icon: IconBrandProducthunt,
         description: "Product management",
         children: [
+            {
+                label: "Manage Packaging Options",
+                icon: IconPackage,
+                href: "/dashboard/products/packaging-options",
+            },
             {
                 label: "Manage Products",
                 icon: IconList,
