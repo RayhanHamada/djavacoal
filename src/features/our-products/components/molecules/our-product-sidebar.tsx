@@ -7,11 +7,11 @@ import { IoMdArrowDropright } from "react-icons/io";
 import { IoChevronDown, IoChevronUp } from "react-icons/io5";
 
 const ITEMS = [
-    { id: "process", label: "Production Process" },
-    { id: "moq", label: "MOQ & Payment Terms" },
-    { id: "shipment", label: "Shipment Terms" },
-    { id: "packaging", label: "Packaging Info" },
-    { id: "faq", label: "FAQ" },
+    { id: "", label: "Coconut Shell Charcoal Briquette" },
+    { id: "", label: "Barbeque Charcoal Briquette" },
+    { id: "", label: "Sawdust Charcoal" },
+    { id: "", label: "Natural Wood Charcoal" },
+    { id: "", label: "Djavacoal’s Brand" },
 ];
 
 type Props = {
@@ -140,7 +140,7 @@ export default function OurProductsSidebar({ idPrefix = "" }: Props) {
                             >
                                 <button
                                     onClick={() => handleClick(id)}
-                                    className={`my-2 flex w-full items-center justify-between px-5 py-4 text-sm font-medium transition-all duration-200 ${
+                                    className={`my-2 flex w-full items-center justify-between px-5 py-4 text-left text-sm font-medium transition-all duration-200 ${
                                         active === id
                                             ? "bg-[#9D7B19] font-semibold text-white"
                                             : "bg-[#222222] text-gray-300 hover:bg-[#3B5952] hover:font-bold hover:text-white"

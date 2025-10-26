@@ -266,7 +266,7 @@ function VideoModal({ isOpen, onClose, videoSrc }: VideoModalProps) {
 }
 
 // Main Component
-export default function VideoGallerySection() {
+export function VideoGallerySection() {
     const [modalOpen, setModalOpen] = useState(false);
     const [currentVideo, setCurrentVideo] = useState("");
 

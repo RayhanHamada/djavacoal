@@ -4,11 +4,13 @@ import { useState } from "react";
 
 import Image from "next/image";
 
+import { VideoGallerySection } from "../atoms";
 import {
-    ProductCategoryDropdown,
     ProductHeroSection,
     ProductDetailTable,
     ShapesList,
+    PackagingList,
+    OurProductsSidebar,
 } from "../molecules";
 
 const PRODUCT_CATEGORIES = [
@@ -22,7 +24,7 @@ const PRODUCT_CATEGORIES = [
 const PRODUCT_DATA = {
     "Coconut Shell Charcoal Briquette": {
         name: "Coconut Shell Charcoal Briquette",
-        image: "/images/product-main-image.svg",
+        image: "/images/product-hero-image-new.png",
         description:
             "Coconut Shell Charcoal Briquette is an eco-friendly, sustainable fuel made from the natural byproduct of coconut shells. Known for its high calorific value, long burn time, and low ash content, it is ideal for grilling, barbecues, shisha, and industrial applications. This charcoal briquette burns cleanly without emitting harmful chemicals, making it a healthier alternative to traditional wood charcoal. Additionally, it's produced using a renewable resource, contributing to environmental conservation while delivering efficient and consistent heat, making it a popular choice for both domestic and commercial uses globally, especially in the shisha market.",
         specifications: [
@@ -69,6 +71,26 @@ const PRODUCT_DATA = {
                 ],
             },
         ],
+        packagingOptions: [
+            {
+                title: "Full Packaging",
+                description:
+                    "Designed for retail and private label brands, this option includes inner plastic, inner box, and master box. It ensures your brand stands out on the market while keeping products safe and ready for direct distribution to customers.",
+                image: "/images/packaging-full.png",
+            },
+            {
+                title: "Bulk Packaging",
+                description:
+                    "Best suited for wholesale buyers and large distributors, this packaging includes inner plastic and master box only. It reduces costs while still maintaining protection and efficient handling during export.",
+                image: "/images/packaging-bulk.png",
+            },
+            {
+                title: "Bulk Loose Packaging",
+                description:
+                    "Ideal for high-volume and cost-sensitive shipments, this option uses only inner plastic (10 kg) packed directly into the master box without inner boxes. It maximizes container space and efficiency, making it the most economical choice.",
+                image: "/images/packaging-bulk-loose.png",
+            },
+        ],
         details: [
             { label: "MOQ:", value: '20" Container (18 Tons)' },
             { label: "Packaging:", value: "Full / Bulk / Bulk Loose" },
@@ -97,77 +119,104 @@ export function ProductPage() {
     };
 
     return (
-        <div className="flex flex-col gap-10 px-5 py-0 md:gap-10 md:px-10 lg:gap-0 lg:px-10 lg:py-10">
-            {/* Filter Dropdown (Mobile/Tablet) */}
-            <div className="lg:hidden">
-                <ProductCategoryDropdown
-                    categories={PRODUCT_CATEGORIES}
-                    selectedCategory={selectedCategory}
-                    onCategoryChange={setSelectedCategory}
-                />
-            </div>
+        <div className="flex flex-col gap-10 px-5 py-0 md:gap-10 lg:gap-0 lg:px-0">
+            <section className="mx-auto max-w-7xl px-6 py-10 md:px-10 md:py-16 lg:mx-0 lg:mr-10 lg:max-w-none lg:px-0 lg:py-0">
+                <div className="grid grid-cols-1 gap-10 lg:grid-cols-[260px_1fr]">
+                    {/* === LEFT SIDEBAR === */}
+                    <div className="bg-[#222222] lg:py-16">
+                        <OurProductsSidebar />
+                    </div>
 
-            {/* Product Content */}
-            <div className="flex flex-col gap-10">
-                <ProductHeroSection
-                    productName={currentProduct.name}
-                    productImage={currentProduct.image}
-                    onDownloadCatalogue={handleDownloadCatalogue}
-                    onAskMore={handleAskMore}
-                />
+                    <div className="space-y-12 lg:py-16">
+                        {/* Product Content */}
+                        <div className="flex flex-col gap-10">
+                            <div className="grid lg:grid-cols-[420px_1fr]">
+                                <div className="lg:py-16">
+                                    <VideoGallerySection />
+                                </div>
+                                <div className="lg:py-16">
+                                    <ProductHeroSection
+                                        productName={currentProduct.name}
+                                        productImage={currentProduct.image}
+                                        onDownloadCatalogue={
+                                            handleDownloadCatalogue
+                                        }
+                                        onAskMore={handleAskMore}
+                                    />
 
-                {/* Divider */}
-                <div className="h-[1px] w-full bg-[#393939]" />
+                                    {/* Divider */}
+                                    <div className="h-[1px] w-full bg-[#393939]" />
 
-                {/* Description Section */}
-                <div className="flex flex-col gap-3">
-                    <h3 className="text-xl font-bold text-white">
-                        Description:
-                    </h3>
-                    <p className="text-justify text-base leading-[23px] text-[#B3B3B3]">
-                        {currentProduct.description}
-                    </p>
-                </div>
+                                    {/* Description Section */}
+                                    <div className="flex flex-col gap-3">
+                                        <h3 className="text-xl font-bold text-white">
+                                            Description:
+                                        </h3>
+                                        <p className="text-justify text-base leading-[23px] text-[#B3B3B3]">
+                                            {currentProduct.description}
+                                        </p>
+                                    </div>
 
-                {/* Divider */}
-                <div className="h-[1px] w-full bg-[#393939]" />
+                                    {/* Divider */}
+                                    <div className="h-[1px] w-full bg-[#393939]" />
 
-                {/* Specifications Section */}
-                <div className="flex flex-col gap-5">
-                    <h3 className="text-xl font-bold text-white">
-                        Specification & Lab. Test:
-                    </h3>
-                    <div className="flex flex-col gap-5 md:flex-row md:gap-5">
-                        {currentProduct.specifications.map((spec, idx) => (
-                            <Image
-                                key={idx}
-                                src={spec.image}
-                                alt={`Specification ${idx + 1}`}
-                                width={744}
-                                height={1054}
-                                className="h-auto w-full"
-                            />
-                        ))}
+                                    {/* Specifications Section */}
+                                    <div className="flex flex-col gap-5">
+                                        <h3 className="text-xl font-bold text-white">
+                                            Specification & Lab. Test:
+                                        </h3>
+                                        <div className="flex flex-col gap-5 md:flex-row md:gap-5">
+                                            {currentProduct.specifications.map(
+                                                (spec, idx) => (
+                                                    <Image
+                                                        key={idx}
+                                                        src={spec.image}
+                                                        alt={`Specification ${idx + 1}`}
+                                                        width={744}
+                                                        height={1054}
+                                                        className="h-auto w-full"
+                                                    />
+                                                )
+                                            )}
+                                        </div>
+                                    </div>
+
+                                    {/* Divider */}
+                                    <div className="h-[1px] w-full bg-[#393939]" />
+
+                                    {/* Shapes Section */}
+                                    <ShapesList
+                                        shapes={currentProduct.shapes}
+                                    />
+
+                                    {/* Divider */}
+                                    <div className="h-[1px] w-full bg-[#393939]" />
+
+                                    {/* Packaging Options Section */}
+                                    <PackagingList
+                                        packagingOptions={
+                                            currentProduct.packagingOptions
+                                        }
+                                    />
+
+                                    {/* Divider */}
+                                    <div className="h-[1px] w-full bg-[#393939]" />
+
+                                    {/* Detail Information Section */}
+                                    <div className="flex flex-col gap-5">
+                                        <h3 className="text-xl font-bold text-white">
+                                            Detail Information:
+                                        </h3>
+                                        <ProductDetailTable
+                                            rows={currentProduct.details}
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
-
-                {/* Divider */}
-                <div className="h-[1px] w-full bg-[#393939]" />
-
-                {/* Shapes Section */}
-                <ShapesList shapes={currentProduct.shapes} />
-
-                {/* Divider */}
-                <div className="h-[1px] w-full bg-[#393939]" />
-
-                {/* Detail Information Section */}
-                <div className="flex flex-col gap-5">
-                    <h3 className="text-xl font-bold text-white">
-                        Detail Information:
-                    </h3>
-                    <ProductDetailTable rows={currentProduct.details} />
-                </div>
-            </div>
+            </section>
         </div>
     );
 }

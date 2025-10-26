@@ -17,7 +17,7 @@
         },
         "Figma": {
             "command": "cmd",
-            "args": ["/c", "npx", "-y", "figma-developer-mcp", "--figma-api-key=figd_7f1iXS4h-zoxNbAohXjjWqf9GGtx-ATHqj8roazV", "--stdio"]
+            "args": ["/c", "npx", "-y", "figma-developer-mcp", "--figma-api-key=figd_ZP74crGN12X8aB6OmWAck4h5vigQ3jUtrEvU9kA3", "--stdio"]
         }
     }
 }
