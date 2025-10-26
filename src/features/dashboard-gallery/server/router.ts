@@ -6,7 +6,7 @@ import {
     deletePhoto,
     listPhotos,
     renamePhoto,
-} from "@/features/gallery/server/functions";
+} from "@/features/dashboard-gallery/server/functions";
 
 export const router = {
     listPhotos,
