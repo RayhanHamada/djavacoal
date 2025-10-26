@@ -3,14 +3,27 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme {
-  --color-primary: #161616;
-  --color-secondary: #efa12d;
-  --color-h1: #ffffff;
-  --color-description: #c6c6c6;
-  --color-hyperlink: #3791e4;
-  --color-button-primary: #efa12d;
-  --color-button-whatsapp: #259f00;
+    --color-primary: #161616;
+    --color-secondary: #efa12d;
+    --color-h1: #ffffff;
+    --color-description: #c6c6c6;
+    --color-hyperlink: #3791e4;
+    --color-button-primary: #efa12d;
+    --color-button-whatsapp: #259f00;
 
-  --ease-fluid: cubic-bezier(0.3, 0, 0, 1);
-  --ease-snappy: cubic-bezier(0.2, 0, 0, 1); /* ... */
+    --ease-fluid: cubic-bezier(0.3, 0, 0, 1);
+    --ease-snappy: cubic-bezier(0.2, 0, 0, 1); /* ... */
+}
+
+.scrollbar-hide {
+    scrollbar-width: thin; /* Firefox */
+}
+.scrollbar-hide::-webkit-scrollbar {
+    width: 2px;
+    height: 2px;
+}
+
+.scrollbar-hide::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 1px;
 }

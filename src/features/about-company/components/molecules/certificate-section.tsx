@@ -111,7 +111,7 @@ export default function CertificateSection() {
             </header>
 
             {/* ===== Mobile Horizontal Scroll ===== */}
-            <div className="scrollbar-hide overflow-x-auto px-6 pb-3 lg:hidden">
+            <div className="scrollbar-hide overflow-x-auto px-6 pr-12 pb-3 lg:hidden">
                 <div className="flex snap-x snap-mandatory gap-6">
                     {certificates.map((c, i) => (
                         <motion.button

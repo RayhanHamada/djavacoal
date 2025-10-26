@@ -92,7 +92,7 @@ export default function GallerySection() {
     return (
         <section
             id="gallery"
-            className="mt-10 max-w-screen-2xl scroll-mt-28 space-y-6 rounded-xl bg-[#222222] pb-10"
+            className="mt-10 scroll-mt-28 space-y-6 overflow-x-hidden rounded-xl bg-[#222222] pb-10"
         >
             {/* === Heading === */}
             <header className="mb-2 pt-4">
@@ -133,23 +133,23 @@ export default function GallerySection() {
                     initial={{ scaleX: 0 }}
                     whileInView={{ scaleX: 1 }}
                     transition={{ duration: 0.6, ease: "easeOut" }}
-                    className="mt-4 h-[1px] origin-left bg-[#3A3A3A]"
+                    className="mt-4 h-px origin-left bg-[#3A3A3A]"
                 />
             </header>
 
             {/* 🎥 HERO VIDEO REELS */}
-            <div className="relative max-w-full items-start">
+            <div className="relative w-full overflow-hidden">
                 <div
                     id="reelsContainer"
-                    className="scrollbar-thin scrollbar-thumb-[#444] scrollbar-track-transparent mx-6 flex w-full snap-x snap-mandatory gap-5 overflow-x-hidden scroll-smooth py-4 lg:w-[80%]"
+                    className="scrollbar-thin scrollbar-thumb-[#444] scrollbar-track-transparent mx-6 flex w-full snap-x snap-mandatory gap-5 overflow-x-auto scroll-smooth py-4 lg:w-[90%]"
                 >
                     {reels.map((id, i) => (
                         <button
-                            key={id}
+                            key={id + crypto.randomUUID()}
                             onClick={() =>
                                 setViewer({ type: "reel", index: i })
                             }
-                            className="group relative aspect-[9/16] w-[300px] flex-shrink-0 snap-start overflow-hidden bg-black transition hover:scale-[1.03]"
+                            className="group relative aspect-9/16 w-[300px] shrink-0 snap-start overflow-hidden bg-black transition hover:scale-[1.03]"
                         >
                             <iframe
                                 className="absolute inset-0 h-full w-full opacity-0 transition-opacity duration-300 group-hover:opacity-100"
@@ -179,7 +179,7 @@ export default function GallerySection() {
                                         width="20"
                                         height="20"
                                         fill="white"
-                                        className="translate-x-[2px]"
+                                        className="translate-x-0.5"
                                     >
                                         <path d="M5 4v16l12-8z" />
                                     </svg>
@@ -214,10 +214,10 @@ export default function GallerySection() {
             {/* Divider for Desktop */}
             <hr className="hidden border-t border-[#3A3A3A] px-6 lg:block" />
 
-            <div className="grid grid-cols-1 gap-2 px-6 lg:grid-cols-2">
+            <div className="grid grid-cols-1 gap-6 px-6 lg:grid-cols-2">
                 <div className="space-y-4">
                     <h3 className="text-lg font-semibold text-[#EFA12D]">
-                        Djavacoal’s Factory Gallery
+                        Djavacoal's Factory Gallery
                     </h3>
                     <div className="grid gap-3">
                         {factoryGallery.map((img, i) => (
@@ -240,8 +240,8 @@ export default function GallerySection() {
                 </div>
 
                 <div className="space-y-4">
-                    <h3 className="px-6 text-lg font-semibold text-[#EFA12D]">
-                        Djavacoal’s Products Gallery
+                    <h3 className="text-lg font-semibold text-[#EFA12D]">
+                        Djavacoal's Products Gallery
                     </h3>
                     <div className="grid gap-3">
                         {productGallery.map((img, i) => (
@@ -266,7 +266,7 @@ export default function GallerySection() {
 
             {viewer !== null && (
                 <div
-                    className="fixed inset-0 z-[999] flex items-center justify-center bg-black/80 p-4 backdrop-blur-sm"
+                    className="fixed inset-0 z-999 flex items-center justify-center bg-black/80 p-4 backdrop-blur-sm"
                     onClick={closeModal}
                 >
                     <button
@@ -281,7 +281,7 @@ export default function GallerySection() {
                         onClick={(e) => e.stopPropagation()}
                     >
                         {viewer.type === "reel" ? (
-                            <div className="relative aspect-[9/16] w-[90vw] max-w-[450px] overflow-hidden rounded-xl border border-[#EFA12D] shadow-[0_0_35px_rgba(239,161,45,0.35)] sm:max-w-[380px] md:max-w-[420px] lg:max-w-[500px] xl:max-w-[520px]">
+                            <div className="relative aspect-9/16 w-[90vw] max-w-[450px] overflow-hidden rounded-xl border border-[#EFA12D] shadow-[0_0_35px_rgba(239,161,45,0.35)] sm:max-w-[380px] md:max-w-[420px] lg:max-w-[500px] xl:max-w-[520px]">
                                 <iframe
                                     src={`https://www.youtube.com/embed/${reels[viewer.index]}?autoplay=1&controls=1&rel=0&modestbranding=1`}
                                     className="absolute inset-0 h-full w-full"
