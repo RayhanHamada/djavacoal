@@ -1,5 +1,6 @@
 import type { NextConfig } from "next";
 
+import nextBundleAnalyzer from "@next/bundle-analyzer";
 import { initOpenNextCloudflareForDev } from "@opennextjs/cloudflare";
 import createNextIntlPlugin from "next-intl/plugin";
 
@@ -10,6 +11,9 @@ const nextConfig: NextConfig = {
             {
                 hostname: new URL(process.env.NEXT_PUBLIC_ASSET_URL).hostname,
             },
+            {
+                hostname: "img.youtube.com",
+            },
         ],
     },
 };
@@ -19,7 +23,11 @@ const nextConfig: NextConfig = {
  * to enable internationalization support
  */
 const withNextIntl = createNextIntlPlugin();
-export default withNextIntl(nextConfig);
+const withBundleAnalyzer = nextBundleAnalyzer({
+    enabled: process.env.ANALYZE === "true",
+});
+
+export default withBundleAnalyzer(withNextIntl(nextConfig));
 
 /**
  * Initialize OpenNext Cloudflare for development environment
