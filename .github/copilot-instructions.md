@@ -295,7 +295,7 @@ SENDER_EMAIL=noreply@yourdomain.com
 # Cloudflare (for migrations/drizzle studio)
 CLOUDFLARE_ACCOUNT_ID=your-account-id
 CLOUDFLARE_DATABASE_ID=your-database-id
-CLOUDFLARE_D1_TOKEN=your-d1-token
+CLOUDFLARE_API_TOKEN=your-d1-token
 ```
 
 **Bindings** (configured in `wrangler.jsonc`, typed in `cloudflare-env.d.ts`):

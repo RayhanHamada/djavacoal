@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 
 import { Container, Paper, Stack, Text, Title } from "@mantine/core";
 import { notifications } from "@mantine/notifications";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 
 import { PackagingOptionForm } from "@/features/dashboard-product/components";
@@ -20,6 +20,7 @@ export default function EditPackagingOptionPage({
     const { id } = use(params);
     const t = useTranslations("PackagingOptions");
     const router = useRouter();
+    const queryClient = useQueryClient();
 
     const { data, isLoading } = useQuery(
         rpc.dashboardProduct.getPackagingOptionById.queryOptions({
@@ -30,6 +31,14 @@ export default function EditPackagingOptionPage({
     const updateMutation = useMutation({
         ...rpc.dashboardProduct.updatePackagingOption.mutationOptions(),
         onSuccess: () => {
+            // Invalidate both list and individual queries
+            queryClient.invalidateQueries({
+                queryKey: rpc.dashboardProduct.listPackagingOptions.key(),
+            });
+            queryClient.invalidateQueries({
+                queryKey: rpc.dashboardProduct.getPackagingOptionById.key(),
+            });
+
             notifications.show({
                 title: t("form.success.updated"),
                 message: "",

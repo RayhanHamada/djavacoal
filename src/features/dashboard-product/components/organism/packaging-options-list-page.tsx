@@ -48,10 +48,15 @@ export function PackagingOptionsListPage() {
 
     const deleteMutation = useMutation(
         rpc.dashboardProduct.deletePackagingOption.mutationOptions({
-            onSettled: () =>
+            onSettled: () => {
+                // Invalidate both list and individual queries
                 queryClient.invalidateQueries({
                     queryKey: rpc.dashboardProduct.listPackagingOptions.key(),
-                }),
+                });
+                queryClient.invalidateQueries({
+                    queryKey: rpc.dashboardProduct.getPackagingOptionById.key(),
+                });
+            },
             onSuccess: () => {
                 notifications.show({
                     title: t("deleteModal.success"),

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import {
     Box,
@@ -13,21 +13,18 @@ import {
     Textarea,
     TextInput,
 } from "@mantine/core";
+import { useForm } from "@mantine/form";
 import { IconPhoto, IconTrash } from "@tabler/icons-react";
 import { useTranslations } from "next-intl";
 
-type PackagingOptionFormData = {
-    en_name: string;
-    ar_name: string;
-    en_description: string;
-    ar_description: string;
-    photo?: File;
-    photo_key?: string;
-};
+import {
+    validatePackagingOptionFormSchema,
+    type PackagingOptionFormValues,
+} from "../../utils/form-schemas";
 
 type PackagingOptionFormProps = {
-    initialData?: PackagingOptionFormData;
-    onSubmit: (data: PackagingOptionFormData & { photo?: File }) => void;
+    initialData?: PackagingOptionFormValues;
+    onSubmit: (data: PackagingOptionFormValues & { photo?: File }) => void;
     onCancel: () => void;
     isSubmitting: boolean;
     assetUrl?: string;
@@ -42,12 +39,16 @@ export function PackagingOptionForm({
 }: PackagingOptionFormProps) {
     const t = useTranslations("PackagingOptions.form");
 
-    const [formData, setFormData] = useState<PackagingOptionFormData>({
-        en_name: initialData?.en_name || "",
-        ar_name: initialData?.ar_name || "",
-        en_description: initialData?.en_description || "",
-        ar_description: initialData?.ar_description || "",
-        photo_key: initialData?.photo_key,
+    const form = useForm<PackagingOptionFormValues>({
+        mode: "uncontrolled",
+        initialValues: {
+            en_name: initialData?.en_name || "",
+            ar_name: initialData?.ar_name || "",
+            en_description: initialData?.en_description || "",
+            ar_description: initialData?.ar_description || "",
+            photo_key: initialData?.photo_key,
+        },
+        validate: validatePackagingOptionFormSchema,
     });
 
     const [photoFile, setPhotoFile] = useState<File | null>(null);
@@ -55,30 +56,34 @@ export function PackagingOptionForm({
         initialData?.photo_key ? `${assetUrl}${initialData.photo_key}` : null
     );
 
-    const handlePhotoChange = (file: File | null) => {
-        if (file) {
-            setPhotoFile(file);
+    useEffect(() => {
+        if (photoFile) {
             const reader = new FileReader();
             reader.onloadend = () => {
                 setPhotoPreview(reader.result as string);
             };
-            reader.readAsDataURL(file);
+            reader.readAsDataURL(photoFile);
+        }
+    }, [photoFile]);
+
+    const handlePhotoChange = (file: File | null) => {
+        if (file) {
+            setPhotoFile(file);
         }
     };
 
     const handleRemovePhoto = () => {
         setPhotoFile(null);
         setPhotoPreview(null);
-        setFormData({ ...formData, photo_key: undefined });
+        form.setFieldValue("photo_key", undefined);
     };
 
-    const handleSubmit = (e: React.FormEvent) => {
-        e.preventDefault();
+    const handleSubmit = form.onSubmit((values) => {
         onSubmit({
-            ...formData,
+            ...values,
             photo: photoFile || undefined,
         });
-    };
+    });
 
     return (
         <form onSubmit={handleSubmit}>
@@ -86,49 +91,35 @@ export function PackagingOptionForm({
                 <TextInput
                     label={t("enName")}
                     placeholder={t("enNamePlaceholder")}
-                    value={formData.en_name}
-                    onChange={(e) =>
-                        setFormData({ ...formData, en_name: e.target.value })
-                    }
                     required
+                    key={form.key("en_name")}
+                    {...form.getInputProps("en_name")}
                 />
 
                 <TextInput
                     label={t("arName")}
                     placeholder={t("arNamePlaceholder")}
-                    value={formData.ar_name}
-                    onChange={(e) =>
-                        setFormData({ ...formData, ar_name: e.target.value })
-                    }
                     required
+                    key={form.key("ar_name")}
+                    {...form.getInputProps("ar_name")}
                 />
 
                 <Textarea
                     label={t("enDescription")}
                     placeholder={t("enDescriptionPlaceholder")}
-                    value={formData.en_description}
-                    onChange={(e) =>
-                        setFormData({
-                            ...formData,
-                            en_description: e.target.value,
-                        })
-                    }
                     required
                     minRows={3}
+                    key={form.key("en_description")}
+                    {...form.getInputProps("en_description")}
                 />
 
                 <Textarea
                     label={t("arDescription")}
                     placeholder={t("arDescriptionPlaceholder")}
-                    value={formData.ar_description}
-                    onChange={(e) =>
-                        setFormData({
-                            ...formData,
-                            ar_description: e.target.value,
-                        })
-                    }
                     required
                     minRows={3}
+                    key={form.key("ar_description")}
+                    {...form.getInputProps("ar_description")}
                 />
 
                 <Box>
@@ -180,11 +171,8 @@ export function PackagingOptionForm({
                         type="submit"
                         loading={isSubmitting}
                         disabled={
-                            !formData.en_name ||
-                            !formData.ar_name ||
-                            !formData.en_description ||
-                            !formData.ar_description ||
-                            (!photoFile && !formData.photo_key)
+                            !form.isValid() ||
+                            (!photoFile && !form.getValues().photo_key)
                         }
                     >
                         {initialData ? t("submitEdit") : t("submitCreate")}

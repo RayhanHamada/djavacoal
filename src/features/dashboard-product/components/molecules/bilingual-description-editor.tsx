@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 
-import { SegmentedControl, Stack } from "@mantine/core";
+import { SegmentedControl, Stack, Text } from "@mantine/core";
 
 import { ProductRichTextEditor } from "../atoms/product-rich-text-editor";
 
@@ -12,6 +12,8 @@ interface BilingualDescriptionEditorProps {
     onEnChange: (value: string) => void;
     onArChange: (value: string) => void;
     disabled?: boolean;
+    enError?: string;
+    arError?: string;
 }
 
 export function BilingualDescriptionEditor({
@@ -20,6 +22,8 @@ export function BilingualDescriptionEditor({
     onEnChange,
     onArChange,
     disabled = false,
+    enError,
+    arError,
 }: BilingualDescriptionEditorProps) {
     const [activeLanguage, setActiveLanguage] = useState<"en" | "ar">("en");
 
@@ -47,6 +51,11 @@ export function BilingualDescriptionEditor({
                     disabled={disabled}
                     rtl={false}
                 />
+                {enError && (
+                    <Text c="red" size="sm" mt="xs">
+                        {enError}
+                    </Text>
+                )}
             </div>
 
             {/* Arabic Editor */}
@@ -61,6 +70,11 @@ export function BilingualDescriptionEditor({
                     disabled={disabled}
                     rtl={true}
                 />
+                {arError && (
+                    <Text c="red" size="sm" mt="xs">
+                        {arError}
+                    </Text>
+                )}
             </div>
         </Stack>
     );

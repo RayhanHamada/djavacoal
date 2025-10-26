@@ -51,6 +51,7 @@ export function ProductForm({ product }: ProductFormProps) {
                             label="English Name"
                             placeholder="Enter product name in English"
                             required
+                            key={form.key("en_name")}
                             {...form.getInputProps("en_name")}
                             disabled={isSubmitting}
                         />
@@ -58,6 +59,7 @@ export function ProductForm({ product }: ProductFormProps) {
                             label="Arabic Name"
                             placeholder="أدخل اسم المنتج بالعربية"
                             required
+                            key={form.key("ar_name")}
                             {...form.getInputProps("ar_name")}
                             disabled={isSubmitting}
                             dir="rtl"
@@ -77,6 +79,8 @@ export function ProductForm({ product }: ProductFormProps) {
                             form.setFieldValue("ar_description", value)
                         }
                         disabled={isSubmitting}
+                        enError={form.errors.en_description as string}
+                        arError={form.errors.ar_description as string}
                     />
                 </Fieldset>
 
@@ -120,6 +124,7 @@ export function ProductForm({ product }: ProductFormProps) {
                             label="Minimum Order Quantity (MOQ)"
                             placeholder="e.g., 100 units"
                             required
+                            key={form.key("moq")}
                             {...form.getInputProps("moq")}
                             disabled={isSubmitting}
                         />
@@ -127,6 +132,7 @@ export function ProductForm({ product }: ProductFormProps) {
                             label="Production Capacity"
                             placeholder="e.g., 1000 units per month"
                             required
+                            key={form.key("production_capacity")}
                             {...form.getInputProps("production_capacity")}
                             disabled={isSubmitting}
                         />
@@ -138,6 +144,7 @@ export function ProductForm({ product }: ProductFormProps) {
                     label="Packaging Options"
                     placeholder="Select packaging options"
                     data={packagingOptions}
+                    key={form.key("packaging_option_ids")}
                     {...form.getInputProps("packaging_option_ids")}
                     disabled={isSubmitting || isLoadingPackaging}
                 />
@@ -146,6 +153,7 @@ export function ProductForm({ product }: ProductFormProps) {
                 <Switch
                     label="Hide product from public view"
                     description="When enabled, this product will not be visible to visitors"
+                    key={form.key("is_hidden")}
                     {...form.getInputProps("is_hidden", { type: "checkbox" })}
                     disabled={isSubmitting}
                 />

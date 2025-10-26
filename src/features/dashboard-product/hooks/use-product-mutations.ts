@@ -1,4 +1,4 @@
-import type { ProductFormValues } from "./use-product-form";
+import type {} from "./use-product-form";
 import type { ProductDetail } from "../server/schemas";
 
 import { useRouter } from "next/navigation";
@@ -7,6 +7,7 @@ import { notifications } from "@mantine/notifications";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 import { useFileUpload } from "./use-file-upload";
+import { ProductFormValues } from "@/features/dashboard-product/utils";
 import { client, rpc } from "@/lib/rpc";
 
 export function useProductMutations(product?: ProductDetail) {
