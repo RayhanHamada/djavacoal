@@ -17,7 +17,7 @@ import {
     updateProduct,
 } from "./functions";
 
-export const dashboardProduct = {
+export const router = {
     // Packaging options
     listPackagingOptions,
     getPackagingOptionById,

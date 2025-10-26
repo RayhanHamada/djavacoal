@@ -15,7 +15,7 @@ import {
     updateNews,
 } from "./functions";
 
-export const dashboardNews = {
+export const router = {
     listNews,
     getNewsById,
     createNews,

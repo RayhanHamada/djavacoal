@@ -17,7 +17,7 @@ import {
     buildR2Path,
     findPhotoById,
     isPhotoNameAvailable,
-} from "@/features/gallery/server/helpers";
+} from "@/features/dashboard-gallery/server/helpers";
 import {
     BulkDeletePhotosInputSchema,
     CheckNameAvailabilityInputSchema,
@@ -29,7 +29,7 @@ import {
     ListPhotosInputSchema,
     ListPhotosOutputSchema,
     RenamePhotoInputSchema,
-} from "@/features/gallery/server/schema";
+} from "@/features/dashboard-gallery/server/schema";
 import base from "@/lib/orpc/server";
 
 /**
