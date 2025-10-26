@@ -57,3 +57,18 @@ export const SetPasswordInputSchema = z.object({
 export const CheckNeedsPasswordOutputSchema = z.object({
     needsPassword: z.boolean(),
 });
+
+export const UpdateNameInputSchema = z.object({
+    name: z.string().min(5).max(100),
+});
+
+export const ChangePasswordInputSchema = z
+    .object({
+        currentPassword: z.string().min(1),
+        newPassword: z.string().min(8).max(100),
+        confirmPassword: z.string().min(8).max(100),
+    })
+    .refine((data) => data.newPassword === data.confirmPassword, {
+        message: "Passwords do not match",
+        path: ["confirmPassword"],
+    });
