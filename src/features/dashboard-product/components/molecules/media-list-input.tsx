@@ -38,7 +38,9 @@ import {
     IconVideo,
 } from "@tabler/icons-react";
 import { PhotoView } from "react-photo-view";
-import { match } from "ts-pattern";
+import { match, P } from "ts-pattern";
+
+import { extractYoutubeID } from "@/features/dashboard-product/utils";
 
 export type MediaItem =
     | {
@@ -302,34 +304,27 @@ function SortableMediaItem({
                                 media_type: "image",
                             },
                             (item) => {
-                                const imageSrc =
-                                    imagePreviewUrl ||
-                                    (item.image_key &&
-                                        `${process.env.NEXT_PUBLIC_ASSET_URL}${item.image_key}`);
+                                const imageSrc = imagePreviewUrl
+                                    ? imagePreviewUrl
+                                    : item.image_key
+                                      ? `${process.env.NEXT_PUBLIC_ASSET_URL}${item.image_key}`
+                                      : null;
                                 return (
                                     <Stack align="flex-start" gap="md">
                                         <Box style={{ flex: "0 0" }}>
-                                            {match({
-                                                hasImage: !!imageSrc,
-                                                imageUrl: imageSrc,
-                                            })
-                                                .with(
-                                                    { hasImage: true },
-                                                    ({ imageUrl }) => (
-                                                        <PhotoView
+                                            {match(imageSrc)
+                                                .with(P.string, (imageUrl) => (
+                                                    <PhotoView src={imageUrl}>
+                                                        <Image
+                                                            alt="Product media"
+                                                            fit="cover"
+                                                            h={150}
+                                                            radius="md"
                                                             src={imageUrl}
-                                                        >
-                                                            <Image
-                                                                alt="Product media"
-                                                                fit="cover"
-                                                                h={150}
-                                                                radius="md"
-                                                                src={imageUrl}
-                                                                w={200}
-                                                            />
-                                                        </PhotoView>
-                                                    )
-                                                )
+                                                            w={200}
+                                                        />
+                                                    </PhotoView>
+                                                ))
                                                 .otherwise(() => null)}
                                         </Box>
                                         <Box style={{ flex: 1 }}>
@@ -381,14 +376,20 @@ function SortableMediaItem({
                                 return (
                                     <Stack gap="sm">
                                         <TextInput
-                                            description="Enter the YouTube video ID (e.g., 'dQw4w9WgXcQ' from https://www.youtube.com/watch?v=dQw4w9WgXcQ)"
+                                            description="Paste Youtube video URL or ID (e.g., 'dQw4w9WgXcQ' from https://www.youtube.com/watch?v=dQw4w9WgXcQ)"
                                             label="YouTube Video ID"
-                                            onChange={(e) =>
-                                                onUpdate(item.id, {
+                                            onChange={(e) => {
+                                                const value = e.target.value;
+                                                if (!value) return;
+
+                                                const youtubeId =
+                                                    extractYoutubeID(value);
+
+                                                return onUpdate(item.id, {
                                                     youtube_video_id:
-                                                        e.target.value,
-                                                })
-                                            }
+                                                        youtubeId ?? "",
+                                                });
+                                            }}
                                             placeholder="dQw4w9WgXcQ"
                                             required
                                             size="sm"
