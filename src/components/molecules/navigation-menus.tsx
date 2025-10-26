@@ -23,7 +23,7 @@ const MOCK_PRODUCTS = [
 
 export function NavigationMenus() {
     return (
-        <div className="flex h-full items-center gap-x-1 self-stretch">
+        <div className="flex h-full items-center gap-x-4 self-stretch">
             <NavigationMenuButton key="home" label="Home" href="/" />
             <NavigationMenuButton
                 key="about"

@@ -6,7 +6,7 @@ type Props = PropsWithChildren;
 
 export default function VisitorLayout({ children }: Props) {
     return (
-        <div className="flex min-h-screen flex-col">
+        <div className="flex min-h-screen flex-col bg-[#151515]">
             <VisitorNavbar />
 
             {/* main contents */}
