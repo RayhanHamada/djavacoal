@@ -23,7 +23,7 @@ import {
     ActionIcon,
     Box,
     Button,
-    Fieldset,
+    Card,
     FileButton,
     Group,
     Image,
@@ -37,6 +37,8 @@ import {
     IconTrash,
     IconVideo,
 } from "@tabler/icons-react";
+import { PhotoView } from "react-photo-view";
+import { match } from "ts-pattern";
 
 export type MediaItem =
     | {
@@ -132,10 +134,20 @@ export function MediaListInput({
         );
     };
 
+    // Check if there are any unfilled media items
+    const hasUnfilledMedia = value.some((item) => {
+        if (item.media_type === "image") {
+            return !item.image_key && !item.image_file;
+        } else {
+            return !item.youtube_video_id;
+        }
+    });
+
     return (
         <Stack gap="md">
             <Group gap="sm">
                 <Button
+                    disabled={hasUnfilledMedia}
                     leftSection={<IconPhoto size={16} />}
                     onClick={addImageMedia}
                     size="sm"
@@ -144,6 +156,7 @@ export function MediaListInput({
                     Add Image
                 </Button>
                 <Button
+                    disabled={hasUnfilledMedia}
                     leftSection={<IconVideo size={16} />}
                     onClick={addYoutubeMedia}
                     size="sm"
@@ -254,146 +267,239 @@ function SortableMediaItem({
 
     return (
         <Box ref={setNodeRef} style={style}>
-            <Fieldset
-                legend={
-                    <Group gap="xs">
-                        <IconGripVertical
-                            size={16}
-                            style={{ cursor: "grab" }}
-                            {...listeners}
-                            {...attributes}
-                        />
-                        <Text size="sm">
-                            {item.media_type === "image"
-                                ? "Image Media"
-                                : "YouTube Video"}
-                        </Text>
-                    </Group>
-                }
-            >
-                <Stack gap="md">
-                    {item.media_type === "image" ? (
-                        <>
-                            <FileButton
-                                accept="image/*"
-                                onChange={(file) =>
-                                    handleImageSelect(file, "image")
-                                }
+            <Card padding="md" radius="md" shadow="sm" withBorder>
+                <Stack gap="sm">
+                    <Group gap="xs" justify="space-between">
+                        <Group gap="xs">
+                            <ActionIcon
+                                size="sm"
+                                style={{ cursor: "grab" }}
+                                variant="subtle"
+                                {...listeners}
+                                {...attributes}
                             >
-                                {(props) => (
-                                    <Button
-                                        {...props}
-                                        leftSection={<IconPhoto size={16} />}
-                                        size="sm"
-                                        variant="light"
-                                    >
-                                        {item.image_key || item.image_file
-                                            ? "Change Image"
-                                            : "Select Image"}
-                                    </Button>
-                                )}
-                            </FileButton>
-
-                            {(item.image_key || imagePreviewUrl) && (
-                                <Image
-                                    alt="Product media"
-                                    fit="contain"
-                                    h={200}
-                                    radius="md"
-                                    src={
-                                        imagePreviewUrl ||
-                                        `${process.env.NEXT_PUBLIC_ASSET_URL}${item.image_key}`
-                                    }
-                                />
-                            )}
-                        </>
-                    ) : (
-                        <>
-                            <TextInput
-                                description="Enter the YouTube video ID (e.g., 'dQw4w9WgXcQ' from https://www.youtube.com/watch?v=dQw4w9WgXcQ)"
-                                label="YouTube Video ID"
-                                onChange={(e) =>
-                                    onUpdate(item.id, {
-                                        youtube_video_id: e.target.value,
-                                    })
-                                }
-                                placeholder="dQw4w9WgXcQ"
-                                required
-                                value={item.youtube_video_id}
-                            />
-
-                            {item.youtube_video_id && (
-                                <Box>
-                                    <Text fw={500} mb="xs" size="sm">
-                                        Default Thumbnail Preview
-                                    </Text>
-                                    <Image
-                                        alt="YouTube thumbnail"
-                                        fit="contain"
-                                        h={150}
-                                        radius="md"
-                                        src={`https://img.youtube.com/vi/${item.youtube_video_id}/maxresdefault.jpg`}
-                                    />
-                                </Box>
-                            )}
-
-                            <Box>
-                                <Text fw={500} mb="xs" size="sm">
-                                    Custom Thumbnail (Optional)
-                                </Text>
-                                <FileButton
-                                    accept="image/*"
-                                    onChange={(file) =>
-                                        handleImageSelect(file, "thumbnail")
-                                    }
-                                >
-                                    {(props) => (
-                                        <Button
-                                            {...props}
-                                            leftSection={
-                                                <IconPhoto size={16} />
-                                            }
-                                            size="sm"
-                                            variant="light"
-                                        >
-                                            {item.video_custom_thumbnail_key ||
-                                            item.video_custom_thumbnail_file
-                                                ? "Change Custom Thumbnail"
-                                                : "Select Custom Thumbnail"}
-                                        </Button>
-                                    )}
-                                </FileButton>
-
-                                {(item.video_custom_thumbnail_key ||
-                                    thumbnailPreviewUrl) && (
-                                    <Image
-                                        alt="Custom thumbnail"
-                                        fit="contain"
-                                        h={150}
-                                        mt="xs"
-                                        radius="md"
-                                        src={
-                                            thumbnailPreviewUrl ||
-                                            `${process.env.NEXT_PUBLIC_ASSET_URL}${item.video_custom_thumbnail_key}`
-                                        }
-                                    />
-                                )}
-                            </Box>
-                        </>
-                    )}
-
-                    <Group justify="flex-end">
+                                <IconGripVertical size={16} />
+                            </ActionIcon>
+                            <Text fw={500} size="sm">
+                                {item.media_type === "image"
+                                    ? "Image Media"
+                                    : "YouTube Video"}
+                            </Text>
+                        </Group>
                         <ActionIcon
                             color="red"
                             onClick={() => onRemove(item.id)}
                             size="sm"
-                            variant="light"
+                            variant="subtle"
                         >
                             <IconTrash size={16} />
                         </ActionIcon>
                     </Group>
+
+                    {match(item)
+                        .with(
+                            {
+                                media_type: "image",
+                            },
+                            (item) => {
+                                const imageSrc =
+                                    imagePreviewUrl ||
+                                    (item.image_key &&
+                                        `${process.env.NEXT_PUBLIC_ASSET_URL}${item.image_key}`);
+                                return (
+                                    <Stack align="flex-start" gap="md">
+                                        <Box style={{ flex: "0 0" }}>
+                                            {match({
+                                                hasImage: !!imageSrc,
+                                                imageUrl: imageSrc,
+                                            })
+                                                .with(
+                                                    { hasImage: true },
+                                                    ({ imageUrl }) => (
+                                                        <PhotoView
+                                                            src={imageUrl}
+                                                        >
+                                                            <Image
+                                                                alt="Product media"
+                                                                fit="cover"
+                                                                h={150}
+                                                                radius="md"
+                                                                src={imageUrl}
+                                                                w={200}
+                                                            />
+                                                        </PhotoView>
+                                                    )
+                                                )
+                                                .otherwise(() => null)}
+                                        </Box>
+                                        <Box style={{ flex: 1 }}>
+                                            <FileButton
+                                                accept="image/*"
+                                                onChange={(file) =>
+                                                    handleImageSelect(
+                                                        file,
+                                                        "image"
+                                                    )
+                                                }
+                                            >
+                                                {(props) => (
+                                                    <Button
+                                                        {...props}
+                                                        fullWidth
+                                                        leftSection={
+                                                            <IconPhoto
+                                                                size={16}
+                                                            />
+                                                        }
+                                                        size="sm"
+                                                        variant="light"
+                                                    >
+                                                        {item.image_key ||
+                                                        item.image_file
+                                                            ? "Change Image"
+                                                            : "Select Image"}
+                                                    </Button>
+                                                )}
+                                            </FileButton>
+                                        </Box>
+                                    </Stack>
+                                );
+                            }
+                        )
+                        .with(
+                            {
+                                media_type: "youtube",
+                            },
+                            (youtubeItem) => {
+                                const youtubeImageSrc = `https://img.youtube.com/vi/${youtubeItem.youtube_video_id}/maxresdefault.jpg`;
+                                const customThumbnailSrc = thumbnailPreviewUrl
+                                    ? thumbnailPreviewUrl
+                                    : youtubeItem.video_custom_thumbnail_key
+                                      ? `${process.env.NEXT_PUBLIC_ASSET_URL}${youtubeItem.video_custom_thumbnail_key}`
+                                      : null;
+
+                                return (
+                                    <Stack gap="sm">
+                                        <TextInput
+                                            description="Enter the YouTube video ID (e.g., 'dQw4w9WgXcQ' from https://www.youtube.com/watch?v=dQw4w9WgXcQ)"
+                                            label="YouTube Video ID"
+                                            onChange={(e) =>
+                                                onUpdate(item.id, {
+                                                    youtube_video_id:
+                                                        e.target.value,
+                                                })
+                                            }
+                                            placeholder="dQw4w9WgXcQ"
+                                            required
+                                            size="sm"
+                                            value={youtubeItem.youtube_video_id}
+                                        />
+
+                                        {youtubeItem.youtube_video_id && (
+                                            <Group align="flex-start" gap="md">
+                                                <Box
+                                                    style={{
+                                                        flex: "0 0 200px",
+                                                    }}
+                                                >
+                                                    <Text
+                                                        fw={500}
+                                                        mb="xs"
+                                                        size="xs"
+                                                    >
+                                                        Default Thumbnail
+                                                    </Text>
+                                                    <PhotoView
+                                                        src={youtubeImageSrc}
+                                                    >
+                                                        <Image
+                                                            alt="YouTube thumbnail"
+                                                            fit="cover"
+                                                            h={112}
+                                                            radius="md"
+                                                            src={
+                                                                youtubeImageSrc
+                                                            }
+                                                            w={200}
+                                                        />
+                                                    </PhotoView>
+                                                </Box>
+
+                                                <Box style={{ flex: 1 }}>
+                                                    <Text
+                                                        fw={500}
+                                                        mb="xs"
+                                                        size="xs"
+                                                    >
+                                                        Custom Thumbnail
+                                                        (Optional)
+                                                    </Text>
+
+                                                    {customThumbnailSrc && (
+                                                        <PhotoView
+                                                            src={
+                                                                customThumbnailSrc
+                                                            }
+                                                        >
+                                                            <Image
+                                                                alt="Custom thumbnail"
+                                                                fit="cover"
+                                                                w={200}
+                                                                h={112}
+                                                                mt="xs"
+                                                                radius="md"
+                                                                src={
+                                                                    customThumbnailSrc
+                                                                }
+                                                            />
+                                                        </PhotoView>
+                                                    )}
+
+                                                    <FileButton
+                                                        accept="image/*"
+                                                        onChange={(file) =>
+                                                            handleImageSelect(
+                                                                file,
+                                                                "thumbnail"
+                                                            )
+                                                        }
+                                                    >
+                                                        {(props) => (
+                                                            <Button
+                                                                mt={
+                                                                    customThumbnailSrc
+                                                                        ? 10
+                                                                        : undefined
+                                                                }
+                                                                w={200}
+                                                                {...props}
+                                                                leftSection={
+                                                                    <IconPhoto
+                                                                        size={
+                                                                            16
+                                                                        }
+                                                                    />
+                                                                }
+                                                                size="sm"
+                                                                variant="light"
+                                                            >
+                                                                {youtubeItem.video_custom_thumbnail_key ||
+                                                                youtubeItem.video_custom_thumbnail_file
+                                                                    ? "Change"
+                                                                    : "Select"}
+                                                            </Button>
+                                                        )}
+                                                    </FileButton>
+                                                </Box>
+                                            </Group>
+                                        )}
+                                    </Stack>
+                                );
+                            }
+                        )
+                        .exhaustive()}
                 </Stack>
-            </Fieldset>
+            </Card>
         </Box>
     );
 }

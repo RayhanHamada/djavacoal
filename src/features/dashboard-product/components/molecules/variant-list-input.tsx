@@ -115,10 +115,19 @@ export function VariantListInput({
         );
     };
 
+    // Check if there are any unfilled variants
+    const hasUnfilledVariants = value.some(
+        (item) =>
+            !item.en_variant_name ||
+            !item.ar_variant_name ||
+            (!item.variant_photo_key && !item.variant_photo_file)
+    );
+
     return (
         <Stack gap="md">
             <Group gap="sm">
                 <Button
+                    disabled={hasUnfilledVariants}
                     leftSection={<IconPhoto size={16} />}
                     onClick={addVariant}
                     size="sm"

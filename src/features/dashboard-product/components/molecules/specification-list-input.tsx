@@ -31,6 +31,7 @@ import {
     Text,
 } from "@mantine/core";
 import { IconGripVertical, IconPhoto, IconTrash } from "@tabler/icons-react";
+import { PhotoView } from "react-photo-view";
 
 export type SpecificationItem = {
     id: string;
@@ -103,10 +104,16 @@ export function SpecificationListInput({
         );
     };
 
+    // Check if there are any unfilled specifications
+    const hasUnfilledSpecifications = value.some(
+        (item) => !item.spec_photo_key && !item.spec_photo_file
+    );
+
     return (
         <Stack gap="md">
             <Group gap="sm">
                 <Button
+                    disabled={hasUnfilledSpecifications}
                     leftSection={<IconPhoto size={16} />}
                     onClick={addSpecification}
                     size="sm"
@@ -199,6 +206,12 @@ function SortableSpecificationItem({
         onUpdate(item.id, { spec_photo_file: file, spec_photo_key: "" });
     };
 
+    const imageSrc =
+        previewUrl ||
+        (item.spec_photo_key
+            ? `${process.env.NEXT_PUBLIC_ASSET_URL}${item.spec_photo_key}`
+            : null);
+
     return (
         <Box ref={setNodeRef} style={style}>
             <Card
@@ -212,15 +225,17 @@ function SortableSpecificationItem({
                 withBorder
             >
                 <Stack gap="md">
-                    <Group
-                        gap="xs"
-                        justify="space-between"
-                        style={{ cursor: "grab" }}
-                        {...listeners}
-                        {...attributes}
-                    >
+                    <Group gap="xs" justify="space-between">
                         <Group gap="xs">
-                            <IconGripVertical size={16} />
+                            <ActionIcon
+                                size="sm"
+                                style={{ cursor: "grab" }}
+                                variant="subtle"
+                                {...listeners}
+                                {...attributes}
+                            >
+                                <IconGripVertical size={16} />
+                            </ActionIcon>
                             <Text fw={500} size="sm">
                                 Specification
                             </Text>
@@ -251,18 +266,17 @@ function SortableSpecificationItem({
                         )}
                     </FileButton>
 
-                    {(item.spec_photo_key || previewUrl) && (
-                        <Image
-                            alt="Specification"
-                            fit="cover"
-                            h={400}
-                            radius="md"
-                            src={
-                                previewUrl ||
-                                `${process.env.NEXT_PUBLIC_ASSET_URL}${item.spec_photo_key}`
-                            }
-                            w="100%"
-                        />
+                    {imageSrc && (
+                        <PhotoView src={imageSrc}>
+                            <Image
+                                alt="Specification"
+                                fit="cover"
+                                h={400}
+                                radius="md"
+                                src={imageSrc}
+                                w="100%"
+                            />
+                        </PhotoView>
                     )}
                 </Stack>
             </Card>
