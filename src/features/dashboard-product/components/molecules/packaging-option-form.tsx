@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import type { PackagingOptionFormValues } from "../../utils/form-schemas";
 
 import {
     Box,
@@ -10,17 +10,13 @@ import {
     Image,
     Stack,
     Text,
-    Textarea,
     TextInput,
 } from "@mantine/core";
-import { useForm } from "@mantine/form";
 import { IconPhoto, IconTrash } from "@tabler/icons-react";
 import { useTranslations } from "next-intl";
 
-import {
-    validatePackagingOptionFormSchema,
-    type PackagingOptionFormValues,
-} from "../../utils/form-schemas";
+import { usePackagingOptionForm } from "../../hooks";
+import { RichTextEditor } from "../atoms";
 
 type PackagingOptionFormProps = {
     initialData?: PackagingOptionFormValues;
@@ -39,50 +35,16 @@ export function PackagingOptionForm({
 }: PackagingOptionFormProps) {
     const t = useTranslations("PackagingOptions.form");
 
-    const form = useForm<PackagingOptionFormValues>({
-        mode: "uncontrolled",
-        initialValues: {
-            en_name: initialData?.en_name || "",
-            ar_name: initialData?.ar_name || "",
-            en_description: initialData?.en_description || "",
-            ar_description: initialData?.ar_description || "",
-            photo_key: initialData?.photo_key,
-        },
-        validate: validatePackagingOptionFormSchema,
-    });
-
-    const [photoFile, setPhotoFile] = useState<File | null>(null);
-    const [photoPreview, setPhotoPreview] = useState<string | null>(
-        initialData?.photo_key ? `${assetUrl}${initialData.photo_key}` : null
-    );
-
-    useEffect(() => {
-        if (photoFile) {
-            const reader = new FileReader();
-            reader.onloadend = () => {
-                setPhotoPreview(reader.result as string);
-            };
-            reader.readAsDataURL(photoFile);
-        }
-    }, [photoFile]);
-
-    const handlePhotoChange = (file: File | null) => {
-        if (file) {
-            setPhotoFile(file);
-        }
-    };
-
-    const handleRemovePhoto = () => {
-        setPhotoFile(null);
-        setPhotoPreview(null);
-        form.setFieldValue("photo_key", undefined);
-    };
+    const {
+        form,
+        photoPreview,
+        handlePhotoChange,
+        handleRemovePhoto,
+        getSubmitData,
+    } = usePackagingOptionForm({ initialData, assetUrl });
 
     const handleSubmit = form.onSubmit((values) => {
-        onSubmit({
-            ...values,
-            photo: photoFile || undefined,
-        });
+        onSubmit(getSubmitData(values));
     });
 
     return (
@@ -104,23 +66,35 @@ export function PackagingOptionForm({
                     {...form.getInputProps("ar_name")}
                 />
 
-                <Textarea
-                    label={t("enDescription")}
-                    placeholder={t("enDescriptionPlaceholder")}
-                    required
-                    minRows={3}
-                    key={form.key("en_description")}
-                    {...form.getInputProps("en_description")}
-                />
+                <Box>
+                    <Text size="sm" fw={500} mb="xs">
+                        {t("enDescription")}{" "}
+                        <span style={{ color: "red" }}>*</span>
+                    </Text>
+                    <RichTextEditor
+                        value={form.getValues().en_description}
+                        onChange={(value) =>
+                            form.setFieldValue("en_description", value)
+                        }
+                        placeholder={t("enDescriptionPlaceholder")}
+                        error={form.errors.en_description}
+                    />
+                </Box>
 
-                <Textarea
-                    label={t("arDescription")}
-                    placeholder={t("arDescriptionPlaceholder")}
-                    required
-                    minRows={3}
-                    key={form.key("ar_description")}
-                    {...form.getInputProps("ar_description")}
-                />
+                <Box>
+                    <Text size="sm" fw={500} mb="xs">
+                        {t("arDescription")}{" "}
+                        <span style={{ color: "red" }}>*</span>
+                    </Text>
+                    <RichTextEditor
+                        value={form.getValues().ar_description}
+                        onChange={(value) =>
+                            form.setFieldValue("ar_description", value)
+                        }
+                        placeholder={t("arDescriptionPlaceholder")}
+                        error={form.errors.ar_description}
+                    />
+                </Box>
 
                 <Box>
                     <Text size="sm" fw={500} mb="xs">
@@ -172,7 +146,7 @@ export function PackagingOptionForm({
                         loading={isSubmitting}
                         disabled={
                             !form.isValid() ||
-                            (!photoFile && !form.getValues().photo_key)
+                            (!form.getValues().photo_key && !photoPreview)
                         }
                     >
                         {initialData ? t("submitEdit") : t("submitCreate")}

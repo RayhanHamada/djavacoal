@@ -1,5 +1,6 @@
 export * from "./atoms";
 export * from "./molecules";
+export * from "./organism";
 
 export { ProductCard } from "./product-card";
 export { ProductCardSkeleton } from "./product-card-skeleton";

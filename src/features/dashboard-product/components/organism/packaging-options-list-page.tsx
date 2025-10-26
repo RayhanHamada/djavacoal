@@ -1,9 +1,6 @@
 "use client";
 
-import { useState } from "react";
-
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 
 import {
     Box,
@@ -17,82 +14,47 @@ import {
     TextInput,
     Title,
 } from "@mantine/core";
-import { useDebouncedValue } from "@mantine/hooks";
-import { notifications } from "@mantine/notifications";
 import { IconPlus, IconSearch } from "@tabler/icons-react";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 
-import { PackagingOptionsGrid } from "@/features/dashboard-product/components";
-import { rpc } from "@/lib/rpc";
+import {
+    usePackagingOptionMutations,
+    usePackagingOptionsList,
+} from "../../hooks";
+import { PackagingOptionsGrid } from "../molecules";
 
 export function PackagingOptionsListPage() {
     const t = useTranslations("PackagingOptions");
-    const router = useRouter();
-    const queryClient = useQueryClient();
 
-    const [search, setSearch] = useState("");
-    const [debouncedSearch] = useDebouncedValue(search, 300);
-    const [page, setPage] = useState(1);
-    const [deleteId, setDeleteId] = useState<number | null>(null);
+    const {
+        search,
+        setSearch,
+        page,
+        setPage,
+        deleteId,
+        data,
+        isLoading,
+        totalPages,
+        deleteOption,
+        handleEdit,
+        handleDelete,
+        closeDeleteModal,
+    } = usePackagingOptionsList();
 
-    const { data, isLoading } = useQuery(
-        rpc.dashboardProduct.listPackagingOptions.queryOptions({
-            input: {
-                search: debouncedSearch,
-                page,
-                limit: 20,
-            },
-        })
-    );
+    const { deleteMutation } = usePackagingOptionMutations();
 
-    const deleteMutation = useMutation(
-        rpc.dashboardProduct.deletePackagingOption.mutationOptions({
-            onSettled: () => {
-                // Invalidate both list and individual queries
-                queryClient.invalidateQueries({
-                    queryKey: rpc.dashboardProduct.listPackagingOptions.key(),
-                });
-                queryClient.invalidateQueries({
-                    queryKey: rpc.dashboardProduct.getPackagingOptionById.key(),
-                });
-            },
-            onSuccess: () => {
-                notifications.show({
-                    title: t("deleteModal.success"),
-                    message: "",
-                    color: "green",
-                });
-                setDeleteId(null);
-            },
-            onError: () => {
-                notifications.show({
-                    title: t("deleteModal.error"),
-                    message: "",
-                    color: "red",
-                });
-            },
-        })
-    );
-
-    function handleEdit(id: number) {
-        router.push(`/dashboard/products/packaging-options/${id}/edit`);
-    }
-
-    function handleDelete(id: number) {
-        setDeleteId(id);
-    }
-
-    function confirmDelete() {
+    const confirmDelete = () => {
         if (deleteId) {
-            deleteMutation.mutate({ id: deleteId });
+            deleteMutation.mutate(
+                { id: deleteId },
+                {
+                    onSuccess: () => {
+                        closeDeleteModal();
+                    },
+                }
+            );
         }
-    }
-
-    const totalPages = data ? Math.ceil(data.total / data.pageSize) : 0;
-    const deleteOption = data?.packagingOptions.find(
-        (opt) => opt.id === deleteId
-    );
+    };
 
     return (
         <Container size="xl" py="xl">
@@ -150,7 +112,7 @@ export function PackagingOptionsListPage() {
 
             <Modal
                 opened={deleteId !== null}
-                onClose={() => setDeleteId(null)}
+                onClose={closeDeleteModal}
                 title={t("deleteModal.title")}
             >
                 <Stack gap="md">
@@ -160,10 +122,7 @@ export function PackagingOptionsListPage() {
                         })}
                     </Text>
                     <Group justify="flex-end">
-                        <Button
-                            variant="default"
-                            onClick={() => setDeleteId(null)}
-                        >
+                        <Button variant="default" onClick={closeDeleteModal}>
                             {t("deleteModal.cancel")}
                         </Button>
                         <Button
