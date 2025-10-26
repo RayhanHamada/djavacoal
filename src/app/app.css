@@ -16,14 +16,10 @@
 }
 
 .scrollbar-hide {
-    scrollbar-width: thin; /* Firefox */
-}
-.scrollbar-hide::-webkit-scrollbar {
-    width: 2px;
-    height: 2px;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
 }
 
-.scrollbar-hide::-webkit-scrollbar-thumb {
-    background: rgba(0, 0, 0, 0.2);
-    border-radius: 1px;
+.scrollbar-hide::-webkit-scrollbar {
+    display: none;
 }

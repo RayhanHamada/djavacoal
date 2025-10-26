@@ -92,7 +92,7 @@ export default function GallerySection() {
     return (
         <section
             id="gallery"
-            className="mt-10 scroll-mt-28 space-y-6 overflow-x-hidden rounded-xl bg-[#222222] pb-10"
+            className="mt-10 scroll-mt-28 space-y-6 rounded-xl bg-[#222222] pb-10"
         >
             {/* === Heading === */}
             <header className="mb-2 pt-4">
@@ -138,10 +138,10 @@ export default function GallerySection() {
             </header>
 
             {/* 🎥 HERO VIDEO REELS */}
-            <div className="relative w-full overflow-hidden">
+            <div className="relative w-full">
                 <div
                     id="reelsContainer"
-                    className="scrollbar-thin scrollbar-thumb-[#444] scrollbar-track-transparent mx-6 flex w-full snap-x snap-mandatory gap-5 overflow-x-auto scroll-smooth py-4 lg:w-[90%]"
+                    className="scrollbar-thin scrollbar-thumb-[#444] scrollbar-track-transparent scrollbar-hide flex snap-x snap-mandatory gap-5 overflow-x-auto scroll-smooth py-4 lg:mx-auto"
                 >
                     {reels.map((id, i) => (
                         <button
@@ -217,7 +217,7 @@ export default function GallerySection() {
             <div className="grid grid-cols-1 gap-6 px-6 lg:grid-cols-2">
                 <div className="space-y-4">
                     <h3 className="text-lg font-semibold text-[#EFA12D]">
-                        Djavacoal's Factory Gallery
+                        Djavacoal&apos;s Factory Gallery
                     </h3>
                     <div className="grid gap-3">
                         {factoryGallery.map((img, i) => (
@@ -241,7 +241,7 @@ export default function GallerySection() {
 
                 <div className="space-y-4">
                     <h3 className="text-lg font-semibold text-[#EFA12D]">
-                        Djavacoal's Products Gallery
+                        Djavacoal&apos;s Products Gallery
                     </h3>
                     <div className="grid gap-3">
                         {productGallery.map((img, i) => (
