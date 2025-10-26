@@ -7,5 +7,140 @@
             "ourProducts": "Our Products",
             "contact": "Contact Us"
         }
+    },
+    "Gallery": {
+        "title": "Photo Gallery",
+        "subtitle": "Manage your photo assets",
+        "searchPlaceholder": "Search photos by name...",
+        "noPhotos": "No photos yet. Drag and drop files to upload.",
+        "noResults": "No photos found matching your search",
+        "uploadModal": {
+            "title": "Prepare Upload",
+            "subtitle": "Give each photo a unique name (8-100 characters)",
+            "photoLabel": "Photo",
+            "namePlaceholder": "Enter photo name",
+            "uploadButton": "Upload {count} Photo(s)",
+            "cancel": "Cancel",
+            "errors": {
+                "lengthInvalid": "Name must be 8-100 characters",
+                "nameTaken": "Name already taken",
+                "validationError": "Please fix all errors before uploading",
+                "uploadFailed": "Upload Failed"
+            },
+            "success": "Uploaded {count} photo(s)"
+        },
+        "renameModal": {
+            "title": "Rename Photo",
+            "subtitle": "Enter a new name for this photo (8-100 characters)",
+            "label": "New Name",
+            "placeholder": "Enter new photo name",
+            "button": "Rename",
+            "cancel": "Cancel",
+            "success": "Photo renamed successfully",
+            "error": "Rename Failed"
+        },
+        "deleteModal": {
+            "title": "Delete Photo",
+            "message": "Are you sure you want to delete {name}? This action cannot be undone.",
+            "button": "Delete",
+            "cancel": "Cancel",
+            "success": "Photo deleted successfully",
+            "error": "Delete Failed"
+        },
+        "bulkDelete": {
+            "barLabel": "{count} photo(s) selected",
+            "buttonLabel": "Delete Selected",
+            "modalTitle": "Delete Photos",
+            "message": "Are you sure you want to delete {count} photo(s)? This action cannot be undone.",
+            "button": "Delete All",
+            "cancel": "Cancel",
+            "success": "Deleted {count} photo(s)",
+            "error": "Delete Failed"
+        },
+        "sort": {
+            "nameAsc": "Sort by name (ascending)",
+            "nameDesc": "Sort by name (descending)",
+            "dateAsc": "Sort by date (oldest first)",
+            "dateDesc": "Sort by date (newest first)",
+            "notActive": "not active"
+        },
+        "actions": {
+            "refresh": "Refresh",
+            "rename": "Rename",
+            "delete": "Delete",
+            "tryAgain": "Try Again"
+        },
+        "dragDrop": {
+            "message": "Drop to prepare upload"
+        },
+        "errors": {
+            "loadingFailed": "Error loading photos"
+        }
+    },
+    "PackagingOptions": {
+        "title": "Packaging Options",
+        "subtitle": "Manage product packaging options",
+        "searchPlaceholder": "Search by English name...",
+        "noOptions": "No packaging options yet. Create your first one!",
+        "noResults": "No packaging options found matching your search",
+        "createButton": "Create Packaging Option",
+        "editTitle": "Edit Packaging Option",
+        "createTitle": "Create Packaging Option",
+        "form": {
+            "enName": "English Name",
+            "enNamePlaceholder": "Enter packaging name in English",
+            "arName": "Arabic Name",
+            "arNamePlaceholder": "Enter packaging name in Arabic",
+            "enDescription": "English Description",
+            "enDescriptionPlaceholder": "Enter description in English",
+            "arDescription": "Arabic Description",
+            "arDescriptionPlaceholder": "Enter description in Arabic",
+            "image": "Packaging Image",
+            "imageHint": "Drop an image or click to select (Max 10MB)",
+            "imagePreview": "Image Preview",
+            "removeImage": "Remove Image",
+            "submitCreate": "Create Packaging Option",
+            "submitEdit": "Save Changes",
+            "cancel": "Cancel",
+            "uploading": "Uploading...",
+            "errors": {
+                "enNameRequired": "English name is required",
+                "enNameLength": "Name must be 3-100 characters",
+                "arNameRequired": "Arabic name is required",
+                "arNameLength": "Name must be 3-100 characters",
+                "enDescriptionRequired": "English description is required",
+                "enDescriptionLength": "Description must be 10-500 characters",
+                "arDescriptionRequired": "Arabic description is required",
+                "arDescriptionLength": "Description must be 10-500 characters",
+                "imageRequired": "Image is required",
+                "imageSize": "Image must be less than 10MB",
+                "imageType": "Only JPEG, PNG, GIF, WebP, and SVG images are allowed",
+                "createFailed": "Failed to create packaging option",
+                "updateFailed": "Failed to update packaging option",
+                "uploadFailed": "Failed to upload image"
+            },
+            "success": {
+                "created": "Packaging option created successfully",
+                "updated": "Packaging option updated successfully"
+            }
+        },
+        "deleteModal": {
+            "title": "Delete Packaging Option",
+            "message": "Are you sure you want to delete \"{name}\"? This action cannot be undone.",
+            "button": "Delete",
+            "cancel": "Cancel",
+            "success": "Packaging option deleted successfully",
+            "error": "Failed to delete packaging option"
+        },
+        "actions": {
+            "edit": "Edit",
+            "delete": "Delete",
+            "view": "View"
+        },
+        "pagination": {
+            "previous": "Previous",
+            "next": "Next",
+            "page": "Page {current} of {total}"
+        }
     }
 }

@@ -5,6 +5,10 @@ import { injectCFContext } from "@/lib/orpc/middlewares";
 
 const base = os
     .errors({
+        UNAUTHORIZED: {
+            message: "You are not authorized to perform this action.",
+            data: z.nullish(z.object()),
+        },
         NOT_FOUND: {
             message: "The requested resource was not found.",
             data: z.nullish(z.object()),

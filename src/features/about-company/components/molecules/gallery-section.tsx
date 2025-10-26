@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 
 import Image from "next/image";
 
@@ -45,7 +45,7 @@ export default function GallerySection() {
 
     const closeModal = () => setViewer(null);
 
-    const next = () => {
+    const next = useCallback(() => {
         if (!viewer) return;
         const list =
             viewer.type === "reel"
@@ -55,9 +55,9 @@ export default function GallerySection() {
                   : productGallery;
 
         setViewer({ ...viewer, index: (viewer.index + 1) % list.length });
-    };
+    }, [viewer]);
 
-    const prev = () => {
+    const prev = useCallback(() => {
         if (!viewer) return;
         const list =
             viewer.type === "reel"
@@ -70,7 +70,7 @@ export default function GallerySection() {
             ...viewer,
             index: (viewer.index - 1 + list.length) % list.length,
         });
-    };
+    }, [viewer]);
 
     useEffect(() => {
         if (!viewer) {
@@ -87,7 +87,7 @@ export default function GallerySection() {
 
         window.addEventListener("keydown", handleKey);
         return () => window.removeEventListener("keydown", handleKey);
-    }, [viewer]);
+    }, [next, prev, viewer]);
 
     return (
         <section
@@ -103,7 +103,7 @@ export default function GallerySection() {
                     transition={{ duration: 0.6, ease: "easeOut" }}
                     className="mb-2 flex items-center gap-3 px-6"
                 >
-                    <div className="h-[1px] w-8 bg-white" />
+                    <div className="h-px w-8 bg-white" />
                     <p className="text-sm font-medium tracking-wide text-[#60A5FF] italic">
                         Djavacoal’s Gallery
                     </p>

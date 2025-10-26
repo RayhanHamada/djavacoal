@@ -5,16 +5,21 @@ import createNextIntlPlugin from "next-intl/plugin";
 
 const nextConfig: NextConfig = {
     images: {
-        domains: [
-            "img.youtube.com",
-            "i.ytimg.com",
-            "ytimg.googleusercontent.com",
-        ],
         remotePatterns: [
             {
-                protocol: "https",
+                hostname: "i.ytimg.com",
+            },
+            {
+                hostname: "img.youtube.com",
+            },
+            {
+                hostname: "ytimg.googleusercontent.com",
+            },
+            {
                 hostname: "flagsapi.com",
-                pathname: "/**",
+            },
+            {
+                hostname: new URL(process.env.NEXT_PUBLIC_ASSET_URL).hostname,
             },
         ],
     },

@@ -3,12 +3,27 @@ export const TABLE_NAMES = {
     SESSIONS: "sessions",
     ACCOUNTS: "accounts",
     VERIFICATIONS: "verifications",
+    GALLERY_PHOTOS: "gallery_photos",
+
+    NEWS: "news",
+
+    PACKAGING_OPTIONS: "packaging_options",
+
+    PRODUCTS: "products",
+    PRODUCT_MEDIAS: "product_medias",
+    PRODUCT_SPECIFICATIONS: "product_specifications",
+    PRODUCT_VARIANTS: "product_variants",
+    PRODUCT_PACKAGING_OPTIONS: "product_packaging_options",
+
+    TAGS: "tags",
 } as const;
 
 export const COMMON_COLUMNS = {
     ID: "id",
     CREATED_AT: "created_at",
     UPDATED_AT: "updated_at",
+    CREATED_BY: "created_by",
+    UPDATED_BY: "updated_by",
 } as const;
 
 export const USER_COLUMNS = {
@@ -48,4 +63,105 @@ export const VERIFICATION_COLUMNS = {
     IDENTIFIER: "identifier",
     VALUE: "value",
     EXPIRES_AT: "expires_at",
+} as const;
+
+export const GALLERY_PHOTO_COLUMNS = {
+    NAME: "name",
+    KEY: "key",
+    SIZE: "size",
+    MIME_TYPE: "mime_type",
+} as const;
+
+export const NEWS_COLUMNS = {
+    SLUG: "slug",
+    IMAGE_KEY: "image_key",
+
+    METADATA_TITLE: "metadata_title",
+    METADATA_DESCRIPTION: "metadata_description",
+    METADATA_TAG_LIST: "metadata_tag_list",
+
+    AR_TITLE: "ar_title",
+    AR_CONTENT_KEY: "ar_content_key",
+
+    EN_TITLE: "en_title",
+    EN_CONTENT_KEY: "en_content_key",
+
+    STATUS: "status",
+    PUBLISHED_AT: "published_at",
+    PUBLISHED_BY: "published_by",
+} as const;
+
+export const TAG_COLUMNS = {
+    NAME: "name",
+    SLUG: "slug",
+} as const;
+
+export const PACKAGING_OPTION_COLUMNS = {
+    EN_NAME: "en_name",
+    AR_NAME: "ar_name",
+    EN_DESCRIPTION: "en_description",
+    AR_DESCRIPTION: "ar_description",
+    PHOTO_KEY: "photo_key",
+} as const;
+
+export const PRODUCT_COLUMNS = {
+    EN_NAME: "en_name",
+    AR_NAME: "ar_name",
+    EN_DESCRIPTION: "en_description",
+    AR_DESCRIPTION: "ar_description",
+    MOQ: "moq",
+    PRODUCTION_CAPACITY: "production_capacity",
+    PAYMENT_TERMS: "payment_terms",
+    SHIPMENT_TERMS: "shipment_terms",
+} as const;
+
+export const PRODUCT_MEDIA_COLUMNS = {
+    PRODUCT_ID: "product_id",
+    MEDIA_TYPE: "media_type",
+    /**
+     * if the media is an image, this is the image key in S3
+     */
+    IMAGE_KEY: "image_key",
+
+    /**
+     * if the media is a video, this is the video id from youtube
+     */
+    YOUTUBE_VIDEO_ID: "video_id",
+
+    /**
+     * if the media is a video, this is the custom thumbnail key in S3
+     */
+    VIDEO_CUSTOM_THUMBNAIL_KEY: "video_custom_thumbnail_key",
+} as const;
+
+export const PRODUCT_VARIANT_COLUMNS = {
+    PRODUCT_ID: "product_id",
+    EN_VARIANT_NAME: "en_variant_name",
+    AR_VARIANT_NAME: "ar_variant_name",
+    VARIANT_PHOTO_KEY: "variant_photo_key",
+    VARIANT_SIZES: "variant_sizes",
+} as const;
+
+export const PRODUCT_PACKAGING_OPTION_COLUMNS = {
+    PRODUCT_ID: "product_id",
+    PACKAGING_OPTION_ID: "packaging_option_id",
+} as const;
+
+export const PRODUCT_SPECIFICATION_COLUMNS = {
+    PRODUCT_ID: "product_id",
+    SPEC_PHOTO_KEY: "spec_photo_key",
+} as const;
+
+/**
+ * constants related to table above
+ */
+export const NEWS_STATUS = {
+    DRAFT: "draft",
+    PUBLISHED: "published",
+    UNPUBLISHED: "unpublished",
+} as const;
+
+export const PRODUCT_MEDIA_TYPE = {
+    IMAGE: "image",
+    YOUTUBE: "youtube",
 } as const;

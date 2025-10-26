@@ -9,7 +9,7 @@
     "compatibility_date": "2025-09-15",
     "build": {
         "watch_dir": "./src",
-        "command": "bun build:cf",
+        "command": "bun cf:build",
     },
     "compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public"],
     "assets": {
@@ -35,24 +35,24 @@
     "d1_databases": [
         {
             "binding": "DJAVACOAL_DB",
-            "database_id": "9f19f668-bed8-4339-9517-189faef8bbf5",
+            "database_id": "3102f897-8e61-460e-8ebc-7d60981ad57e",
             "database_name": "djavacoal",
             "migrations_dir": "./src/adapters/d1/migrations",
-            "remote": false,
+            "remote": true,
         },
     ],
     "r2_buckets": [
         {
             "binding": "DJAVACOAL_BUCKET",
             "bucket_name": "djavacoal",
-            "remote": false,
+            "remote": true,
         },
     ],
     "kv_namespaces": [
         {
             "binding": "DJAVACOAL_KV",
             "id": "3c8b8d406b184518a307c1ee397d3bff",
-            "remote": false,
+            "remote": true,
         },
     ],
     "vars": {

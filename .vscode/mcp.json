@@ -10,6 +10,14 @@
             "headers": {
                 "CONTEXT7_API_KEY": "{env:CONTEXT7_API_KEY}"
             }
+        },
+        "Chrome": {
+            "command":"bunx",
+            "args":["chrome-devtools-mcp@latest"]
+        },
+        "Figma": {
+            "command": "bunx",
+            "args": ["-y", "figma-developer-mcp", "--figma-api-key={env:FIGMA_API_KEY}", "--stdio"]
         }
     }
 }

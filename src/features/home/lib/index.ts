@@ -1,1 +1,1 @@
-export * from "@/features/home/lib/utils";
+export * from "./utils";

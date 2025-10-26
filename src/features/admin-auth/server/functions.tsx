@@ -8,7 +8,6 @@ import { ACCOUNT_COLUMNS } from "@/adapters/d1/constants";
 import { getDB } from "@/adapters/d1/db";
 import { users, accounts } from "@/adapters/d1/schema";
 import { getResend } from "@/adapters/email-service";
-import { KV_KEYS } from "@/adapters/kv/constants";
 import { getAuth } from "@/features/admin-auth/lib/better-auth-server";
 import {
     EMAIL_SENDER_NAME,
@@ -38,19 +37,16 @@ export const setupFirstUser = base
         input: { name, email, password },
         errors,
     }) {
-        const auth = getAuth(env);
+        const db = getDB(env.DJAVACOAL_DB);
+        const user = await db.query.users.findFirst();
 
-        const onboarded = await env.DJAVACOAL_KV.get(
-            KV_KEYS.IS_ALREADY_ONBOARDED,
-            "json"
-        );
-
-        if (onboarded) {
+        if (user) {
             throw errors.BAD_REQUEST({
                 message: "Admin user already exists",
             });
         }
 
+        const auth = getAuth(env);
         await auth.api.createUser({
             body: {
                 name,
@@ -59,23 +55,16 @@ export const setupFirstUser = base
                 role: "admin",
             },
         });
-
-        await env.DJAVACOAL_KV.put(
-            KV_KEYS.IS_ALREADY_ONBOARDED,
-            JSON.stringify(true)
-        );
     })
     .callable();
 
 export const redirectJoinedUser = base
     .handler(async function ({ context: { env } }) {
-        const onboarded = await env.DJAVACOAL_KV.get(
-            KV_KEYS.IS_ALREADY_ONBOARDED,
-            "json"
-        );
+        const db = getDB(env.DJAVACOAL_DB);
+        const user = await db.query.users.findFirst();
 
         return {
-            onboarded: !!onboarded,
+            onboarded: !!user,
         };
     })
     .callable();
