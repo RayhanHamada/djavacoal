@@ -143,8 +143,6 @@ export const PRODUCT_VARIANT_COLUMNS = {
     PRODUCT_ID: "product_id",
     EN_VARIANT_NAME: "en_variant_name",
     AR_VARIANT_NAME: "ar_variant_name",
-    EN_DESCRIPTION: "en_description",
-    AR_DESCRIPTION: "ar_description",
     VARIANT_PHOTO_KEY: "variant_photo_key",
     VARIANT_SIZES: "variant_sizes",
     ORDER_INDEX: "order_index",

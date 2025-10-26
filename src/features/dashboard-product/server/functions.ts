@@ -604,11 +604,8 @@ export const getProductById = base
                 id: v[COMMON_COLUMNS.ID],
                 en_variant_name: v[PRODUCT_VARIANT_COLUMNS.EN_VARIANT_NAME],
                 ar_variant_name: v[PRODUCT_VARIANT_COLUMNS.AR_VARIANT_NAME],
-                en_description:
-                    v[PRODUCT_VARIANT_COLUMNS.EN_DESCRIPTION] ?? undefined,
-                ar_description:
-                    v[PRODUCT_VARIANT_COLUMNS.AR_DESCRIPTION] ?? undefined,
                 variant_photo_key: v[PRODUCT_VARIANT_COLUMNS.VARIANT_PHOTO_KEY],
+                variant_sizes: v[PRODUCT_VARIANT_COLUMNS.VARIANT_SIZES],
                 order_index: v[PRODUCT_VARIANT_COLUMNS.ORDER_INDEX],
             })),
             packaging_option_ids: packagingOptionsResult.map((p) => p.id),
@@ -713,9 +710,8 @@ export const createProduct = base
                     product_id: productId,
                     en_variant_name: v.en_variant_name,
                     ar_variant_name: v.ar_variant_name,
-                    en_description: v.en_description,
-                    ar_description: v.ar_description,
                     variant_photo_key: v.variant_photo_key,
+                    variant_sizes: v.variant_sizes,
                     order_index: v.order_index,
                 }))
             );
@@ -768,112 +764,122 @@ export const updateProduct = base
             throw errors.NOT_FOUND({ message: "Product not found" });
         }
 
-        // Update product
-        await db
-            .update(products)
-            .set({
-                en_name: input.en_name,
-                ar_name: input.ar_name,
-                en_description: input.en_description,
-                ar_description: input.ar_description,
-                moq: input.moq,
-                production_capacity: input.production_capacity,
-                is_hidden: input.is_hidden,
-                order_index: input.order_index,
-                updated_by: userId,
-            })
-            .where(eq(products[COMMON_COLUMNS.ID], input.id));
+        try {
+            // Update product
+            await db
+                .update(products)
+                .set({
+                    en_name: input.en_name,
+                    ar_name: input.ar_name,
+                    en_description: input.en_description,
+                    ar_description: input.ar_description,
+                    moq: input.moq,
+                    production_capacity: input.production_capacity,
+                    is_hidden: input.is_hidden,
+                    order_index: input.order_index,
+                    updated_by: userId,
+                })
+                .where(eq(products[COMMON_COLUMNS.ID], input.id));
 
-        // Delete existing related data
-        await db
-            .delete(productMedias)
-            .where(
-                eq(productMedias[PRODUCT_MEDIA_COLUMNS.PRODUCT_ID], input.id)
-            );
-        await db
-            .delete(productSpecifications)
-            .where(
-                eq(
-                    productSpecifications[
-                        PRODUCT_SPECIFICATION_COLUMNS.PRODUCT_ID
-                    ],
-                    input.id
-                )
-            );
-        await db
-            .delete(productVariants)
-            .where(
-                eq(
-                    productVariants[PRODUCT_VARIANT_COLUMNS.PRODUCT_ID],
-                    input.id
-                )
-            );
-        await db
-            .delete(productPackagingOptions)
-            .where(
-                eq(
-                    productPackagingOptions[
-                        PRODUCT_PACKAGING_OPTION_COLUMNS.PRODUCT_ID
-                    ],
-                    input.id
-                )
-            );
+            // Delete existing related data
+            await db
+                .delete(productMedias)
+                .where(
+                    eq(
+                        productMedias[PRODUCT_MEDIA_COLUMNS.PRODUCT_ID],
+                        input.id
+                    )
+                );
+            await db
+                .delete(productSpecifications)
+                .where(
+                    eq(
+                        productSpecifications[
+                            PRODUCT_SPECIFICATION_COLUMNS.PRODUCT_ID
+                        ],
+                        input.id
+                    )
+                );
+            await db
+                .delete(productVariants)
+                .where(
+                    eq(
+                        productVariants[PRODUCT_VARIANT_COLUMNS.PRODUCT_ID],
+                        input.id
+                    )
+                );
+            await db
+                .delete(productPackagingOptions)
+                .where(
+                    eq(
+                        productPackagingOptions[
+                            PRODUCT_PACKAGING_OPTION_COLUMNS.PRODUCT_ID
+                        ],
+                        input.id
+                    )
+                );
 
-        // Re-insert medias
-        if (input.medias.length) {
-            await db.insert(productMedias).values(
-                input.medias.map((m) => ({
-                    product_id: input.id,
-                    media_type: m.media_type,
-                    image_key:
-                        m.media_type === "image" ? m.image_key : undefined,
-                    video_id:
-                        m.media_type === "youtube"
-                            ? m.youtube_video_id
-                            : undefined,
-                    video_custom_thumbnail_key:
-                        m.media_type === "youtube"
-                            ? m.video_custom_thumbnail_key
-                            : undefined,
-                    order_index: m.order_index,
-                }))
-            );
-        }
+            // Re-insert medias
+            if (input.medias.length) {
+                await db.insert(productMedias).values(
+                    input.medias.map((m) => ({
+                        product_id: input.id,
+                        media_type: m.media_type,
+                        image_key:
+                            m.media_type === "image" ? m.image_key : undefined,
+                        video_id:
+                            m.media_type === "youtube"
+                                ? m.youtube_video_id
+                                : undefined,
+                        video_custom_thumbnail_key:
+                            m.media_type === "youtube"
+                                ? m.video_custom_thumbnail_key
+                                : undefined,
+                        order_index: m.order_index,
+                    }))
+                );
+            }
 
-        // Re-insert specifications
-        if (input.specifications.length) {
-            await db.insert(productSpecifications).values(
-                input.specifications.map((s) => ({
-                    product_id: input.id,
-                    spec_photo_key: s.spec_photo_key,
-                    order_index: s.order_index,
-                }))
-            );
-        }
+            // Re-insert specifications
+            if (input.specifications.length) {
+                await db.insert(productSpecifications).values(
+                    input.specifications.map((s) => ({
+                        product_id: input.id,
+                        spec_photo_key: s.spec_photo_key,
+                        order_index: s.order_index,
+                    }))
+                );
+            }
 
-        // Re-insert variants
-        if (input.variants.length) {
-            await db.insert(productVariants).values(
-                input.variants.map((v) => ({
-                    product_id: input.id,
-                    en_variant_name: v.en_variant_name,
-                    ar_variant_name: v.ar_variant_name,
-                    en_description: v.en_description,
-                    ar_description: v.ar_description,
-                    variant_photo_key: v.variant_photo_key,
-                    order_index: v.order_index,
-                }))
-            );
-        }
+            console.log(`variant sizes =>> `, input.variants);
 
-        // Re-insert packaging options
-        if (input.packaging_option_ids.length) {
-            await db.insert(productPackagingOptions).values(
-                input.packaging_option_ids.map((id) => ({
-                    product_id: input.id,
-                    packaging_option_id: id,
-                }))
-            );
+            // Re-insert variants
+            if (input.variants.length) {
+                await db.insert(productVariants).values(
+                    input.variants.map((v) => ({
+                        product_id: input.id,
+                        en_variant_name: v.en_variant_name,
+                        ar_variant_name: v.ar_variant_name,
+                        variant_photo_key: v.variant_photo_key,
+                        variant_sizes: v.variant_sizes,
+                        order_index: v.order_index,
+                    }))
+                );
+            }
+
+            // Re-insert packaging options
+            if (input.packaging_option_ids.length) {
+                await db.insert(productPackagingOptions).values(
+                    input.packaging_option_ids.map((id) => ({
+                        product_id: input.id,
+                        packaging_option_id: id,
+                    }))
+                );
+            }
+        } catch {
+            throw errors.INTERNAL_SERVER_ERROR({
+                message: "Failed to update product",
+            });
         }
 
         return {

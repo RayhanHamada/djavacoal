@@ -205,9 +205,8 @@ export const ProductVariantItemSchema = z.object({
     id: z.number().optional(),
     en_variant_name: z.string().min(1, "English variant name is required"),
     ar_variant_name: z.string().min(1, "Arabic variant name is required"),
-    en_description: z.string().optional(),
-    ar_description: z.string().optional(),
     variant_photo_key: z.string(),
+    variant_sizes: z.array(z.string()).default([]),
     order_index: z.number(),
 });
 

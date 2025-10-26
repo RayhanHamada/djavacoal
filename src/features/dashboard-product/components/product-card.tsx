@@ -63,7 +63,7 @@ export function ProductCard({ product }: ProductCardProps) {
 
     const deleteMutation = useMutation(
         rpc.dashboardProduct.deleteProduct.mutationOptions({
-            onSuccess() {
+            async onSuccess() {
                 queryClient.invalidateQueries({
                     queryKey: rpc.dashboardProduct.listProducts.key(),
                 });

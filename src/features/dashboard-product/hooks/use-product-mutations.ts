@@ -48,8 +48,7 @@ export function useProductMutations(product?: ProductDetail) {
                 variants: uploadedValues.variants.map((v, index) => ({
                     en_variant_name: v.en_variant_name,
                     ar_variant_name: v.ar_variant_name,
-                    en_description: v.en_description,
-                    ar_description: v.ar_description,
+                    variant_sizes: v.variant_sizes,
                     variant_photo_key: v.variant_photo_key,
                     order_index: index,
                 })),
@@ -61,8 +60,8 @@ export function useProductMutations(product?: ProductDetail) {
                 order_index: 0,
             });
         },
-        onSuccess: () => {
-            queryClient.invalidateQueries({
+        onSuccess: async () => {
+            await queryClient.invalidateQueries({
                 queryKey: rpc.dashboardProduct.listProducts.key(),
             });
             notifications.show({
@@ -118,8 +117,7 @@ export function useProductMutations(product?: ProductDetail) {
                 variants: uploadedValues.variants.map((v, index) => ({
                     en_variant_name: v.en_variant_name,
                     ar_variant_name: v.ar_variant_name,
-                    en_description: v.en_description,
-                    ar_description: v.ar_description,
+                    variant_sizes: v.variant_sizes,
                     variant_photo_key: v.variant_photo_key,
                     order_index: index,
                 })),
@@ -131,11 +129,11 @@ export function useProductMutations(product?: ProductDetail) {
                 order_index: product.order_index,
             });
         },
-        onSuccess: () => {
-            queryClient.invalidateQueries({
+        onSuccess: async () => {
+            await queryClient.invalidateQueries({
                 queryKey: rpc.dashboardProduct.getProductById.key(),
             });
-            queryClient.invalidateQueries({
+            await queryClient.invalidateQueries({
                 queryKey: rpc.dashboardProduct.listProducts.key(),
             });
 

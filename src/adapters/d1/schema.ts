@@ -412,18 +412,12 @@ export const PRODUCT_VARIANT_COLUMN_FIELDS = {
     [PRODUCT_VARIANT_COLUMNS.AR_VARIANT_NAME]: text().notNull(),
 
     /**
-     * variant description
-     */
-    [PRODUCT_VARIANT_COLUMNS.EN_DESCRIPTION]: text(),
-    [PRODUCT_VARIANT_COLUMNS.AR_DESCRIPTION]: text(),
-
-    /**
      * variant photo key in S3
      */
     [PRODUCT_VARIANT_COLUMNS.VARIANT_PHOTO_KEY]: text().notNull(),
 
     /**
-     * array of available sizes for this variant
+     * array of available sizes for this variant (e.g., ["Small", "Medium", "Large"])
      */
     [PRODUCT_VARIANT_COLUMNS.VARIANT_SIZES]: text({
         mode: "json",

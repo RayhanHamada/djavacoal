@@ -28,19 +28,20 @@ import {
     Group,
     Image,
     Stack,
+    TagsInput,
     Text,
     TextInput,
-    Textarea,
 } from "@mantine/core";
 import { IconGripVertical, IconPhoto, IconTrash } from "@tabler/icons-react";
+import { PhotoView } from "react-photo-view";
+import { match, P } from "ts-pattern";
 
 export type VariantItem = {
     id: string;
     en_variant_name: string;
     ar_variant_name: string;
-    en_description?: string;
-    ar_description?: string;
     variant_photo_key: string;
+    variant_sizes: string[];
     variant_photo_file?: File; // For deferred upload
     order_index: number;
 };
@@ -86,9 +87,8 @@ export function VariantListInput({
             id: `new-${Date.now()}`,
             en_variant_name: "",
             ar_variant_name: "",
-            en_description: "",
-            ar_description: "",
             variant_photo_key: "",
+            variant_sizes: [],
             order_index: value.length,
         };
         onChange([...value, newVariant]);
@@ -165,7 +165,7 @@ export function VariantListInput({
                 </SortableContext>
             </DndContext>
 
-            {value.length === 0 && (
+            {!value.length && (
                 <Text c="dimmed" size="sm" ta="center">
                     No variants added yet. Click the button above to add product
                     variants.
@@ -213,6 +213,12 @@ function SortableVariantItem({
         onUpdate(item.id, { variant_photo_file: file, variant_photo_key: "" });
     };
 
+    const imageSrc =
+        previewUrl ||
+        (item.variant_photo_key
+            ? `${process.env.NEXT_PUBLIC_ASSET_URL}${item.variant_photo_key}`
+            : null);
+
     return (
         <Box ref={setNodeRef} style={style}>
             <Fieldset
@@ -255,33 +261,14 @@ function SortableVariantItem({
                         />
                     </Group>
 
-                    <Group grow>
-                        <Textarea
-                            label="English Description (Optional)"
-                            maxLength={1000}
-                            minRows={3}
-                            onChange={(e) =>
-                                onUpdate(item.id, {
-                                    en_description: e.target.value,
-                                })
-                            }
-                            placeholder="Additional details..."
-                            value={item.en_description}
-                        />
-                        <Textarea
-                            dir="rtl"
-                            label="Arabic Description (Optional)"
-                            maxLength={1000}
-                            minRows={3}
-                            onChange={(e) =>
-                                onUpdate(item.id, {
-                                    ar_description: e.target.value,
-                                })
-                            }
-                            placeholder="تفاصيل إضافية..."
-                            value={item.ar_description}
-                        />
-                    </Group>
+                    <TagsInput
+                        label="Variant Sizes"
+                        onChange={(variant_sizes) =>
+                            onUpdate(item.id, { variant_sizes })
+                        }
+                        placeholder="Type size and press Enter (e.g., Small, Medium, Large)"
+                        value={item.variant_sizes}
+                    />
 
                     <FileButton accept="image/*" onChange={handleImageSelect}>
                         {(props) => (
@@ -293,24 +280,25 @@ function SortableVariantItem({
                             >
                                 {item.variant_photo_key ||
                                 item.variant_photo_file
-                                    ? "Change Image (Square)"
-                                    : "Select Image (Square)"}
+                                    ? "Change Image (1:1 Ratio Recommended)"
+                                    : "Select Image (1:1 Ratio Recommended)"}
                             </Button>
                         )}
                     </FileButton>
 
-                    {(item.variant_photo_key || previewUrl) && (
-                        <Image
-                            alt="Variant"
-                            fit="contain"
-                            h={200}
-                            radius="md"
-                            src={
-                                previewUrl ||
-                                `${process.env.NEXT_PUBLIC_ASSET_URL}/${item.variant_photo_key}`
-                            }
-                        />
-                    )}
+                    {match(imageSrc)
+                        .with(P.string, (imageSrc) => (
+                            <PhotoView src={imageSrc}>
+                                <Image
+                                    alt="Variant"
+                                    fit="contain"
+                                    h={200}
+                                    radius="md"
+                                    src={imageSrc}
+                                />
+                            </PhotoView>
+                        ))
+                        .otherwise(() => null)}
 
                     <Group justify="flex-end">
                         <ActionIcon
