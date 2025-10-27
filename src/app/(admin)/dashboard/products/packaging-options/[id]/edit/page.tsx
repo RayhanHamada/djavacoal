@@ -5,11 +5,14 @@ import { use } from "react";
 import { useRouter } from "next/navigation";
 
 import { Container, Paper, Stack, Text, Title } from "@mantine/core";
-import { notifications } from "@mantine/notifications";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 
 import { PackagingOptionForm } from "@/features/dashboard-product/components";
+import {
+    useImageUpload,
+    usePackagingOptionMutations,
+} from "@/features/dashboard-product/hooks";
 import { rpc } from "@/lib/rpc";
 
 export default function EditPackagingOptionPage({
@@ -27,28 +30,8 @@ export default function EditPackagingOptionPage({
         })
     );
 
-    const updateMutation = useMutation({
-        ...rpc.dashboardProduct.updatePackagingOption.mutationOptions(),
-        onSuccess: () => {
-            notifications.show({
-                title: t("form.success.updated"),
-                message: "",
-                color: "green",
-            });
-            router.push("/dashboard/products/packaging-options");
-        },
-        onError: () => {
-            notifications.show({
-                title: t("form.errors.updateFailed"),
-                message: "",
-                color: "red",
-            });
-        },
-    });
-
-    const generateUrlMutation = useMutation(
-        rpc.dashboardProduct.generateImageUploadUrl.mutationOptions()
-    );
+    const { updateMutation } = usePackagingOptionMutations();
+    const { uploadImage, isUploading } = useImageUpload();
 
     const handleSubmit = async (formData: {
         en_name: string;
@@ -63,24 +46,7 @@ export default function EditPackagingOptionPage({
 
             // If new photo is provided, upload it
             if (formData.photo) {
-                const urlData = await generateUrlMutation.mutateAsync({
-                    mimeType: formData.photo.type,
-                    size: formData.photo.size,
-                });
-
-                const uploadResponse = await fetch(urlData.uploadUrl, {
-                    method: "PUT",
-                    body: formData.photo,
-                    headers: {
-                        "Content-Type": formData.photo.type,
-                    },
-                });
-
-                if (!uploadResponse.ok) {
-                    throw new Error("Upload failed");
-                }
-
-                photoKey = urlData.key;
+                photoKey = await uploadImage(formData.photo);
             }
 
             // Update packaging option
@@ -92,12 +58,9 @@ export default function EditPackagingOptionPage({
                 ar_description: formData.ar_description,
                 photo_key: photoKey,
             });
-        } catch {
-            notifications.show({
-                title: t("form.errors.uploadFailed"),
-                message: "",
-                color: "red",
-            });
+        } catch (error) {
+            // Error handling is done in the hooks
+            console.error("Failed to update packaging option:", error);
         }
     };
 
@@ -137,10 +100,7 @@ export default function EditPackagingOptionPage({
                         onCancel={() =>
                             router.push("/dashboard/products/packaging-options")
                         }
-                        isSubmitting={
-                            updateMutation.isPending ||
-                            generateUrlMutation.isPending
-                        }
+                        isSubmitting={updateMutation.isPending || isUploading}
                         assetUrl={process.env.NEXT_PUBLIC_ASSET_URL}
                     />
                 </Paper>

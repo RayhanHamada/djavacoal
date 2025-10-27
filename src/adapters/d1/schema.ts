@@ -320,21 +320,14 @@ const PRODUCT_COLUMN_FIELDS = {
     [PRODUCT_COLUMNS.EN_DESCRIPTION]: text().notNull(),
     [PRODUCT_COLUMNS.AR_DESCRIPTION]: text().notNull(),
 
-    [PRODUCT_COLUMNS.MOQ]: int().notNull(),
+    [PRODUCT_COLUMNS.MOQ]: text().notNull(),
     [PRODUCT_COLUMNS.PRODUCTION_CAPACITY]: text().notNull(),
-
-    [PRODUCT_COLUMNS.PAYMENT_TERMS]: text({
-        mode: "json",
+    [PRODUCT_COLUMNS.IS_HIDDEN]: int({
+        mode: "boolean",
     })
         .notNull()
-        .$type<string[]>()
-        .$default(() => []),
-    [PRODUCT_COLUMNS.SHIPMENT_TERMS]: text({
-        mode: "json",
-    })
-        .notNull()
-        .$type<string[]>()
-        .$default(() => []),
+        .default(false),
+    [PRODUCT_COLUMNS.ORDER_INDEX]: int().notNull().default(0),
 } as const;
 
 /**
@@ -369,6 +362,11 @@ export const PRODUCT_MEDIA_COLUMN_FIELDS = {
      * if the media is a video, this is an optional custom thumbnail image key in S3
      */
     [PRODUCT_MEDIA_COLUMNS.VIDEO_CUSTOM_THUMBNAIL_KEY]: text(),
+
+    /**
+     * order index for sorting media items
+     */
+    [PRODUCT_MEDIA_COLUMNS.ORDER_INDEX]: int().notNull().default(0),
 } as const;
 
 export const PRODUCT_SPECIFICATION_COLUMN_FIELDS = {
@@ -386,6 +384,11 @@ export const PRODUCT_SPECIFICATION_COLUMN_FIELDS = {
      * specification photo key in S3
      */
     [PRODUCT_SPECIFICATION_COLUMNS.SPEC_PHOTO_KEY]: text().notNull(),
+
+    /**
+     * order index for sorting specification items
+     */
+    [PRODUCT_SPECIFICATION_COLUMNS.ORDER_INDEX]: int().notNull().default(0),
 } as const;
 
 export const PRODUCT_VARIANT_COLUMN_FIELDS = {
@@ -396,7 +399,7 @@ export const PRODUCT_VARIANT_COLUMN_FIELDS = {
     /**
      * references the product table (id)
      */
-    [PRODUCT_SPECIFICATION_COLUMNS.PRODUCT_ID]: int()
+    [PRODUCT_VARIANT_COLUMNS.PRODUCT_ID]: int()
         .notNull()
         .references(() => products.id, {
             onDelete: "cascade",
@@ -414,7 +417,7 @@ export const PRODUCT_VARIANT_COLUMN_FIELDS = {
     [PRODUCT_VARIANT_COLUMNS.VARIANT_PHOTO_KEY]: text().notNull(),
 
     /**
-     * array of available sizes for this variant
+     * array of available sizes for this variant (e.g., ["Small", "Medium", "Large"])
      */
     [PRODUCT_VARIANT_COLUMNS.VARIANT_SIZES]: text({
         mode: "json",
@@ -422,6 +425,11 @@ export const PRODUCT_VARIANT_COLUMN_FIELDS = {
         .notNull()
         .$type<string[]>()
         .$default(() => []),
+
+    /**
+     * order index for sorting variant items
+     */
+    [PRODUCT_VARIANT_COLUMNS.ORDER_INDEX]: int().notNull().default(0),
 };
 
 export const PRODUCT_PACKAGING_OPTION_COLUMN_FIELDS = {

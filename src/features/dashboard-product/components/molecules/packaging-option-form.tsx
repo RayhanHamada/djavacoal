@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import type { PackagingOptionFormValues } from "../../utils/form-schemas";
 
 import {
     Box,
@@ -10,24 +10,17 @@ import {
     Image,
     Stack,
     Text,
-    Textarea,
     TextInput,
 } from "@mantine/core";
 import { IconPhoto, IconTrash } from "@tabler/icons-react";
 import { useTranslations } from "next-intl";
 
-type PackagingOptionFormData = {
-    en_name: string;
-    ar_name: string;
-    en_description: string;
-    ar_description: string;
-    photo?: File;
-    photo_key?: string;
-};
+import { usePackagingOptionForm } from "../../hooks";
+import { RichTextEditor } from "../atoms";
 
 type PackagingOptionFormProps = {
-    initialData?: PackagingOptionFormData;
-    onSubmit: (data: PackagingOptionFormData & { photo?: File }) => void;
+    initialData?: PackagingOptionFormValues;
+    onSubmit: (data: PackagingOptionFormValues & { photo?: File }) => void;
     onCancel: () => void;
     isSubmitting: boolean;
     assetUrl?: string;
@@ -42,43 +35,17 @@ export function PackagingOptionForm({
 }: PackagingOptionFormProps) {
     const t = useTranslations("PackagingOptions.form");
 
-    const [formData, setFormData] = useState<PackagingOptionFormData>({
-        en_name: initialData?.en_name || "",
-        ar_name: initialData?.ar_name || "",
-        en_description: initialData?.en_description || "",
-        ar_description: initialData?.ar_description || "",
-        photo_key: initialData?.photo_key,
+    const {
+        form,
+        photoPreview,
+        handlePhotoChange,
+        handleRemovePhoto,
+        getSubmitData,
+    } = usePackagingOptionForm({ initialData, assetUrl });
+
+    const handleSubmit = form.onSubmit((values) => {
+        onSubmit(getSubmitData(values));
     });
-
-    const [photoFile, setPhotoFile] = useState<File | null>(null);
-    const [photoPreview, setPhotoPreview] = useState<string | null>(
-        initialData?.photo_key ? `${assetUrl}${initialData.photo_key}` : null
-    );
-
-    const handlePhotoChange = (file: File | null) => {
-        if (file) {
-            setPhotoFile(file);
-            const reader = new FileReader();
-            reader.onloadend = () => {
-                setPhotoPreview(reader.result as string);
-            };
-            reader.readAsDataURL(file);
-        }
-    };
-
-    const handleRemovePhoto = () => {
-        setPhotoFile(null);
-        setPhotoPreview(null);
-        setFormData({ ...formData, photo_key: undefined });
-    };
-
-    const handleSubmit = (e: React.FormEvent) => {
-        e.preventDefault();
-        onSubmit({
-            ...formData,
-            photo: photoFile || undefined,
-        });
-    };
 
     return (
         <form onSubmit={handleSubmit}>
@@ -86,50 +53,48 @@ export function PackagingOptionForm({
                 <TextInput
                     label={t("enName")}
                     placeholder={t("enNamePlaceholder")}
-                    value={formData.en_name}
-                    onChange={(e) =>
-                        setFormData({ ...formData, en_name: e.target.value })
-                    }
                     required
+                    key={form.key("en_name")}
+                    {...form.getInputProps("en_name")}
                 />
 
                 <TextInput
                     label={t("arName")}
                     placeholder={t("arNamePlaceholder")}
-                    value={formData.ar_name}
-                    onChange={(e) =>
-                        setFormData({ ...formData, ar_name: e.target.value })
-                    }
                     required
+                    key={form.key("ar_name")}
+                    {...form.getInputProps("ar_name")}
                 />
 
-                <Textarea
-                    label={t("enDescription")}
-                    placeholder={t("enDescriptionPlaceholder")}
-                    value={formData.en_description}
-                    onChange={(e) =>
-                        setFormData({
-                            ...formData,
-                            en_description: e.target.value,
-                        })
-                    }
-                    required
-                    minRows={3}
-                />
+                <Box>
+                    <Text size="sm" fw={500} mb="xs">
+                        {t("enDescription")}{" "}
+                        <span style={{ color: "red" }}>*</span>
+                    </Text>
+                    <RichTextEditor
+                        value={form.getValues().en_description}
+                        onChange={(value) =>
+                            form.setFieldValue("en_description", value)
+                        }
+                        placeholder={t("enDescriptionPlaceholder")}
+                        error={form.errors.en_description}
+                    />
+                </Box>
 
-                <Textarea
-                    label={t("arDescription")}
-                    placeholder={t("arDescriptionPlaceholder")}
-                    value={formData.ar_description}
-                    onChange={(e) =>
-                        setFormData({
-                            ...formData,
-                            ar_description: e.target.value,
-                        })
-                    }
-                    required
-                    minRows={3}
-                />
+                <Box>
+                    <Text size="sm" fw={500} mb="xs">
+                        {t("arDescription")}{" "}
+                        <span style={{ color: "red" }}>*</span>
+                    </Text>
+                    <RichTextEditor
+                        value={form.getValues().ar_description}
+                        onChange={(value) =>
+                            form.setFieldValue("ar_description", value)
+                        }
+                        placeholder={t("arDescriptionPlaceholder")}
+                        error={form.errors.ar_description}
+                    />
+                </Box>
 
                 <Box>
                     <Text size="sm" fw={500} mb="xs">
@@ -180,11 +145,8 @@ export function PackagingOptionForm({
                         type="submit"
                         loading={isSubmitting}
                         disabled={
-                            !formData.en_name ||
-                            !formData.ar_name ||
-                            !formData.en_description ||
-                            !formData.ar_description ||
-                            (!photoFile && !formData.photo_key)
+                            !form.isValid() ||
+                            (!form.getValues().photo_key && !photoPreview)
                         }
                     >
                         {initialData ? t("submitEdit") : t("submitCreate")}

@@ -81,7 +81,7 @@ export function NavigationFooter() {
             <Menu.Dropdown>
                 <Menu.Label>Account</Menu.Label>
                 <Menu.Item leftSection={<IconUser size={16} />}>
-                    <Link href="/dashboard/profile">My Profile</Link>
+                    <Link href="/dashboard/admins/me">My Profile</Link>
                 </Menu.Item>
                 <Menu.Divider />
                 <Menu.Item

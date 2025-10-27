@@ -10,6 +10,7 @@ import {
     IconList,
     IconPhoto,
     IconPackage,
+    IconCode,
 } from "@tabler/icons-react";
 
 export const navigationConfig: NavigationItem[] = [
@@ -57,12 +58,34 @@ export const navigationConfig: NavigationItem[] = [
         label: "Admin",
         icon: IconUser,
         description: "Administrative panels",
-        href: "/dashboard/admins",
+        children: [
+            {
+                icon: IconList,
+                label: "Manage Admins",
+                href: "/dashboard/admins",
+            },
+            {
+                icon: IconUser,
+                label: "My Profile",
+                href: "/dashboard/admins/me",
+            },
+        ],
     },
     {
         label: "Page Settings",
         icon: IconLayoutDashboard,
         description: "Page configurations",
-        href: "/dashboard/settings",
+        children: [
+            {
+                icon: IconCode,
+                label: "SEO Metadata",
+                href: "/dashboard/page-settings/seo-metadata",
+            },
+            {
+                icon: IconPhoto,
+                label: "Media Configuration",
+                href: "/dashboard/page-settings/media-configuration",
+            },
+        ],
     },
 ];

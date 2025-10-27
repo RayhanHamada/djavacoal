@@ -111,8 +111,8 @@ export const PRODUCT_COLUMNS = {
     AR_DESCRIPTION: "ar_description",
     MOQ: "moq",
     PRODUCTION_CAPACITY: "production_capacity",
-    PAYMENT_TERMS: "payment_terms",
-    SHIPMENT_TERMS: "shipment_terms",
+    IS_HIDDEN: "is_hidden",
+    ORDER_INDEX: "order_index",
 } as const;
 
 export const PRODUCT_MEDIA_COLUMNS = {
@@ -132,6 +132,11 @@ export const PRODUCT_MEDIA_COLUMNS = {
      * if the media is a video, this is the custom thumbnail key in S3
      */
     VIDEO_CUSTOM_THUMBNAIL_KEY: "video_custom_thumbnail_key",
+
+    /**
+     * order index for sorting
+     */
+    ORDER_INDEX: "order_index",
 } as const;
 
 export const PRODUCT_VARIANT_COLUMNS = {
@@ -140,6 +145,7 @@ export const PRODUCT_VARIANT_COLUMNS = {
     AR_VARIANT_NAME: "ar_variant_name",
     VARIANT_PHOTO_KEY: "variant_photo_key",
     VARIANT_SIZES: "variant_sizes",
+    ORDER_INDEX: "order_index",
 } as const;
 
 export const PRODUCT_PACKAGING_OPTION_COLUMNS = {
@@ -150,6 +156,7 @@ export const PRODUCT_PACKAGING_OPTION_COLUMNS = {
 export const PRODUCT_SPECIFICATION_COLUMNS = {
     PRODUCT_ID: "product_id",
     SPEC_PHOTO_KEY: "spec_photo_key",
+    ORDER_INDEX: "order_index",
 } as const;
 
 /**

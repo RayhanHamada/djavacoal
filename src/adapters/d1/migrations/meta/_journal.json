@@ -1,83 +1,111 @@
 {
-    "version": "7",
-    "dialect": "sqlite",
-    "entries": [
-        {
-            "idx": 0,
-            "version": "6",
-            "when": 1759742039341,
-            "tag": "0000_init-better-auth",
-            "breakpoints": true
-        },
-        {
-            "idx": 1,
-            "version": "6",
-            "when": 1760766021672,
-            "tag": "0001_add-admin-plugin-fields",
-            "breakpoints": true
-        },
-        {
-            "idx": 2,
-            "version": "6",
-            "when": 1760778427000,
-            "tag": "0002_add-gallery-photos",
-            "breakpoints": true
-        },
-        {
-            "idx": 3,
-            "version": "6",
-            "when": 1760855838742,
-            "tag": "0003_init_news_feature",
-            "breakpoints": true
-        },
-        {
-            "idx": 4,
-            "version": "6",
-            "when": 1760878367776,
-            "tag": "0004_simplify_news_schema",
-            "breakpoints": true
-        },
-        {
-            "idx": 5,
-            "version": "6",
-            "when": 1760887111352,
-            "tag": "0005_spotty_calypso",
-            "breakpoints": true
-        },
-        {
-            "idx": 6,
-            "version": "6",
-            "when": 1760933539249,
-            "tag": "0006_icy_carlie_cooper",
-            "breakpoints": true
-        },
-        {
-            "idx": 7,
-            "version": "6",
-            "when": 1760937935608,
-            "tag": "0007_motionless_gwen_stacy",
-            "breakpoints": true
-        },
-        {
-            "idx": 8,
-            "version": "6",
-            "when": 1761038050155,
-            "tag": "0008_brief_medusa",
-            "breakpoints": true
-        },
-        {
-            "idx": 9,
-            "version": "6",
-            "when": 1761307077119,
-            "tag": "0009_hard_zuras",
-            "breakpoints": true
-        },
-        {
-            "idx": 10,
-            "version": "6",
-            "when": 1761332778155,
-            "tag": "0010_burly_ozymandias",
-            "breakpoints": true
-        }
-    ]
+  "version": "7",
+  "dialect": "sqlite",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "6",
+      "when": 1759742039341,
+      "tag": "0000_init-better-auth",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "6",
+      "when": 1760766021672,
+      "tag": "0001_add-admin-plugin-fields",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1760778427000,
+      "tag": "0002_add-gallery-photos",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "6",
+      "when": 1760855838742,
+      "tag": "0003_init_news_feature",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "6",
+      "when": 1760878367776,
+      "tag": "0004_simplify_news_schema",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "6",
+      "when": 1760887111352,
+      "tag": "0005_spotty_calypso",
+      "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "6",
+      "when": 1760933539249,
+      "tag": "0006_icy_carlie_cooper",
+      "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "6",
+      "when": 1760937935608,
+      "tag": "0007_motionless_gwen_stacy",
+      "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "6",
+      "when": 1761038050155,
+      "tag": "0008_brief_medusa",
+      "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "6",
+      "when": 1761307077119,
+      "tag": "0009_hard_zuras",
+      "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "6",
+      "when": 1761332778155,
+      "tag": "0010_burly_ozymandias",
+      "breakpoints": true
+    },
+    {
+      "idx": 11,
+      "version": "6",
+      "when": 1761393340812,
+      "tag": "0011_chilly_sheva_callister",
+      "breakpoints": true
+    },
+    {
+      "idx": 12,
+      "version": "6",
+      "when": 1761394687259,
+      "tag": "0012_odd_blockbuster",
+      "breakpoints": true
+    },
+    {
+      "idx": 13,
+      "version": "6",
+      "when": 1761465259326,
+      "tag": "0013_equal_nova",
+      "breakpoints": true
+    },
+    {
+      "idx": 14,
+      "version": "6",
+      "when": 1761465901014,
+      "tag": "0014_last_doctor_faustus",
+      "breakpoints": true
+    }
+  ]
 }
