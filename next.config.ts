@@ -5,9 +5,20 @@ import { initOpenNextCloudflareForDev } from "@opennextjs/cloudflare";
 import createNextIntlPlugin from "next-intl/plugin";
 
 const nextConfig: NextConfig = {
-    /* config options here */
     images: {
         remotePatterns: [
+            {
+                hostname: "i.ytimg.com",
+            },
+            {
+                hostname: "img.youtube.com",
+            },
+            {
+                hostname: "ytimg.googleusercontent.com",
+            },
+            {
+                hostname: "flagsapi.com",
+            },
             {
                 hostname: new URL(process.env.NEXT_PUBLIC_ASSET_URL).hostname,
             },
@@ -19,8 +30,7 @@ const nextConfig: NextConfig = {
 };
 
 /**
- * Wrap the Next.js config with the next-intl plugin
- * to enable internationalization support
+ * Wrap Next.js config with next-intl plugin (for i18n)
  */
 const withNextIntl = createNextIntlPlugin();
 const withBundleAnalyzer = nextBundleAnalyzer({
@@ -30,8 +40,6 @@ const withBundleAnalyzer = nextBundleAnalyzer({
 export default withBundleAnalyzer(withNextIntl(nextConfig));
 
 /**
- * Initialize OpenNext Cloudflare for development environment
- * to enable Cloudflare Workers support when running
- * `wrangler dev` command
+ * Initialize Cloudflare Workers dev environment
  */
 initOpenNextCloudflareForDev();
