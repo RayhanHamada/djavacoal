@@ -74,6 +74,9 @@ export const productFormSchema = z.object({
     medias: z
         .array(mediaItemSchema)
         .min(1, "At least one media item is required")
+        .refine((medias) => medias.at(0)?.media_type === "image", {
+            message: "The first media item must be an image",
+        })
         .refine(
             (medias) => medias.some((media) => media.media_type === "image"),
             {

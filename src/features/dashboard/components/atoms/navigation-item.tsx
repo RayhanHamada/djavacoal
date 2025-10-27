@@ -12,7 +12,7 @@ type Props = {
     defaultOpened?: boolean;
 };
 
-export function NavigationItemComponent({ item, defaultOpened = true }: Props) {
+export function NavigationItemComponent({ item, defaultOpened }: Props) {
     const Icon = item.icon;
     const [opened, setOpened] = useState(defaultOpened);
 

@@ -109,7 +109,7 @@ export function ProductCard({ product }: ProductCardProps) {
     }
 
     return (
-        <Card shadow="sm" padding="lg" radius="md" withBorder>
+        <Card shadow="sm" padding="lg" radius="md" withBorder h={450}>
             <Card.Section
                 component={Link}
                 href={`/dashboard/products/${product.id}/edit`}
