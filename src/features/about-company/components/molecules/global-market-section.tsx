@@ -6,16 +6,16 @@ export default function GlobalMarketSection() {
     return (
         <section
             id="global-market"
-            className="mt-2 scroll-mt-28 space-y-4 rounded-xl bg-[#222222] pb-6"
+            className="mt-2 scroll-mt-28 space-y-4 rounded-xl bg-[#222222] p-[40px]"
         >
             {/* === Heading === */}
-            <header className="mb-2 pt-4">
+            <header className="mb-2">
                 <motion.div
                     initial={{ opacity: 0, y: 30 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true, amount: 0.3 }}
                     transition={{ duration: 0.6, ease: "easeOut" }}
-                    className="mb-2 flex items-center gap-3 px-6"
+                    className="mb-2 flex items-center gap-3"
                 >
                     <div className="h-[1px] w-8 bg-white" />
                     <p className="text-sm font-medium tracking-wide text-[#60A5FF] italic">
@@ -28,7 +28,7 @@ export default function GlobalMarketSection() {
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
                     transition={{ duration: 0.65, ease: "easeOut" }}
-                    className="px-6 text-xl leading-snug font-semibold text-white md:text-2xl"
+                    className="text-xl leading-snug font-semibold text-white md:text-2xl"
                 >
                     Bringing Indonesia’s Finest Charcoal to the Global Market
                 </motion.h2>
@@ -38,7 +38,7 @@ export default function GlobalMarketSection() {
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
                     transition={{ duration: 0.7, ease: "easeOut" }}
-                    className="px-6 font-medium text-[#EFA12D]"
+                    className="font-medium text-[#EFA12D]"
                 >
                     Delivering Premium Products With Integrity, Innovation, And
                     Care
@@ -48,7 +48,7 @@ export default function GlobalMarketSection() {
                     initial={{ scaleX: 0 }}
                     whileInView={{ scaleX: 1 }}
                     transition={{ duration: 0.6, ease: "easeOut" }}
-                    className="mt-4 h-[1px] origin-left bg-[#3A3A3A] px-6"
+                    className="mt-4 h-[1px] origin-left bg-[#3A3A3A]"
                 />
             </header>
 
@@ -58,7 +58,7 @@ export default function GlobalMarketSection() {
                 whileInView={{ opacity: 1 }}
                 viewport={{ once: true, margin: "-50px" }}
                 transition={{ duration: 0.8 }}
-                className="space-y-5 px-6 text-justify leading-relaxed text-gray-300 lg:text-lg"
+                className="space-y-5 text-justify leading-relaxed text-gray-300 lg:text-lg"
             >
                 <p>
                     At{" "}

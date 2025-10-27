@@ -41,27 +41,27 @@ export default function CompanyIntroSection() {
     return (
         <section
             id="company-intro"
-            className="mt-2 scroll-mt-28 space-y-4 rounded-xl bg-[#222222] pb-6"
+            className="mt-2 scroll-mt-28 space-y-4 rounded-xl bg-[#222222] p-[40px]"
         >
             {/* === Heading === */}
-            <header className="mb-2 pt-4">
-                <div className="mb-2 flex items-center gap-3 px-6">
+            <header className="mb-2">
+                <div className="mb-2 flex items-center gap-3">
                     <div className="h-[1px] w-8 bg-white" />
                     <p className="text-sm font-medium tracking-wide text-[#60A5FF] italic">
                         Production Process
                     </p>
                 </div>
-                <h2 className="px-6 text-xl leading-snug font-semibold text-white md:text-2xl">
+                <h2 className="text-xl leading-snug font-semibold text-white md:text-2xl">
                     How We Craft Quality Charcoal for Global Markets
                 </h2>
-                <p className="px-6 font-medium text-[#EFA12D]">
+                <p className="font-medium text-[#EFA12D]">
                     Leading Indonesian Charcoal Manufacturer
                 </p>
-                <div className="mt-4 h-[1px] bg-[#3A3A3A] px-6" />
+                <div className="mt-4 h-[1px] bg-[#3A3A3A]" />
             </header>
 
             {/* === Video Section === */}
-            <div className="flex w-full px-6">
+            <div className="flex w-full">
                 <div className="relative aspect-video w-full max-w-[849px] overflow-hidden rounded-xl">
                     {playVideo ? (
                         <>
@@ -140,7 +140,7 @@ export default function CompanyIntroSection() {
             </div>
 
             {/* === Social Media Links === */}
-            <div className="flex space-x-3 px-6">
+            <div className="flex space-x-3">
                 <Link
                     href="#"
                     className="border-1 bg-transparent p-2 hover:bg-gray-500"
@@ -162,7 +162,7 @@ export default function CompanyIntroSection() {
             </div>
 
             {/* === Description === */}
-            <div className="space-y-4 px-6 text-justify leading-relaxed text-gray-200">
+            <div className="space-y-4 text-justify leading-relaxed text-gray-200">
                 <p>
                     <strong>CV Djavacoal Indonesia</strong> is a trusted
                     supplier and exporter of premium charcoal products,
@@ -199,7 +199,7 @@ export default function CompanyIntroSection() {
             </div>
 
             {/* === Company Legal Data === */}
-            <div className="space-y-4 px-6">
+            <div className="space-y-4">
                 <h3 className="text-lg font-semibold">Company Legal Data</h3>
 
                 <div className="overflow-hidden rounded-md border border-[#2A2A2A] text-sm">
@@ -276,7 +276,7 @@ export default function CompanyIntroSection() {
             </div>
 
             {/* === Export Countries === */}
-            <div className="space-y-4 px-6 py-4">
+            <div className="space-y-4 py-4">
                 <h3 className="text-lg font-semibold">
                     Countries We Have Exported To
                 </h3>
