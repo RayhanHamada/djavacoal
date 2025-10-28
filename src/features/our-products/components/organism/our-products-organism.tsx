@@ -127,14 +127,14 @@ export function ProductPage() {
                         <OurProductsSidebar />
                     </div>
 
-                    <div className="space-y-12 bg-[#222222] lg:mt-4">
+                    <div className="space-y-12 rounded-xl bg-[#222222] lg:mt-16 lg:px-6 lg:py-6">
                         {/* Product Content */}
                         <div className="flex flex-col gap-10">
-                            <div className="grid lg:grid-cols-[420px_1fr]">
-                                <div className="lg:py-16">
+                            <div className="grid gap-x-10 lg:grid-cols-[420px_1fr]">
+                                <div className="hidden lg:block">
                                     <VideoGallerySection />
                                 </div>
-                                <div className="lg:py-16">
+                                <div className="">
                                     <ProductHeroSection
                                         productName={currentProduct.name}
                                         productImage={currentProduct.image}
@@ -145,7 +145,7 @@ export function ProductPage() {
                                     />
 
                                     {/* Divider */}
-                                    <div className="h-[1px] w-full bg-[#393939]" />
+                                    <div className="my-6 h-[1px] w-full bg-[#393939]" />
 
                                     {/* Description Section */}
                                     <div className="flex flex-col gap-3">
@@ -158,7 +158,7 @@ export function ProductPage() {
                                     </div>
 
                                     {/* Divider */}
-                                    <div className="h-[1px] w-full bg-[#393939]" />
+                                    <div className="my-6 h-[1px] w-full bg-[#393939]" />
 
                                     {/* Specifications Section */}
                                     <div className="flex flex-col gap-5">
@@ -182,7 +182,7 @@ export function ProductPage() {
                                     </div>
 
                                     {/* Divider */}
-                                    <div className="h-[1px] w-full bg-[#393939]" />
+                                    <div className="my-6 h-[1px] w-full bg-[#393939]" />
 
                                     {/* Shapes Section */}
                                     <ShapesList
@@ -190,7 +190,7 @@ export function ProductPage() {
                                     />
 
                                     {/* Divider */}
-                                    <div className="h-[1px] w-full bg-[#393939]" />
+                                    <div className="my-6 h-[1px] w-full bg-[#393939]" />
 
                                     {/* Packaging Options Section */}
                                     <PackagingList
@@ -200,7 +200,7 @@ export function ProductPage() {
                                     />
 
                                     {/* Divider */}
-                                    <div className="h-[1px] w-full bg-[#393939]" />
+                                    <div className="my-6 h-[1px] w-full bg-[#393939]" />
 
                                     {/* Detail Information Section */}
                                     <div className="flex flex-col gap-5">
