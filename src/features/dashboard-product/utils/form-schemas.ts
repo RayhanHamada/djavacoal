@@ -15,23 +15,38 @@ export const packagingOptionFormSchema = z.object({
 /**
  * Schema for media items (images and YouTube videos)
  */
-const mediaItemSchema = z.discriminatedUnion("media_type", [
-    z.object({
+const mediaItemSchema = z
+    .object({
         id: z.string(),
-        media_type: z.literal("image"),
-        image_key: z.string(),
-        image_file: z.instanceof(File).optional(),
         order_index: z.number(),
-    }),
-    z.object({
-        id: z.string(),
-        media_type: z.literal("youtube"),
-        youtube_video_id: z.string(),
-        video_custom_thumbnail_key: z.string().optional(),
-        video_custom_thumbnail_file: z.instanceof(File).optional(),
-        order_index: z.number(),
-    }),
-]);
+    })
+    .and(
+        z.discriminatedUnion("media_type", [
+            z.object({
+                media_type: z.literal("image"),
+                image_key: z.string(),
+                image_file: z
+                    .file()
+                    .mime(
+                        ["image/png", "image/jpeg", "image/jpg"],
+                        "Supported image formats for image item are PNG and JPEG"
+                    )
+                    .optional(),
+            }),
+            z.object({
+                media_type: z.literal("youtube"),
+                youtube_video_id: z.string(),
+                video_custom_thumbnail_key: z.string().optional(),
+                video_custom_thumbnail_file: z
+                    .file()
+                    .mime(
+                        ["image/png", "image/jpeg", "image/jpg"],
+                        "Supported image formats for video custom thumbnail are PNG and JPEG"
+                    )
+                    .optional(),
+            }),
+        ])
+    );
 
 /**
  * Schema for specification items
@@ -52,7 +67,13 @@ const variantItemSchema = z.object({
     ar_variant_name: z.string(),
     variant_photo_key: z.string(),
     variant_sizes: z.array(z.string()).min(1, "At least one size is required"),
-    variant_photo_file: z.instanceof(File).optional(),
+    variant_photo_file: z
+        .file()
+        .mime(
+            ["image/png", "image/jpeg", "image/jpg"],
+            "Supported image formats for variant items are PNG and JPEG"
+        )
+        .optional(),
     order_index: z.number(),
 });
 
@@ -74,14 +95,13 @@ export const productFormSchema = z.object({
     medias: z
         .array(mediaItemSchema)
         .min(1, "At least one media item is required")
-        .refine((medias) => medias.at(0)?.media_type === "image", {
-            message: "The first media item must be an image",
-        })
+        .refine(
+            (medias) => medias.at(0)?.media_type === "image",
+            "The first media item must be an image"
+        )
         .refine(
             (medias) => medias.some((media) => media.media_type === "image"),
-            {
-                message: "At least one image media is required",
-            }
+            "At least one image media is required"
         ),
     specifications: z
         .array(specificationItemSchema)

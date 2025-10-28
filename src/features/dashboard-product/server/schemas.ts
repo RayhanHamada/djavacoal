@@ -167,21 +167,24 @@ export const GenerateImageUploadUrlOutputSchema = z.object({
 /**
  * Schema for product media items
  */
-export const ProductMediaItemSchema = z.discriminatedUnion("media_type", [
-    z.object({
+export const ProductMediaItemSchema = z
+    .object({
         id: z.number().optional(),
-        media_type: z.literal("image"),
-        image_key: z.string(),
         order_index: z.number(),
-    }),
-    z.object({
-        id: z.number().optional(),
-        media_type: z.literal("youtube"),
-        youtube_video_id: z.string(),
-        video_custom_thumbnail_key: z.string().optional(),
-        order_index: z.number(),
-    }),
-]);
+    })
+    .and(
+        z.discriminatedUnion("media_type", [
+            z.object({
+                media_type: z.literal("image"),
+                image_key: z.string(),
+            }),
+            z.object({
+                media_type: z.literal("youtube"),
+                youtube_video_id: z.string(),
+                video_custom_thumbnail_key: z.string().optional(),
+            }),
+        ])
+    );
 
 export type ProductMediaItem = z.infer<typeof ProductMediaItemSchema>;
 
