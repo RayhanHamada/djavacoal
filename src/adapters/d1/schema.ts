@@ -6,6 +6,13 @@ import {
     COMMON_COLUMNS,
     GALLERY_PHOTO_COLUMNS,
     NEWS_COLUMNS,
+    PACKAGING_OPTION_COLUMNS,
+    PRODUCT_COLUMNS,
+    PRODUCT_MEDIA_COLUMNS,
+    PRODUCT_MEDIA_TYPE,
+    PRODUCT_PACKAGING_OPTION_COLUMNS,
+    PRODUCT_SPECIFICATION_COLUMNS,
+    PRODUCT_VARIANT_COLUMNS,
     SESSION_COLUMNS,
     TABLE_NAMES,
     TAG_COLUMNS,
@@ -281,6 +288,169 @@ const TAG_COLUMN_FIELDS = {
 } as const;
 
 /**
+ * table used for packaging options
+ */
+const PACKAGING_OPTION_COLUMN_FIELDS = {
+    ...COMMON_FIELDS,
+    ...COMMON_AUTHORED_FIELDS,
+
+    /**
+     * primary key for the packaging_options table
+     */
+    [COMMON_COLUMNS.ID]: int().primaryKey(),
+
+    [PACKAGING_OPTION_COLUMNS.EN_NAME]: text().notNull(),
+    [PACKAGING_OPTION_COLUMNS.AR_NAME]: text().notNull(),
+    [PACKAGING_OPTION_COLUMNS.EN_DESCRIPTION]: text().notNull(),
+    [PACKAGING_OPTION_COLUMNS.AR_DESCRIPTION]: text().notNull(),
+    [PACKAGING_OPTION_COLUMNS.PHOTO_KEY]: text().notNull(),
+} as const;
+
+/**
+ * table used for products
+ */
+const PRODUCT_COLUMN_FIELDS = {
+    ...COMMON_AUTHORED_FIELDS,
+    ...COMMON_FIELDS,
+
+    [COMMON_COLUMNS.ID]: int().primaryKey(),
+
+    [PRODUCT_COLUMNS.EN_NAME]: text().notNull(),
+    [PRODUCT_COLUMNS.AR_NAME]: text().notNull(),
+    [PRODUCT_COLUMNS.EN_DESCRIPTION]: text().notNull(),
+    [PRODUCT_COLUMNS.AR_DESCRIPTION]: text().notNull(),
+
+    [PRODUCT_COLUMNS.MOQ]: text().notNull(),
+    [PRODUCT_COLUMNS.PRODUCTION_CAPACITY]: text().notNull(),
+    [PRODUCT_COLUMNS.IS_HIDDEN]: int({
+        mode: "boolean",
+    })
+        .notNull()
+        .default(false),
+    [PRODUCT_COLUMNS.ORDER_INDEX]: int().notNull().default(0),
+} as const;
+
+/**
+ * table used for product media
+ */
+export const PRODUCT_MEDIA_COLUMN_FIELDS = {
+    ...COMMON_FIELDS,
+
+    [COMMON_COLUMNS.ID]: int().primaryKey(),
+
+    [PRODUCT_MEDIA_COLUMNS.PRODUCT_ID]: int()
+        .notNull()
+        .references(() => products.id, {
+            onDelete: "cascade",
+        }),
+
+    [PRODUCT_MEDIA_COLUMNS.MEDIA_TYPE]: text({
+        enum: [PRODUCT_MEDIA_TYPE.IMAGE, PRODUCT_MEDIA_TYPE.YOUTUBE],
+    }).notNull(),
+
+    /**
+     * if the media is an image, this is the image key in S3
+     */
+    [PRODUCT_MEDIA_COLUMNS.IMAGE_KEY]: text(),
+
+    /**
+     * if the media is a video, this is the video id from youtube
+     */
+    [PRODUCT_MEDIA_COLUMNS.YOUTUBE_VIDEO_ID]: text(),
+
+    /**
+     * if the media is a video, this is an optional custom thumbnail image key in S3
+     */
+    [PRODUCT_MEDIA_COLUMNS.VIDEO_CUSTOM_THUMBNAIL_KEY]: text(),
+
+    /**
+     * order index for sorting media items
+     */
+    [PRODUCT_MEDIA_COLUMNS.ORDER_INDEX]: int().notNull().default(0),
+} as const;
+
+export const PRODUCT_SPECIFICATION_COLUMN_FIELDS = {
+    ...COMMON_FIELDS,
+
+    [COMMON_COLUMNS.ID]: int().primaryKey(),
+
+    [PRODUCT_SPECIFICATION_COLUMNS.PRODUCT_ID]: int()
+        .notNull()
+        .references(() => products.id, {
+            onDelete: "cascade",
+        }),
+
+    /**
+     * specification photo key in S3
+     */
+    [PRODUCT_SPECIFICATION_COLUMNS.SPEC_PHOTO_KEY]: text().notNull(),
+
+    /**
+     * order index for sorting specification items
+     */
+    [PRODUCT_SPECIFICATION_COLUMNS.ORDER_INDEX]: int().notNull().default(0),
+} as const;
+
+export const PRODUCT_VARIANT_COLUMN_FIELDS = {
+    ...COMMON_FIELDS,
+
+    [COMMON_COLUMNS.ID]: int().primaryKey(),
+
+    /**
+     * references the product table (id)
+     */
+    [PRODUCT_VARIANT_COLUMNS.PRODUCT_ID]: int()
+        .notNull()
+        .references(() => products.id, {
+            onDelete: "cascade",
+        }),
+
+    /**
+     * variant name (e.g., "Flat, Cube, Hexa")
+     */
+    [PRODUCT_VARIANT_COLUMNS.EN_VARIANT_NAME]: text().notNull(),
+    [PRODUCT_VARIANT_COLUMNS.AR_VARIANT_NAME]: text().notNull(),
+
+    /**
+     * variant photo key in S3
+     */
+    [PRODUCT_VARIANT_COLUMNS.VARIANT_PHOTO_KEY]: text().notNull(),
+
+    /**
+     * array of available sizes for this variant (e.g., ["Small", "Medium", "Large"])
+     */
+    [PRODUCT_VARIANT_COLUMNS.VARIANT_SIZES]: text({
+        mode: "json",
+    })
+        .notNull()
+        .$type<string[]>()
+        .$default(() => []),
+
+    /**
+     * order index for sorting variant items
+     */
+    [PRODUCT_VARIANT_COLUMNS.ORDER_INDEX]: int().notNull().default(0),
+};
+
+export const PRODUCT_PACKAGING_OPTION_COLUMN_FIELDS = {
+    ...COMMON_FIELDS,
+
+    [COMMON_COLUMNS.ID]: int().primaryKey(),
+
+    [PRODUCT_PACKAGING_OPTION_COLUMNS.PRODUCT_ID]: int()
+        .notNull()
+        .references(() => products.id, {
+            onDelete: "cascade",
+        }),
+
+    [PRODUCT_PACKAGING_OPTION_COLUMNS.PACKAGING_OPTION_ID]: int()
+        .notNull()
+        .references(() => packagingOptions.id, {
+            onDelete: "cascade",
+        }),
+} as const;
+
+/**
  * table used by better-auth to store users
  */
 
@@ -330,6 +500,42 @@ export const news = sqliteTable(TABLE_NAMES.NEWS, NEWS_COLUMN_FIELDS);
 export const tags = sqliteTable(TABLE_NAMES.TAGS, TAG_COLUMN_FIELDS);
 
 /**
+ * for storing packaging options
+ */
+export const packagingOptions = sqliteTable(
+    TABLE_NAMES.PACKAGING_OPTIONS,
+    PACKAGING_OPTION_COLUMN_FIELDS
+);
+
+/**
+ * for storing products
+ */
+export const products = sqliteTable(
+    TABLE_NAMES.PRODUCTS,
+    PRODUCT_COLUMN_FIELDS
+);
+
+export const productMedias = sqliteTable(
+    TABLE_NAMES.PRODUCT_MEDIAS,
+    PRODUCT_MEDIA_COLUMN_FIELDS
+);
+
+export const productPackagingOptions = sqliteTable(
+    TABLE_NAMES.PRODUCT_PACKAGING_OPTIONS,
+    PRODUCT_PACKAGING_OPTION_COLUMN_FIELDS
+);
+
+export const productSpecifications = sqliteTable(
+    TABLE_NAMES.PRODUCT_SPECIFICATIONS,
+    PRODUCT_SPECIFICATION_COLUMN_FIELDS
+);
+
+export const productVariants = sqliteTable(
+    TABLE_NAMES.PRODUCT_VARIANTS,
+    PRODUCT_VARIANT_COLUMN_FIELDS
+);
+
+/**
  * relations between tables
  */
 
@@ -362,3 +568,89 @@ export const newsRelations = relations(news, ({ one }) => ({
         references: [users[COMMON_COLUMNS.ID]],
     }),
 }));
+
+export const packagingOptionRelations = relations(
+    packagingOptions,
+    ({ one }) => ({
+        createdBy: one(users, {
+            fields: [packagingOptions[COMMON_COLUMNS.CREATED_BY]],
+            references: [users[COMMON_COLUMNS.ID]],
+        }),
+        updatedBy: one(users, {
+            fields: [packagingOptions[COMMON_COLUMNS.UPDATED_BY]],
+            references: [users[COMMON_COLUMNS.ID]],
+        }),
+    })
+);
+
+export const productMediaRelations = relations(productMedias, ({ one }) => ({
+    product: one(products, {
+        fields: [productMedias[PRODUCT_MEDIA_COLUMNS.PRODUCT_ID]],
+        references: [products[COMMON_COLUMNS.ID]],
+    }),
+}));
+
+export const productRelations = relations(products, ({ one, many }) => ({
+    createdBy: one(users, {
+        fields: [products[COMMON_COLUMNS.CREATED_BY]],
+        references: [users[COMMON_COLUMNS.ID]],
+    }),
+    updatedBy: one(users, {
+        fields: [products[COMMON_COLUMNS.UPDATED_BY]],
+        references: [users[COMMON_COLUMNS.ID]],
+    }),
+    medias: many(productMedias),
+    packagingOptions: many(productPackagingOptions),
+    specifications: many(productSpecifications),
+    variants: many(productVariants),
+}));
+
+export const productSpecificationRelations = relations(
+    productSpecifications,
+    ({ one }) => ({
+        product: one(products, {
+            fields: [
+                productSpecifications[PRODUCT_SPECIFICATION_COLUMNS.PRODUCT_ID],
+            ],
+            references: [products[COMMON_COLUMNS.ID]],
+        }),
+    })
+);
+
+export const productVariantRelations = relations(
+    productVariants,
+    ({ one }) => ({
+        product: one(products, {
+            fields: [productVariants[PRODUCT_VARIANT_COLUMNS.PRODUCT_ID]],
+            references: [products[COMMON_COLUMNS.ID]],
+        }),
+    })
+);
+
+export const productPackagingOptionRelations = relations(
+    productPackagingOptions,
+    ({ one }) => ({
+        product: one(products, {
+            fields: [
+                productPackagingOptions[
+                    PRODUCT_PACKAGING_OPTION_COLUMNS.PRODUCT_ID
+                ],
+            ],
+            references: [products[COMMON_COLUMNS.ID]],
+        }),
+        packagingOption: one(packagingOptions, {
+            fields: [
+                productPackagingOptions[
+                    PRODUCT_PACKAGING_OPTION_COLUMNS.PACKAGING_OPTION_ID
+                ],
+            ],
+            references: [packagingOptions[COMMON_COLUMNS.ID]],
+        }),
+    })
+);
+
+export const galleryPhotoRelations = relations(galleryPhotos, () => ({}));
+
+export const verificationRelations = relations(verifications, () => ({}));
+
+export const tagRelations = relations(tags, () => ({}));

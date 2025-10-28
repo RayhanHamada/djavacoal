@@ -6,8 +6,9 @@ import { RPCHandler } from "@orpc/server/fetch";
 import z from "zod/v4";
 
 import { router as admins } from "@/features/admin-auth/server/router";
-import { dashboardNews } from "@/features/dashboard-news/server";
-import { router as gallery } from "@/features/gallery/server/router";
+import { router as gallery } from "@/features/dashboard-gallery/server/router";
+import { router as dashboardNews } from "@/features/dashboard-news/server";
+import { router as dashboardProduct } from "@/features/dashboard-product/server";
 
 const router = {
     /**
@@ -16,6 +17,7 @@ const router = {
     admins,
     gallery,
     dashboardNews,
+    dashboardProduct,
 };
 
 const handler = new RPCHandler(router, {

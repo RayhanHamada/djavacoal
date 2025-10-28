@@ -6,9 +6,14 @@ export const TABLE_NAMES = {
     GALLERY_PHOTOS: "gallery_photos",
 
     NEWS: "news",
-    NEWS_METADATA: "news_metadatas",
-    NEWS_TITLE: "news_titles",
-    NEWS_CONTENT: "news_contents",
+
+    PACKAGING_OPTIONS: "packaging_options",
+
+    PRODUCTS: "products",
+    PRODUCT_MEDIAS: "product_medias",
+    PRODUCT_SPECIFICATIONS: "product_specifications",
+    PRODUCT_VARIANTS: "product_variants",
+    PRODUCT_PACKAGING_OPTIONS: "product_packaging_options",
 
     TAGS: "tags",
 } as const;
@@ -86,13 +91,84 @@ export const NEWS_COLUMNS = {
     PUBLISHED_BY: "published_by",
 } as const;
 
+export const TAG_COLUMNS = {
+    NAME: "name",
+    SLUG: "slug",
+} as const;
+
+export const PACKAGING_OPTION_COLUMNS = {
+    EN_NAME: "en_name",
+    AR_NAME: "ar_name",
+    EN_DESCRIPTION: "en_description",
+    AR_DESCRIPTION: "ar_description",
+    PHOTO_KEY: "photo_key",
+} as const;
+
+export const PRODUCT_COLUMNS = {
+    EN_NAME: "en_name",
+    AR_NAME: "ar_name",
+    EN_DESCRIPTION: "en_description",
+    AR_DESCRIPTION: "ar_description",
+    MOQ: "moq",
+    PRODUCTION_CAPACITY: "production_capacity",
+    IS_HIDDEN: "is_hidden",
+    ORDER_INDEX: "order_index",
+} as const;
+
+export const PRODUCT_MEDIA_COLUMNS = {
+    PRODUCT_ID: "product_id",
+    MEDIA_TYPE: "media_type",
+    /**
+     * if the media is an image, this is the image key in S3
+     */
+    IMAGE_KEY: "image_key",
+
+    /**
+     * if the media is a video, this is the video id from youtube
+     */
+    YOUTUBE_VIDEO_ID: "video_id",
+
+    /**
+     * if the media is a video, this is the custom thumbnail key in S3
+     */
+    VIDEO_CUSTOM_THUMBNAIL_KEY: "video_custom_thumbnail_key",
+
+    /**
+     * order index for sorting
+     */
+    ORDER_INDEX: "order_index",
+} as const;
+
+export const PRODUCT_VARIANT_COLUMNS = {
+    PRODUCT_ID: "product_id",
+    EN_VARIANT_NAME: "en_variant_name",
+    AR_VARIANT_NAME: "ar_variant_name",
+    VARIANT_PHOTO_KEY: "variant_photo_key",
+    VARIANT_SIZES: "variant_sizes",
+    ORDER_INDEX: "order_index",
+} as const;
+
+export const PRODUCT_PACKAGING_OPTION_COLUMNS = {
+    PRODUCT_ID: "product_id",
+    PACKAGING_OPTION_ID: "packaging_option_id",
+} as const;
+
+export const PRODUCT_SPECIFICATION_COLUMNS = {
+    PRODUCT_ID: "product_id",
+    SPEC_PHOTO_KEY: "spec_photo_key",
+    ORDER_INDEX: "order_index",
+} as const;
+
+/**
+ * constants related to table above
+ */
 export const NEWS_STATUS = {
     DRAFT: "draft",
     PUBLISHED: "published",
     UNPUBLISHED: "unpublished",
 } as const;
 
-export const TAG_COLUMNS = {
-    NAME: "name",
-    SLUG: "slug",
+export const PRODUCT_MEDIA_TYPE = {
+    IMAGE: "image",
+    YOUTUBE: "youtube",
 } as const;

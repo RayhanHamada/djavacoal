@@ -14,13 +14,13 @@ import {
     GalleryControls,
     GalleryModals,
     PhotoGrid,
-} from "@/features/gallery/components/organisms";
+} from "@/features/dashboard-gallery/components/organisms";
 import {
     useDragAndDrop,
     useGalleryData,
     useGalleryModals,
     useGalleryState,
-} from "@/features/gallery/hooks";
+} from "@/features/dashboard-gallery/hooks";
 
 /**
  * Main Gallery Page Component

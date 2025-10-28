@@ -23,6 +23,8 @@ import {
     SetPasswordInputSchema,
     CheckNeedsPasswordOutputSchema,
     RemoveAdminInputSchema,
+    UpdateNameInputSchema,
+    ChangePasswordInputSchema,
 } from "@/features/admin-auth/server/schema";
 import base from "@/lib/orpc/server";
 import {
@@ -366,6 +368,76 @@ export const removeAdmin = base
         } catch {
             throw errors.INTERNAL_SERVER_ERROR({
                 message: "Failed to remove user. Please try again.",
+            });
+        }
+    })
+    .callable();
+
+/**
+ * Update the authenticated user's name
+ */
+export const updateMyName = base
+    .input(UpdateNameInputSchema)
+    .handler(async function ({ context: { env }, input: { name }, errors }) {
+        const header = await headers();
+        const auth = getAuth(env);
+        const session = await auth.api.getSession({ headers: header });
+
+        if (!session?.user) {
+            throw errors.BAD_REQUEST({
+                message: "You must be authenticated",
+            });
+        }
+
+        try {
+            await auth.api.updateUser({
+                headers: header,
+                body: {
+                    name,
+                },
+            });
+        } catch {
+            throw errors.INTERNAL_SERVER_ERROR({
+                message: "Failed to update name",
+            });
+        }
+    })
+    .callable();
+
+/**
+ * Change the authenticated user's password
+ * Requires the current password for verification
+ */
+export const changeMyPassword = base
+    .input(ChangePasswordInputSchema)
+    .handler(async function ({
+        context: { env },
+        input: { currentPassword, newPassword },
+        errors,
+    }) {
+        const header = await headers();
+        const auth = getAuth(env);
+        const session = await auth.api.getSession({ headers: header });
+
+        if (!session?.user) {
+            throw errors.BAD_REQUEST({
+                message: "You must be authenticated",
+            });
+        }
+
+        try {
+            await auth.api.changePassword({
+                headers: header,
+                body: {
+                    currentPassword,
+                    newPassword,
+                    revokeOtherSessions: false, // Keep user signed in on all devices
+                },
+            });
+        } catch {
+            throw errors.BAD_REQUEST({
+                message:
+                    "Invalid current password or failed to change password",
             });
         }
     })

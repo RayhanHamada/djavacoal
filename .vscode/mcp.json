@@ -16,8 +16,8 @@
             "args":["chrome-devtools-mcp@latest"]
         },
         "Figma": {
-            "command": "cmd",
-            "args": ["/c", "npx", "-y", "figma-developer-mcp", "--figma-api-key=figd_ZP74crGN12X8aB6OmWAck4h5vigQ3jUtrEvU9kA3", "--stdio"]
+            "command": "bunx",
+            "args": ["-y", "figma-developer-mcp", "--figma-api-key={env:FIGMA_API_KEY}", "--stdio"]
         }
     }
 }

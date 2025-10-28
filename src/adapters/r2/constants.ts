@@ -19,6 +19,14 @@ export const NEWS_IMAGES_PREFIX = "news/images";
 export const NEWS_CONTENT_PREFIX = "news/content";
 
 /**
+ * Product folder prefixes in R2
+ */
+export const PRODUCT_MEDIA_PREFIX = "products/media";
+export const PRODUCT_SPECIFICATIONS_PREFIX = "products/specifications";
+export const PRODUCT_VARIANTS_PREFIX = "products/variants";
+export const PRODUCT_DESCRIPTIONS_PREFIX = "products/descriptions";
+
+/**
  * Presigned URL expiration time in seconds (1 hour)
  */
 export const PRESIGNED_URL_EXPIRATION = 3600;
