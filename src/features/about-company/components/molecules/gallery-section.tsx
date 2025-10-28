@@ -100,7 +100,7 @@ export default function GallerySection() {
     return (
         <section
             id="gallery"
-            className="mt-10 scroll-mt-28 space-y-6 rounded-xl bg-[#222222] p-[40px]"
+            className="mt-10 scroll-mt-28 space-y-6 rounded-xl bg-[#222222] p-[20px] lg:p-[40px]"
         >
             {/* === Heading === */}
             <header className="mb-2">
