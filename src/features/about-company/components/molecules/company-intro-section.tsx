@@ -41,7 +41,7 @@ export default function CompanyIntroSection() {
     return (
         <section
             id="company-intro"
-            className="mt-2 scroll-mt-28 space-y-4 rounded-xl bg-[#222222] p-[40px]"
+            className="mt-2 scroll-mt-28 space-y-4 rounded-xl bg-[#222222] p-[20px] lg:p-[40px]"
         >
             {/* === Heading === */}
             <header className="mb-2">
