@@ -127,7 +127,7 @@ export function ProductPage() {
                         <OurProductsSidebar />
                     </div>
 
-                    <div className="space-y-12 lg:py-16">
+                    <div className="space-y-12 bg-[#222222] lg:mt-4">
                         {/* Product Content */}
                         <div className="flex flex-col gap-10">
                             <div className="grid lg:grid-cols-[420px_1fr]">

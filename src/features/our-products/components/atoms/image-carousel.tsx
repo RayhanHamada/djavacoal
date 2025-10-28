@@ -49,7 +49,7 @@ function VideoThumbnail({
 
     return (
         <div
-            className="group relative aspect-video w-full cursor-pointer overflow-hidden rounded-lg bg-gray-900"
+            className="group relative aspect-video w-full cursor-pointer overflow-hidden rounded-lg"
             onMouseEnter={() => setIsHovering(true)}
             onMouseLeave={() => setIsHovering(false)}
             onClick={onOpenModal}
