@@ -18,7 +18,7 @@ export default function OurProductsPage() {
 
                 {/* Content */}
                 <div className="relative z-10 flex flex-col items-center gap-[214px] px-4 py-[125px]">
-                    <h1 className="text-center text-4xl leading-[46px] font-bold text-white md:text-5xl lg:text-[36px]">
+                    <h1 className="text-2xl font-semibold italic md:text-4xl">
                         Products
                     </h1>
                 </div>

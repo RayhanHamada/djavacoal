@@ -25,7 +25,7 @@ export function ProductHeroSection({
             {/* Mobile/Tablet: Vertical Layout | Desktop: Horizontal Layout */}
             <div className="flex flex-col gap-10 lg:flex-row lg:gap-10">
                 {/* Left Side: Product Image (Desktop) / Top (Mobile) */}
-                <div className="flex justify-center lg:w-[365px] lg:flex-shrink-0">
+                <div className="flex justify-center lg:hidden lg:w-[365px]">
                     <Image
                         src={productImage}
                         alt={productName}

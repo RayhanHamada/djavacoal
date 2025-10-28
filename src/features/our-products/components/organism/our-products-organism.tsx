@@ -127,11 +127,11 @@ export function ProductPage() {
                         <OurProductsSidebar />
                     </div>
 
-                    <div className="space-y-12 rounded-xl bg-[#222222] lg:mt-16 lg:px-6 lg:py-6">
+                    <div className="space-y-12 rounded-xl bg-[#222222] lg:mt-16 lg:px-10 lg:py-10">
                         {/* Product Content */}
                         <div className="flex flex-col gap-10">
-                            <div className="grid gap-x-10 lg:grid-cols-[420px_1fr]">
-                                <div className="hidden lg:block">
+                            <div className="grid gap-x-10 lg:grid-cols-[620px_1fr]">
+                                <div className="hidden grid-cols-1 lg:block">
                                     <VideoGallerySection />
                                 </div>
                                 <div className="">
