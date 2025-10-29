@@ -81,11 +81,6 @@ export const navigationConfig: NavigationItem[] = [
                 label: "SEO Metadata",
                 href: "/dashboard/page-settings/seo-metadata",
             },
-            {
-                icon: IconPhoto,
-                label: "Media Configuration",
-                href: "/dashboard/page-settings/media-configuration",
-            },
         ],
     },
 ];

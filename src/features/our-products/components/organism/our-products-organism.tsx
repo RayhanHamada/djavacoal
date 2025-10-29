@@ -102,7 +102,7 @@ const PRODUCT_DATA = {
 };
 
 export function ProductPage() {
-    const [selectedCategory, setSelectedCategory] = useState(
+    const [selectedCategory, _setSelectedCategory] = useState(
         PRODUCT_CATEGORIES[0]
     );
 
