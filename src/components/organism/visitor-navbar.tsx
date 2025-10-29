@@ -1,9 +1,11 @@
 "use client";
 
-import { PropsWithChildren, useState } from "react";
+import { PropsWithChildren, useMemo, useState } from "react";
 
 import Image from "next/image";
 import Link from "next/link";
+
+import { useTranslations } from "next-intl";
 
 import { HamburgerButton } from "@/components/atoms";
 import { MobileNavigationMenu, NavigationMenus } from "@/components/molecules";
@@ -12,95 +14,99 @@ import { cn } from "@/lib/utils";
 
 type Props = PropsWithChildren;
 
-// Menu items configuration for mobile menu
-const MENU_ITEMS = [
-    {
-        label: "Home",
-        href: "/",
-    },
-    {
-        label: "About Company",
-        submenus: [
-            {
-                label: "CV. Djavacoal Indonesia",
-                href: "/about#cv-djavacoal-indonesia",
-            },
-            {
-                label: "Djavacoal's Team",
-                href: "/about#djavacoals-team",
-            },
-            {
-                label: "What We Do ?",
-                href: "/about#what-we-do",
-            },
-            {
-                label: "Legal & Certificate",
-                href: "/about#legal-certificate",
-            },
-            {
-                label: "Factory",
-                href: "/about#factory",
-            },
-            {
-                label: "Our Gallery",
-                href: "/about#our-gallery",
-            },
-        ],
-    },
-    {
-        label: "Our Products",
-        submenus: [
-            {
-                label: "Coal",
-                href: "/products/coal",
-            },
-            {
-                label: "Hardwood Charcoal",
-                href: "/products/hardwood-charcoal",
-            },
-            {
-                label: "Coconut Shell Charcoal",
-                href: "/products/coconut-shell-charcoal",
-            },
-            {
-                label: "Bamboo Charcoal",
-                href: "/products/bamboo-charcoal",
-            },
-        ],
-    },
-    {
-        label: "Production Info",
-        submenus: [
-            {
-                label: "Production Process",
-                href: "/production-info#production-process",
-            },
-            {
-                label: "Shipment Terms",
-                href: "/production-info#shipment-terms",
-            },
-            {
-                label: "MOQ & Payment Terms",
-                href: "/production-info#moq-payment-terms",
-            },
-            {
-                label: "FAQ",
-                href: "/production-info#faq",
-            },
-        ],
-    },
-    {
-        label: "News & Articles",
-        href: "/news",
-    },
-    {
-        label: "Contact",
-        href: "/contact-us",
-    },
-];
-
 export default function VisitorNavbar(_: Props) {
+    const t = useTranslations("Navigation");
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+    // Menu items configuration for mobile menu with translations
+    const MENU_ITEMS = useMemo(
+        () => [
+            {
+                label: t("home"),
+                href: "/",
+            },
+            {
+                label: t("aboutCompany"),
+                submenus: [
+                    {
+                        label: t("aboutCompanySubmenus.cvDjavacoal"),
+                        href: "/about#cv-djavacoal-indonesia",
+                    },
+                    {
+                        label: t("aboutCompanySubmenus.team"),
+                        href: "/about#djavacoals-team",
+                    },
+                    {
+                        label: t("aboutCompanySubmenus.whatWeDo"),
+                        href: "/about#what-we-do",
+                    },
+                    {
+                        label: t("aboutCompanySubmenus.legalCertificate"),
+                        href: "/about#legal-certificate",
+                    },
+                    {
+                        label: t("aboutCompanySubmenus.factory"),
+                        href: "/about#factory",
+                    },
+                    {
+                        label: t("aboutCompanySubmenus.gallery"),
+                        href: "/about#our-gallery",
+                    },
+                ],
+            },
+            {
+                label: t("ourProducts"),
+                submenus: [
+                    {
+                        label: "Coal",
+                        href: "/products/coal",
+                    },
+                    {
+                        label: "Hardwood Charcoal",
+                        href: "/products/hardwood-charcoal",
+                    },
+                    {
+                        label: "Coconut Shell Charcoal",
+                        href: "/products/coconut-shell-charcoal",
+                    },
+                    {
+                        label: "Bamboo Charcoal",
+                        href: "/products/bamboo-charcoal",
+                    },
+                ],
+            },
+            {
+                label: t("productionInfo"),
+                submenus: [
+                    {
+                        label: t("productionInfoSubmenus.process"),
+                        href: "/production-info#production-process",
+                    },
+                    {
+                        label: t("productionInfoSubmenus.shipment"),
+                        href: "/production-info#shipment-terms",
+                    },
+                    {
+                        label: t("productionInfoSubmenus.moqPayment"),
+                        href: "/production-info#moq-payment-terms",
+                    },
+                    {
+                        label: t("productionInfoSubmenus.faq"),
+                        href: "/production-info#faq",
+                    },
+                ],
+            },
+            {
+                label: t("newsArticles"),
+                href: "/news",
+            },
+            {
+                label: t("contact"),
+                href: "/contact-us",
+            },
+        ],
+        [t]
+    );
 
     const toggleMobileMenu = () => {
         setIsMobileMenuOpen((prev) => !prev);

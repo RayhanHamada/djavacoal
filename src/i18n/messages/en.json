@@ -1,12 +1,25 @@
 {
-    "HomePage": {
-        "title": "Hello world!",
-        "navbar": {
-            "home": "Home",
-            "about": "About Company",
-            "ourProducts": "Our Products",
-            "contact": "Contact Us"
-        }
+    "Navigation": {
+        "home": "Home",
+        "aboutCompany": "About Company",
+        "aboutCompanySubmenus": {
+            "cvDjavacoal": "CV. Djavacoal Indonesia",
+            "team": "Djavacoal's Team",
+            "whatWeDo": "What We Do ?",
+            "legalCertificate": "Legal & Certificate",
+            "factory": "Factory",
+            "gallery": "Our Gallery"
+        },
+        "ourProducts": "Our Products",
+        "productionInfo": "Production Info",
+        "productionInfoSubmenus": {
+            "process": "Production Process",
+            "shipment": "Shipment Terms",
+            "moqPayment": "MOQ & Payment Terms",
+            "faq": "FAQ"
+        },
+        "newsArticles": "News & Articles",
+        "contact": "Contact"
     },
     "Gallery": {
         "title": "Photo Gallery",
