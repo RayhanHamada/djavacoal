@@ -1,4 +1,26 @@
 {
+    "Navigation": {
+        "home": "الرئيسية",
+        "aboutCompany": "عن الشركة",
+        "aboutCompanySubmenus": {
+            "cvDjavacoal": "CV. ديافاكوال إندونيسيا",
+            "team": "فريق ديافاكوال",
+            "whatWeDo": "ماذا نفعل؟",
+            "legalCertificate": "الشهادات القانونية",
+            "factory": "المصنع",
+            "gallery": "معرضنا"
+        },
+        "ourProducts": "منتجاتنا",
+        "productionInfo": "معلومات الإنتاج",
+        "productionInfoSubmenus": {
+            "process": "عملية الإنتاج",
+            "shipment": "شروط الشحن",
+            "moqPayment": "الحد الأدنى للطلب وشروط الدفع",
+            "faq": "الأسئلة الشائعة"
+        },
+        "newsArticles": "الأخبار والمقالات",
+        "contact": "اتصل بنا"
+    },
     "HomePage": {
         "title": "Halo Dunia !"
     },

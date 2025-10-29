@@ -1,5 +1,7 @@
 "use client";
 
+import { useTranslations } from "next-intl";
+
 import { NavigationMenuButton } from "@/components/atoms";
 
 const MOCK_PRODUCTS = [
@@ -22,74 +24,76 @@ const MOCK_PRODUCTS = [
 ];
 
 export function NavigationMenus() {
+    const t = useTranslations("Navigation");
+
     return (
         <div className="flex h-full items-center gap-x-4 self-stretch">
-            <NavigationMenuButton key="home" label="Home" href="/" />
+            <NavigationMenuButton key="home" label={t("home")} href="/" />
             <NavigationMenuButton
                 key="about"
-                label="About Company"
+                label={t("aboutCompany")}
                 submenus={[
                     {
-                        label: "CV. Djavacoal Indonesia",
+                        label: t("aboutCompanySubmenus.cvDjavacoal"),
                         href: "/about#cv-djavacoal-indonesia",
                     },
                     {
-                        label: "Djavacoal's Team",
+                        label: t("aboutCompanySubmenus.team"),
                         href: "/about#djavacoals-team",
                     },
                     {
-                        label: "What We Do ?",
+                        label: t("aboutCompanySubmenus.whatWeDo"),
                         href: "/about#what-we-do",
                     },
                     {
-                        label: "Legal & Certificate",
+                        label: t("aboutCompanySubmenus.legalCertificate"),
                         href: "/about#legal-certificate",
                     },
                     {
-                        label: "Factory",
+                        label: t("aboutCompanySubmenus.factory"),
                         href: "/about#factory",
                     },
                     {
-                        label: "Our Gallery",
+                        label: t("aboutCompanySubmenus.gallery"),
                         href: "/about#our-gallery",
                     },
                 ]}
             />
             <NavigationMenuButton
                 key="our-products"
-                label="Our Products"
+                label={t("ourProducts")}
                 submenus={MOCK_PRODUCTS}
             />
             <NavigationMenuButton
                 key="production-info"
-                label="Production Info"
+                label={t("productionInfo")}
                 submenus={[
                     {
-                        label: "Production Process",
+                        label: t("productionInfoSubmenus.process"),
                         href: "/production-info#production-process",
                     },
                     {
-                        label: "Shipment Terms",
+                        label: t("productionInfoSubmenus.shipment"),
                         href: "/production-info#shipment-terms",
                     },
                     {
-                        label: "MOQ & Payment Terms",
+                        label: t("productionInfoSubmenus.moqPayment"),
                         href: "/production-info#moq-payment-terms",
                     },
                     {
-                        label: "FAQ",
+                        label: t("productionInfoSubmenus.faq"),
                         href: "/production-info#faq",
                     },
                 ]}
             />
             <NavigationMenuButton
                 key="news-and-articles"
-                label="News & Articles"
+                label={t("newsArticles")}
                 href="/news"
             />
             <NavigationMenuButton
                 key="contact"
-                label="Contact"
+                label={t("contact")}
                 href="/contact-us"
             />
         </div>
