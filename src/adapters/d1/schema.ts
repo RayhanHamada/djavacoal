@@ -7,6 +7,7 @@ import {
     GALLERY_PHOTO_COLUMNS,
     NEWS_COLUMNS,
     PACKAGING_OPTION_COLUMNS,
+    PAGE_METADATA_COLUMNS,
     PRODUCT_COLUMNS,
     PRODUCT_MEDIA_COLUMNS,
     PRODUCT_MEDIA_TYPE,
@@ -451,6 +452,40 @@ export const PRODUCT_PACKAGING_OPTION_COLUMN_FIELDS = {
 } as const;
 
 /**
+ * for storing page metadata for SEO purposes
+ */
+export const PAGE_METADATA_COLUMN_FIELDS = {
+    ...COMMON_FIELDS,
+
+    [COMMON_COLUMNS.ID]: int().primaryKey(),
+
+    /**
+     * the path of the page
+     */
+    [PAGE_METADATA_COLUMNS.PATH]: text().notNull().unique(),
+
+    /**
+     * SEO metadata fields
+     */
+    [PAGE_METADATA_COLUMNS.METADATA_TITLE]: text().notNull(),
+
+    /**
+     * description for SEO
+     */
+    [PAGE_METADATA_COLUMNS.METADATA_DESCRIPTION]: text().notNull(),
+
+    /**
+     * keywords for SEO
+     */
+    [PAGE_METADATA_COLUMNS.METADATA_KEYWORDS]: text({
+        mode: "json",
+    })
+        .notNull()
+        .$type<string[]>()
+        .$default(() => []),
+} as const;
+
+/**
  * table used by better-auth to store users
  */
 
@@ -533,6 +568,11 @@ export const productSpecifications = sqliteTable(
 export const productVariants = sqliteTable(
     TABLE_NAMES.PRODUCT_VARIANTS,
     PRODUCT_VARIANT_COLUMN_FIELDS
+);
+
+export const pageMetadatas = sqliteTable(
+    TABLE_NAMES.PAGE_METADATAS,
+    PAGE_METADATA_COLUMN_FIELDS
 );
 
 /**

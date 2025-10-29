@@ -16,6 +16,8 @@ export const TABLE_NAMES = {
     PRODUCT_PACKAGING_OPTIONS: "product_packaging_options",
 
     TAGS: "tags",
+
+    PAGE_METADATAS: "page_metadatas",
 } as const;
 
 export const COMMON_COLUMNS = {
@@ -157,6 +159,13 @@ export const PRODUCT_SPECIFICATION_COLUMNS = {
     PRODUCT_ID: "product_id",
     SPEC_PHOTO_KEY: "spec_photo_key",
     ORDER_INDEX: "order_index",
+} as const;
+
+export const PAGE_METADATA_COLUMNS = {
+    PATH: "path",
+    METADATA_TITLE: "metadata_title",
+    METADATA_DESCRIPTION: "metadata_description",
+    METADATA_KEYWORDS: "metadata_keywords",
 } as const;
 
 /**
