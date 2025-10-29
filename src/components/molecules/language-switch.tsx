@@ -3,6 +3,7 @@
 import { useState } from "react";
 
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 import { Check, ChevronDown, Globe } from "lucide-react";
 import { Locale } from "next-intl";
@@ -20,12 +21,18 @@ type Props = {
 };
 
 export function LanguageSwitch({ variant = "desktop" }: Props) {
+    const router = useRouter();
     const { locale, setLocale } = useAppLocale();
     const [isOpen, setIsOpen] = useState(false);
 
     async function handleChangeLocale(newLocale: Locale) {
         setIsOpen(false);
-        await setLocale(newLocale);
+        try {
+            await setLocale(newLocale);
+        } catch {
+            // TODO: handler error
+        }
+        router.refresh();
     }
 
     const locales = [

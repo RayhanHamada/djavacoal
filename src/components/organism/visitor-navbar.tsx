@@ -8,7 +8,6 @@ import Link from "next/link";
 import { HamburgerButton } from "@/components/atoms";
 import { MobileNavigationMenu, NavigationMenus } from "@/components/molecules";
 import { LanguageSwitch } from "@/components/molecules/language-switch";
-import { useAppLocale } from "@/hooks";
 import { cn } from "@/lib/utils";
 
 type Props = PropsWithChildren;
@@ -101,7 +100,6 @@ const MENU_ITEMS = [
 ];
 
 export default function VisitorNavbar(_: Props) {
-    const { locale } = useAppLocale();
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
     const toggleMobileMenu = () => {
@@ -115,7 +113,6 @@ export default function VisitorNavbar(_: Props) {
     return (
         <>
             <nav className="border-b-secondary bg-primary/90 fixed z-100 flex min-h-24 w-full items-center justify-between backdrop-blur-xl">
-                <span className="text-white">Locale {locale}</span>
                 <Link
                     href="/"
                     className="px-6 text-lg font-semibold lg:ml-[50px]"
