@@ -65,7 +65,7 @@ export default function PackagingSection() {
             {/* Header */}
             <header className="mb-8 px-4 pt-4 md:px-6">
                 <div className="mb-2 flex items-center gap-3">
-                    <div className="h-[1px] w-8 bg-white" />
+                    <div className="h-px w-8 bg-white" />
                     <p className="text-sm font-medium tracking-wide text-[#60A5FF] italic">
                         Packaging Option
                     </p>
@@ -73,7 +73,7 @@ export default function PackagingSection() {
                 <h2 className="text-xl leading-snug font-semibold text-white md:text-2xl">
                     Flexible Packaging to Suit Your Business Needs
                 </h2>
-                <div className="mt-4 h-[1px] bg-[#3A3A3A]" />
+                <div className="mt-4 h-px bg-[#3A3A3A]" />
             </header>
 
             {/* Cards */}
