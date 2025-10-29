@@ -1,20 +1,21 @@
 import { relations } from "drizzle-orm";
-import { sqliteTable, text, int } from "drizzle-orm/sqlite-core";
+import { sqliteTable, text, int, real } from "drizzle-orm/sqlite-core";
 
 import {
     ACCOUNT_COLUMNS,
     COMMON_COLUMNS,
     GALLERY_PHOTO_COLUMNS,
+    PRODUCT_MEDIA_TYPE_ENUM,
     NEWS_COLUMNS,
     PACKAGING_OPTION_COLUMNS,
     PAGE_METADATA_COLUMNS,
     PRODUCT_COLUMNS,
     PRODUCT_MEDIA_COLUMNS,
-    PRODUCT_MEDIA_TYPE,
     PRODUCT_PACKAGING_OPTION_COLUMNS,
     PRODUCT_SPECIFICATION_COLUMNS,
     PRODUCT_VARIANT_COLUMNS,
     SESSION_COLUMNS,
+    SITEMAP_CHANGEFREQ_ENUM,
     TABLE_NAMES,
     TAG_COLUMNS,
     USER_COLUMNS,
@@ -346,7 +347,7 @@ export const PRODUCT_MEDIA_COLUMN_FIELDS = {
         }),
 
     [PRODUCT_MEDIA_COLUMNS.MEDIA_TYPE]: text({
-        enum: [PRODUCT_MEDIA_TYPE.IMAGE, PRODUCT_MEDIA_TYPE.YOUTUBE],
+        enum: PRODUCT_MEDIA_TYPE_ENUM,
     }).notNull(),
 
     /**
@@ -483,6 +484,16 @@ export const PAGE_METADATA_COLUMN_FIELDS = {
         .notNull()
         .$type<string[]>()
         .$default(() => []),
+
+    [PAGE_METADATA_COLUMNS.SITEMAP_PRIORITY]: real()
+        .notNull()
+        .$default(() => 0.5),
+
+    [PAGE_METADATA_COLUMNS.SITEMAP_CHANGEFREQ]: text({
+        enum: SITEMAP_CHANGEFREQ_ENUM,
+    })
+        .notNull()
+        .$default(() => "weekly"),
 } as const;
 
 /**

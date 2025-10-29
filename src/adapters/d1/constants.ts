@@ -166,6 +166,8 @@ export const PAGE_METADATA_COLUMNS = {
     METADATA_TITLE: "metadata_title",
     METADATA_DESCRIPTION: "metadata_description",
     METADATA_KEYWORDS: "metadata_keywords",
+    SITEMAP_PRIORITY: "sitemap_priority",
+    SITEMAP_CHANGEFREQ: "sitemap_changefreq",
 } as const;
 
 /**
@@ -181,3 +183,30 @@ export const PRODUCT_MEDIA_TYPE = {
     IMAGE: "image",
     YOUTUBE: "youtube",
 } as const;
+
+export const PRODUCT_MEDIA_TYPE_ENUM = [
+    PRODUCT_MEDIA_TYPE.IMAGE,
+    PRODUCT_MEDIA_TYPE.YOUTUBE,
+] as const;
+
+export const SITEMAP_PRIORITY_DEFAULT = 0.5;
+
+export const SITEMAP_CHANGEFREQ_VALUES = {
+    ALWAYS: "always",
+    HOURLY: "hourly",
+    DAILY: "daily",
+    WEEKLY: "weekly",
+    MONTHLY: "monthly",
+    YEARLY: "yearly",
+    NEVER: "never",
+} as const;
+
+export const SITEMAP_CHANGEFREQ_ENUM = [
+    SITEMAP_CHANGEFREQ_VALUES.ALWAYS,
+    SITEMAP_CHANGEFREQ_VALUES.HOURLY,
+    SITEMAP_CHANGEFREQ_VALUES.DAILY,
+    SITEMAP_CHANGEFREQ_VALUES.WEEKLY,
+    SITEMAP_CHANGEFREQ_VALUES.MONTHLY,
+    SITEMAP_CHANGEFREQ_VALUES.YEARLY,
+    SITEMAP_CHANGEFREQ_VALUES.NEVER,
+] as const;
