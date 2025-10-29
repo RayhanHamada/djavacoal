@@ -3,6 +3,8 @@ import type { ProductImage } from "../../lib";
 
 import { useState } from "react";
 
+import Image from "next/image";
+
 interface ProductImageGalleryProps {
     images: ProductImage[];
 }
@@ -13,10 +15,12 @@ export function ProductImageGallery({ images }: ProductImageGalleryProps) {
     return (
         <div className="space-y-4">
             <div className="flex min-h-[400px] items-center justify-center rounded-lg bg-gray-800 p-8">
-                <img
+                <Image
                     src={images[selectedImage].src}
                     alt={images[selectedImage].alt}
                     className="h-auto max-w-full"
+                    width={600}
+                    height={400}
                 />
             </div>
 
@@ -31,10 +35,12 @@ export function ProductImageGallery({ images }: ProductImageGalleryProps) {
                                 : ""
                         }`}
                     >
-                        <img
+                        <Image
                             src={img.src}
                             alt={img.alt}
                             className="h-auto w-full"
+                            width={150}
+                            height={100}
                         />
                     </button>
                 ))}

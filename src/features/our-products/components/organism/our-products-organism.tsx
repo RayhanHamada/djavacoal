@@ -102,7 +102,7 @@ const PRODUCT_DATA = {
 };
 
 export function ProductPage() {
-    const [selectedCategory, setSelectedCategory] = useState(
+    const [selectedCategory, _setSelectedCategory] = useState(
         PRODUCT_CATEGORIES[0]
     );
 
@@ -145,7 +145,7 @@ export function ProductPage() {
                                     />
 
                                     {/* Divider */}
-                                    <div className="my-6 h-[1px] w-full bg-[#393939]" />
+                                    <div className="my-6 h-px w-full bg-[#393939]" />
 
                                     {/* Description Section */}
                                     <div className="flex flex-col gap-3">
@@ -158,7 +158,7 @@ export function ProductPage() {
                                     </div>
 
                                     {/* Divider */}
-                                    <div className="my-6 h-[1px] w-full bg-[#393939]" />
+                                    <div className="my-6 h-px w-full bg-[#393939]" />
 
                                     {/* Specifications Section */}
                                     <div className="flex flex-col gap-5">
@@ -182,7 +182,7 @@ export function ProductPage() {
                                     </div>
 
                                     {/* Divider */}
-                                    <div className="my-6 h-[1px] w-full bg-[#393939]" />
+                                    <div className="my-6 h-px w-full bg-[#393939]" />
 
                                     {/* Shapes Section */}
                                     <ShapesList
@@ -190,7 +190,7 @@ export function ProductPage() {
                                     />
 
                                     {/* Divider */}
-                                    <div className="my-6 h-[1px] w-full bg-[#393939]" />
+                                    <div className="my-6 h-px w-full bg-[#393939]" />
 
                                     {/* Packaging Options Section */}
                                     <PackagingList
@@ -200,7 +200,7 @@ export function ProductPage() {
                                     />
 
                                     {/* Divider */}
-                                    <div className="my-6 h-[1px] w-full bg-[#393939]" />
+                                    <div className="my-6 h-px w-full bg-[#393939]" />
 
                                     {/* Detail Information Section */}
                                     <div className="flex flex-col gap-5">

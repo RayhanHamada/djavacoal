@@ -1,19 +1,21 @@
 import { relations } from "drizzle-orm";
-import { sqliteTable, text, int } from "drizzle-orm/sqlite-core";
+import { sqliteTable, text, int, real } from "drizzle-orm/sqlite-core";
 
 import {
     ACCOUNT_COLUMNS,
     COMMON_COLUMNS,
     GALLERY_PHOTO_COLUMNS,
+    PRODUCT_MEDIA_TYPE_ENUM,
     NEWS_COLUMNS,
     PACKAGING_OPTION_COLUMNS,
+    PAGE_METADATA_COLUMNS,
     PRODUCT_COLUMNS,
     PRODUCT_MEDIA_COLUMNS,
-    PRODUCT_MEDIA_TYPE,
     PRODUCT_PACKAGING_OPTION_COLUMNS,
     PRODUCT_SPECIFICATION_COLUMNS,
     PRODUCT_VARIANT_COLUMNS,
     SESSION_COLUMNS,
+    SITEMAP_CHANGEFREQ_ENUM,
     TABLE_NAMES,
     TAG_COLUMNS,
     USER_COLUMNS,
@@ -345,7 +347,7 @@ export const PRODUCT_MEDIA_COLUMN_FIELDS = {
         }),
 
     [PRODUCT_MEDIA_COLUMNS.MEDIA_TYPE]: text({
-        enum: [PRODUCT_MEDIA_TYPE.IMAGE, PRODUCT_MEDIA_TYPE.YOUTUBE],
+        enum: PRODUCT_MEDIA_TYPE_ENUM,
     }).notNull(),
 
     /**
@@ -451,6 +453,50 @@ export const PRODUCT_PACKAGING_OPTION_COLUMN_FIELDS = {
 } as const;
 
 /**
+ * for storing page metadata for SEO purposes
+ */
+export const PAGE_METADATA_COLUMN_FIELDS = {
+    ...COMMON_FIELDS,
+
+    [COMMON_COLUMNS.ID]: int().primaryKey(),
+
+    /**
+     * the path of the page
+     */
+    [PAGE_METADATA_COLUMNS.PATH]: text().notNull().unique(),
+
+    /**
+     * SEO metadata fields
+     */
+    [PAGE_METADATA_COLUMNS.METADATA_TITLE]: text().notNull(),
+
+    /**
+     * description for SEO
+     */
+    [PAGE_METADATA_COLUMNS.METADATA_DESCRIPTION]: text().notNull(),
+
+    /**
+     * keywords for SEO
+     */
+    [PAGE_METADATA_COLUMNS.METADATA_KEYWORDS]: text({
+        mode: "json",
+    })
+        .notNull()
+        .$type<string[]>()
+        .$default(() => []),
+
+    [PAGE_METADATA_COLUMNS.SITEMAP_PRIORITY]: real()
+        .notNull()
+        .$default(() => 0.5),
+
+    [PAGE_METADATA_COLUMNS.SITEMAP_CHANGEFREQ]: text({
+        enum: SITEMAP_CHANGEFREQ_ENUM,
+    })
+        .notNull()
+        .$default(() => "weekly"),
+} as const;
+
+/**
  * table used by better-auth to store users
  */
 
@@ -533,6 +579,11 @@ export const productSpecifications = sqliteTable(
 export const productVariants = sqliteTable(
     TABLE_NAMES.PRODUCT_VARIANTS,
     PRODUCT_VARIANT_COLUMN_FIELDS
+);
+
+export const pageMetadatas = sqliteTable(
+    TABLE_NAMES.PAGE_METADATAS,
+    PAGE_METADATA_COLUMN_FIELDS
 );
 
 /**

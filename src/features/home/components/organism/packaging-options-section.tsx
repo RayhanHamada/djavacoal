@@ -9,7 +9,7 @@ const packagingOptions = [
         name: "Full Packaging",
         description:
             "Complete packaging solution with branded boxes, ensuring maximum protection and premium presentation for retail distribution.",
-        image: "/images/pack-full.png",
+        image: "/images/packaging-full.png",
         features: ["Branded Boxes", "Retail Ready", "Maximum Protection"],
     },
     {
@@ -17,7 +17,7 @@ const packagingOptions = [
         name: "Bulk Packaging",
         description:
             "Efficient bulk packaging in large containers, ideal for wholesale distribution and commercial use with cost-effective solutions.",
-        image: "/images/pack-bulk.png",
+        image: "/images/packaging-bulk.png",
         features: ["Large Containers", "Cost Effective", "Wholesale Ready"],
     },
     {
@@ -25,7 +25,7 @@ const packagingOptions = [
         name: "Bulk Loose Packaging",
         description:
             "Flexible loose bulk packaging for industrial applications, offering the most economical option for large-volume orders.",
-        image: "/images/pack-loose.png",
+        image: "/images/packaging-bulk-loose.png",
         features: ["Industrial Use", "Most Economical", "Large Volume"],
     },
 ];

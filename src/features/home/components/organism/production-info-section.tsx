@@ -63,7 +63,7 @@ const productionTabs = [
             "Bulk Loose Packaging",
             "Custom Solutions",
         ],
-        image: "/images/pack-full.png",
+        image: "/images/packaging-full.png",
         href: "/production-info#packaging",
     },
 ];

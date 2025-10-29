@@ -16,6 +16,8 @@ export const TABLE_NAMES = {
     PRODUCT_PACKAGING_OPTIONS: "product_packaging_options",
 
     TAGS: "tags",
+
+    PAGE_METADATAS: "page_metadatas",
 } as const;
 
 export const COMMON_COLUMNS = {
@@ -159,6 +161,15 @@ export const PRODUCT_SPECIFICATION_COLUMNS = {
     ORDER_INDEX: "order_index",
 } as const;
 
+export const PAGE_METADATA_COLUMNS = {
+    PATH: "path",
+    METADATA_TITLE: "metadata_title",
+    METADATA_DESCRIPTION: "metadata_description",
+    METADATA_KEYWORDS: "metadata_keywords",
+    SITEMAP_PRIORITY: "sitemap_priority",
+    SITEMAP_CHANGEFREQ: "sitemap_changefreq",
+} as const;
+
 /**
  * constants related to table above
  */
@@ -172,3 +183,30 @@ export const PRODUCT_MEDIA_TYPE = {
     IMAGE: "image",
     YOUTUBE: "youtube",
 } as const;
+
+export const PRODUCT_MEDIA_TYPE_ENUM = [
+    PRODUCT_MEDIA_TYPE.IMAGE,
+    PRODUCT_MEDIA_TYPE.YOUTUBE,
+] as const;
+
+export const SITEMAP_PRIORITY_DEFAULT = 0.5;
+
+export const SITEMAP_CHANGEFREQ_VALUES = {
+    ALWAYS: "always",
+    HOURLY: "hourly",
+    DAILY: "daily",
+    WEEKLY: "weekly",
+    MONTHLY: "monthly",
+    YEARLY: "yearly",
+    NEVER: "never",
+} as const;
+
+export const SITEMAP_CHANGEFREQ_ENUM = [
+    SITEMAP_CHANGEFREQ_VALUES.ALWAYS,
+    SITEMAP_CHANGEFREQ_VALUES.HOURLY,
+    SITEMAP_CHANGEFREQ_VALUES.DAILY,
+    SITEMAP_CHANGEFREQ_VALUES.WEEKLY,
+    SITEMAP_CHANGEFREQ_VALUES.MONTHLY,
+    SITEMAP_CHANGEFREQ_VALUES.YEARLY,
+    SITEMAP_CHANGEFREQ_VALUES.NEVER,
+] as const;
