@@ -12,7 +12,12 @@ import {
     METADATA_TITLE_MIN_LENGTH,
     PATH_MAX_LENGTH,
     PATH_MIN_LENGTH,
+    SITEMAP_CHANGEFREQ_DEFAULT,
+    SITEMAP_PRIORITY_DEFAULT,
+    SITEMAP_PRIORITY_MAX,
+    SITEMAP_PRIORITY_MIN,
 } from "./constants";
+import { SITEMAP_CHANGEFREQ_ENUM } from "@/adapters/d1/constants";
 
 /**
  * Input schema for listing page metadata with pagination and search
@@ -42,6 +47,8 @@ export const ListPageMetadataOutputSchema = z.object({
             metadata_title: z.string(),
             metadata_description: z.string(),
             metadata_keywords: z.array(z.string()),
+            sitemap_priority: z.number(),
+            sitemap_changefreq: z.enum(SITEMAP_CHANGEFREQ_ENUM),
             created_at: z.date(),
             updated_at: z.date(),
         })
@@ -67,6 +74,8 @@ export const GetPageMetadataByIdOutputSchema = z.object({
     metadata_title: z.string(),
     metadata_description: z.string(),
     metadata_keywords: z.array(z.string()),
+    sitemap_priority: z.number(),
+    sitemap_changefreq: z.enum(SITEMAP_CHANGEFREQ_ENUM),
     created_at: z.date(),
     updated_at: z.date(),
 });
@@ -113,6 +122,20 @@ export const CreatePageMetadataInputSchema = z.object({
         )
         .max(MAX_KEYWORDS, `Maximum ${MAX_KEYWORDS} keywords allowed`)
         .default([]),
+    sitemap_priority: z
+        .number()
+        .min(
+            SITEMAP_PRIORITY_MIN,
+            `Priority must be at least ${SITEMAP_PRIORITY_MIN}`
+        )
+        .max(
+            SITEMAP_PRIORITY_MAX,
+            `Priority must be at most ${SITEMAP_PRIORITY_MAX}`
+        )
+        .default(SITEMAP_PRIORITY_DEFAULT),
+    sitemap_changefreq: z
+        .enum(SITEMAP_CHANGEFREQ_ENUM)
+        .default(SITEMAP_CHANGEFREQ_DEFAULT),
 });
 
 /**
@@ -158,6 +181,20 @@ export const UpdatePageMetadataInputSchema = z.object({
         )
         .max(MAX_KEYWORDS, `Maximum ${MAX_KEYWORDS} keywords allowed`)
         .default([]),
+    sitemap_priority: z
+        .number()
+        .min(
+            SITEMAP_PRIORITY_MIN,
+            `Priority must be at least ${SITEMAP_PRIORITY_MIN}`
+        )
+        .max(
+            SITEMAP_PRIORITY_MAX,
+            `Priority must be at most ${SITEMAP_PRIORITY_MAX}`
+        )
+        .default(SITEMAP_PRIORITY_DEFAULT),
+    sitemap_changefreq: z
+        .enum(SITEMAP_CHANGEFREQ_ENUM)
+        .default(SITEMAP_CHANGEFREQ_DEFAULT),
 });
 
 /**

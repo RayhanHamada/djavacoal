@@ -46,6 +46,10 @@ export const listPageMetadata = base
                     pageMetadatas[PAGE_METADATA_COLUMNS.METADATA_DESCRIPTION],
                 metadata_keywords:
                     pageMetadatas[PAGE_METADATA_COLUMNS.METADATA_KEYWORDS],
+                sitemap_priority:
+                    pageMetadatas[PAGE_METADATA_COLUMNS.SITEMAP_PRIORITY],
+                sitemap_changefreq:
+                    pageMetadatas[PAGE_METADATA_COLUMNS.SITEMAP_CHANGEFREQ],
                 created_at: pageMetadatas[COMMON_COLUMNS.CREATED_AT],
                 updated_at: pageMetadatas[COMMON_COLUMNS.UPDATED_AT],
             })
@@ -67,6 +71,16 @@ export const listPageMetadata = base
             items: items.map((item) => ({
                 ...item,
                 metadata_keywords: (item.metadata_keywords as string[]) ?? [],
+                sitemap_priority: (item.sitemap_priority as number) ?? 0.5,
+                sitemap_changefreq:
+                    (item.sitemap_changefreq as
+                        | "always"
+                        | "hourly"
+                        | "daily"
+                        | "weekly"
+                        | "monthly"
+                        | "yearly"
+                        | "never") ?? "weekly",
                 created_at: new Date(item.created_at ?? 0),
                 updated_at: new Date(item.updated_at ?? 0),
             })),
@@ -108,6 +122,19 @@ export const getPageMetadataById = base
                 (pageMetadata[
                     PAGE_METADATA_COLUMNS.METADATA_KEYWORDS
                 ] as string[]) ?? [],
+            sitemap_priority:
+                (pageMetadata[
+                    PAGE_METADATA_COLUMNS.SITEMAP_PRIORITY
+                ] as number) ?? 0.5,
+            sitemap_changefreq:
+                (pageMetadata[PAGE_METADATA_COLUMNS.SITEMAP_CHANGEFREQ] as
+                    | "always"
+                    | "hourly"
+                    | "daily"
+                    | "weekly"
+                    | "monthly"
+                    | "yearly"
+                    | "never") ?? "weekly",
             created_at: new Date(pageMetadata[COMMON_COLUMNS.CREATED_AT] ?? 0),
             updated_at: new Date(pageMetadata[COMMON_COLUMNS.UPDATED_AT] ?? 0),
         };
@@ -126,6 +153,8 @@ export const createPageMetadata = base
             metadata_title,
             metadata_description,
             metadata_keywords,
+            sitemap_priority,
+            sitemap_changefreq,
         } = input;
 
         // Check if path already exists
@@ -145,6 +174,8 @@ export const createPageMetadata = base
                 [PAGE_METADATA_COLUMNS.METADATA_DESCRIPTION]:
                     metadata_description,
                 [PAGE_METADATA_COLUMNS.METADATA_KEYWORDS]: metadata_keywords,
+                [PAGE_METADATA_COLUMNS.SITEMAP_PRIORITY]: sitemap_priority,
+                [PAGE_METADATA_COLUMNS.SITEMAP_CHANGEFREQ]: sitemap_changefreq,
             })
             .returning({
                 id: pageMetadatas[COMMON_COLUMNS.ID],
@@ -170,6 +201,8 @@ export const updatePageMetadata = base
             metadata_title,
             metadata_description,
             metadata_keywords,
+            sitemap_priority,
+            sitemap_changefreq,
         } = input;
 
         // Check if page metadata exists
@@ -197,6 +230,8 @@ export const updatePageMetadata = base
                 [PAGE_METADATA_COLUMNS.METADATA_DESCRIPTION]:
                     metadata_description,
                 [PAGE_METADATA_COLUMNS.METADATA_KEYWORDS]: metadata_keywords,
+                [PAGE_METADATA_COLUMNS.SITEMAP_PRIORITY]: sitemap_priority,
+                [PAGE_METADATA_COLUMNS.SITEMAP_CHANGEFREQ]: sitemap_changefreq,
             })
             .where(eq(pageMetadatas[COMMON_COLUMNS.ID], id));
 

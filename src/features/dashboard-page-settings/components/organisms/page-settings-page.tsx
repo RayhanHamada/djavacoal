@@ -3,9 +3,9 @@
 import { Box, Container, Stack, Text, Title } from "@mantine/core";
 
 import {
-    CreatePageMetadataModal,
+    CreatePageMetadataDrawer,
     DeletePageMetadataModal,
-    EditPageMetadataModal,
+    EditPageMetadataDrawer,
 } from "@/features/dashboard-page-settings/components/molecules";
 import { PageMetadataTable } from "@/features/dashboard-page-settings/components/organisms";
 import {
@@ -91,15 +91,15 @@ export function PageSettingsPage() {
                     onDelete={handleDelete}
                 />
 
-                {/* Create Modal */}
-                <CreatePageMetadataModal
+                {/* Create Drawer */}
+                <CreatePageMetadataDrawer
                     opened={createModalOpened}
                     onClose={closeCreateModal}
                     onSuccess={handleSuccess}
                 />
 
-                {/* Edit Modal */}
-                <EditPageMetadataModal
+                {/* Edit Drawer */}
+                <EditPageMetadataDrawer
                     opened={editModalOpened}
                     onClose={closeEditModal}
                     pageMetadataId={selectedPageMetadata?.id ?? null}

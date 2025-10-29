@@ -2,8 +2,9 @@
 
 import {
     Button,
+    Drawer,
     Group,
-    Modal,
+    Select,
     Stack,
     TagsInput,
     Textarea,
@@ -13,33 +14,37 @@ import { useForm } from "@mantine/form";
 import { notifications } from "@mantine/notifications";
 import { useMutation } from "@tanstack/react-query";
 
+import { SITEMAP_CHANGEFREQ_VALUES } from "@/adapters/d1/constants";
 import {
     CreatePageMetadataFormValues,
     validateCreatePageMetadataForm,
 } from "@/features/dashboard-page-settings/lib/form-schema";
 import {
+    MAX_KEYWORDS,
     METADATA_DESCRIPTION_MAX_LENGTH,
     METADATA_DESCRIPTION_MIN_LENGTH,
     METADATA_TITLE_MAX_LENGTH,
     METADATA_TITLE_MIN_LENGTH,
-    MAX_KEYWORDS,
+    SITEMAP_CHANGEFREQ_DEFAULT,
+    SITEMAP_PRIORITY_DEFAULT,
+    SITEMAP_PRIORITY_OPTIONS,
 } from "@/features/dashboard-page-settings/server/constants";
-import { client } from "@/lib/rpc";
+import { rpc } from "@/lib/rpc";
 
-interface CreatePageMetadataModalProps {
+interface CreatePageMetadataDrawerProps {
     opened: boolean;
     onClose: () => void;
     onSuccess: () => void;
 }
 
 /**
- * Modal component for creating a new page metadata entry
+ * Drawer component for creating a new page metadata entry
  */
-export function CreatePageMetadataModal({
+export function CreatePageMetadataDrawer({
     opened,
     onClose,
     onSuccess,
-}: CreatePageMetadataModalProps) {
+}: CreatePageMetadataDrawerProps) {
     const form = useForm<CreatePageMetadataFormValues>({
         mode: "uncontrolled",
         initialValues: {
@@ -47,35 +52,39 @@ export function CreatePageMetadataModal({
             metadata_title: "",
             metadata_description: "",
             metadata_keywords: [],
+            sitemap_priority: SITEMAP_PRIORITY_DEFAULT,
+            sitemap_changefreq: SITEMAP_CHANGEFREQ_DEFAULT,
         },
         validate: validateCreatePageMetadataForm,
     });
 
-    const createMutation = useMutation({
-        mutationFn: async (values: CreatePageMetadataFormValues) => {
-            return client.pageSettings.createPageMetadata(values);
-        },
-        onSuccess: () => {
-            notifications.show({
-                title: "Success",
-                message: "Page metadata created successfully",
-                color: "green",
-            });
-            form.reset();
-            onSuccess();
-            onClose();
-        },
-        onError: (error) => {
-            notifications.show({
-                title: "Error",
-                message:
-                    error instanceof Error
-                        ? error.message
-                        : "Failed to create page metadata",
-                color: "red",
-            });
-        },
-    });
+    const createMutation = useMutation(
+        rpc.pageSettings.createPageMetadata.mutationOptions({
+            onSuccess: (_, __, ___, context) => {
+                notifications.show({
+                    title: "Success",
+                    message: "Page metadata created successfully",
+                    color: "green",
+                });
+                context.client.invalidateQueries({
+                    queryKey: rpc.pageSettings.listPageMetadata.key(),
+                });
+                form.reset();
+                onSuccess();
+                onClose();
+            },
+            onError: (error) => {
+                notifications.show({
+                    title: "Error",
+                    message:
+                        error instanceof Error
+                            ? error.message
+                            : "Failed to create page metadata",
+                    color: "red",
+                });
+            },
+        })
+    );
 
     const handleSubmit = form.onSubmit(async (values) => {
         await createMutation.mutateAsync(values);
@@ -89,10 +98,11 @@ export function CreatePageMetadataModal({
     }
 
     return (
-        <Modal
+        <Drawer
             opened={opened}
             onClose={handleClose}
             title="Create Page Metadata"
+            position="right"
             size="lg"
             closeOnClickOutside={!createMutation.isPending}
             closeOnEscape={!createMutation.isPending}
@@ -139,6 +149,64 @@ export function CreatePageMetadataModal({
                         disabled={createMutation.isPending}
                     />
 
+                    <Select
+                        label="Sitemap Priority"
+                        description="Priority for sitemap.xml (1.0 = highest)"
+                        required
+                        data={SITEMAP_PRIORITY_OPTIONS.map((opt) => ({
+                            value: opt.value.toString(),
+                            label: opt.label,
+                        }))}
+                        key={form.key("sitemap_priority")}
+                        value={form.getValues().sitemap_priority.toString()}
+                        onChange={(value) => {
+                            form.setFieldValue(
+                                "sitemap_priority",
+                                parseFloat(value ?? "0.5")
+                            );
+                        }}
+                        disabled={createMutation.isPending}
+                    />
+
+                    <Select
+                        label="Sitemap Change Frequency"
+                        description="Expected update frequency for sitemap.xml"
+                        required
+                        data={[
+                            {
+                                value: SITEMAP_CHANGEFREQ_VALUES.ALWAYS,
+                                label: "Always",
+                            },
+                            {
+                                value: SITEMAP_CHANGEFREQ_VALUES.HOURLY,
+                                label: "Hourly",
+                            },
+                            {
+                                value: SITEMAP_CHANGEFREQ_VALUES.DAILY,
+                                label: "Daily",
+                            },
+                            {
+                                value: SITEMAP_CHANGEFREQ_VALUES.WEEKLY,
+                                label: "Weekly",
+                            },
+                            {
+                                value: SITEMAP_CHANGEFREQ_VALUES.MONTHLY,
+                                label: "Monthly",
+                            },
+                            {
+                                value: SITEMAP_CHANGEFREQ_VALUES.YEARLY,
+                                label: "Yearly",
+                            },
+                            {
+                                value: SITEMAP_CHANGEFREQ_VALUES.NEVER,
+                                label: "Never",
+                            },
+                        ]}
+                        key={form.key("sitemap_changefreq")}
+                        {...form.getInputProps("sitemap_changefreq")}
+                        disabled={createMutation.isPending}
+                    />
+
                     <Group justify="flex-end" mt="md">
                         <Button
                             variant="subtle"
@@ -156,6 +224,6 @@ export function CreatePageMetadataModal({
                     </Group>
                 </Stack>
             </form>
-        </Modal>
+        </Drawer>
     );
 }

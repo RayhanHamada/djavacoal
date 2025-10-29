@@ -3,7 +3,8 @@
 import { useState } from "react";
 
 /**
- * Hook to manage page metadata modals state
+ * Hook to manage page metadata drawers and modals state
+ * Manages both drawers (create/edit) and modals (delete)
  */
 export function usePageMetadataModals() {
     const [createModalOpened, setCreateModalOpened] = useState(false);
