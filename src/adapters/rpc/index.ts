@@ -10,6 +10,7 @@ import { router as gallery } from "@/features/dashboard-gallery/server/router";
 import { router as dashboardNews } from "@/features/dashboard-news/server";
 import { router as pageSettings } from "@/features/dashboard-page-settings/server";
 import { router as dashboardProduct } from "@/features/dashboard-product/server";
+import { router as staticMedia } from "@/features/dashboard-static-media/server/router";
 
 const router = {
     /**
@@ -20,6 +21,7 @@ const router = {
     dashboardNews,
     dashboardProduct,
     pageSettings,
+    staticMedia,
 };
 
 const handler = new RPCHandler(router, {

@@ -11,6 +11,7 @@ import {
     IconPhoto,
     IconPackage,
     IconCode,
+    IconPhotoVideo,
 } from "@tabler/icons-react";
 
 export const navigationConfig: NavigationItem[] = [
@@ -85,6 +86,11 @@ export const navigationConfig: NavigationItem[] = [
                 icon: IconUser,
                 label: "Team Members",
                 href: "/dashboard/page-settings/team-members",
+            },
+            {
+                icon: IconPhotoVideo,
+                label: "Static Media",
+                href: "/dashboard/page-settings/static-media",
             },
         ],
     },

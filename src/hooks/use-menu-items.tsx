@@ -27,27 +27,27 @@ export function useMenuItems() {
                 submenus: [
                     {
                         label: t("aboutCompanySubmenus.cvDjavacoal"),
-                        href: "/about#cv-djavacoal-indonesia",
+                        href: "/about-company#cv-djavacoal-indonesia",
                     },
                     {
                         label: t("aboutCompanySubmenus.team"),
-                        href: "/about#djavacoals-team",
+                        href: "/about-company#djavacoals-team",
                     },
                     {
                         label: t("aboutCompanySubmenus.whatWeDo"),
-                        href: "/about#what-we-do",
+                        href: "/about-company#what-we-do",
                     },
                     {
                         label: t("aboutCompanySubmenus.legalCertificate"),
-                        href: "/about#legal-certificate",
+                        href: "/about-company#legal-certificate",
                     },
                     {
                         label: t("aboutCompanySubmenus.factory"),
-                        href: "/about#factory",
+                        href: "/about-company#factory",
                     },
                     {
                         label: t("aboutCompanySubmenus.gallery"),
-                        href: "/about#our-gallery",
+                        href: "/about-company#our-gallery",
                     },
                 ],
             },
