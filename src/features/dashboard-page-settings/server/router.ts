@@ -5,6 +5,7 @@ import {
     listPageMetadata,
     updatePageMetadata,
 } from "./functions";
+import * as teamMembers from "./team-members/router";
 
 export const router = {
     listPageMetadata,
@@ -12,4 +13,5 @@ export const router = {
     createPageMetadata,
     updatePageMetadata,
     deletePageMetadata,
+    ...teamMembers,
 };

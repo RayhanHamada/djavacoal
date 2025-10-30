@@ -505,6 +505,7 @@ const TEAM_MEMBER_COLUMN_FIELDS = {
     [TEAM_MEMBER_COLUMNS.NAME]: text().notNull(),
     [TEAM_MEMBER_COLUMNS.POSITION]: text().notNull(),
     [TEAM_MEMBER_COLUMNS.PHOTO_KEY]: text().notNull(),
+    [TEAM_MEMBER_COLUMNS.ORDER_INDEX]: int().notNull().default(0),
 } as const;
 
 /**

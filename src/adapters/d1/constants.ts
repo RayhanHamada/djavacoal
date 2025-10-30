@@ -175,7 +175,8 @@ export const TEAM_MEMBER_COLUMNS = {
     NAME: "name",
     POSITION: "position",
     PHOTO_KEY: "photo_key",
-};
+    ORDER_INDEX: "order_index",
+} as const;
 
 /**
  * constants related to table above
