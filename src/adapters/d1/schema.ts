@@ -20,6 +20,7 @@ import {
     TAG_COLUMNS,
     USER_COLUMNS,
     VERIFICATION_COLUMNS,
+    TEAM_MEMBER_COLUMNS,
 } from "@/adapters/d1/constants";
 
 const ALLOWED_IMAGE_MIME_TYPES = [
@@ -335,7 +336,7 @@ const PRODUCT_COLUMN_FIELDS = {
 /**
  * table used for product media
  */
-export const PRODUCT_MEDIA_COLUMN_FIELDS = {
+const PRODUCT_MEDIA_COLUMN_FIELDS = {
     ...COMMON_FIELDS,
 
     [COMMON_COLUMNS.ID]: int().primaryKey(),
@@ -371,7 +372,7 @@ export const PRODUCT_MEDIA_COLUMN_FIELDS = {
     [PRODUCT_MEDIA_COLUMNS.ORDER_INDEX]: int().notNull().default(0),
 } as const;
 
-export const PRODUCT_SPECIFICATION_COLUMN_FIELDS = {
+const PRODUCT_SPECIFICATION_COLUMN_FIELDS = {
     ...COMMON_FIELDS,
 
     [COMMON_COLUMNS.ID]: int().primaryKey(),
@@ -393,7 +394,7 @@ export const PRODUCT_SPECIFICATION_COLUMN_FIELDS = {
     [PRODUCT_SPECIFICATION_COLUMNS.ORDER_INDEX]: int().notNull().default(0),
 } as const;
 
-export const PRODUCT_VARIANT_COLUMN_FIELDS = {
+const PRODUCT_VARIANT_COLUMN_FIELDS = {
     ...COMMON_FIELDS,
 
     [COMMON_COLUMNS.ID]: int().primaryKey(),
@@ -434,7 +435,7 @@ export const PRODUCT_VARIANT_COLUMN_FIELDS = {
     [PRODUCT_VARIANT_COLUMNS.ORDER_INDEX]: int().notNull().default(0),
 };
 
-export const PRODUCT_PACKAGING_OPTION_COLUMN_FIELDS = {
+const PRODUCT_PACKAGING_OPTION_COLUMN_FIELDS = {
     ...COMMON_FIELDS,
 
     [COMMON_COLUMNS.ID]: int().primaryKey(),
@@ -455,7 +456,7 @@ export const PRODUCT_PACKAGING_OPTION_COLUMN_FIELDS = {
 /**
  * for storing page metadata for SEO purposes
  */
-export const PAGE_METADATA_COLUMN_FIELDS = {
+const PAGE_METADATA_COLUMN_FIELDS = {
     ...COMMON_FIELDS,
 
     [COMMON_COLUMNS.ID]: int().primaryKey(),
@@ -494,6 +495,16 @@ export const PAGE_METADATA_COLUMN_FIELDS = {
     })
         .notNull()
         .$default(() => "weekly"),
+} as const;
+
+const TEAM_MEMBER_COLUMN_FIELDS = {
+    ...COMMON_FIELDS,
+
+    [COMMON_COLUMNS.ID]: int().primaryKey(),
+
+    [TEAM_MEMBER_COLUMNS.NAME]: text().notNull(),
+    [TEAM_MEMBER_COLUMNS.POSITION]: text().notNull(),
+    [TEAM_MEMBER_COLUMNS.PHOTO_KEY]: text().notNull(),
 } as const;
 
 /**
@@ -584,6 +595,14 @@ export const productVariants = sqliteTable(
 export const pageMetadatas = sqliteTable(
     TABLE_NAMES.PAGE_METADATAS,
     PAGE_METADATA_COLUMN_FIELDS
+);
+
+/**
+ * table for storing team members
+ */
+export const teams = sqliteTable(
+    TABLE_NAMES.TEAM_MEMBERS,
+    TEAM_MEMBER_COLUMN_FIELDS
 );
 
 /**
@@ -705,3 +724,7 @@ export const galleryPhotoRelations = relations(galleryPhotos, () => ({}));
 export const verificationRelations = relations(verifications, () => ({}));
 
 export const tagRelations = relations(tags, () => ({}));
+
+export const pageMetadataRelations = relations(pageMetadatas, () => ({}));
+
+export const teamMemberRelations = relations(teams, () => ({}));
