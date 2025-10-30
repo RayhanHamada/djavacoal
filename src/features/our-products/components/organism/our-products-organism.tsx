@@ -131,7 +131,7 @@ export function ProductPage() {
                         {/* Product Content */}
                         <div className="flex flex-col gap-10">
                             <div className="grid gap-x-10 lg:grid-cols-[460px_1fr]">
-                                <div className="hidden grid-cols-1 lg:block">
+                                <div className="hidden flex-1 lg:block">
                                     <VideoGallerySection />
                                 </div>
                                 <div className="">
@@ -165,7 +165,7 @@ export function ProductPage() {
                                         <h3 className="text-xl font-bold text-white">
                                             Specification & Lab. Test:
                                         </h3>
-                                        <div className="flex flex-col gap-5 md:flex-row md:gap-5">
+                                        <div className="flex flex-wrap items-center justify-center gap-5 md:flex-row md:gap-5">
                                             {currentProduct.specifications.map(
                                                 (spec, idx) => (
                                                     <Image
@@ -174,7 +174,7 @@ export function ProductPage() {
                                                         alt={`Specification ${idx + 1}`}
                                                         width={744}
                                                         height={1054}
-                                                        className="h-auto w-full"
+                                                        className="h-auto w-full max-w-[620px]"
                                                     />
                                                 )
                                             )}

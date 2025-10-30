@@ -43,7 +43,7 @@ export function ProductHeroSection({
                     </h2>
 
                     {/* Action Buttons */}
-                    <div className="flex flex-col gap-5 md:flex-row md:gap-5">
+                    <div className="flex w-auto flex-col gap-5 md:flex-row md:gap-5">
                         <ActionButton
                             label="Catalogue"
                             icon="/images/icon-download.svg"
