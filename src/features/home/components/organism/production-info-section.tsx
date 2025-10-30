@@ -136,7 +136,7 @@ export function ProductionInfoSection() {
                                         key={index}
                                         className="flex items-center gap-3 font-['Open_Sans'] text-[14px] text-white md:text-[15px]"
                                     >
-                                        <div className="flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full bg-[#EFA12D]">
+                                        <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-[#EFA12D]">
                                             <svg
                                                 width="12"
                                                 height="12"

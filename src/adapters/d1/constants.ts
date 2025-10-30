@@ -18,6 +18,7 @@ export const TABLE_NAMES = {
     TAGS: "tags",
 
     PAGE_METADATAS: "page_metadatas",
+    TEAM_MEMBERS: "team_members",
 } as const;
 
 export const COMMON_COLUMNS = {
@@ -168,6 +169,13 @@ export const PAGE_METADATA_COLUMNS = {
     METADATA_KEYWORDS: "metadata_keywords",
     SITEMAP_PRIORITY: "sitemap_priority",
     SITEMAP_CHANGEFREQ: "sitemap_changefreq",
+} as const;
+
+export const TEAM_MEMBER_COLUMNS = {
+    NAME: "name",
+    POSITION: "position",
+    PHOTO_KEY: "photo_key",
+    ORDER_INDEX: "order_index",
 } as const;
 
 /**
