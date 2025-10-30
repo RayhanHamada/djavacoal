@@ -94,7 +94,7 @@ function VideoSquare({
 
     return (
         <div
-            className="group relative aspect-square w-full cursor-pointer overflow-hidden rounded-xl"
+            className="group relative aspect-square cursor-pointer overflow-hidden rounded-xl"
             onMouseEnter={() => setIsHovering(true)}
             onMouseLeave={() => setIsHovering(false)}
             onClick={onOpenModal}
@@ -195,7 +195,7 @@ export function VideoGallerySection({
         <div className="w-full">
             <div className="container mx-auto">
                 {/* Stacked Video Squares */}
-                <div className="mx-auto max-w-[620px] space-y-8">
+                <div className="mx-auto max-w-[460px] space-y-8">
                     {videoData.gallery.map((item, index) => (
                         <VideoSquare
                             key={index}
