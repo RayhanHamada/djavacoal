@@ -56,19 +56,19 @@ export function useMenuItems() {
                 submenus: [
                     {
                         label: "Coal",
-                        href: "/our-products/coal",
+                        href: "/our-products",
                     },
                     {
                         label: "Hardwood Charcoal",
-                        href: "/our-products/hardwood-charcoal",
+                        href: "/our-products",
                     },
                     {
                         label: "Coconut Shell Charcoal",
-                        href: "/our-products/coconut-shell-charcoal",
+                        href: "/our-products",
                     },
                     {
                         label: "Bamboo Charcoal",
-                        href: "/our-products/bamboo-charcoal",
+                        href: "/our-products",
                     },
                 ],
             },
