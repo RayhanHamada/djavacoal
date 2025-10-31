@@ -53,7 +53,7 @@ export default function TeamSection() {
             {/* === Heading === */}
             <header className="mb-2 pt-4">
                 <div className="mb-2 flex items-center gap-3">
-                    <div className="h-[1px] w-8 bg-white" />
+                    <div className="h-px w-8 bg-white" />
                     <p className="text-sm font-medium tracking-wide text-[#60A5FF] italic">
                         Djavacoal’s Team
                     </p>
@@ -64,7 +64,7 @@ export default function TeamSection() {
                 <p className="font-medium text-[#EFA12D]">
                     From Indonesia to the World, With Dedication and Care
                 </p>
-                <div className="mt-4 h-[1px] bg-[#3A3A3A] px-6" />
+                <div className="mt-4 h-px bg-[#3A3A3A] px-6" />
             </header>
 
             {/* === TEAM GRID === */}
@@ -74,11 +74,11 @@ export default function TeamSection() {
                     {team.map((member, i) => (
                         <article
                             key={i}
-                            className="w-[260px] flex-shrink-0 snap-start overflow-hidden bg-[#1E1E1E]"
+                            className="w-[260px] shrink-0 snap-start overflow-hidden bg-[#1E1E1E]"
                         >
                             <div className="relative">
                                 {/* === Radial background: subtle white corners === */}
-                                <div className="pointer-events-none absolute inset-0 z-0 border border-[#414141] bg-[radial-gradient(circle_at_center,_rgba(0,0,0,1)_40%,_rgba(255,255,255,0.2)_100%)]" />
+                                <div className="pointer-events-none absolute inset-0 z-0 border border-[#414141] bg-[radial-gradient(circle_at_center,rgba(0,0,0,1)_40%,rgba(255,255,255,0.2)_100%)]" />
 
                                 {/* === Image on top === */}
                                 <Image
@@ -111,7 +111,7 @@ export default function TeamSection() {
                         >
                             <div className="relative h-[420px]">
                                 {/* === Subtle radial background for desktop === */}
-                                <div className="z-0x absolute inset-0 bg-[radial-gradient(circle_at_center,_rgba(0,0,0,1)_45%,_rgba(255,255,255,0.22)_100%)]" />
+                                <div className="z-0x absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(0,0,0,1)_45%,rgba(255,255,255,0.22)_100%)]" />
 
                                 {/* === Image layer === */}
                                 <Image

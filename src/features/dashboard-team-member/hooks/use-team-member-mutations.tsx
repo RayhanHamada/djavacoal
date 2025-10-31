@@ -12,10 +12,10 @@ export function useTeamMemberMutations() {
     const queryClient = useQueryClient();
 
     const createMutation = useMutation(
-        rpc.pageSettings.createTeamMember.mutationOptions({
+        rpc.dashboardTeamMember.createTeamMember.mutationOptions({
             onSuccess() {
                 queryClient.invalidateQueries({
-                    queryKey: rpc.pageSettings.listTeamMembers.key(),
+                    queryKey: rpc.dashboardTeamMember.listTeamMembers.key(),
                 });
                 notifications.show({
                     title: "Success",
@@ -34,10 +34,10 @@ export function useTeamMemberMutations() {
     );
 
     const updateMutation = useMutation(
-        rpc.pageSettings.updateTeamMember.mutationOptions({
+        rpc.dashboardTeamMember.updateTeamMember.mutationOptions({
             onSuccess() {
                 queryClient.invalidateQueries({
-                    queryKey: rpc.pageSettings.listTeamMembers.key(),
+                    queryKey: rpc.dashboardTeamMember.listTeamMembers.key(),
                 });
                 notifications.show({
                     title: "Success",
@@ -56,10 +56,10 @@ export function useTeamMemberMutations() {
     );
 
     const deleteMutation = useMutation(
-        rpc.pageSettings.deleteTeamMember.mutationOptions({
+        rpc.dashboardTeamMember.deleteTeamMember.mutationOptions({
             onSuccess() {
                 queryClient.invalidateQueries({
-                    queryKey: rpc.pageSettings.listTeamMembers.key(),
+                    queryKey: rpc.dashboardTeamMember.listTeamMembers.key(),
                 });
                 notifications.show({
                     title: "Success",
@@ -78,10 +78,10 @@ export function useTeamMemberMutations() {
     );
 
     const reorderMutation = useMutation(
-        rpc.pageSettings.reorderTeamMembers.mutationOptions({
+        rpc.dashboardTeamMember.reorderTeamMembers.mutationOptions({
             onSuccess() {
                 queryClient.invalidateQueries({
-                    queryKey: rpc.pageSettings.listTeamMembers.key(),
+                    queryKey: rpc.dashboardTeamMember.listTeamMembers.key(),
                 });
             },
             onError(error: Error) {

@@ -1,6 +1,6 @@
 "use client";
 
-import type { TeamMemberListItem } from "@/features/dashboard-page-settings/server/team-members/schemas";
+import type { TeamMemberListItem } from "../../server/schemas";
 
 import { useState } from "react";
 
@@ -26,7 +26,7 @@ import { PhotoView } from "react-photo-view";
 import {
     CARD_NAME_TRUNCATE_LENGTH,
     CARD_POSITION_TRUNCATE_LENGTH,
-} from "@/features/dashboard-page-settings/server/team-members/constants";
+} from "../../server/constants";
 
 interface TeamMemberCardProps {
     teamMember: TeamMemberListItem;

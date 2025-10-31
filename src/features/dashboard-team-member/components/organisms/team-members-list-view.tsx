@@ -1,6 +1,6 @@
 "use client";
 
-import type { TeamMemberListItem } from "@/features/dashboard-page-settings/server/team-members/schemas";
+import type { TeamMemberListItem } from "../../server/schemas";
 
 import { useEffect, useState } from "react";
 
@@ -30,12 +30,9 @@ import {
 import { useDisclosure } from "@mantine/hooks";
 import { IconPlus } from "@tabler/icons-react";
 
-import { TeamMemberCard } from "../../atoms/team-members";
-import { TeamMemberModal } from "../../molecules/team-members";
-import {
-    useTeamMemberMutations,
-    useTeamMembersList,
-} from "@/features/dashboard-page-settings/hooks/team-members";
+import { useTeamMemberMutations, useTeamMembersList } from "../../hooks";
+import { TeamMemberCard } from "../atoms";
+import { TeamMemberModal } from "../molecules";
 
 /**
  * TeamMembersListView component displays team members in a 4-column grid with drag-and-drop reordering

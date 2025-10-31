@@ -8,5 +8,5 @@ import { rpc } from "@/lib/rpc";
  * Hook for fetching team members list
  */
 export function useTeamMembersList() {
-    return useQuery(rpc.pageSettings.listTeamMembers.queryOptions());
+    return useQuery(rpc.dashboardTeamMember.listTeamMembers.queryOptions());
 }
