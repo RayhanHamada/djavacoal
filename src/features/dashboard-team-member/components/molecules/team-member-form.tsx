@@ -1,6 +1,6 @@
 "use client";
 
-import type { TeamMemberListItem } from "@/features/dashboard-page-settings/server/team-members/schemas";
+import type { TeamMemberListItem } from "../../server/schemas";
 
 import { useEffect } from "react";
 
@@ -21,11 +21,11 @@ import { IconPhoto, IconX } from "@tabler/icons-react";
 import { useMutation } from "@tanstack/react-query";
 import { PhotoView } from "react-photo-view";
 
-import { useFileUpload } from "@/features/dashboard-page-settings/hooks/team-members";
+import { useFileUpload } from "../../hooks";
 import {
     validateCreateTeamMemberForm,
     validateEditTeamMemberForm,
-} from "@/features/dashboard-page-settings/lib";
+} from "../../lib";
 import { rpc } from "@/lib/rpc";
 
 interface TeamMemberFormProps {
@@ -106,7 +106,7 @@ export function TeamMemberForm({
     }, [file]);
 
     const uploadMutation = useMutation(
-        rpc.pageSettings.generateTeamMemberUploadUrl.mutationOptions()
+        rpc.dashboardTeamMember.generateTeamMemberUploadUrl.mutationOptions()
     );
 
     const handleSubmit = form.onSubmit(async (values) => {

@@ -1,4 +1,4 @@
-import { TeamMembersListView } from "@/features/dashboard-page-settings/components/organisms/team-members";
+import { TeamMembersListView } from "@/features/dashboard-team-member";
 
 export default function TeamMembersPage() {
     return <TeamMembersListView />;

@@ -1,11 +1,11 @@
 "use client";
 
-import type { TeamMemberListItem } from "@/features/dashboard-page-settings/server/team-members/schemas";
+import type { TeamMemberListItem } from "../../server/schemas";
 
 import { Modal } from "@mantine/core";
 
 import { TeamMemberForm } from "./team-member-form";
-import { useTeamMemberMutations } from "@/features/dashboard-page-settings/hooks/team-members";
+import { useTeamMemberMutations } from "../../hooks";
 
 interface TeamMemberModalProps {
     opened: boolean;

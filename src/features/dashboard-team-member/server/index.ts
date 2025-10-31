@@ -5,4 +5,4 @@
 
 export * from "./constants";
 export * from "./schemas";
-export * as teamMembersRouter from "./router";
+export * as router from "./router";
