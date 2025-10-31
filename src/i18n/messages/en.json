@@ -16,7 +16,8 @@
             "process": "Production Process",
             "shipment": "Shipment Terms",
             "moqPayment": "MOQ & Payment Terms",
-            "faq": "FAQ"
+            "faq": "FAQ",
+            "packagingOption": "Packaging Options"
         },
         "newsArticles": "News & Articles",
         "contact": "Contact"

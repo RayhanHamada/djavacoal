@@ -80,16 +80,16 @@ export function useMenuItems() {
                         href: "/production-info#production-process",
                     },
                     {
+                        label: t("productionInfoSubmenus.moqPayment"),
+                        href: "/production-info#moq-payment",
+                    },
+                    {
                         label: t("productionInfoSubmenus.shipment"),
                         href: "/production-info#shipment-terms",
                     },
                     {
-                        label: t("productionInfoSubmenus.moqPayment"),
-                        href: "/production-info#moq-payment-terms",
-                    },
-                    {
-                        label: t("productionInfoSubmenus.faq"),
-                        href: "/production-info#faq",
+                        label: t("productionInfoSubmenus.packagingOption"),
+                        href: "/production-info#packaging-option",
                     },
                 ],
             },
