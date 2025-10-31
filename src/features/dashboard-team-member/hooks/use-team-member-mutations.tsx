@@ -1,7 +1,7 @@
 "use client";
 
 import { notifications } from "@mantine/notifications";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 
 import { rpc } from "@/lib/rpc";
 
@@ -9,19 +9,20 @@ import { rpc } from "@/lib/rpc";
  * Hook for team member mutations (create, update, delete, reorder)
  */
 export function useTeamMemberMutations() {
-    const queryClient = useQueryClient();
-
     const createMutation = useMutation(
         rpc.dashboardTeamMember.createTeamMember.mutationOptions({
-            onSuccess() {
-                queryClient.invalidateQueries({
-                    queryKey: rpc.dashboardTeamMember.listTeamMembers.key(),
-                });
+            onSuccess: (_, __, ___, { client }) => {
                 notifications.show({
                     title: "Success",
                     message: "Team member created successfully",
                     color: "green",
                 });
+
+                Promise.all([
+                    client.invalidateQueries({
+                        queryKey: rpc.dashboardTeamMember.listTeamMembers.key(),
+                    }),
+                ]);
             },
             onError(error: Error) {
                 notifications.show({
@@ -35,15 +36,18 @@ export function useTeamMemberMutations() {
 
     const updateMutation = useMutation(
         rpc.dashboardTeamMember.updateTeamMember.mutationOptions({
-            onSuccess() {
-                queryClient.invalidateQueries({
-                    queryKey: rpc.dashboardTeamMember.listTeamMembers.key(),
-                });
+            onSuccess: (_, __, ___, { client }) => {
                 notifications.show({
                     title: "Success",
                     message: "Team member updated successfully",
                     color: "green",
                 });
+
+                Promise.all([
+                    client.invalidateQueries({
+                        queryKey: rpc.dashboardTeamMember.listTeamMembers.key(),
+                    }),
+                ]);
             },
             onError(error: Error) {
                 notifications.show({
@@ -57,15 +61,18 @@ export function useTeamMemberMutations() {
 
     const deleteMutation = useMutation(
         rpc.dashboardTeamMember.deleteTeamMember.mutationOptions({
-            onSuccess() {
-                queryClient.invalidateQueries({
-                    queryKey: rpc.dashboardTeamMember.listTeamMembers.key(),
-                });
+            onSuccess: async (_, __, ___, { client }) => {
                 notifications.show({
                     title: "Success",
                     message: "Team member deleted successfully",
                     color: "green",
                 });
+
+                Promise.all([
+                    client.invalidateQueries({
+                        queryKey: rpc.dashboardTeamMember.listTeamMembers.key(),
+                    }),
+                ]);
             },
             onError(error: Error) {
                 notifications.show({
@@ -79,12 +86,20 @@ export function useTeamMemberMutations() {
 
     const reorderMutation = useMutation(
         rpc.dashboardTeamMember.reorderTeamMembers.mutationOptions({
-            onSuccess() {
-                queryClient.invalidateQueries({
-                    queryKey: rpc.dashboardTeamMember.listTeamMembers.key(),
+            onSuccess: async (_, __, ___, { client }) => {
+                notifications.show({
+                    title: "Success",
+                    message: "Team members reordered successfully",
+                    color: "green",
                 });
+
+                await Promise.all([
+                    client.invalidateQueries({
+                        queryKey: rpc.dashboardTeamMember.listTeamMembers.key(),
+                    }),
+                ]);
             },
-            onError(error: Error) {
+            onError: (error) => {
                 notifications.show({
                     title: "Error",
                     message: error.message || "Failed to reorder team members",
