@@ -2,19 +2,17 @@ import { useRouter } from "next/navigation";
 
 import { notifications } from "@mantine/notifications";
 import { useMutation } from "@tanstack/react-query";
-import { useTranslations } from "next-intl";
 
 import { rpc } from "@/lib/rpc";
 
 export function usePackagingOptionMutations() {
     const router = useRouter();
-    const t = useTranslations("PackagingOptions");
 
     const createMutation = useMutation(
         rpc.dashboardProduct.createPackagingOption.mutationOptions({
             onSuccess: async (_, __, ___, { client }) => {
                 notifications.show({
-                    title: t("form.success.created"),
+                    title: "Packaging option created successfully",
                     message: "",
                     color: "green",
                 });
@@ -29,7 +27,7 @@ export function usePackagingOptionMutations() {
             },
             onError: () => {
                 notifications.show({
-                    title: t("form.errors.createFailed"),
+                    title: "Failed to create packaging option",
                     message: "",
                     color: "red",
                 });
@@ -41,7 +39,7 @@ export function usePackagingOptionMutations() {
         rpc.dashboardProduct.updatePackagingOption.mutationOptions({
             onSuccess: async (_, __, ___, { client }) => {
                 notifications.show({
-                    title: t("form.success.updated"),
+                    title: "Packaging option updated successfully",
                     message: "",
                     color: "green",
                 });
@@ -61,7 +59,7 @@ export function usePackagingOptionMutations() {
             },
             onError: () => {
                 notifications.show({
-                    title: t("form.errors.updateFailed"),
+                    title: "Failed to update packaging option",
                     message: "",
                     color: "red",
                 });
@@ -73,7 +71,7 @@ export function usePackagingOptionMutations() {
         rpc.dashboardProduct.deletePackagingOption.mutationOptions({
             onSuccess: async (_, __, ___, { client }) => {
                 notifications.show({
-                    title: t("deleteModal.success"),
+                    title: "Packaging option deleted successfully",
                     message: "",
                     color: "green",
                 });
@@ -91,7 +89,7 @@ export function usePackagingOptionMutations() {
             },
             onError: () => {
                 notifications.show({
-                    title: t("deleteModal.error"),
+                    title: "Failed to delete packaging option",
                     message: "",
                     color: "red",
                 });

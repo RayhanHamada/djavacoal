@@ -1,12 +1,9 @@
 import { notifications } from "@mantine/notifications";
 import { useMutation } from "@tanstack/react-query";
-import { useTranslations } from "next-intl";
 
 import { rpc } from "@/lib/rpc";
 
 export function useImageUpload() {
-    const t = useTranslations("PackagingOptions");
-
     const generateUrlMutation = useMutation(
         rpc.dashboardProduct.generateImageUploadUrl.mutationOptions()
     );
@@ -27,7 +24,7 @@ export function useImageUpload() {
 
         if (!uploadResponse.ok) {
             notifications.show({
-                title: t("form.errors.uploadFailed"),
+                title: "Failed to upload image",
                 message: "",
                 color: "red",
             });

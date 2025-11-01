@@ -4,6 +4,8 @@
 
 This feature provides comprehensive product catalog management for the Djavacoal admin dashboard. It supports complex product structures with bilingual content (English/Arabic), multiple media types (images/YouTube videos), specifications, variants with sizes, packaging options, and visibility controls. Products can be reordered via drag-and-drop.
 
+**Note:** The dashboard UI uses hardcoded English text for labels, buttons, and messages. The `next-intl` internationalization library has been removed from this feature to simplify the admin interface, though the product data itself remains bilingual (EN/AR) for public display.
+
 ## Architecture
 
 ### Directory Structure
@@ -275,6 +277,7 @@ Products are displayed on `/our-products` page filtered by `is_hidden = false` a
 - `nanoid` - Unique ID generation
 - `zod` - Schema validation
 - `@mantine/core`, `@mantine/hooks`, `@mantine/form` - UI components
+- `@mantine/notifications` - Toast notifications for user feedback
 - `@dnd-kit/core`, `@dnd-kit/sortable` - Drag and drop
 
 ### Internal Dependencies
@@ -283,6 +286,9 @@ Products are displayed on `/our-products` page filtered by `is_hidden = false` a
 - `@/features/admin-auth` - Authentication
 - `@/lib/orpc/server` - RPC base configuration
 - `@/lib/rpc` - Client-side RPC client
+
+### UI Text Localization
+This feature does **not** use `next-intl` for the dashboard UI. All interface text (labels, buttons, notifications, error messages) is hardcoded in English for simplicity. Product data (names, descriptions) remains bilingual (EN/AR) for public-facing pages.
 
 ## Usage Examples
 
@@ -423,10 +429,27 @@ Product: Premium Indonesian Coal
 - `INTERNAL_SERVER_ERROR` - Database or R2 operation failed
 
 ### Client-Side
-- Network errors shown via Mantine notifications
+- Network errors shown via Mantine notifications (hardcoded English messages)
 - Form validation errors displayed inline
 - R2 upload failures handled gracefully
 - Drag-and-drop state management
+
+### Notification Examples
+```typescript
+// Success notification
+notifications.show({
+    title: "Packaging option created successfully",
+    message: "",
+    color: "green",
+});
+
+// Error notification
+notifications.show({
+    title: "Failed to upload image",
+    message: "",
+    color: "red",
+});
+```
 
 ## Best Practices for AI Agents
 
@@ -436,13 +459,15 @@ Product: Premium Indonesian Coal
 3. Use transactions for complex multi-table operations
 4. Track user actions (created_by, updated_by)
 5. Validate YouTube video IDs before saving
+6. **Do not use `next-intl`** - Use hardcoded English strings for dashboard UI
 
 ### When Modifying
 1. Update all related tables together (products, medias, specs, variants)
 2. Handle cascade deletes properly
-3. Maintain bilingual content consistency
+3. Maintain bilingual content consistency for product data (EN/AR)
 4. Test drag-and-drop reordering thoroughly
 5. Ensure R2 cleanup doesn't leave orphaned files
+6. Keep UI text in English - translation is only for public-facing product data
 
 ### When Debugging
 1. Check foreign key constraints
@@ -450,6 +475,13 @@ Product: Premium Indonesian Coal
 3. Test with various media combinations (images only, videos only, mixed)
 4. Check order_index after reordering
 5. Verify packaging option associations
+
+### UI Text Guidelines
+- **Labels and Forms**: Use clear, concise English labels (e.g., "English Name", "Arabic Description")
+- **Notifications**: Hardcode success/error messages (e.g., "Product created successfully", "Failed to upload image")
+- **Buttons**: Use simple action words (e.g., "Create", "Update", "Delete", "Cancel")
+- **Placeholders**: Provide helpful hints (e.g., "Search packaging options...", "Enter product name in English")
+- **No Translation Keys**: Do not use `t()` function or translation key strings like `t("form.submit")`
 
 ## YouTube Integration
 

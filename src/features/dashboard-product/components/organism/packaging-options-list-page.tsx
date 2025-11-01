@@ -15,7 +15,6 @@ import {
     Title,
 } from "@mantine/core";
 import { IconPlus, IconSearch } from "@tabler/icons-react";
-import { useTranslations } from "next-intl";
 
 import {
     usePackagingOptionMutations,
@@ -24,8 +23,6 @@ import {
 import { PackagingOptionsGrid } from "../molecules";
 
 export function PackagingOptionsListPage() {
-    const t = useTranslations("PackagingOptions");
-
     const {
         search,
         setSearch,
@@ -61,20 +58,22 @@ export function PackagingOptionsListPage() {
             <Stack gap="lg">
                 <Group justify="space-between">
                     <div>
-                        <Title order={2}>{t("title")}</Title>
-                        <Text c="dimmed">{t("subtitle")}</Text>
+                        <Title order={2}>Packaging Options</Title>
+                        <Text c="dimmed">
+                            Manage packaging options for products
+                        </Text>
                     </div>
                     <Button
                         component={Link}
                         href="/dashboard/products/packaging-options/create"
                         leftSection={<IconPlus size={16} />}
                     >
-                        {t("createButton")}
+                        Create New
                     </Button>
                 </Group>
 
                 <TextInput
-                    placeholder={t("searchPlaceholder")}
+                    placeholder="Search packaging options..."
                     leftSection={<IconSearch size={16} />}
                     value={search}
                     onChange={(e) => setSearch(e.target.value)}
@@ -105,7 +104,9 @@ export function PackagingOptionsListPage() {
                     </>
                 ) : (
                     <Text ta="center" c="dimmed" mt="xl">
-                        {search ? t("noResults") : t("noOptions")}
+                        {search
+                            ? "No packaging options found"
+                            : "No packaging options yet"}
                     </Text>
                 )}
             </Stack>
@@ -113,24 +114,24 @@ export function PackagingOptionsListPage() {
             <Modal
                 opened={deleteId !== null}
                 onClose={closeDeleteModal}
-                title={t("deleteModal.title")}
+                title="Delete Packaging Option"
             >
                 <Stack gap="md">
                     <Text>
-                        {t("deleteModal.message", {
-                            name: deleteOption?.en_name || "",
-                        })}
+                        Are you sure you want to delete &quot;
+                        {deleteOption?.en_name || ""}&quot;? This action cannot
+                        be undone.
                     </Text>
                     <Group justify="flex-end">
                         <Button variant="default" onClick={closeDeleteModal}>
-                            {t("deleteModal.cancel")}
+                            Cancel
                         </Button>
                         <Button
                             color="red"
                             onClick={confirmDelete}
                             loading={deleteMutation.isPending}
                         >
-                            {t("deleteModal.button")}
+                            Delete
                         </Button>
                     </Group>
                 </Stack>

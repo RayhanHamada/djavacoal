@@ -13,7 +13,6 @@ import {
     TextInput,
 } from "@mantine/core";
 import { IconPhoto, IconTrash } from "@tabler/icons-react";
-import { useTranslations } from "next-intl";
 
 import { usePackagingOptionForm } from "../../hooks";
 import { RichTextEditor } from "../atoms";
@@ -33,8 +32,6 @@ export function PackagingOptionForm({
     isSubmitting,
     assetUrl = "",
 }: PackagingOptionFormProps) {
-    const t = useTranslations("PackagingOptions.form");
-
     const {
         form,
         photoPreview,
@@ -51,16 +48,16 @@ export function PackagingOptionForm({
         <form onSubmit={handleSubmit}>
             <Stack gap="md">
                 <TextInput
-                    label={t("enName")}
-                    placeholder={t("enNamePlaceholder")}
+                    label="English Name"
+                    placeholder="Enter packaging option name in English"
                     required
                     key={form.key("en_name")}
                     {...form.getInputProps("en_name")}
                 />
 
                 <TextInput
-                    label={t("arName")}
-                    placeholder={t("arNamePlaceholder")}
+                    label="Arabic Name"
+                    placeholder="Enter packaging option name in Arabic"
                     required
                     key={form.key("ar_name")}
                     {...form.getInputProps("ar_name")}
@@ -68,7 +65,7 @@ export function PackagingOptionForm({
 
                 <Box>
                     <Text size="sm" fw={500} mb="xs">
-                        {t("enDescription")}{" "}
+                        English Description{" "}
                         <span style={{ color: "red" }}>*</span>
                     </Text>
                     <RichTextEditor
@@ -76,14 +73,14 @@ export function PackagingOptionForm({
                         onChange={(value) =>
                             form.setFieldValue("en_description", value)
                         }
-                        placeholder={t("enDescriptionPlaceholder")}
+                        placeholder="Enter description in English"
                         error={form.errors.en_description}
                     />
                 </Box>
 
                 <Box>
                     <Text size="sm" fw={500} mb="xs">
-                        {t("arDescription")}{" "}
+                        Arabic Description{" "}
                         <span style={{ color: "red" }}>*</span>
                     </Text>
                     <RichTextEditor
@@ -91,14 +88,14 @@ export function PackagingOptionForm({
                         onChange={(value) =>
                             form.setFieldValue("ar_description", value)
                         }
-                        placeholder={t("arDescriptionPlaceholder")}
+                        placeholder="Enter description in Arabic"
                         error={form.errors.ar_description}
                     />
                 </Box>
 
                 <Box>
                     <Text size="sm" fw={500} mb="xs">
-                        {t("image")}
+                        Image
                     </Text>
                     {photoPreview ? (
                         <Stack gap="sm">
@@ -115,7 +112,7 @@ export function PackagingOptionForm({
                                 leftSection={<IconTrash size={16} />}
                                 onClick={handleRemovePhoto}
                             >
-                                {t("removeImage")}
+                                Remove Image
                             </Button>
                         </Stack>
                     ) : (
@@ -130,7 +127,7 @@ export function PackagingOptionForm({
                                     leftSection={<IconPhoto size={16} />}
                                     fullWidth
                                 >
-                                    {t("imageHint")}
+                                    Upload Image
                                 </Button>
                             )}
                         </FileButton>
@@ -139,7 +136,7 @@ export function PackagingOptionForm({
 
                 <Group justify="flex-end" mt="md">
                     <Button variant="default" onClick={onCancel}>
-                        {t("cancel")}
+                        Cancel
                     </Button>
                     <Button
                         type="submit"
@@ -149,7 +146,7 @@ export function PackagingOptionForm({
                             (!form.getValues().photo_key && !photoPreview)
                         }
                     >
-                        {initialData ? t("submitEdit") : t("submitCreate")}
+                        {initialData ? "Update" : "Create"}
                     </Button>
                 </Group>
             </Stack>
