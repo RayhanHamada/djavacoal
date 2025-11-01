@@ -4,15 +4,13 @@ import Image from "next/image";
 import { motion } from "framer-motion";
 
 function PackagingCard({
-    title,
     image,
     desc,
     type,
 }: {
-    title: string;
     image: string;
     desc: string;
-    type: "Full" | "Bulk" | "Loose";
+    type: string;
 }) {
     return (
         <article className="rounded-xl bg-[#222222] text-left">
@@ -23,13 +21,13 @@ function PackagingCard({
             </h3>
 
             {/* Image */}
-            <div className="relative mb-4 flex w-full justify-center overflow-hidden rounded-xl">
-                <div className="/* mobile */ relative aspect-square max-h-none w-full max-w-none overflow-hidden rounded-xl transition-all duration-300">
+            <div className="group relative mb-4 flex w-full justify-center overflow-hidden rounded-xl">
+                <div className="relative aspect-square max-h-none w-full max-w-none overflow-hidden rounded-xl transition-all duration-300">
                     <Image
                         src={image}
-                        alt={title}
+                        alt={`${type} Packaging`}
                         fill
-                        className="/* sedikit kecil di desktop */ scale-85 rounded-xl object-contain transition-transform duration-300 lg:scale-90"
+                        className="scale-85 rounded-xl object-contain transition-transform duration-300 group-hover:scale-110 lg:scale-90"
                     />
 
                     {/* Overlay radial gradient */}
@@ -55,6 +53,30 @@ function PackagingCard({
         </article>
     );
 }
+
+const PACKAGING_OPTIONS = [
+    {
+        type: "Full",
+        image: "/images/packaging-full.png",
+        description:
+            "Designed for retail and private label brands, this option includes inner plastic, inner box, and master box. It ensures your brand stands out on the market while keeping products safe and ready for direct distribution to customers.",
+        features: ["Retail Ready", "Brand Protection", "Complete Packaging"],
+    },
+    {
+        type: "Bulk",
+        image: "/images/packaging-bulk.png",
+        description:
+            "Best suited for wholesale buyers and large distributors, this packaging includes inner plastic and master box only. It reduces costs while still maintaining protection and efficient handling during export.",
+        features: ["Wholesale Focused", "Cost Effective", "Efficient Handling"],
+    },
+    {
+        type: "Loose",
+        image: "/images/packaging-bulk-loose.png",
+        description:
+            "Ideal for high-volume and cost-sensitive shipments, this option uses only inner plastic (10 kg) packed directly into the master box without inner boxes. It maximizes container space and efficiency, making it the most economical choice.",
+        features: ["High Volume", "Space Efficient", "Most Economical"],
+    },
+];
 
 export default function PackagingSection() {
     return (
@@ -82,26 +104,16 @@ export default function PackagingSection() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, amount: 0.2 }}
                 transition={{ duration: 0.4 }}
-                className="grid grid-cols-1 gap-6 px-4 pb-8 md:grid-cols-3 md:px-6"
+                className="group grid grid-cols-1 gap-6 px-4 pb-8 md:grid-cols-3 md:px-6"
             >
-                <PackagingCard
-                    type="Full"
-                    title="Full Packaging"
-                    image="/images/pack-full.png"
-                    desc="Designed for retail and private label brands, this option includes inner plastic, inner box, and master box. It ensures your brand stands out on the market while keeping products safe and ready for direct distribution to customers."
-                />
-                <PackagingCard
-                    type="Bulk"
-                    title="Bulk Packaging"
-                    image="/images/pack-bulk.png"
-                    desc="Best suited for wholesale buyers and large distributors, this packaging includes inner plastic and master box only. It reduces costs while still maintaining protection and efficient handling during export."
-                />
-                <PackagingCard
-                    type="Loose"
-                    title="Loose Packaging"
-                    image="/images/pack-loose.png"
-                    desc="Ideal for high-volume and cost-sensitive shipments, this option uses only inner plastic (10 kg) packed directly into the master box without inner boxes. It maximizes container space and efficiency, making it the most economical choice."
-                />
+                {PACKAGING_OPTIONS.map((option) => (
+                    <PackagingCard
+                        key={option.type}
+                        type={option.type}
+                        image={option.image}
+                        desc={option.description}
+                    />
+                ))}
             </motion.div>
         </section>
     );
