@@ -33,6 +33,30 @@ export const KV_KEYS = {
      * should be array of photos for product gallery section
      */
     PRODUCT_GALLERY_PHOTOS: "product_gallery_photos",
+
+    /**
+     * social media links
+     */
+    FACEBOOK_LINK: "facebook_link",
+    LINKEDIN_LINK: "linkedin_link",
+    INSTAGRAM_LINK: "instagram_link",
+    TIKTOK_LINK: "tiktok_link",
+
+    /**
+     * address informations
+     */
+    MAPS_LINK: "maps_link",
+    ADDRESS_LINE: "address_line",
+
+    /**
+     * phone number
+     */
+    WHATSAPP_NUMBER: "whatsapp_number",
+
+    /**
+     * email address
+     */
+    EMAIL_ADDRESS: "email_address",
 } as const;
 
 type KVKey = typeof KV_KEYS;

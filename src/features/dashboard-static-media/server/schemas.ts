@@ -96,3 +96,35 @@ export const GetReelsOutputSchema = z.object({
 export const DeletePhotoInputSchema = z.object({
     key: z.string(),
 });
+
+/**
+ * Schema for saving contact settings
+ */
+export const SaveContactSettingsInputSchema = z.object({
+    // Social media links
+    facebookLink: z.string().url().optional().or(z.literal("")),
+    linkedinLink: z.string().url().optional().or(z.literal("")),
+    instagramLink: z.string().url().optional().or(z.literal("")),
+    tiktokLink: z.string().url().optional().or(z.literal("")),
+    // Contact information
+    emailAddress: z.string().email().optional().or(z.literal("")),
+    whatsappNumber: z.string().optional().or(z.literal("")),
+    mapsLink: z.string().url().optional().or(z.literal("")),
+    addressLine: z.string().max(500).optional().or(z.literal("")),
+});
+
+/**
+ * Schema for getting contact settings
+ */
+export const GetContactSettingsOutputSchema = z.object({
+    // Social media links
+    facebookLink: z.string().nullable(),
+    linkedinLink: z.string().nullable(),
+    instagramLink: z.string().nullable(),
+    tiktokLink: z.string().nullable(),
+    // Contact information
+    emailAddress: z.string().nullable(),
+    whatsappNumber: z.string().nullable(),
+    mapsLink: z.string().nullable(),
+    addressLine: z.string().nullable(),
+});

@@ -5,7 +5,7 @@ import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 
-const productionTabs = [
+const PRODUCTION_TABS = [
     {
         id: "production-process",
         label: "Production Process",
@@ -89,7 +89,7 @@ export function ProductionInfoSection() {
 
             {/* Tab Buttons */}
             <div className="mx-auto mb-8 flex max-w-4xl flex-wrap justify-center gap-3 md:mb-12 md:gap-4">
-                {productionTabs.map((tab, index) => (
+                {PRODUCTION_TABS.map((tab, index) => (
                     <button
                         key={tab.id}
                         onClick={() => setActiveTab(index)}
@@ -111,8 +111,8 @@ export function ProductionInfoSection() {
                     <div className="relative overflow-hidden rounded-[20px]">
                         <div className="relative h-[300px] w-full md:h-[400px] lg:h-[500px]">
                             <Image
-                                src={productionTabs[activeTab].image}
-                                alt={productionTabs[activeTab].title}
+                                src={PRODUCTION_TABS[activeTab].image}
+                                alt={PRODUCTION_TABS[activeTab].title}
                                 fill
                                 className="rounded-[20px] object-cover"
                             />
@@ -122,15 +122,15 @@ export function ProductionInfoSection() {
                     {/* Right: Content */}
                     <div className="flex flex-col justify-center space-y-6">
                         <h3 className="font-['Josefin_Sans'] text-[26px] font-bold text-white uppercase md:text-[32px] lg:text-[36px]">
-                            {productionTabs[activeTab].title}
+                            {PRODUCTION_TABS[activeTab].title}
                         </h3>
                         <p className="font-['Open_Sans'] text-[15px] leading-relaxed text-[#C6C6C6] md:text-[16px]">
-                            {productionTabs[activeTab].description}
+                            {PRODUCTION_TABS[activeTab].description}
                         </p>
 
                         {/* Features List */}
                         <ul className="space-y-3">
-                            {productionTabs[activeTab].features.map(
+                            {PRODUCTION_TABS[activeTab].features.map(
                                 (feature, index) => (
                                     <li
                                         key={index}
@@ -161,7 +161,7 @@ export function ProductionInfoSection() {
 
                         {/* Learn More Button */}
                         <Link
-                            href={productionTabs[activeTab].href}
+                            href={PRODUCTION_TABS[activeTab].href}
                             className="mt-6 inline-flex w-fit items-center gap-2 rounded-[40px] border-2 border-[#EFA12D] bg-transparent px-8 py-3 font-['Open_Sans'] text-[14px] font-semibold text-[#EFA12D] uppercase transition-all hover:bg-[#EFA12D] hover:text-[#151515] md:px-10 md:py-4 md:text-[15px]"
                         >
                             Learn More
