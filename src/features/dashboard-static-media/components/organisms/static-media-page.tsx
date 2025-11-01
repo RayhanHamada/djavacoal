@@ -5,6 +5,7 @@ import { PhotoProvider } from "react-photo-view";
 import "react-photo-view/dist/react-photo-view.css";
 
 import {
+    ContactSettingsForm,
     PhotoGalleryManager,
     ReelsManager,
     SinglePhotoUploader,
@@ -97,6 +98,14 @@ export function StaticMediaPage() {
                         />
                     </Paper>
                 </PhotoProvider>
+
+                {/* Contact Settings */}
+                <Paper p="xl" withBorder radius="md" shadow="sm">
+                    <ContactSettingsForm
+                        title="Social Media & Contact Information"
+                        description="Manage social media links and contact information displayed on your website."
+                    />
+                </Paper>
             </Stack>
         </Container>
     );
