@@ -1,6 +1,6 @@
 import Image from "next/image";
 
-export default function Loading() {
+export default async function Loading() {
     return (
         <div className="fixed inset-0 z-9999 flex items-center justify-center bg-[#1a1a1a]">
             <div className="animate-pulse">

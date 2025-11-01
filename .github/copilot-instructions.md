@@ -4,6 +4,8 @@
 
 Next.js 15 application deployed to Cloudflare Workers using OpenNext adapter. Features admin authentication, i18n support, and a feature-based architecture with type-safe RPC.
 
+**Documentation Convention**: Each feature has an `AGENTS.md` file in its directory (`src/features/<feature-name>/AGENTS.md`) providing comprehensive implementation details, schemas, and usage examples. Always consult these files when working with specific features.
+
 ## Tech Stack
 
 - **Framework**: Next.js 15 (App Router) + TypeScript + Bun runtime
@@ -13,8 +15,9 @@ Next.js 15 application deployed to Cloudflare Workers using OpenNext adapter. Fe
 - **Auth**: Better Auth (NOT NextAuth) with custom D1 adapter
 - **RPC**: oRPC for type-safe client-server communication
 - **UI**: Mantine v8 + Tailwind CSS v4 + Framer Motion
-- **i18n**: next-intl (cookie-based locale storage)
+- **i18n**: next-intl (cookie-based locale storage for visitor pages)
 - **Email**: Resend with react-email templates
+- **Rich Text**: TipTap for content editing (news articles)
 
 ## Critical Architecture Patterns
 
@@ -46,6 +49,8 @@ Features live in `src/features/<feature-name>/` with subfolders:
 ### RPC System (oRPC)
 
 Type-safe client-server communication without API route boilerplate. RPC functions can be **callable** (for client-side hooks) or **actionable** (for Server Actions with redirects).
+
+**Middleware**: The `injectCFContext` middleware (in `src/lib/orpc/middlewares.ts`) automatically injects Cloudflare context into all RPC handlers, making `env` available in the `context` parameter.
 
 **Server-side** (`src/features/<feature>/server/`):
 
@@ -179,6 +184,8 @@ await client.resetPassword({ newPassword, token });
 - **Messages**: JSON files in `src/i18n/messages/{locale}.json`
 - **Config**: `src/i18n/request.ts` reads locale from cookies
 - **Usage**: `useTranslations()` hook from `next-intl`
+- **Dashboard UI**: Some dashboard features use hardcoded English text for simplicity (e.g., `dashboard-product`), while product/content data remains bilingual (EN/AR) for public display
+- **Public Pages**: All visitor-facing content uses `next-intl` for full bilingual support
 
 ### Component Organization
 
@@ -311,6 +318,60 @@ CLOUDFLARE_API_TOKEN=your-d1-token
 bun cf:typegen
 ```
 
+## Feature-Specific Patterns
+
+### Content Management Features (News, Products)
+
+**Status Workflows**: Features like `dashboard-news` use draft→published→unpublished status flows:
+
+- Validate status transitions server-side (can't go draft→unpublished)
+- Track `published_at` and `published_by` fields
+- Support scheduled publishing with "migration" vs "fresh" modes
+
+**Rich Text Content**: Store HTML in R2, not D1:
+
+- Separate files for EN/AR content (`news-content/{id}-en.html`, `news-content/{id}-ar.html`)
+- Use `uploadTextContent()` / `getTextContent()` from R2 adapter
+- Store only R2 keys in database
+
+**Auto-Tag Systems**: Tags are created automatically when referenced:
+
+```typescript
+// Tags in metadata are auto-created if they don't exist
+await db.insert(tags).values(nameSlugPairs).onConflictDoNothing();
+```
+
+### Media Management Patterns
+
+**Direct Upload Flow**: Use presigned URLs for browser-to-R2 uploads:
+
+1. Client requests presigned URL with name/MIME type
+2. Client uploads directly to R2 using PUT request
+3. Client confirms upload to save metadata in D1
+
+**R2 Cleanup**: Always delete R2 objects when removing database records:
+
+```typescript
+// Delete from database AND R2
+await db.delete(photos).where(eq(photos.id, id));
+await deleteObject(env.DJAVACOAL_BUCKET, key);
+```
+
+**Unique Name Validation**: Check availability before upload/rename:
+
+```typescript
+const isAvailable = await isPhotoNameAvailable(db, name, excludeId);
+if (!isAvailable) throw errors.BAD_REQUEST({ message: "Name taken" });
+```
+
+### Drag-and-Drop Reordering
+
+Features with custom ordering (products, variants, specs) use `order_index`:
+
+- 0-based sequential indexing
+- Use `@dnd-kit` libraries for UI
+- Batch update via RPC with array of `{ id, order_index }` pairs
+
 ## Common Pitfalls
 
 1. **Don't use NextAuth** - This project uses Better Auth exclusively
@@ -320,6 +381,9 @@ bun cf:typegen
 5. **Column names** in D1 are snake_case, map via constants, not hardcoded strings
 6. **Locale switching** updates cookie, not URL path
 7. **Environment variables** - Use `env` from Cloudflare context in server code, not `process.env`
+8. **R2 Content Storage** - Store large content (HTML, rich text) in R2, not D1 columns
+9. **Status Transitions** - Validate state machine transitions server-side, don't trust client
+10. **Feature Documentation** - Always check `src/features/<feature>/AGENTS.md` for feature-specific patterns
 
 ## Integration Points
 
