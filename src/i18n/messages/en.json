@@ -16,7 +16,8 @@
             "process": "Production Process",
             "shipment": "Shipment Terms",
             "moqPayment": "MOQ & Payment Terms",
-            "faq": "FAQ"
+            "faq": "FAQ",
+            "packagingOption": "Packaging Options"
         },
         "newsArticles": "News & Articles",
         "contact": "Contact"
@@ -154,6 +155,17 @@
             "previous": "Previous",
             "next": "Next",
             "page": "Page {current} of {total}"
+        }
+    },
+    "NotFound": {
+        "title": "404 - NOT FOUND",
+        "subtitle": "The page or file you're looking for doesn't exist or has been moved elsewhere.",
+        "whatCanIDo": "What can I do now?",
+        "pleaseCheck": "Please check the URL for mistakes or search for the correct page.",
+        "buttons": {
+            "returnHome": "Return to Home",
+            "ourProducts": "Our Products",
+            "aboutCompany": "About Company"
         }
     }
 }

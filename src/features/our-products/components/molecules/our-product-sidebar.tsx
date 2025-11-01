@@ -7,11 +7,11 @@ import { IoMdArrowDropright } from "react-icons/io";
 import { IoChevronDown, IoChevronUp } from "react-icons/io5";
 
 const ITEMS = [
-    { id: "", label: "Coconut Shell Charcoal Briquette" },
-    { id: "", label: "Barbeque Charcoal Briquette" },
-    { id: "", label: "Sawdust Charcoal" },
-    { id: "", label: "Natural Wood Charcoal" },
-    { id: "", label: "Djavacoal’s Brand" },
+    { id: "1", label: "Coconut Shell Charcoal Briquette" },
+    { id: "2", label: "Barbeque Charcoal Briquette" },
+    { id: "3", label: "Sawdust Charcoal" },
+    { id: "4", label: "Natural Wood Charcoal" },
+    { id: "5", label: "Djavacoal’s Brand" },
 ];
 
 type Props = {
@@ -82,7 +82,7 @@ export default function OurProductsSidebar({ idPrefix = "" }: Props) {
     return (
         <>
             {/* MOBILE DROPDOWN */}
-            <div className="sticky top-0 z-40 flex items-center gap-3 border-b border-[#2a2a2a] bg-[#161616] py-3 lg:hidden">
+            <div className="bg-primary sticky top-0 z-40 flex items-center gap-3 border-b border-[#2a2a2a] py-3 lg:hidden">
                 <div className="text-xl text-[#EFA12D]">
                     <Image
                         src="/svgs/ic_select.svg"
@@ -136,7 +136,7 @@ export default function OurProductsSidebar({ idPrefix = "" }: Props) {
                         {ITEMS.map(({ id, label }) => (
                             <div
                                 key={id}
-                                className="relative after:absolute after:bottom-0 after:left-0 after:h-[1px] after:w-full after:bg-[#2a2a2a]/60 after:content-[''] last:after:hidden"
+                                className="relative after:absolute after:bottom-0 after:left-0 after:h-px after:w-full after:bg-[#2a2a2a]/60 after:content-[''] last:after:hidden"
                             >
                                 <button
                                     onClick={() => handleClick(id)}

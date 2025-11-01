@@ -13,7 +13,7 @@ import {
     IconWorld,
     IconWorldOff,
 } from "@tabler/icons-react";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 
 import { client, rpc } from "@/lib/rpc";
 
@@ -35,20 +35,24 @@ export function NewsTableActions({
     status,
     onEdit,
 }: NewsTableActionsProps) {
-    const queryClient = useQueryClient();
-
     // Delete mutation
     const deleteMutation = useMutation({
-        mutationFn: (id: number) => client.dashboardNews.deleteNews({ id }),
-        onSuccess: () => {
+        mutationFn: (id: number) =>
+            client.dashboardNews.deleteNews({
+                id,
+            }),
+        onSuccess: async (_, __, ___, { client }) => {
             notifications.show({
                 title: "Success",
                 message: "News article deleted successfully",
                 color: "green",
             });
-            queryClient.invalidateQueries({
-                queryKey: ["dashboardNews", "listNews"],
-            });
+
+            await Promise.all([
+                client.invalidateQueries({
+                    queryKey: rpc.dashboardNews.listNews.key(),
+                }),
+            ]);
         },
         onError: (error) => {
             notifications.show({
@@ -69,7 +73,7 @@ export function NewsTableActions({
             id: number;
             status: "draft" | "published" | "unpublished";
         }) => client.dashboardNews.changeStatus({ id, status }),
-        onSuccess: (_, variables) => {
+        onSuccess: async (_, variables, __, { client }) => {
             const statusMessages = {
                 draft: "News article saved as draft",
                 published: "News article published",
@@ -80,9 +84,12 @@ export function NewsTableActions({
                 message: statusMessages[variables.status],
                 color: "green",
             });
-            queryClient.invalidateQueries({
-                queryKey: rpc.dashboardNews.listNews.key(),
-            });
+
+            await Promise.all([
+                client.invalidateQueries({
+                    queryKey: rpc.dashboardNews.listNews.key(),
+                }),
+            ]);
         },
         onError: (error) => {
             notifications.show({
