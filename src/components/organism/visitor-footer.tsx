@@ -18,7 +18,7 @@ export default function VisitorFooter() {
 
     return (
         <footer className="relative bg-[linear-gradient(rgba(0,0,0,0.7),rgba(0,0,0,0.7)),url('/images/bg-footer.png')] bg-cover bg-center text-gray-200">
-            <div className="bg-secondary absolute top-0 left-0 z-50 h-[2px] w-full"></div>
+            <div className="bg-secondary absolute top-0 left-0 z-50 h-0.5 w-full"></div>
             {/* Top Section */}
             <div className="mx-auto grid grid-cols-1 gap-10 px-6 py-10 lg:grid-cols-4">
                 {/* Logo & Social Media */}
@@ -33,25 +33,25 @@ export default function VisitorFooter() {
                     <div className="flex space-x-3">
                         <Link
                             href="#"
-                            className="border-1 bg-transparent p-2 hover:bg-gray-500"
+                            className="border bg-transparent p-2 hover:bg-gray-500"
                         >
                             <FaFacebookF size={16} />
                         </Link>
                         <Link
                             href="#"
-                            className="border-1 bg-transparent p-2 hover:bg-gray-500"
+                            className="border bg-transparent p-2 hover:bg-gray-500"
                         >
                             <FaLinkedinIn size={16} />
                         </Link>
                         <Link
                             href="#"
-                            className="border-1 bg-transparent p-2 hover:bg-gray-500"
+                            className="border bg-transparent p-2 hover:bg-gray-500"
                         >
                             <FaInstagram size={18} />
                         </Link>
                         <Link
                             href="#"
-                            className="border-1 bg-transparent p-2 hover:bg-gray-500"
+                            className="border bg-transparent p-2 hover:bg-gray-500"
                         >
                             <FaTiktok size={16} />
                         </Link>
@@ -183,7 +183,7 @@ export default function VisitorFooter() {
 
             {/* Copyright */}
             <div className="relative py-4 text-center text-xs text-white">
-                <div className="absolute inset-0 bg-[#EFA12D]/100"></div>
+                <div className="absolute inset-0 bg-[#EFA12D]"></div>
                 <div className="absolute inset-0 bg-black/50"></div>
                 <span className="relative z-10 text-xs lg:text-base">
                     © Copyright {year} · CV. Djavacoal Indonesia
