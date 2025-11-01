@@ -1,5 +1,7 @@
 "use client";
 
+import { useMemo } from "react";
+
 import { notifications } from "@mantine/notifications";
 import { useMutation, useQuery } from "@tanstack/react-query";
 
@@ -66,17 +68,23 @@ export function useContactSettings() {
         });
     };
 
+    const settings = useMemo(
+        () =>
+            data || {
+                facebookLink: null,
+                linkedinLink: null,
+                instagramLink: null,
+                tiktokLink: null,
+                emailAddress: null,
+                whatsappNumber: null,
+                mapsLink: null,
+                addressLine: null,
+            },
+        [data]
+    );
+
     return {
-        settings: data || {
-            facebookLink: null,
-            linkedinLink: null,
-            instagramLink: null,
-            tiktokLink: null,
-            emailAddress: null,
-            whatsappNumber: null,
-            mapsLink: null,
-            addressLine: null,
-        },
+        settings,
         isLoading,
         saveSettings,
         isSaving: saveMutation.isPending,
