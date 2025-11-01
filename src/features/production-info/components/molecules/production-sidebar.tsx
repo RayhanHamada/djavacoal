@@ -82,7 +82,7 @@ export default function ProductionSidebar({ idPrefix = "" }: Props) {
     return (
         <>
             {/* MOBILE DROPDOWN */}
-            <div className="sticky top-0 z-40 flex items-center gap-3 border-b border-[#2a2a2a] bg-[#161616] py-3 lg:hidden">
+            <div className="bg-primary sticky top-0 z-40 flex items-center gap-3 border-b border-[#2a2a2a] py-3 lg:hidden">
                 <div className="text-xl text-[#EFA12D]">
                     <Image
                         src="/svgs/ic_select.svg"
@@ -136,7 +136,7 @@ export default function ProductionSidebar({ idPrefix = "" }: Props) {
                         {ITEMS.map(({ id, label }) => (
                             <div
                                 key={id}
-                                className="relative after:absolute after:bottom-0 after:left-0 after:h-[1px] after:w-full after:bg-[#2a2a2a]/60 after:content-[''] last:after:hidden"
+                                className="relative after:absolute after:bottom-0 after:left-0 after:h-px after:w-full after:bg-[#2a2a2a]/60 after:content-[''] last:after:hidden"
                             >
                                 <button
                                     onClick={() => handleClick(id)}
