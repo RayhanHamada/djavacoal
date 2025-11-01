@@ -114,7 +114,8 @@ export function ContactSettingsForm({
 
         // Validate address line character limit
         if (formData.addressLine && formData.addressLine.length > 500) {
-            newErrors.addressLine = "Address line must not exceed 500 characters";
+            newErrors.addressLine =
+                "Address line must not exceed 500 characters";
         }
 
         setErrors(newErrors);
@@ -161,7 +162,10 @@ export function ContactSettingsForm({
                     placeholder="https://facebook.com/yourpage"
                     value={formData.facebookLink || ""}
                     onChange={(e) =>
-                        setFormData({ ...formData, facebookLink: e.target.value })
+                        setFormData({
+                            ...formData,
+                            facebookLink: e.target.value,
+                        })
                     }
                     leftSection={<IconBrandFacebook size={18} />}
                     disabled={isSaving}
@@ -173,7 +177,10 @@ export function ContactSettingsForm({
                     placeholder="https://linkedin.com/company/yourcompany"
                     value={formData.linkedinLink || ""}
                     onChange={(e) =>
-                        setFormData({ ...formData, linkedinLink: e.target.value })
+                        setFormData({
+                            ...formData,
+                            linkedinLink: e.target.value,
+                        })
                     }
                     leftSection={<IconBrandLinkedin size={18} />}
                     disabled={isSaving}
@@ -260,7 +267,10 @@ export function ContactSettingsForm({
                     placeholder="Enter your full address"
                     value={formData.addressLine || ""}
                     onChange={(e) =>
-                        setFormData({ ...formData, addressLine: e.target.value })
+                        setFormData({
+                            ...formData,
+                            addressLine: e.target.value,
+                        })
                     }
                     disabled={isSaving}
                     error={errors.addressLine}
