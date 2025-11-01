@@ -1,10 +1,9 @@
-import type {} from "./use-product-form";
 import type { ProductDetail } from "../server/schemas";
 
 import { useRouter } from "next/navigation";
 
 import { notifications } from "@mantine/notifications";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 
 import { useFileUpload } from "./use-file-upload";
 import { ProductFormValues } from "@/features/dashboard-product/utils";
@@ -12,7 +11,6 @@ import { client, rpc } from "@/lib/rpc";
 
 export function useProductMutations(product?: ProductDetail) {
     const router = useRouter();
-    const queryClient = useQueryClient();
     const { uploadAllFiles } = useFileUpload();
 
     const createMutation = useMutation({
@@ -61,10 +59,13 @@ export function useProductMutations(product?: ProductDetail) {
                 order_index: 0,
             });
         },
-        onSuccess: async () => {
-            await queryClient.invalidateQueries({
-                queryKey: rpc.dashboardProduct.listProducts.key(),
-            });
+        onSuccess: async (_, __, ___, { client }) => {
+            await Promise.all([
+                client.invalidateQueries({
+                    queryKey: rpc.dashboardProduct.listProducts.key(),
+                }),
+            ]);
+
             notifications.show({
                 title: "Success",
                 message: "Product created successfully",
@@ -130,13 +131,15 @@ export function useProductMutations(product?: ProductDetail) {
                 order_index: product.order_index,
             });
         },
-        onSuccess: async () => {
-            await queryClient.invalidateQueries({
-                queryKey: rpc.dashboardProduct.getProductById.key(),
-            });
-            await queryClient.invalidateQueries({
-                queryKey: rpc.dashboardProduct.listProducts.key(),
-            });
+        onSuccess: async (_, __, ___, { client }) => {
+            await Promise.all([
+                client.invalidateQueries({
+                    queryKey: rpc.dashboardProduct.getProductById.key(),
+                }),
+                client.invalidateQueries({
+                    queryKey: rpc.dashboardProduct.listProducts.key(),
+                }),
+            ]);
 
             notifications.show({
                 title: "Success",

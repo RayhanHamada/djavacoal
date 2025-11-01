@@ -283,9 +283,9 @@ await confirmMutation.mutateAsync({
 
 ```typescript
 const renameMutation = rpc.gallery.renamePhoto.useMutation({
-  onSuccess: () => {
+  onSuccess: (_, __, ___, { client }) => {
     // Refresh photo list
-    queryClient.invalidateQueries(['gallery', 'listPhotos']);
+    client.invalidateQueries(['gallery', 'listPhotos']);
   }
 });
 
