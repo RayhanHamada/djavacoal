@@ -27,6 +27,18 @@ export const PRODUCT_VARIANTS_PREFIX = "products/variants";
 export const PRODUCT_DESCRIPTIONS_PREFIX = "products/descriptions";
 
 /**
+ * Static media folder prefixes in R2
+ */
+export const STATIC_MEDIA_CAROUSEL_PREFIX = "static-media/carousel";
+export const STATIC_MEDIA_FACTORY_VISIT_PREFIX = "static-media/factory-visit";
+export const STATIC_MEDIA_FACTORY_PHOTO_PREFIX = "static-media/factory-photo";
+export const STATIC_MEDIA_REELS_PREFIX = "static-media/reels";
+export const STATIC_MEDIA_FACTORY_GALLERY_PREFIX =
+    "static-media/factory-gallery";
+export const STATIC_MEDIA_PRODUCT_GALLERY_PREFIX =
+    "static-media/product-gallery";
+
+/**
  * Presigned URL expiration time in seconds (1 hour)
  */
 export const PRESIGNED_URL_EXPIRATION = 3600;

@@ -46,7 +46,7 @@ export default function ProductionInfoPage() {
     };
 
     return (
-        <main className="bg-[#161616] text-white">
+        <main className="bg-primary text-white">
             {/* JSON-LD */}
             <script
                 type="application/ld+json"

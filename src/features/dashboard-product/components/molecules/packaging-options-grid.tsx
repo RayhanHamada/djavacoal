@@ -1,7 +1,6 @@
 "use client";
 
 import { SimpleGrid, Text } from "@mantine/core";
-import { useTranslations } from "next-intl";
 
 import { PackagingOptionCard } from "../atoms";
 
@@ -27,12 +26,10 @@ export function PackagingOptionsGrid({
     onDelete,
     assetUrl,
 }: PackagingOptionsGridProps) {
-    const t = useTranslations("PackagingOptions");
-
     if (options.length === 0) {
         return (
             <Text c="dimmed" ta="center" mt="xl">
-                {t("noResults")}
+                No packaging options found
             </Text>
         );
     }

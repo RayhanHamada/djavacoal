@@ -2,6 +2,8 @@
 
 import type { ProductDetail } from "../server/schemas";
 
+import { useEffect } from "react";
+
 import {
     Button,
     Fieldset,
@@ -10,6 +12,7 @@ import {
     Switch,
     TextInput,
 } from "@mantine/core";
+import { notifications } from "@mantine/notifications";
 
 import {
     usePackagingOptions,
@@ -38,6 +41,17 @@ export function ProductForm({ product }: ProductFormProps) {
             createMutation.mutate(values);
         }
     });
+
+    useEffect(() => {
+        const errors = Object.values(form.errors);
+        if (!errors.length) return;
+
+        notifications.show({
+            title: "Error",
+            color: "red",
+            message: errors.at(0),
+        });
+    }, [form.errors]);
 
     const isSubmitting = createMutation.isPending || updateMutation.isPending;
 
@@ -167,6 +181,7 @@ export function ProductForm({ product }: ProductFormProps) {
                     {product ? "Update Product" : "Create Product"}
                 </Button>
             </Stack>
+            <p>{JSON.stringify(form.errors)}</p>
         </form>
     );
 }

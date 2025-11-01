@@ -444,7 +444,7 @@ function SortableMediaItem({
                                                         >
                                                             <Image
                                                                 alt="Custom thumbnail"
-                                                                fit="cover"
+                                                                fit="contain"
                                                                 w={200}
                                                                 h={112}
                                                                 mt="xs"

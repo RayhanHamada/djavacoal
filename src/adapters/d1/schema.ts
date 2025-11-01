@@ -1,23 +1,26 @@
 import { relations } from "drizzle-orm";
-import { sqliteTable, text, int } from "drizzle-orm/sqlite-core";
+import { sqliteTable, text, int, real } from "drizzle-orm/sqlite-core";
 
 import {
     ACCOUNT_COLUMNS,
     COMMON_COLUMNS,
     GALLERY_PHOTO_COLUMNS,
+    PRODUCT_MEDIA_TYPE_ENUM,
     NEWS_COLUMNS,
     PACKAGING_OPTION_COLUMNS,
+    PAGE_METADATA_COLUMNS,
     PRODUCT_COLUMNS,
     PRODUCT_MEDIA_COLUMNS,
-    PRODUCT_MEDIA_TYPE,
     PRODUCT_PACKAGING_OPTION_COLUMNS,
     PRODUCT_SPECIFICATION_COLUMNS,
     PRODUCT_VARIANT_COLUMNS,
     SESSION_COLUMNS,
+    SITEMAP_CHANGEFREQ_ENUM,
     TABLE_NAMES,
     TAG_COLUMNS,
     USER_COLUMNS,
     VERIFICATION_COLUMNS,
+    TEAM_MEMBER_COLUMNS,
 } from "@/adapters/d1/constants";
 
 const ALLOWED_IMAGE_MIME_TYPES = [
@@ -333,7 +336,7 @@ const PRODUCT_COLUMN_FIELDS = {
 /**
  * table used for product media
  */
-export const PRODUCT_MEDIA_COLUMN_FIELDS = {
+const PRODUCT_MEDIA_COLUMN_FIELDS = {
     ...COMMON_FIELDS,
 
     [COMMON_COLUMNS.ID]: int().primaryKey(),
@@ -345,7 +348,7 @@ export const PRODUCT_MEDIA_COLUMN_FIELDS = {
         }),
 
     [PRODUCT_MEDIA_COLUMNS.MEDIA_TYPE]: text({
-        enum: [PRODUCT_MEDIA_TYPE.IMAGE, PRODUCT_MEDIA_TYPE.YOUTUBE],
+        enum: PRODUCT_MEDIA_TYPE_ENUM,
     }).notNull(),
 
     /**
@@ -369,7 +372,7 @@ export const PRODUCT_MEDIA_COLUMN_FIELDS = {
     [PRODUCT_MEDIA_COLUMNS.ORDER_INDEX]: int().notNull().default(0),
 } as const;
 
-export const PRODUCT_SPECIFICATION_COLUMN_FIELDS = {
+const PRODUCT_SPECIFICATION_COLUMN_FIELDS = {
     ...COMMON_FIELDS,
 
     [COMMON_COLUMNS.ID]: int().primaryKey(),
@@ -391,7 +394,7 @@ export const PRODUCT_SPECIFICATION_COLUMN_FIELDS = {
     [PRODUCT_SPECIFICATION_COLUMNS.ORDER_INDEX]: int().notNull().default(0),
 } as const;
 
-export const PRODUCT_VARIANT_COLUMN_FIELDS = {
+const PRODUCT_VARIANT_COLUMN_FIELDS = {
     ...COMMON_FIELDS,
 
     [COMMON_COLUMNS.ID]: int().primaryKey(),
@@ -432,7 +435,7 @@ export const PRODUCT_VARIANT_COLUMN_FIELDS = {
     [PRODUCT_VARIANT_COLUMNS.ORDER_INDEX]: int().notNull().default(0),
 };
 
-export const PRODUCT_PACKAGING_OPTION_COLUMN_FIELDS = {
+const PRODUCT_PACKAGING_OPTION_COLUMN_FIELDS = {
     ...COMMON_FIELDS,
 
     [COMMON_COLUMNS.ID]: int().primaryKey(),
@@ -448,6 +451,61 @@ export const PRODUCT_PACKAGING_OPTION_COLUMN_FIELDS = {
         .references(() => packagingOptions.id, {
             onDelete: "cascade",
         }),
+} as const;
+
+/**
+ * for storing page metadata for SEO purposes
+ */
+const PAGE_METADATA_COLUMN_FIELDS = {
+    ...COMMON_FIELDS,
+
+    [COMMON_COLUMNS.ID]: int().primaryKey(),
+
+    /**
+     * the path of the page
+     */
+    [PAGE_METADATA_COLUMNS.PATH]: text().notNull().unique(),
+
+    /**
+     * SEO metadata fields
+     */
+    [PAGE_METADATA_COLUMNS.METADATA_TITLE]: text().notNull(),
+
+    /**
+     * description for SEO
+     */
+    [PAGE_METADATA_COLUMNS.METADATA_DESCRIPTION]: text().notNull(),
+
+    /**
+     * keywords for SEO
+     */
+    [PAGE_METADATA_COLUMNS.METADATA_KEYWORDS]: text({
+        mode: "json",
+    })
+        .notNull()
+        .$type<string[]>()
+        .$default(() => []),
+
+    [PAGE_METADATA_COLUMNS.SITEMAP_PRIORITY]: real()
+        .notNull()
+        .$default(() => 0.5),
+
+    [PAGE_METADATA_COLUMNS.SITEMAP_CHANGEFREQ]: text({
+        enum: SITEMAP_CHANGEFREQ_ENUM,
+    })
+        .notNull()
+        .$default(() => "weekly"),
+} as const;
+
+const TEAM_MEMBER_COLUMN_FIELDS = {
+    ...COMMON_FIELDS,
+
+    [COMMON_COLUMNS.ID]: int().primaryKey(),
+
+    [TEAM_MEMBER_COLUMNS.NAME]: text().notNull(),
+    [TEAM_MEMBER_COLUMNS.POSITION]: text().notNull(),
+    [TEAM_MEMBER_COLUMNS.PHOTO_KEY]: text().notNull(),
+    [TEAM_MEMBER_COLUMNS.ORDER_INDEX]: int().notNull().default(0),
 } as const;
 
 /**
@@ -533,6 +591,19 @@ export const productSpecifications = sqliteTable(
 export const productVariants = sqliteTable(
     TABLE_NAMES.PRODUCT_VARIANTS,
     PRODUCT_VARIANT_COLUMN_FIELDS
+);
+
+export const pageMetadatas = sqliteTable(
+    TABLE_NAMES.PAGE_METADATAS,
+    PAGE_METADATA_COLUMN_FIELDS
+);
+
+/**
+ * table for storing team members
+ */
+export const teams = sqliteTable(
+    TABLE_NAMES.TEAM_MEMBERS,
+    TEAM_MEMBER_COLUMN_FIELDS
 );
 
 /**
@@ -654,3 +725,7 @@ export const galleryPhotoRelations = relations(galleryPhotos, () => ({}));
 export const verificationRelations = relations(verifications, () => ({}));
 
 export const tagRelations = relations(tags, () => ({}));
+
+export const pageMetadataRelations = relations(pageMetadatas, () => ({}));
+
+export const teamMemberRelations = relations(teams, () => ({}));

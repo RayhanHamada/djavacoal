@@ -8,7 +8,10 @@ import z from "zod/v4";
 import { router as admins } from "@/features/admin-auth/server/router";
 import { router as gallery } from "@/features/dashboard-gallery/server/router";
 import { router as dashboardNews } from "@/features/dashboard-news/server";
+import { router as pageSettings } from "@/features/dashboard-page-settings/server";
 import { router as dashboardProduct } from "@/features/dashboard-product/server";
+import { router as staticMedia } from "@/features/dashboard-static-media/server/router";
+import { router as dashboardTeamMember } from "@/features/dashboard-team-member/server";
 
 const router = {
     /**
@@ -18,6 +21,9 @@ const router = {
     gallery,
     dashboardNews,
     dashboardProduct,
+    pageSettings,
+    staticMedia,
+    dashboardTeamMember,
 };
 
 const handler = new RPCHandler(router, {

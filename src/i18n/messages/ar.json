@@ -1,4 +1,27 @@
 {
+    "Navigation": {
+        "home": "الرئيسية",
+        "aboutCompany": "عن الشركة",
+        "aboutCompanySubmenus": {
+            "cvDjavacoal": "CV. ديافاكوال إندونيسيا",
+            "team": "فريق ديافاكوال",
+            "whatWeDo": "ماذا نفعل؟",
+            "legalCertificate": "الشهادات القانونية",
+            "factory": "المصنع",
+            "gallery": "معرضنا"
+        },
+        "ourProducts": "منتجاتنا",
+        "productionInfo": "معلومات الإنتاج",
+        "productionInfoSubmenus": {
+            "process": "عملية الإنتاج",
+            "shipment": "شروط الشحن",
+            "moqPayment": "الحد الأدنى للطلب وشروط الدفع",
+            "faq": "الأسئلة الشائعة",
+            "packagingOption": "خيارات التعبئة"
+        },
+        "newsArticles": "الأخبار والمقالات",
+        "contact": "اتصل بنا"
+    },
     "HomePage": {
         "title": "Halo Dunia !"
     },
@@ -135,6 +158,17 @@
             "previous": "السابق",
             "next": "التالي",
             "page": "صفحة {current} من {total}"
+        }
+    },
+    "NotFound": {
+        "title": "404 - غير موجود",
+        "subtitle": "الصفحة أو الملف الذي تبحث عنه غير موجود أو تم نقله إلى مكان آخر.",
+        "whatCanIDo": "ماذا يمكنني أن أفعل الآن؟",
+        "pleaseCheck": "يرجى التحقق من عنوان URL بحثًا عن أخطاء أو البحث عن الصفحة الصحيحة.",
+        "buttons": {
+            "returnHome": "العودة إلى الصفحة الرئيسية",
+            "ourProducts": "منتجاتنا",
+            "aboutCompany": "عن الشركة"
         }
     }
 }

@@ -32,7 +32,7 @@ export function NavigationMenuButton(props: Props) {
 
     const classNames = cn(
         "text-sm lg:text-base text-center",
-        "h-full text-white hover:bg-secondary hover:text-white transition-colors min-w-10  px-2",
+        "h-full text-white hover:bg-secondary hover:text-white transition-colors min-w-10 px-2",
         "flex flex-col justify-center hover:cursor-pointer items-center",
 
         isPathMatchCurrentButton && "text-secondary",
