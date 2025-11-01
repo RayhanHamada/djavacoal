@@ -1,9 +1,11 @@
 import {
     deletePhoto,
     generateUploadUrl,
+    getContactSettings,
     getPhotoList,
     getReels,
     getYouTubeUrl,
+    saveContactSettings,
     savePhotoList,
     saveReels,
     saveYouTubeUrl,
@@ -18,4 +20,6 @@ export const router = {
     saveReels,
     getReels,
     deletePhoto,
+    saveContactSettings,
+    getContactSettings,
 };

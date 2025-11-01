@@ -16,11 +16,13 @@ import {
     DeletePhotoInputSchema,
     GenerateUploadUrlInputSchema,
     GenerateUploadUrlOutputSchema,
+    GetContactSettingsOutputSchema,
     GetPhotoListInputSchema,
     GetPhotoListOutputSchema,
     GetReelsOutputSchema,
     GetYouTubeUrlInputSchema,
     GetYouTubeUrlOutputSchema,
+    SaveContactSettingsInputSchema,
     SavePhotoListInputSchema,
     SaveReelsInputSchema,
     SaveYouTubeUrlInputSchema,
@@ -188,6 +190,104 @@ export const deletePhoto = base
 
         return {
             success: true,
+        };
+    })
+    .callable();
+
+/**
+ * Save contact settings to KV
+ */
+export const saveContactSettings = base
+    .input(SaveContactSettingsInputSchema)
+    .handler(async function ({ context: { env }, input }) {
+        // Save each field to its respective KV key
+        const kvOperations = [];
+
+        if (input.facebookLink !== undefined) {
+            kvOperations.push(
+                env.DJAVACOAL_KV.put("facebook_link", input.facebookLink)
+            );
+        }
+        if (input.linkedinLink !== undefined) {
+            kvOperations.push(
+                env.DJAVACOAL_KV.put("linkedin_link", input.linkedinLink)
+            );
+        }
+        if (input.instagramLink !== undefined) {
+            kvOperations.push(
+                env.DJAVACOAL_KV.put("instagram_link", input.instagramLink)
+            );
+        }
+        if (input.tiktokLink !== undefined) {
+            kvOperations.push(
+                env.DJAVACOAL_KV.put("tiktok_link", input.tiktokLink)
+            );
+        }
+        if (input.emailAddress !== undefined) {
+            kvOperations.push(
+                env.DJAVACOAL_KV.put("email_address", input.emailAddress)
+            );
+        }
+        if (input.whatsappNumber !== undefined) {
+            kvOperations.push(
+                env.DJAVACOAL_KV.put("whatsapp_number", input.whatsappNumber)
+            );
+        }
+        if (input.mapsLink !== undefined) {
+            kvOperations.push(
+                env.DJAVACOAL_KV.put("maps_link", input.mapsLink)
+            );
+        }
+        if (input.addressLine !== undefined) {
+            kvOperations.push(
+                env.DJAVACOAL_KV.put("address_line", input.addressLine)
+            );
+        }
+
+        await Promise.all(kvOperations);
+
+        return {
+            success: true,
+        };
+    })
+    .callable();
+
+/**
+ * Get contact settings from KV
+ */
+export const getContactSettings = base
+    .output(GetContactSettingsOutputSchema)
+    .handler(async function ({ context: { env } }) {
+        // Fetch all contact settings in parallel
+        const [
+            facebookLink,
+            linkedinLink,
+            instagramLink,
+            tiktokLink,
+            emailAddress,
+            whatsappNumber,
+            mapsLink,
+            addressLine,
+        ] = await Promise.all([
+            env.DJAVACOAL_KV.get("facebook_link"),
+            env.DJAVACOAL_KV.get("linkedin_link"),
+            env.DJAVACOAL_KV.get("instagram_link"),
+            env.DJAVACOAL_KV.get("tiktok_link"),
+            env.DJAVACOAL_KV.get("email_address"),
+            env.DJAVACOAL_KV.get("whatsapp_number"),
+            env.DJAVACOAL_KV.get("maps_link"),
+            env.DJAVACOAL_KV.get("address_line"),
+        ]);
+
+        return {
+            facebookLink: facebookLink || null,
+            linkedinLink: linkedinLink || null,
+            instagramLink: instagramLink || null,
+            tiktokLink: tiktokLink || null,
+            emailAddress: emailAddress || null,
+            whatsappNumber: whatsappNumber || null,
+            mapsLink: mapsLink || null,
+            addressLine: addressLine || null,
         };
     })
     .callable();
