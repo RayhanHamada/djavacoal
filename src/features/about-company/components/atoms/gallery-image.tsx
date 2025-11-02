@@ -1,14 +1,18 @@
 "use client";
 
+import type { GalleryImage as GalleryImageType } from "../../lib/types";
+
 import Image from "next/image";
 
-type Props = {
-    src: string;
-    alt: string;
-    onClick?: () => void; // ✅ event agar bisa open modal
-};
+interface GalleryImageProps {
+    image: GalleryImageType;
+    onClick?: () => void;
+}
 
-export default function GalleryImage({ src, alt, onClick }: Props) {
+export default function GalleryImage({
+    image: { src, alt },
+    onClick,
+}: GalleryImageProps) {
     return (
         <button
             onClick={onClick}

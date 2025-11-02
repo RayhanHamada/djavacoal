@@ -1,13 +1,15 @@
-import CertificateSection from "../molecules/certificate-section";
-import CompanyIntroSection from "../molecules/company-intro-section";
-import FactorySection from "../molecules/factory-section";
-import GallerySection from "../molecules/gallery-section";
-import GlobalMarketSection from "../molecules/global-market-section";
-import TeamSection from "../molecules/team-section";
+import {
+    CertificateSection,
+    CompanyIntroSection,
+    FactorySection,
+    GallerySection,
+    GlobalMarketSection,
+    TeamSection,
+} from "../molecules";
 
 export default function AboutCompanyContent() {
     return (
-        <div className="flex flex-col space-y-12 leading-relaxed text-gray-200 lg:space-y-16">
+        <div className="space-y-12 overflow-x-hidden lg:py-16">
             <CompanyIntroSection />
             <TeamSection />
             <GlobalMarketSection />

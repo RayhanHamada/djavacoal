@@ -1,11 +1,16 @@
+import type { Certificate } from "../../lib/types";
+
 import Image from "next/image";
 
-type Props = {
-    src: string;
-    alt: string;
-};
+import { WATERMARK_IMAGE } from "../../lib/constants";
 
-export default function CertificateCard({ src, alt }: Props) {
+interface CertificateCardProps {
+    certificate: Certificate;
+}
+
+export default function CertificateCard({
+    certificate: { src, alt },
+}: CertificateCardProps) {
     return (
         <div className="relative w-full overflow-hidden rounded-md border border-[#333] bg-black">
             {/* Certificate Image */}
@@ -21,7 +26,7 @@ export default function CertificateCard({ src, alt }: Props) {
             {/* Watermark Overlay */}
             <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
                 <Image
-                    src="/images/watermark-legal.png" // ✅ tinggal kamu ganti
+                    src={WATERMARK_IMAGE}
                     alt="Watermark"
                     width={200}
                     height={200}

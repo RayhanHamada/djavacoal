@@ -1,61 +1,20 @@
-import Image from "next/image";
+"use client";
+
+import { TEAM_MEMBERS } from "../../lib/constants";
+import { FadeInView, ScaleOnHover, TeamCard } from "../atoms";
 
 export default function TeamSection() {
-    const team = [
-        {
-            name: "Yoga Indraprana",
-            role: "President Directors",
-            image: "/images/owner-djavacoal.png",
-        },
-        {
-            name: "Yoga Indraprana",
-            role: "President Directors",
-            image: "/images/owner-djavacoal.png",
-        },
-        {
-            name: "Yoga Indraprana",
-            role: "President Directors",
-            image: "/images/owner-djavacoal.png",
-        },
-        {
-            name: "Yoga Indraprana",
-            role: "President Directors",
-            image: "/images/owner-djavacoal.png",
-        },
-        {
-            name: "Yoga Indraprana",
-            role: "President Directors",
-            image: "/images/owner-djavacoal.png",
-        },
-        {
-            name: "Yoga Indraprana",
-            role: "President Directors",
-            image: "/images/owner-djavacoal.png",
-        },
-        {
-            name: "Yoga Indraprana",
-            role: "President Directors",
-            image: "/images/owner-djavacoal.png",
-        },
-        {
-            name: "Yoga Indraprana",
-            role: "President Directors",
-            image: "/images/owner-djavacoal.png",
-        },
-    ];
-
     return (
         <section
             id="team"
             className="relative scroll-mt-24 overflow-hidden rounded-2xl border border-[#2A2A2A] bg-[#222222] p-6 md:p-10"
             aria-label="Djavacoal Team Section"
         >
-            {/* === Heading === */}
             <header className="mb-2 pt-4">
                 <div className="mb-2 flex items-center gap-3">
                     <div className="h-px w-8 bg-white" />
                     <p className="text-sm font-medium tracking-wide text-[#60A5FF] italic">
-                        Djavacoal’s Team
+                        Djavacoal&apos;s Team
                     </p>
                 </div>
                 <h2 className="text-xl leading-snug font-semibold text-white md:text-2xl">
@@ -67,71 +26,28 @@ export default function TeamSection() {
                 <div className="mt-4 h-px bg-[#3A3A3A] px-6" />
             </header>
 
-            {/* === TEAM GRID === */}
             <div className="relative">
                 {/* Mobile & Tablet: scroll horizontally */}
                 <div className="scrollbar-hide flex snap-x snap-mandatory overflow-x-auto pb-6 lg:hidden">
-                    {team.map((member, i) => (
-                        <article
-                            key={i}
-                            className="w-[260px] shrink-0 snap-start overflow-hidden bg-[#1E1E1E]"
-                        >
-                            <div className="relative">
-                                {/* === Radial background: subtle white corners === */}
-                                <div className="pointer-events-none absolute inset-0 z-0 border border-[#414141] bg-[radial-gradient(circle_at_center,rgba(0,0,0,1)_40%,rgba(255,255,255,0.2)_100%)]" />
-
-                                {/* === Image on top === */}
-                                <Image
-                                    src={member.image}
-                                    alt={`${member.name} - ${member.role}`}
-                                    width={400}
-                                    height={500}
-                                    className="relative z-10 h-[340px] w-full object-cover"
-                                />
+                    {TEAM_MEMBERS.map((member, i) => (
+                        <FadeInView key={i} delay={i * 0.05}>
+                            <div className="w-[260px] shrink-0 snap-start">
+                                <ScaleOnHover scale={1.02}>
+                                    <TeamCard member={member} />
+                                </ScaleOnHover>
                             </div>
-
-                            <div className="bg-[#222222] p-3 text-center">
-                                <p className="text-sm text-[#BBBBBB] italic">
-                                    {member.role}
-                                </p>
-                                <p className="font-semibold text-white">
-                                    {member.name}
-                                </p>
-                            </div>
-                        </article>
+                        </FadeInView>
                     ))}
                 </div>
 
                 {/* Desktop: grid layout */}
                 <div className="hidden lg:grid lg:grid-cols-4">
-                    {team.map((member, i) => (
-                        <article
-                            key={i}
-                            className="overflow-hidden" // sedikit background biar blending halus
-                        >
-                            <div className="relative h-[420px]">
-                                {/* === Subtle radial background for desktop === */}
-                                <div className="z-0x absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(0,0,0,1)_45%,rgba(255,255,255,0.22)_100%)]" />
-
-                                {/* === Image layer === */}
-                                <Image
-                                    src={member.image}
-                                    alt={`${member.name} - ${member.role}`}
-                                    width={400}
-                                    height={500}
-                                    className="relative z-10 h-full w-full border border-[#414141] object-contain object-bottom"
-                                />
-                            </div>
-
-                            <div className="bg-[#222222] p-4 text-center">
-                                <p className="text-sm text-[#BBBBBB] italic">
-                                    {member.role}
-                                </p>
-                                <p className="font-semibold text-white">
-                                    {member.name}
-                                </p>
-                            </div>
-                        </article>
+                    {TEAM_MEMBERS.map((member, i) => (
+                        <FadeInView key={i} delay={i * 0.05}>
+                            <ScaleOnHover scale={1.02}>
+                                <TeamCard member={member} />
+                            </ScaleOnHover>
+                        </FadeInView>
                     ))}
                 </div>
             </div>

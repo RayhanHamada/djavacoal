@@ -1,467 +1,246 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import type { GalleryType } from "../../lib/types";
 
 import Image from "next/image";
 
-import { motion } from "framer-motion";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
-/* ✅ Reels: simpan Video ID */
-const reels = [
-    "EouOlxd_DlU",
-    "q98uLQT6hh4",
-    "4c4w0Bu8a1I",
-    "cGAVGlKIOt4",
-    "9CiCASBhKPM",
-    "EouOlxd_DlU",
-    "q98uLQT6hh4",
-    "4c4w0Bu8a1I",
-    "cGAVGlKIOt4",
-    "9CiCASBhKPM",
-];
+import ReelGallery from "./reel-gallery";
+import { useGalleryViewer } from "../../hooks";
+import {
+    FACTORY_GALLERY,
+    GALLERY_REELS,
+    PRODUCT_GALLERY,
+} from "../../lib/constants";
+import { FadeInView, ScaleOnHover, ScaleXView, SlideInView } from "../atoms";
 
-/* ✅ Helper thumbnail yang selalu ada */
-const getYTThumb = (id: string) =>
-    `https://img.youtube.com/vi/${id}/sddefault.jpg`;
+interface GallerySubsectionProps {
+    title: string;
+    highlightWord: string;
+    galleryType: GalleryType;
+    onImageClick: (index: number) => void;
+}
 
-const factoryGallery = [
-    "/images/factory-gallery1.png",
-    "/images/factory-gallery-large1.png",
-    "/images/factory-gallery-large2.png",
-    "/images/factory-gallery-large3.png",
-    "/images/factory-gallery-large1.png",
-    "/images/factory-gallery-large2.png",
-    "/images/factory-gallery-large3.png",
-];
+function GallerySubsection({
+    title,
+    highlightWord,
+    galleryType,
+    onImageClick,
+}: GallerySubsectionProps) {
+    const images =
+        galleryType === "factory" ? FACTORY_GALLERY : PRODUCT_GALLERY;
+    const mainImage = images[0];
+    const thumbnails = images.slice(1);
+    const containerId = `${galleryType}Thumbs`;
 
-const productGallery = [
-    "/images/product-gallery1.png",
-    "/images/product-gallery-large1.png",
-    "/images/product-gallery-large2.png",
-    "/images/product-gallery-large3.png",
-    "/images/product-gallery-large1.png",
-    "/images/product-gallery-large2.png",
-    "/images/product-gallery-large3.png",
-];
+    const scroll = (direction: "left" | "right") => {
+        const el = document.getElementById(containerId);
+        if (!el) return;
+        const scrollAmount = direction === "left" ? -240 : 240;
+        el.scrollBy({ left: scrollAmount, behavior: "smooth" });
+    };
+
+    return (
+        <div className="space-y-4">
+            <FadeInView>
+                <h3 className="text-lg font-semibold lg:text-2xl">
+                    {title}{" "}
+                    <span className="text-[#EFA12D]">{highlightWord}</span>{" "}
+                    Gallery
+                </h3>
+            </FadeInView>
+
+            <ScaleOnHover>
+                <button
+                    onClick={() => onImageClick(0)}
+                    className="col-span-full block w-full overflow-hidden"
+                >
+                    <Image
+                        src={mainImage.src}
+                        alt={mainImage.alt}
+                        width={1600}
+                        height={900}
+                        className="h-[300px] w-full rounded-none object-cover md:h-[400px] lg:h-[685px]"
+                    />
+                </button>
+            </ScaleOnHover>
+
+            <div className="relative">
+                <div
+                    id={containerId}
+                    className="scrollbar-hide flex snap-x snap-mandatory gap-3 overflow-x-auto pb-2"
+                >
+                    {thumbnails.map((image, i) => (
+                        <button
+                            key={image.src + crypto.randomUUID()}
+                            onClick={() => onImageClick(i + 1)}
+                            className="group h-[180px] min-w-[180px] snap-start overflow-hidden transition lg:h-[220px] lg:min-w-[220px]"
+                        >
+                            <Image
+                                src={image.src}
+                                alt={image.alt}
+                                width={220}
+                                height={220}
+                                className="h-full w-full object-cover duration-300 group-hover:scale-[1.05]"
+                            />
+                        </button>
+                    ))}
+                </div>
+
+                <button
+                    onClick={() => scroll("left")}
+                    className="absolute top-1/2 left-0 z-10 hidden h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-black/60 text-white transition hover:bg-[#EFA12D] lg:flex"
+                    aria-label="Scroll thumbnails left"
+                >
+                    <ChevronLeft size={24} />
+                </button>
+
+                <button
+                    onClick={() => scroll("right")}
+                    className="absolute top-1/2 right-0 z-10 hidden h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-black/60 text-white transition hover:bg-[#EFA12D] lg:flex"
+                    aria-label="Scroll thumbnails right"
+                >
+                    <ChevronRight size={24} />
+                </button>
+            </div>
+        </div>
+    );
+}
 
 export default function GallerySection() {
-    const [viewer, setViewer] = useState<{
-        type: "reel" | "factory" | "product";
-        index: number;
-    } | null>(null);
+    const { viewer, openViewer, closeViewer, nextItem, prevItem } =
+        useGalleryViewer();
 
-    const closeModal = () => setViewer(null);
+    const getCurrentList = () => {
+        if (!viewer) return [];
+        if (viewer.type === "reel") return GALLERY_REELS;
+        return viewer.type === "factory" ? FACTORY_GALLERY : PRODUCT_GALLERY;
+    };
 
-    const next = useCallback(() => {
-        if (!viewer) return;
-        const list =
-            viewer.type === "reel"
-                ? reels
-                : viewer.type === "factory"
-                  ? factoryGallery
-                  : productGallery;
+    const renderModalContent = () => {
+        if (!viewer) return null;
 
-        setViewer({ ...viewer, index: (viewer.index + 1) % list.length });
-    }, [viewer]);
-
-    const prev = useCallback(() => {
-        if (!viewer) return;
-        const list =
-            viewer.type === "reel"
-                ? reels
-                : viewer.type === "factory"
-                  ? factoryGallery
-                  : productGallery;
-
-        setViewer({
-            ...viewer,
-            index: (viewer.index - 1 + list.length) % list.length,
-        });
-    }, [viewer]);
-
-    useEffect(() => {
-        if (!viewer) {
-            document.body.style.overflow = "auto";
-            return;
+        if (viewer.type === "reel") {
+            const videoId = GALLERY_REELS[viewer.index];
+            return (
+                <div className="relative aspect-9/16 w-[85vw] max-w-[400px] overflow-hidden rounded-xl">
+                    <iframe
+                        src={`https://www.youtube-nocookie.com/embed/${videoId}?autoplay=1&controls=1&playsinline=1`}
+                        className="absolute inset-0 h-full w-full"
+                        allow="autoplay; encrypted-media"
+                        allowFullScreen
+                        title={`Video reel ${viewer.index + 1}`}
+                    />
+                </div>
+            );
         }
-        document.body.style.overflow = "hidden";
 
-        const handleKey = (e: KeyboardEvent) => {
-            if (e.key === "Escape") closeModal();
-            if (e.key === "ArrowRight") next();
-            if (e.key === "ArrowLeft") prev();
-        };
+        const images =
+            viewer.type === "factory" ? FACTORY_GALLERY : PRODUCT_GALLERY;
+        const currentImage = images[viewer.index];
 
-        window.addEventListener("keydown", handleKey);
-        return () => window.removeEventListener("keydown", handleKey);
-    }, [next, prev, viewer]);
+        return (
+            <Image
+                src={currentImage.src}
+                alt={currentImage.alt}
+                width={1200}
+                height={1200}
+                className="max-h-[85vh] w-auto object-contain"
+            />
+        );
+    };
 
     return (
         <section
             id="gallery"
             className="mt-10 scroll-mt-28 space-y-6 rounded-xl bg-[#222222] p-5 lg:p-10"
         >
-            {/* === Heading === */}
             <header className="mb-2">
-                <motion.div
-                    initial={{ opacity: 0, y: 30 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true, amount: 0.3 }}
-                    transition={{ duration: 0.6, ease: "easeOut" }}
-                    className="mb-2 flex items-center gap-3"
-                >
-                    <div className="h-px w-8 bg-white" />
-                    <p className="text-sm font-medium tracking-wide text-[#60A5FF] italic">
-                        Djavacoal’s Gallery
+                <SlideInView yOffset={30} duration={0.6}>
+                    <div className="mb-2 flex items-center gap-3">
+                        <div className="h-px w-8 bg-white" />
+                        <p className="text-sm font-medium tracking-wide text-[#60A5FF] italic">
+                            Djavacoal&apos;s Gallery
+                        </p>
+                    </div>
+                </SlideInView>
+
+                <SlideInView yOffset={30} duration={0.65}>
+                    <h2 className="text-xl leading-snug font-semibold text-white md:text-2xl">
+                        Our Story in Pictures
+                    </h2>
+                </SlideInView>
+
+                <SlideInView yOffset={35} duration={0.7}>
+                    <p className="font-medium text-[#EFA12D]">
+                        Experience The Dedication Behind Every Charcoal We
+                        Produce
                     </p>
-                </motion.div>
+                </SlideInView>
 
-                <motion.h2
-                    initial={{ opacity: 0, y: 30 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.65, ease: "easeOut" }}
-                    className="text-xl leading-snug font-semibold text-white md:text-2xl"
-                >
-                    Our Story in Pictures
-                </motion.h2>
-
-                <motion.p
-                    initial={{ opacity: 0, y: 35 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.7, ease: "easeOut" }}
-                    className="font-medium text-[#EFA12D]"
-                >
-                    Experience The Dedication Behind Every Charcoal We Produce
-                </motion.p>
-
-                <motion.div
-                    initial={{ scaleX: 0 }}
-                    whileInView={{ scaleX: 1 }}
-                    transition={{ duration: 0.6, ease: "easeOut" }}
-                    className="mt-4 h-px origin-left bg-[#3A3A3A]"
-                />
+                <ScaleXView duration={0.6}>
+                    <div className="mt-4 h-px origin-left bg-[#3A3A3A]" />
+                </ScaleXView>
             </header>
-            {/* 🎥 HERO VIDEO REELS */}
-            <div className="-mx-10">
-                <div className="relative w-full">
-                    <div
-                        id="reelsContainer"
-                        className="scrollbar-thin scrollbar-thumb-[#444] scrollbar-track-transparent scrollbar-hide -pr-[40px] -pl-[40px] flex snap-x snap-mandatory gap-5 overflow-x-auto scroll-smooth py-4 lg:mx-auto"
-                    >
-                        {reels.map((id, i) => (
-                            <button
-                                key={id + crypto.randomUUID()}
-                                onClick={() =>
-                                    setViewer({ type: "reel", index: i })
-                                }
-                                className="group relative aspect-9/16 w-[300px] shrink-0 snap-start overflow-hidden bg-black transition hover:scale-[1.03]"
-                            >
-                                <iframe
-                                    className="pointer-events-none absolute inset-0 h-full w-full opacity-0 transition-opacity duration-300 group-hover:opacity-100"
-                                    src={`https://www.youtube-nocookie.com/embed/${id}?autoplay=1&mute=1&controls=0&loop=1&playlist=${id}&playsinline=1`}
-                                />
 
-                                <Image
-                                    src={getYTThumb(id)}
-                                    alt={`Reel ${i + 1}`}
-                                    fill
-                                    className="object-cover transition duration-300 group-hover:opacity-0"
-                                />
+            <ReelGallery onReelClick={(index) => openViewer("reel", index)} />
 
-                                <div className="pointer-events-none absolute top-2 left-1/2 -translate-x-1/2 opacity-70">
-                                    <Image
-                                        src="/svgs/logo.svg"
-                                        alt="Logo"
-                                        width={70}
-                                        height={70}
-                                        className="drop-shadow-lg"
-                                    />
-                                </div>
-
-                                <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
-                                    <div className="flex h-14 w-14 items-center justify-center rounded-full bg-[#202020]/50 shadow-lg">
-                                        <svg
-                                            width="20"
-                                            height="20"
-                                            fill="white"
-                                            className="translate-x-0.5"
-                                        >
-                                            <path d="M5 4v16l12-8z" />
-                                        </svg>
-                                    </div>
-                                </div>
-                            </button>
-                        ))}
-                    </div>
-
-                    {/* ✅ DESKTOP ARROWS */}
-                    <button
-                        className="absolute top-1/2 left-2 hidden h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full bg-[#202020]/60 text-white transition hover:bg-[#EFA12D] lg:flex"
-                        onClick={() => {
-                            const el =
-                                document.getElementById("reelsContainer");
-                            if (el)
-                                el.scrollBy({ left: -350, behavior: "smooth" });
-                        }}
-                    >
-                        <ChevronLeft size={26} />
-                    </button>
-
-                    <button
-                        className="absolute top-1/2 right-2 hidden h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full bg-[#202020]/60 text-white transition hover:bg-[#EFA12D] lg:flex"
-                        onClick={() => {
-                            const el =
-                                document.getElementById("reelsContainer");
-                            if (el)
-                                el.scrollBy({ left: 350, behavior: "smooth" });
-                        }}
-                    >
-                        <ChevronRight size={26} />
-                    </button>
-                </div>
-            </div>
-
-            {/* Divider for Desktop */}
             <hr className="hidden border-t border-[#3A3A3A] lg:block" />
-            {/* 📸 FACTORY & PRODUCT GALLERIES */}
+
             <div className="grid grid-cols-1 gap-8 lg:grid-cols-2">
-                {/* ✅ Factory Gallery */}
-                <div className="space-y-4">
-                    <h3 className="text-lg font-semibold">
-                        Djavacoal’s{" "}
-                        <span className="text-[#EFA12D]">Factory</span> Gallery
-                    </h3>
+                <GallerySubsection
+                    title="Djavacoal's"
+                    highlightWord="Factory"
+                    galleryType="factory"
+                    onImageClick={(index) => openViewer("factory", index)}
+                />
 
-                    {/* ✅ Main Large Image (Factory) */}
-                    <button
-                        onClick={() => setViewer({ type: "factory", index: 0 })}
-                        className="col-span-full block w-full overflow-hidden"
-                    >
-                        <Image
-                            src={factoryGallery[0]}
-                            alt="Factory Main"
-                            width={1600}
-                            height={900}
-                            className="h-[300px] w-full rounded-none object-cover md:h-[400px] lg:h-[685px]"
-                        />
-                    </button>
-
-                    <div className="relative">
-                        {/* ✅ Thumbnails scrollable */}
-                        <div
-                            id="factoryThumbs"
-                            className="scrollbar-hide flex snap-x snap-mandatory gap-3 overflow-x-auto pb-2"
-                        >
-                            {factoryGallery.slice(1).map((img, i) => (
-                                <button
-                                    key={i}
-                                    onClick={() =>
-                                        setViewer({
-                                            type: "factory",
-                                            index: i + 1,
-                                        })
-                                    }
-                                    className="group h-[180px] min-w-[180px] snap-start overflow-hidden transition lg:h-[220px] lg:min-w-[220px]"
-                                >
-                                    <Image
-                                        src={img}
-                                        alt={`Factory ${i + 2}`}
-                                        width={220}
-                                        height={220}
-                                        className="h-full w-full object-cover duration-300 group-hover:scale-[1.05]"
-                                    />
-                                </button>
-                            ))}
-                        </div>
-
-                        {/* ✅ Left Arrow */}
-                        <button
-                            onClick={() => {
-                                const el =
-                                    document.getElementById("factoryThumbs");
-                                if (el)
-                                    el.scrollBy({
-                                        left: -240,
-                                        behavior: "smooth",
-                                    });
-                            }}
-                            className="absolute top-1/2 left-0 z-10 hidden h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-black/60 text-white transition hover:bg-[#EFA12D] lg:flex"
-                        >
-                            <ChevronLeft size={24} />
-                        </button>
-
-                        {/* ✅ Right Arrow */}
-                        <button
-                            onClick={() => {
-                                const el =
-                                    document.getElementById("factoryThumbs");
-                                if (el)
-                                    el.scrollBy({
-                                        left: 240,
-                                        behavior: "smooth",
-                                    });
-                            }}
-                            className="absolute top-1/2 right-0 z-10 hidden h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-black/60 text-white transition hover:bg-[#EFA12D] lg:flex"
-                        >
-                            <ChevronRight size={24} />
-                        </button>
-                    </div>
-                </div>
-
-                {/* ✅ Products Gallery */}
-                <div className="space-y-4">
-                    <h3 className="text-lg font-semibold">
-                        Djavacoal’s{" "}
-                        <span className="text-[#EFA12D]">Products</span> Gallery
-                    </h3>
-
-                    {/* ✅ Main Large Image (Product) */}
-                    <button
-                        onClick={() => setViewer({ type: "product", index: 0 })}
-                        className="col-span-full block w-full overflow-hidden"
-                    >
-                        <Image
-                            src={productGallery[0]}
-                            alt="Product Main"
-                            width={1600}
-                            height={900}
-                            className="h-[300px] w-full rounded-none object-cover md:h-[400px] lg:h-[685px]"
-                        />
-                    </button>
-
-                    <div className="relative">
-                        {/* ✅ Thumbnails scrollable */}
-                        <div
-                            id="productThumbs"
-                            className="scrollbar-hide flex snap-x snap-mandatory gap-3 overflow-x-auto pb-2"
-                        >
-                            {productGallery.slice(1).map((img, i) => (
-                                <button
-                                    key={i}
-                                    onClick={() =>
-                                        setViewer({
-                                            type: "product",
-                                            index: i + 1,
-                                        })
-                                    }
-                                    className="group h-[180px] min-w-[180px] snap-start overflow-hidden transition lg:h-[220px] lg:min-w-[220px]"
-                                >
-                                    <Image
-                                        src={img}
-                                        alt={`Product ${i + 2}`}
-                                        width={220}
-                                        height={220}
-                                        className="h-full w-full object-cover duration-300 group-hover:scale-[1.05]"
-                                    />
-                                </button>
-                            ))}
-                        </div>
-
-                        {/* ✅ Left Arrow */}
-                        <button
-                            onClick={() => {
-                                const el =
-                                    document.getElementById("productThumbs");
-                                if (el)
-                                    el.scrollBy({
-                                        left: -240,
-                                        behavior: "smooth",
-                                    });
-                            }}
-                            className="absolute top-1/2 left-0 z-10 hidden h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-black/60 text-white transition hover:bg-[#EFA12D] lg:flex"
-                        >
-                            <ChevronLeft size={24} />
-                        </button>
-
-                        {/* ✅ Right Arrow */}
-                        <button
-                            onClick={() => {
-                                const el =
-                                    document.getElementById("productThumbs");
-                                if (el)
-                                    el.scrollBy({
-                                        left: 240,
-                                        behavior: "smooth",
-                                    });
-                            }}
-                            className="absolute top-1/2 right-0 z-10 hidden h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-black/60 text-white transition hover:bg-[#EFA12D] lg:flex"
-                        >
-                            <ChevronRight size={24} />
-                        </button>
-                    </div>
-                </div>
+                <GallerySubsection
+                    title="Djavacoal's"
+                    highlightWord="Products"
+                    galleryType="product"
+                    onImageClick={(index) => openViewer("product", index)}
+                />
             </div>
-            {/* ✅ Single Unified Modal */}
-            {viewer !== null && (
+
+            {viewer && (
                 <div
                     className="fixed inset-0 z-99999 flex items-center justify-center bg-black/80 px-4 backdrop-blur-sm"
-                    onClick={closeModal}
+                    onClick={closeViewer}
                 >
-                    {/* Close */}
                     <button
                         className="absolute top-6 right-6 rounded-full bg-black/40 p-2 text-white hover:bg-black/70"
-                        onClick={closeModal}
+                        onClick={closeViewer}
+                        aria-label="Close viewer"
                     >
                         ✕
                     </button>
 
-                    {/* Modal Content Wrapper (agar klik luar nutup) */}
                     <div
                         className="relative flex items-center justify-center"
                         onClick={(e) => e.stopPropagation()}
                     >
-                        {viewer.type === "reel" && (
-                            <div className="relative aspect-9/16 w-[85vw] max-w-[400px] overflow-hidden rounded-xl">
-                                <iframe
-                                    src={`https://www.youtube-nocookie.com/embed/${reels[viewer.index]}?autoplay=1&controls=1&playsinline=1`}
-                                    className="absolute inset-0 h-full w-full"
-                                    allow="autoplay; encrypted-media"
-                                    allowFullScreen
-                                />
-                            </div>
-                        )}
+                        {renderModalContent()}
 
-                        {viewer.type === "factory" && (
-                            <Image
-                                src={factoryGallery[viewer.index]}
-                                alt="Factory Photo"
-                                width={1200}
-                                height={1200}
-                                className="max-h-[85vh] w-auto object-contain"
-                            />
-                        )}
-
-                        {viewer.type === "product" && (
-                            <Image
-                                src={productGallery[viewer.index]}
-                                alt="Product Photo"
-                                width={1200}
-                                height={1200}
-                                className="max-h-[85vh] w-auto object-contain"
-                            />
-                        )}
-
-                        {/* Prev Button */}
                         <button
                             onClick={(e) => {
                                 e.stopPropagation();
-                                prev();
+                                prevItem(getCurrentList().length);
                             }}
-                            className="/* Mobile/tablet inside | Desktop outside */ absolute top-1/2 left-2 -translate-y-1/2 rounded-full bg-white/10 p-3 text-white transition hover:bg-[#EFA12D] lg:left-[-85px]"
+                            className="absolute top-1/2 left-2 -translate-y-1/2 rounded-full bg-white/10 p-3 text-white transition hover:bg-[#EFA12D] lg:left-[-85px]"
+                            aria-label="Previous item"
                         >
                             <ChevronLeft size={30} />
                         </button>
 
-                        {/* Next Button */}
                         <button
                             onClick={(e) => {
                                 e.stopPropagation();
-                                next();
+                                nextItem(getCurrentList().length);
                             }}
-                            className="/* Mobile/tablet inside | Desktop outside */ absolute top-1/2 right-2 -translate-y-1/2 rounded-full bg-white/10 p-3 text-white transition hover:bg-[#EFA12D] lg:right-[-85px]"
+                            className="absolute top-1/2 right-2 -translate-y-1/2 rounded-full bg-white/10 p-3 text-white transition hover:bg-[#EFA12D] lg:right-[-85px]"
+                            aria-label="Next item"
                         >
                             <ChevronRight size={30} />
                         </button>

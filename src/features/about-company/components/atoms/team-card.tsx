@@ -1,8 +1,14 @@
+import type { TeamMember } from "../../lib/types";
+
 import Image from "next/image";
 
-type Props = { name: string; role: string; image: string };
+interface TeamCardProps {
+    member: Pick<TeamMember, "name" | "role" | "image">;
+}
 
-export default function TeamCard({ name, role, image }: Props) {
+export default function TeamCard({
+    member: { name, role, image },
+}: TeamCardProps) {
     return (
         <div className="space-y-2 text-center">
             <Image
