@@ -4,6 +4,8 @@ import { useMemo } from "react";
 
 import { useTranslations } from "next-intl";
 
+import { $api } from "@/adapters/public-api/client";
+
 export type MenuItem = {
     label: string;
     href?: string;
@@ -15,6 +17,16 @@ export type MenuItem = {
 
 export function useMenuItems() {
     const t = useTranslations("Navigation");
+    const { data: namesData } = $api.useQuery("get", "/products-names");
+
+    const productSubmenus = useMemo(
+        () =>
+            namesData?.data?.names.map(({ name }) => ({
+                label: name,
+                href: `/our-products#${encodeURIComponent(name)}`,
+            })) ?? [],
+        [namesData]
+    );
 
     const menuItems = useMemo<MenuItem[]>(
         () => [
@@ -53,24 +65,7 @@ export function useMenuItems() {
             },
             {
                 label: t("ourProducts"),
-                submenus: [
-                    {
-                        label: "Coal",
-                        href: "/our-products",
-                    },
-                    {
-                        label: "Hardwood Charcoal",
-                        href: "/our-products",
-                    },
-                    {
-                        label: "Coconut Shell Charcoal",
-                        href: "/our-products",
-                    },
-                    {
-                        label: "Bamboo Charcoal",
-                        href: "/our-products",
-                    },
-                ],
+                submenus: productSubmenus,
             },
             {
                 label: t("productionInfo"),
@@ -102,7 +97,7 @@ export function useMenuItems() {
                 href: "/contact-us",
             },
         ],
-        [t]
+        [t, productSubmenus]
     );
 
     return menuItems;

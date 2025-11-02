@@ -1,3 +1,5 @@
+import "server-only";
+
 import { onError, ORPCError } from "@orpc/client";
 import { OpenAPIHandler } from "@orpc/openapi/fetch";
 import { OpenAPIReferencePlugin } from "@orpc/openapi/plugins";
@@ -57,6 +59,7 @@ const handler = new OpenAPIHandler(router, {
     ],
     plugins: [
         new OpenAPIReferencePlugin({
+            docsTitle: "Djavacoal API Docs",
             schemaConverters: [new ZodToJsonSchemaConverter()],
             specGenerateOptions: {
                 info: {
@@ -68,7 +71,7 @@ const handler = new OpenAPIHandler(router, {
     ],
 });
 
-export default async function getHandler(request: Request) {
+export async function getHandler(request: Request) {
     return handler
         .handle(request, {
             prefix: PUBLIC_API_PREFIX,
@@ -82,3 +85,5 @@ export default async function getHandler(request: Request) {
             };
         });
 }
+
+export { _publicApiClient as serverPublicAPIClient } from "@/adapters/public-api/api-client";

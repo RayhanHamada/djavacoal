@@ -1,4 +1,4 @@
-import getHandler from "@/adapters/public-api";
+import { getHandler } from "@/adapters/public-api/server";
 
 async function handleRequest(request: Request) {
     const { response } = await getHandler(request);
