@@ -17,13 +17,17 @@ export type MenuItem = {
 
 export function useMenuItems() {
     const t = useTranslations("Navigation");
-    const { data: namesData } = $api.useQuery("get", "/products-names");
+    const { data: namesData } = $api.useQuery(
+        "get",
+        "/products-names",
+        undefined
+    );
 
     const productSubmenus = useMemo(
         () =>
             namesData?.data?.names.map(({ name }) => ({
                 label: name,
-                href: `/our-products#${encodeURIComponent(name)}`,
+                href: `/our-products#${encodeURIComponent(name.replaceAll(" ", "-").toLowerCase())}`,
             })) ?? [],
         [namesData]
     );
