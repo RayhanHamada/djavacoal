@@ -55,14 +55,20 @@ export const router = {
             return {
                 body: {
                     data: {
-                        names: names.map((item) => ({
-                            id: item.id,
-                            name: item[
-                                isArabic
-                                    ? PRODUCT_COLUMNS.AR_NAME
-                                    : PRODUCT_COLUMNS.EN_NAME
-                            ],
-                        })),
+                        names: names.map((item) => {
+                            const name = isArabic
+                                ? item[PRODUCT_COLUMNS.AR_NAME]
+                                : item[PRODUCT_COLUMNS.EN_NAME];
+
+                            const slug = item[PRODUCT_COLUMNS.EN_NAME]
+                                .replaceAll(" ", "-")
+                                .toLowerCase();
+                            return {
+                                id: item.id,
+                                slug,
+                                name,
+                            };
+                        }),
                         meta: {
                             total: names.length,
                         },

@@ -30,6 +30,7 @@ export const LIST_PRODUCT_NAME_OUTPUT_SCHEMA = z.object({
                 z.object({
                     id: z.number(),
                     name: z.string(),
+                    slug: z.string(),
                 })
             ),
             meta: z.object({
