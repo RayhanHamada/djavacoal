@@ -302,6 +302,7 @@ export default function CompanyIntroSection() {
                                 src={`https://flagsapi.com/${code}/flat/64.png`}
                                 alt={`${code} flag`}
                                 fill
+                                sizes="(max-width: 768px) 2rem, 4rem"
                                 className="object-cover"
                             />
                         </div>

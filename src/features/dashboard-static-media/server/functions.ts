@@ -1,5 +1,6 @@
 import "server-only";
 
+import { KV_KEYS } from "@/adapters/kv/constants";
 import {
     DEFAULT_BUCKET_NAME,
     deleteObject,
@@ -269,14 +270,14 @@ export const getContactSettings = base
             mapsLink,
             addressLine,
         ] = await Promise.all([
-            env.DJAVACOAL_KV.get("facebook_link"),
-            env.DJAVACOAL_KV.get("linkedin_link"),
-            env.DJAVACOAL_KV.get("instagram_link"),
-            env.DJAVACOAL_KV.get("tiktok_link"),
-            env.DJAVACOAL_KV.get("email_address"),
-            env.DJAVACOAL_KV.get("whatsapp_number"),
-            env.DJAVACOAL_KV.get("maps_link"),
-            env.DJAVACOAL_KV.get("address_line"),
+            env.DJAVACOAL_KV.get(KV_KEYS.FACEBOOK_LINK),
+            env.DJAVACOAL_KV.get(KV_KEYS.LINKEDIN_LINK),
+            env.DJAVACOAL_KV.get(KV_KEYS.INSTAGRAM_LINK),
+            env.DJAVACOAL_KV.get(KV_KEYS.TIKTOK_LINK),
+            env.DJAVACOAL_KV.get(KV_KEYS.EMAIL_ADDRESS),
+            env.DJAVACOAL_KV.get(KV_KEYS.WHATSAPP_NUMBER),
+            env.DJAVACOAL_KV.get(KV_KEYS.MAPS_LINK),
+            env.DJAVACOAL_KV.get(KV_KEYS.ADDRESS_LINE),
         ]);
 
         return {
