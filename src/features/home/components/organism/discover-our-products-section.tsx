@@ -3,132 +3,115 @@
 import Image from "next/image";
 import Link from "next/link";
 
+import { motion } from "framer-motion";
+
 const products = [
     {
         id: "coconut-shell-charcoal",
-        name: "Coconut Shell Charcoal Briquette",
-        subtitle: "for Shisha",
+        highlight: "Coconut Shell",
+        title: "Charcoal Briquette",
         description:
-            "Premium coconut shell charcoal briquettes, perfect for shisha with long-lasting burn time and low ash content.",
-        image: "/images/ProductsHeader.png", // Temporary - replace with actual product image
+            "For Shisha - This charcoal is perfect for high heat and long burn times, offering a clean and sustainable option for shisha lovers. Its natural properties ensure minimal ash production and even heat distribution.",
+        image: "/images/prod-coconut.png",
         href: "/our-products/coconut-shell-charcoal",
     },
     {
         id: "barbeque-charcoal",
-        name: "Barbeque Charcoal",
-        subtitle: "for Grilling",
+        highlight: "Barbeque",
+        title: "Charcoal",
         description:
-            "High-quality barbeque charcoal for grilling, delivering consistent heat and authentic smoky flavor.",
-        image: "/images/ProductsHeader.png", // Temporary - replace with actual product image
+            "For Grilling & Industrial Use - Ideal for grilling and industrial purposes, this charcoal is known for its dense structure, providing high heat retention and long-lasting burn, making it a reliable choice for both home and commercial use.",
+        image: "/images/prod-bbq.png",
         href: "/our-products/barbeque-charcoal",
     },
     {
         id: "sawdust-charcoal",
-        name: "Sawdust Charcoal",
-        subtitle: "for Cooking",
+        highlight: "Sawdust",
+        title: "Charcoal",
         description:
-            "Eco-friendly sawdust charcoal briquettes, ideal for cooking with excellent heat retention.",
-        image: "/images/ProductsHeader.png", // Temporary - replace with actual product image
+            "For Grilling & Cooking - Best suited for grilling and slow-cooked meals, this charcoal is made from sawdust, ensuring a consistent and controlled burn, imparting a rich, smoky flavor to food while minimizing harmful emissions.",
+        image: "/images/prod-sawdust.png",
         href: "/our-products/sawdust-charcoal",
     },
     {
         id: "natural-wood-charcoal",
-        name: "Natural Wood Charcoal",
-        subtitle: "for Open Flame",
+        highlight: "Natural Wood",
+        title: "Charcoal",
         description:
-            "Pure natural wood charcoal for open flame cooking, sourced from sustainable hardwood.",
-        image: "/images/ProductsHeader.png", // Temporary - replace with actual product image
+            "For Open Flame Grilling - Made from natural hardwoods, this charcoal is designed for open flame grilling, providing intense heat quickly with minimal ash. It's perfect for achieving that classic char-grilled flavor in a short cooking time.",
+        image: "/images/prod-wood.png",
         href: "/our-products/natural-wood-charcoal",
     },
 ];
 
 export function DiscoverOurProductSection() {
     return (
-        <section className="relative w-full overflow-hidden bg-[#0D0D0D] px-5 py-20 md:px-10 md:py-24 lg:px-20 lg:py-32">
-            {/* Section Header */}
-            <div className="mb-14 flex flex-col items-center justify-center md:mb-20">
-                <div className="mb-3 flex items-center gap-4">
-                    <div className="h-0.5 w-[60px] bg-[#EFA12D]" />
-                    <h2 className="font-['Josefin_Sans'] text-[30px] font-bold text-white uppercase md:text-[38px] lg:text-[45px]">
-                        Discover Our Products
-                    </h2>
-                </div>
-                <p className="mt-4 max-w-2xl text-center font-['Open_Sans'] text-[14px] leading-relaxed text-[#B0B0B0] md:text-[16px]">
-                    Explore our premium range of charcoal products, each crafted
-                    to meet your specific needs
-                </p>
+        <section className="relative w-full overflow-hidden bg-[#0D0D0D] px-6 py-16 md:px-10 md:py-20 lg:px-20 lg:py-24">
+            {/* Garis emas atas */}
+            <div className="absolute top-0 left-0 h-[1px] w-full bg-[#EFA12D]" />
+
+            {/* Header */}
+            <div className="mb-12 text-center">
+                <h2 className="font-['Josefin_Sans'] text-[28px] font-bold text-white uppercase md:text-[36px] lg:text-[42px]">
+                    Discover Our{" "}
+                    <span className="text-[#EFA12D]">Products</span>
+                </h2>
             </div>
 
-            {/* Product Grid */}
-            <div className="mx-auto grid max-w-7xl grid-cols-1 gap-8 md:grid-cols-2 lg:gap-10">
+            {/* ✅ Layout: Grid for mobile/tablet, flex row for desktop */}
+            <div className="mx-auto flex max-w-[1600px] flex-wrap justify-center gap-x-8 gap-y-14 md:gap-x-10 lg:flex-nowrap lg:gap-x-8">
                 {products.map((product) => (
-                    <div
+                    <motion.div
                         key={product.id}
-                        className="group bg-gradient-radial relative overflow-hidden rounded-[25px] border-2 border-[#2A2A2A] from-[#0D0D0D] to-white/5 p-8 backdrop-blur-md transition-all duration-300 hover:border-[#EFA12D] hover:shadow-xl hover:shadow-[#EFA12D]/10 md:p-10"
+                        whileHover={{ scale: 1.02 }}
+                        transition={{ duration: 0.3 }}
+                        className="flex w-[85vw] flex-shrink-0 flex-col items-center text-center md:w-[46%] lg:w-[24%] xl:w-[23%]"
                     >
-                        {/* Product Image */}
-                        <div className="relative mb-8 flex h-[220px] items-center justify-center overflow-hidden rounded-[20px] bg-gradient-to-b from-[#1A1A1A] to-[#0D0D0D] md:h-[280px]">
+                        {/* Card */}
+                        <div className="relative flex aspect-square h-[371px] w-full max-w-[415px] items-center justify-center overflow-hidden rounded-[22px] border border-[#FFFFFF25] bg-[radial-gradient(circle_at_center,#000_0%,#171717_50%,_#ffffff30_100%)] shadow-[0_0_30px_#00000040] transition-all duration-500 hover:border-[#EFA12D]/80 hover:shadow-[0_0_30px_#EFA12D40] md:h-[334px] lg:h-[415px]">
+                            {/* Watermark */}
+                            <Image
+                                src="/images/logo.png"
+                                alt="Djavacoal Logo"
+                                width={150}
+                                height={40}
+                                className="absolute top-5 left-1/2 -translate-x-1/2 opacity-80"
+                            />
                             <Image
                                 src={product.image}
-                                alt={product.name}
-                                width={350}
-                                height={350}
-                                className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
+                                alt={product.title}
+                                width={400}
+                                height={400}
+                                className="h-full w-full object-contain transition-transform duration-700 hover:scale-105"
                             />
-                            <div className="absolute inset-0 bg-gradient-to-t from-[#0D0D0D] via-transparent to-transparent opacity-60" />
                         </div>
 
-                        {/* Product Info */}
-                        <div className="space-y-4">
-                            <div>
-                                <h3 className="font-['Josefin_Sans'] text-[22px] font-bold text-white uppercase md:text-[26px]">
-                                    {product.name}
-                                </h3>
-                                <p className="mt-1 font-['Open_Sans'] text-[14px] text-[#EFA12D] uppercase md:text-[16px]">
-                                    {product.subtitle}
-                                </p>
-                            </div>
-                            <p className="font-['Open_Sans'] text-[14px] leading-relaxed text-[#B0B0B0] md:text-[15px]">
+                        {/* Text */}
+                        <div className="mt-6 max-w-[415px]">
+                            <h3 className="font-['Josefin_Sans'] text-[15px] font-bold text-white uppercase md:text-[16px]">
+                                <span className="text-[#EFA12D]">
+                                    {product.highlight}
+                                </span>{" "}
+                                {product.title}
+                            </h3>
+
+                            <p className="mt-3 font-['Open_Sans'] text-[13px] leading-relaxed text-[#C6C6C6] md:text-[14px]">
                                 {product.description}
                             </p>
 
-                            {/* CTA Button */}
                             <Link
                                 href={product.href}
-                                className="mt-6 inline-flex items-center gap-2 font-['Open_Sans'] text-[14px] font-semibold text-[#EFA12D] uppercase transition-all hover:gap-3 md:text-[15px]"
+                                className="mt-3 inline-block font-['Open_Sans'] text-[13px] font-semibold text-[#1E90FF] hover:underline md:text-[14px]"
                             >
-                                Detail Products
-                                <svg
-                                    width="20"
-                                    height="20"
-                                    viewBox="0 0 20 20"
-                                    fill="none"
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    className="transition-transform group-hover:translate-x-1"
-                                >
-                                    <path
-                                        d="M7.5 15L12.5 10L7.5 5"
-                                        stroke="currentColor"
-                                        strokeWidth="2"
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                    />
-                                </svg>
+                                Detail Products...
                             </Link>
                         </div>
-                    </div>
+                    </motion.div>
                 ))}
             </div>
 
-            {/* View All Products Button */}
-            <div className="mt-14 flex justify-center md:mt-20">
-                <Link
-                    href="/our-products"
-                    className="rounded-[40px] border-2 border-[#EFA12D] bg-transparent px-10 py-4 font-['Open_Sans'] text-[14px] font-semibold text-[#EFA12D] uppercase transition-all hover:bg-[#EFA12D] hover:text-[#0D0D0D] md:px-12 md:py-5 md:text-[16px]"
-                >
-                    View All Products
-                </Link>
-            </div>
+            {/* Garis emas bawah */}
+            <div className="absolute bottom-0 left-0 h-[1px] w-full bg-[#EFA12D]" />
         </section>
     );
 }

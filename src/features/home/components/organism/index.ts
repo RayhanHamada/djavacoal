@@ -6,5 +6,5 @@ export * from "./discover-our-products-section";
 export * from "./packaging-options-section";
 export * from "./production-info-section";
 export * from "./visit-our-factory-section";
-export * from "./majority-export-destination-section";
+export { default as MajorityExportDestinationSection } from "./majority-export-destination-section";
 export * from "./global-shipping-partner-section";

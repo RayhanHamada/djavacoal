@@ -29,3 +29,30 @@
 .scrollbar-hide {
     -ms-overflow-style: none;
 }
+
+:focus {
+    outline: none !important;
+}
+svg [tabindex="-1"] {
+    outline: none !important;
+}
+
+.scroll-wrapper {
+    width: 100%;
+    overflow: hidden;
+    position: relative;
+}
+
+.scroll-track {
+    display: flex;
+    animation: infiniteScroll 20s linear infinite;
+}
+
+@keyframes infiniteScroll {
+    0% {
+        transform: translateX(0);
+    }
+    100% {
+        transform: translateX(-50%);
+    }
+}

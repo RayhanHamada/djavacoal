@@ -3,113 +3,80 @@
 import Image from "next/image";
 import Link from "next/link";
 
+import { motion } from "framer-motion";
+
 const packagingOptions = [
     {
         id: "full-packaging",
         name: "Full Packaging",
-        description:
-            "Complete packaging solution with branded boxes, ensuring maximum protection and premium presentation for retail distribution.",
         image: "/images/pack-full.png",
-        features: ["Branded Boxes", "Retail Ready", "Maximum Protection"],
     },
     {
         id: "bulk-packaging",
         name: "Bulk Packaging",
-        description:
-            "Efficient bulk packaging in large containers, ideal for wholesale distribution and commercial use with cost-effective solutions.",
         image: "/images/pack-bulk.png",
-        features: ["Large Containers", "Cost Effective", "Wholesale Ready"],
     },
     {
         id: "bulk-loose-packaging",
         name: "Bulk Loose Packaging",
-        description:
-            "Flexible loose bulk packaging for industrial applications, offering the most economical option for large-volume orders.",
         image: "/images/pack-loose.png",
-        features: ["Industrial Use", "Most Economical", "Large Volume"],
     },
 ];
 
 export function PackagingOptionsSection() {
     return (
-        <section className="relative w-full overflow-hidden bg-[#1D1D1D] px-5 py-16 md:px-10 md:py-20 lg:px-20 lg:py-24">
+        <section className="relative w-full overflow-hidden bg-[url('/images/bg-packaging-option.png')] bg-cover px-6 py-16 md:px-10 lg:px-20">
             {/* Section Header */}
-            <div className="mb-12 flex flex-col items-center justify-center md:mb-16">
-                <div className="mb-2 flex items-center gap-3">
-                    <div className="h-0.5 w-[50px] bg-[#EFA12D]" />
-                    <h2 className="font-['Josefin_Sans'] text-[28px] font-bold text-white uppercase md:text-[36px] lg:text-[42px]">
-                        Packaging Options
+            <div className="mb-10 flex flex-col items-start justify-center pl-[20px] md:items-start md:pl-[60px] lg:pl-[240px]">
+                <div className="flex items-center gap-3">
+                    <div className="h-[2px] w-[50px] bg-[#EFA12D]" />
+                    <h2 className="font-['Josefin_Sans'] text-[26px] font-bold text-white md:text-[34px] lg:text-[40px]">
+                        Packaging <span className="text-[#EFA12D]">Option</span>
                     </h2>
                 </div>
-                <p className="mt-3 max-w-2xl text-center font-['Open_Sans'] text-[14px] text-[#C6C6C6] md:text-[16px]">
-                    Choose from our flexible packaging solutions tailored to
-                    your business needs
-                </p>
             </div>
 
-            {/* Packaging Grid */}
-            <div className="mx-auto grid max-w-7xl grid-cols-1 gap-6 md:grid-cols-3 lg:gap-8">
-                {packagingOptions.map((option) => (
-                    <div
-                        key={option.id}
-                        className="group bg-gradient-radial relative overflow-hidden rounded-[20px] border border-[#4F4F4F] from-[#151515] to-white/5 p-6 backdrop-blur-md transition-all duration-300 hover:border-[#EFA12D]"
-                    >
-                        {/* Package Image */}
-                        <div className="relative mb-6 flex h-[250px] items-center justify-center overflow-hidden rounded-[15px] bg-[#151515] md:h-[280px]">
-                            <Image
-                                src={option.image}
-                                alt={option.name}
-                                width={400}
-                                height={400}
-                                className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
-                            />
-                        </div>
+            {/* Flex Container (bukan grid agar layout sesuai Figma) */}
+            <div className="px-[20px] md:px-[40px] lg:px-[100px]">
+                <div className="flex flex-col items-center gap-8 md:grid md:grid-cols-2 lg:flex lg:flex-row lg:justify-center">
+                    {packagingOptions.map((option) => (
+                        <motion.div
+                            key={option.id}
+                            whileHover={{ scale: 1.03 }}
+                            transition={{ duration: 0.4 }}
+                            className="group relative flex h-[371px] w-[371px] flex-col items-center justify-center overflow-hidden rounded-[16px] border border-[#FFFFFF30] bg-[radial-gradient(circle_at_center,#000_0%,#171717_50%,_#ffffff40_100%)] shadow-[0_0_40px_#00000050] transition-all duration-500 hover:border-[#EFA12D] md:h-[334px] md:w-[334px] lg:h-[384px] lg:w-[560px] lg:rounded-[0px]"
+                        >
+                            {/* Gambar */}
+                            <div className="relative flex h-full w-full items-center justify-center">
+                                <Image
+                                    src={option.image}
+                                    alt={option.name}
+                                    width={600}
+                                    height={600}
+                                    className="h-full w-full scale-75 object-contain transition-transform duration-700 group-hover:scale-90"
+                                />
 
-                        {/* Package Info */}
-                        <div className="space-y-4">
-                            <h3 className="font-['Josefin_Sans'] text-[22px] font-bold text-white uppercase md:text-[24px]">
-                                {option.name}
+                                {/* Overlay Radial Putih di Sudut */}
+                                <div className="src/features/home/components/organism/global-shipping-partner-section.tsx pointer-events-none absolute inset-0" />
+                            </div>
+
+                            {/* Teks di atas tengah */}
+                            <h3 className="absolute top-5 left-1/2 -translate-x-1/2 font-['Josefin_Sans'] text-[18px] font-semibold text-white md:text-[20px] lg:text-[22px]">
+                                <span className="text-[#EFA12D]">
+                                    {option.name.split(" ")[0]}
+                                </span>{" "}
+                                {option.name.split(" ")[1]}
                             </h3>
-                            <p className="font-['Open_Sans'] text-[14px] leading-relaxed text-[#C6C6C6]">
-                                {option.description}
-                            </p>
-
-                            {/* Features List */}
-                            <ul className="space-y-2">
-                                {option.features.map((feature, index) => (
-                                    <li
-                                        key={index}
-                                        className="flex items-center gap-2 font-['Open_Sans'] text-[13px] text-[#EFA12D]"
-                                    >
-                                        <svg
-                                            width="16"
-                                            height="16"
-                                            viewBox="0 0 16 16"
-                                            fill="none"
-                                            xmlns="http://www.w3.org/2000/svg"
-                                        >
-                                            <path
-                                                d="M13.3334 4L6.00002 11.3333L2.66669 8"
-                                                stroke="currentColor"
-                                                strokeWidth="2"
-                                                strokeLinecap="round"
-                                                strokeLinejoin="round"
-                                            />
-                                        </svg>
-                                        {feature}
-                                    </li>
-                                ))}
-                            </ul>
-                        </div>
-                    </div>
-                ))}
+                        </motion.div>
+                    ))}
+                </div>
             </div>
 
-            {/* View Details Button */}
-            <div className="mt-12 flex justify-center md:mt-16">
+            {/* Tombol View Details */}
+            <div className="mt-12 flex justify-center">
                 <Link
                     href="/production-info#packaging"
-                    className="rounded-[40px] border-2 border-[#EFA12D] bg-transparent px-8 py-3 font-['Open_Sans'] text-[14px] font-semibold text-[#EFA12D] uppercase transition-all hover:bg-[#EFA12D] hover:text-[#151515] md:px-10 md:py-4 md:text-[16px]"
+                    className="font-['Open_Sans'] text-[15px] font-semibold text-[#EFA12D] italic underline-offset-4 hover:underline md:text-[16px]"
                 >
                     View Packaging Details
                 </Link>
