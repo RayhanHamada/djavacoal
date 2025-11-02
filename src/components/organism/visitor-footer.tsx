@@ -13,8 +13,13 @@ import {
 } from "react-icons/fa";
 import { HiMail } from "react-icons/hi";
 
+import { serverPublicAPIClient } from "@/adapters/public-api/server";
+import { FooterProductList } from "@/components/molecules/footer-product-list";
+
 export default async function VisitorFooter() {
     const year = new Date().getFullYear();
+
+    const { data } = await serverPublicAPIClient.GET("/footer-content");
 
     return (
         <footer className="relative bg-[linear-gradient(rgba(0,0,0,0.7),rgba(0,0,0,0.7)),url('/images/bg-footer.png')] bg-cover bg-center text-gray-200">
@@ -32,25 +37,25 @@ export default async function VisitorFooter() {
                     />
                     <div className="flex space-x-3">
                         <Link
-                            href="#"
+                            href={data?.data.facebook_link || "#"}
                             className="border bg-transparent p-2 hover:bg-gray-500"
                         >
                             <FaFacebookF size={16} />
                         </Link>
                         <Link
-                            href="#"
+                            href={data?.data.linkedin_link || "#"}
                             className="border bg-transparent p-2 hover:bg-gray-500"
                         >
                             <FaLinkedinIn size={16} />
                         </Link>
                         <Link
-                            href="#"
+                            href={data?.data.instagram_link || "#"}
                             className="border bg-transparent p-2 hover:bg-gray-500"
                         >
                             <FaInstagram size={18} />
                         </Link>
                         <Link
-                            href="#"
+                            href={data?.data.tiktok_link || "#"}
                             className="border bg-transparent p-2 hover:bg-gray-500"
                         >
                             <FaTiktok size={16} />
@@ -89,29 +94,7 @@ export default async function VisitorFooter() {
                         <h3 className="text-secondary border-secondary mb-2 border-b-2 pb-1 text-base font-bold sm:text-xl">
                             Products
                         </h3>
-                        <ul className="mt-3 space-y-2 text-xs md:text-base">
-                            <li>
-                                <Link href="#">
-                                    Coconut Shell Charcoal Briquette
-                                </Link>
-                            </li>
-                            <li>
-                                <Link href="#">
-                                    Barbeque Charcoal Briquette
-                                </Link>
-                            </li>
-                            <li>
-                                <Link href="#">Sawdust Charcoal Briquette</Link>
-                            </li>
-                            <li>
-                                <Link href="#">
-                                    Natural Wood Charcoal Briquette
-                                </Link>
-                            </li>
-                            <li>
-                                <Link href="#">Djavacoal’s Brand</Link>
-                            </li>
-                        </ul>
+                        <FooterProductList />
                     </div>
                 </div>
 
@@ -150,23 +133,21 @@ export default async function VisitorFooter() {
                         </h3>
                         <div className="mt-3 space-y-3">
                             <Link
-                                href="https://maps.app.goo.gl/cAjob1UgJrb42iwj8"
+                                href={data?.data.maps_link || "#"}
                                 className="flex items-start gap-2"
                             >
                                 <FaMapMarkerAlt className="mt-1 size-8 self-center md:size-6" />
                                 <span className="text-xs md:text-base">
-                                    PT TAIBA COCOCHA INDONESIA Jl. PWRI No.53,
-                                    RT.1/RW.6, Tonjong, Tajur Halang, Bogor,
-                                    Jawa Barat 16320, Indonesia
+                                    {data?.data.address || ""}
                                 </span>
                             </Link>
                             <p className="font-bold">Phone :</p>
                             <Link
-                                href="https://wa.me/6282122859318"
+                                href={`https://wa.me/${data?.data.phone_number || ""}`}
                                 className="flex items-center gap-2"
                             >
-                                <FaPhoneAlt className="size-4" /> +62 821 2285
-                                9318
+                                <FaPhoneAlt className="size-4" />{" "}
+                                {data?.data.phone_number || ""}
                             </Link>
                             <p className="font-bold">E-mail :</p>
                             <Link
@@ -174,13 +155,12 @@ export default async function VisitorFooter() {
                                 className="flex items-center gap-2"
                             >
                                 <HiMail className="size-4 md:size-6" />{" "}
-                                marketing@djavacoal.com
+                                {data?.data.email || ""}
                             </Link>
                         </div>
                     </div>
                 </div>
             </div>
-
             {/* Copyright */}
             <div className="relative py-4 text-center text-xs text-white">
                 <div className="absolute inset-0 bg-[#EFA12D]"></div>

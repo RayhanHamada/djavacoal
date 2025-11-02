@@ -38,3 +38,19 @@ export const LIST_PRODUCT_NAME_OUTPUT_SCHEMA = z.object({
         }),
     }),
 });
+
+export const FOOTER_CONTENT_OUTPUT_SCHEMA = z.object({
+    body: z.object({
+        data: z.object({
+            facebook_link: z.string().nullable(),
+            linkedin_link: z.string().nullable(),
+            instagram_link: z.string().nullable(),
+            tiktok_link: z.string().nullable(),
+
+            maps_link: z.string().nullable(),
+            address: z.string().nullable(),
+            phone_number: z.string().nullable(),
+            email: z.string().nullable(),
+        }),
+    }),
+});

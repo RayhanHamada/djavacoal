@@ -1,7 +1,9 @@
 import { COMMON_COLUMNS, PRODUCT_COLUMNS } from "@/adapters/d1/constants";
 import { getDB } from "@/adapters/d1/db";
+import { KV_KEYS } from "@/adapters/kv/constants";
 import { COOKIE_NAME, LOCALES } from "@/configs";
 import {
+    FOOTER_CONTENT_OUTPUT_SCHEMA,
     LIST_PRODUCT_NAME_INPUT_SCHEMA,
     LIST_PRODUCT_NAME_OUTPUT_SCHEMA,
 } from "@/features/public-api/schemas";
@@ -22,6 +24,8 @@ export const router = {
         .route({
             method: "GET",
             path: "/products-names",
+            summary: "List product names",
+            description: "List product names with localization support",
             inputStructure: "detailed",
             outputStructure: "detailed",
         })
@@ -62,6 +66,55 @@ export const router = {
                         meta: {
                             total: names.length,
                         },
+                    },
+                },
+            };
+        }),
+
+    footerContent: publicBase
+        .route({
+            method: "GET",
+            path: "/footer-content",
+            summary: "Fetch footer content data",
+            description:
+                "Get footer content including social media links and contact info",
+            outputStructure: "detailed",
+        })
+        .output(FOOTER_CONTENT_OUTPUT_SCHEMA)
+        .handler(async function ({ context: { env } }) {
+            const [
+                facebook_link,
+                linkedin_link,
+                instagram_link,
+                tiktok_link,
+                maps_link,
+                address,
+                phone_number,
+                email,
+            ] = await Promise.all([
+                env.DJAVACOAL_KV.get(KV_KEYS.FACEBOOK_LINK),
+                env.DJAVACOAL_KV.get(KV_KEYS.LINKEDIN_LINK),
+                env.DJAVACOAL_KV.get(KV_KEYS.INSTAGRAM_LINK),
+                env.DJAVACOAL_KV.get(KV_KEYS.TIKTOK_LINK),
+
+                env.DJAVACOAL_KV.get(KV_KEYS.MAPS_LINK),
+                env.DJAVACOAL_KV.get(KV_KEYS.ADDRESS_LINE),
+                env.DJAVACOAL_KV.get(KV_KEYS.WHATSAPP_NUMBER),
+                env.DJAVACOAL_KV.get(KV_KEYS.EMAIL_ADDRESS),
+            ]);
+
+            return {
+                body: {
+                    data: {
+                        address,
+                        email,
+                        facebook_link,
+                        instagram_link,
+                        linkedin_link,
+                        maps_link,
+                        phone_number,
+                        tiktok_link,
+                        products: [],
                     },
                 },
             };
