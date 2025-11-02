@@ -41,12 +41,12 @@ export default function CompanyIntroSection() {
     return (
         <section
             id="company-intro"
-            className="mt-2 scroll-mt-28 space-y-4 rounded-xl bg-[#222222] p-[20px] lg:p-[40px]"
+            className="mt-2 scroll-mt-28 space-y-4 rounded-xl bg-[#222222] p-5 lg:p-10"
         >
             {/* === Heading === */}
             <header className="mb-2">
                 <div className="mb-2 flex items-center gap-3">
-                    <div className="h-[1px] w-8 bg-white" />
+                    <div className="h-px w-8 bg-white" />
                     <p className="text-sm font-medium tracking-wide text-[#60A5FF] italic">
                         Production Process
                     </p>
@@ -57,7 +57,7 @@ export default function CompanyIntroSection() {
                 <p className="font-medium text-[#EFA12D]">
                     Leading Indonesian Charcoal Manufacturer
                 </p>
-                <div className="mt-4 h-[1px] bg-[#3A3A3A]" />
+                <div className="mt-4 h-px bg-[#3A3A3A]" />
             </header>
 
             {/* === Video Section === */}
@@ -94,7 +94,7 @@ export default function CompanyIntroSection() {
                                 height={200}
                                 src="/images/thumbnail-yt.png"
                                 alt="Video Thumbnail"
-                                className="absolute inset-0 h-full w-full border border-[#EFA12D] object-contain object-cover"
+                                className="absolute inset-0 h-full w-full border border-[#EFA12D] object-cover"
                             />
 
                             {/* === Overlay Logo + Tombol Play (dengan animasi ringan) === */}
@@ -143,19 +143,19 @@ export default function CompanyIntroSection() {
             <div className="flex space-x-3">
                 <Link
                     href="#"
-                    className="border-1 bg-transparent p-2 hover:bg-gray-500"
+                    className="border bg-transparent p-2 hover:bg-gray-500"
                 >
                     <FaFacebookF size={16} />
                 </Link>
                 <Link
                     href="#"
-                    className="border-1 bg-transparent p-2 hover:bg-gray-500"
+                    className="border bg-transparent p-2 hover:bg-gray-500"
                 >
                     <FaInstagram size={18} />
                 </Link>
                 <Link
                     href="#"
-                    className="border-1 bg-transparent p-2 hover:bg-gray-500"
+                    className="border bg-transparent p-2 hover:bg-gray-500"
                 >
                     <FaLinkedinIn size={16} />
                 </Link>
