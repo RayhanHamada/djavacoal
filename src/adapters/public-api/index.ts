@@ -1,34 +1,15 @@
-import "server-only";
-
 import { onError, ORPCError } from "@orpc/client";
+import { OpenAPIHandler } from "@orpc/openapi/fetch";
+import { OpenAPIReferencePlugin } from "@orpc/openapi/plugins";
 import { ValidationError } from "@orpc/server";
-import { RPCHandler } from "@orpc/server/fetch";
-import z from "zod";
+import { ZodToJsonSchemaConverter } from "@orpc/zod/zod4";
+import { z } from "zod";
 
-import { RPC_API_PREFIX } from "@/adapters/rpc/constants";
-import { router as admins } from "@/features/admin-auth/server/router";
-import { router as gallery } from "@/features/dashboard-gallery/server/router";
-import { router as dashboardNews } from "@/features/dashboard-news/server";
-import { router as pageSettings } from "@/features/dashboard-page-settings/server";
-import { router as dashboardProduct } from "@/features/dashboard-product/server";
-import { router as staticMedia } from "@/features/dashboard-static-media/server/router";
-import { router as dashboardTeamMember } from "@/features/dashboard-team-member/server";
+import { PUBLIC_API_PREFIX } from "@/adapters/public-api/constants";
+import { router } from "@/features/public-api/router";
 
-const router = {
-    /**
-     * Add your RPC methods here
-     */
-    admins,
-    gallery,
-    dashboardNews,
-    dashboardProduct,
-    pageSettings,
-    staticMedia,
-    dashboardTeamMember,
-};
-
-const handler = new RPCHandler(router, {
-    clientInterceptors: [
+const handler = new OpenAPIHandler(router, {
+    interceptors: [
         onError(async function (error) {
             /**
              * skip check if not ORPCError or not ValidationError
@@ -70,19 +51,34 @@ const handler = new RPCHandler(router, {
                     cause,
                 });
             }
+
+            console.log(error);
+        }),
+    ],
+    plugins: [
+        new OpenAPIReferencePlugin({
+            schemaConverters: [new ZodToJsonSchemaConverter()],
+            specGenerateOptions: {
+                info: {
+                    title: "Public Djavacoal API",
+                    version: "1.0.0",
+                },
+            },
         }),
     ],
 });
+
 export default async function getHandler(request: Request) {
     return handler
         .handle(request, {
-            prefix: RPC_API_PREFIX,
+            prefix: PUBLIC_API_PREFIX,
         })
         .catch((error) => {
-            console.error("RPC Handler Error:", error);
+            console.error("Public API Handler Error:", error);
 
-            return;
+            return {
+                response: undefined,
+                matched: false,
+            };
         });
 }
-
-export type Router = typeof router;

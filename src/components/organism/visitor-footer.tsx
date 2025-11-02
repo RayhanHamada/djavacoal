@@ -13,7 +13,7 @@ import {
 } from "react-icons/fa";
 import { HiMail } from "react-icons/hi";
 
-export default function VisitorFooter() {
+export default async function VisitorFooter() {
     const year = new Date().getFullYear();
 
     return (

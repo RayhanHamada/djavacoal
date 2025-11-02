@@ -1,7 +1,7 @@
 {
     "compilerOptions": {
         "allowArbitraryExtensions": true,
-        "target": "ES2017",
+        "target": "esnext",
         "lib": ["dom", "dom.iterable", "esnext"],
         "resolvePackageJsonImports": true,
         "allowJs": true,
