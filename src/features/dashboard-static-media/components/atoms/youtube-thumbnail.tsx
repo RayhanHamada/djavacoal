@@ -39,6 +39,7 @@ export function YouTubeThumbnail({
         transform: CSS.Transform.toString(transform),
         transition,
         opacity: isDragging ? 0.5 : 1,
+        zIndex: isDragging ? 1000 : "auto",
     };
 
     const thumbnailUrl = `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`;
@@ -105,7 +106,9 @@ export function YouTubeThumbnail({
                     <ActionIcon
                         variant="subtle"
                         color="gray"
-                        style={{ cursor: isDraggable ? "grab" : "default" }}
+                        style={{
+                            cursor: isDraggable ? "grab" : "default",
+                        }}
                         {...attributes}
                         {...listeners}
                     >

@@ -42,6 +42,7 @@ export function PhotoCard({
         transform: CSS.Transform.toString(transform),
         transition,
         opacity: isDragging ? 0.5 : 1,
+        zIndex: isDragging ? 1000 : "auto",
     };
 
     const imageHeight = aspectRatio === "wide" ? 120 : 200;
@@ -72,7 +73,9 @@ export function PhotoCard({
                     <ActionIcon
                         variant="subtle"
                         color="gray"
-                        style={{ cursor: isDraggable ? "grab" : "default" }}
+                        style={{
+                            cursor: isDraggable ? "grab" : "default",
+                        }}
                         {...attributes}
                         {...listeners}
                     >

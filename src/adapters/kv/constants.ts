@@ -37,26 +37,26 @@ export const KV_KEYS = {
     /**
      * social media links
      */
-    FACEBOOK_LINK: "facebook_link",
-    LINKEDIN_LINK: "linkedin_link",
-    INSTAGRAM_LINK: "instagram_link",
-    TIKTOK_LINK: "tiktok_link",
+    FACEBOOK_LINK: "footer:facebook_link",
+    LINKEDIN_LINK: "footer:linkedin_link",
+    INSTAGRAM_LINK: "footer:instagram_link",
+    TIKTOK_LINK: "footer:tiktok_link",
 
     /**
      * address informations
      */
-    MAPS_LINK: "maps_link",
-    ADDRESS_LINE: "address_line",
+    MAPS_LINK: "footer:maps_link",
+    ADDRESS_LINE: "footer:address_line",
 
     /**
      * phone number
      */
-    WHATSAPP_NUMBER: "whatsapp_number",
+    WHATSAPP_NUMBER: "footer:whatsapp_number",
 
     /**
      * email address
      */
-    EMAIL_ADDRESS: "email_address",
+    EMAIL_ADDRESS: "footer:email_address",
 } as const;
 
 type KVKey = typeof KV_KEYS;
