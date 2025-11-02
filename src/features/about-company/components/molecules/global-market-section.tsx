@@ -6,7 +6,7 @@ export default function GlobalMarketSection() {
     return (
         <section
             id="global-market"
-            className="mt-2 scroll-mt-28 space-y-4 rounded-xl bg-[#222222] p-[20px] lg:p-[40px]"
+            className="mt-2 scroll-mt-28 space-y-4 rounded-xl bg-[#222222] p-5 lg:p-10"
         >
             {/* === Heading === */}
             <header className="mb-2">
@@ -17,7 +17,7 @@ export default function GlobalMarketSection() {
                     transition={{ duration: 0.6, ease: "easeOut" }}
                     className="mb-2 flex items-center gap-3"
                 >
-                    <div className="h-[1px] w-8 bg-white" />
+                    <div className="h-px w-8 bg-white" />
                     <p className="text-sm font-medium tracking-wide text-[#60A5FF] italic">
                         What We Do?
                     </p>
@@ -48,7 +48,7 @@ export default function GlobalMarketSection() {
                     initial={{ scaleX: 0 }}
                     whileInView={{ scaleX: 1 }}
                     transition={{ duration: 0.6, ease: "easeOut" }}
-                    className="mt-4 h-[1px] origin-left bg-[#3A3A3A]"
+                    className="mt-4 h-px origin-left bg-[#3A3A3A]"
                 />
             </header>
 

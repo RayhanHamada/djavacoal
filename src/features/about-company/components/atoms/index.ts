@@ -1,4 +1,4 @@
-export { default as InfoCard } from "./InfoCard";
-export { default as TeamCard } from "./TeamCard";
-export { default as CertificateCard } from "./CertificateCard";
-export { default as GalleryImage } from "./GalleryImage";
+export { default as InfoCard } from "./info-card";
+export { default as TeamCard } from "./team-card";
+export { default as CertificateCard } from "./certificate-card";
+export { default as GalleryImage } from "./gallery-image";

@@ -100,7 +100,7 @@ export default function GallerySection() {
     return (
         <section
             id="gallery"
-            className="mt-10 scroll-mt-28 space-y-6 rounded-xl bg-[#222222] p-[20px] lg:p-[40px]"
+            className="mt-10 scroll-mt-28 space-y-6 rounded-xl bg-[#222222] p-5 lg:p-10"
         >
             {/* === Heading === */}
             <header className="mb-2">
@@ -145,7 +145,7 @@ export default function GallerySection() {
                 />
             </header>
             {/* 🎥 HERO VIDEO REELS */}
-            <div className="-mx-[40px]">
+            <div className="-mx-10">
                 <div className="relative w-full">
                     <div
                         id="reelsContainer"
@@ -397,7 +397,7 @@ export default function GallerySection() {
             {/* ✅ Single Unified Modal */}
             {viewer !== null && (
                 <div
-                    className="fixed inset-0 z-[99999] flex items-center justify-center bg-black/80 px-4 backdrop-blur-sm"
+                    className="fixed inset-0 z-99999 flex items-center justify-center bg-black/80 px-4 backdrop-blur-sm"
                     onClick={closeModal}
                 >
                     {/* Close */}
@@ -414,7 +414,7 @@ export default function GallerySection() {
                         onClick={(e) => e.stopPropagation()}
                     >
                         {viewer.type === "reel" && (
-                            <div className="relative aspect-[9/16] w-[85vw] max-w-[400px] overflow-hidden rounded-xl">
+                            <div className="relative aspect-9/16 w-[85vw] max-w-[400px] overflow-hidden rounded-xl">
                                 <iframe
                                     src={`https://www.youtube-nocookie.com/embed/${reels[viewer.index]}?autoplay=1&controls=1&playsinline=1`}
                                     className="absolute inset-0 h-full w-full"

@@ -6,7 +6,7 @@ import Image from "next/image";
 
 import { motion } from "framer-motion";
 
-import CertificateCard from "../atoms/CertificateCard";
+import CertificateCard from "../atoms/certificate-card";
 
 export default function CertificateSection() {
     const certificates = [
@@ -65,7 +65,7 @@ export default function CertificateSection() {
     return (
         <section
             id="certificates"
-            className="mt-10 scroll-mt-28 space-y-6 rounded-xl bg-[#222222] p-[20px] lg:p-[40px]"
+            className="mt-10 scroll-mt-28 space-y-6 rounded-xl bg-[#222222] p-5 lg:p-10"
         >
             {/* === Heading === */}
             <header className="mb-2">
@@ -76,7 +76,7 @@ export default function CertificateSection() {
                     transition={{ duration: 0.6, ease: "easeOut" }}
                     className="mb-2 flex items-center gap-3"
                 >
-                    <div className="h-[1px] w-8 bg-white" />
+                    <div className="h-px w-8 bg-white" />
                     <p className="text-sm font-medium tracking-wide text-[#60A5FF] italic">
                         Legal & Certificates
                     </p>
@@ -106,7 +106,7 @@ export default function CertificateSection() {
                     initial={{ scaleX: 0 }}
                     whileInView={{ scaleX: 1 }}
                     transition={{ duration: 0.6, ease: "easeOut" }}
-                    className="mt-4 h-[1px] origin-left bg-[#3A3A3A]"
+                    className="mt-4 h-px origin-left bg-[#3A3A3A]"
                 />
             </header>
 
@@ -156,7 +156,7 @@ export default function CertificateSection() {
             {/* ===== Modal / Lightbox Overlay ===== */}
             {open && activeCert && (
                 <motion.div
-                    className="fixed inset-0 z-[999] flex items-start justify-center overflow-y-auto bg-black/80 p-8 backdrop-blur-sm"
+                    className="fixed inset-0 z-999 flex items-start justify-center overflow-y-auto bg-black/80 p-8 backdrop-blur-sm"
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     onClick={handleClose}
