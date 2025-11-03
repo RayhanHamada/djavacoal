@@ -283,7 +283,7 @@ Products are displayed on `/our-products` page filtered by `is_hidden = false` a
 ### Internal Dependencies
 - `@/adapters/d1` - Database access and constants
 - `@/adapters/r2` - R2 storage operations
-- `@/features/admin-auth` - Authentication
+- `@/features/dashboard-auth` - Authentication
 - `@/lib/orpc/server` - RPC base configuration
 - `@/lib/rpc` - Client-side RPC client
 
@@ -503,7 +503,7 @@ Products can use custom thumbnails for YouTube videos instead of YouTube's defau
 - **dashboard-gallery** - Photos may be used for products
 - **dashboard-static-media** - Similar media management patterns
 - **our-products** - Public product display
-- **admin-auth** - Authentication and user tracking
+- **dashboard-auth** - Authentication and user tracking
 
 ## Future Enhancements
 

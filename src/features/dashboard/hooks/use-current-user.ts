@@ -1,6 +1,6 @@
 "use client";
 
-import { client } from "@/features/admin-auth/lib/better-auth-client";
+import { client } from "@/features/dashboard-auth/lib/better-auth-client";
 
 /**
  * Hook to get current user session

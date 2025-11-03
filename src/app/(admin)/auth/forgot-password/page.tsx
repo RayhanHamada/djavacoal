@@ -1,6 +1,6 @@
 import { Box } from "@mantine/core";
 
-import { ForgotPasswordCard } from "@/features/admin-auth/components/molecules";
+import { ForgotPasswordCard } from "@/features/dashboard-auth/components/molecules";
 
 /**
  * Forgot Password Page

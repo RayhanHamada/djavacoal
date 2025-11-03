@@ -382,7 +382,7 @@ const ContactFormSchema = z.object({
 - **home** - May have contact CTA
 - **our-products** - Product inquiry links to contact
 - **about-company** - Company information
-- **admin-auth** - Admin can view inquiries (if stored in DB)
+- **dashboard-auth** - Admin can view inquiries (if stored in DB)
 
 ## Future Enhancements
 

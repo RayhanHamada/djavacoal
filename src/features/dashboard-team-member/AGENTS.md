@@ -257,7 +257,7 @@ if (!session) throw errors.UNAUTHORIZED();
 ### Internal Dependencies
 - `@/adapters/d1` - Database access and constants
 - `@/adapters/r2` - R2 storage operations
-- `@/features/admin-auth` - Authentication
+- `@/features/dashboard-auth` - Authentication
 - `@/lib/orpc/server` - RPC base configuration
 - `@/lib/rpc` - Client-side RPC client
 
@@ -350,7 +350,7 @@ Potential improvements for this feature:
 ## Related Features
 
 - **dashboard-page-settings** - Manages SEO metadata for static pages
-- **admin-auth** - Provides authentication for all operations
+- **dashboard-auth** - Provides authentication for all operations
 - **dashboard-gallery** - Similar photo management patterns
 
 ## License

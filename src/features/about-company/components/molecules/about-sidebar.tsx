@@ -1,71 +1,40 @@
 "use client";
-import { useEffect, useState } from "react";
+
+import { useState } from "react";
 
 import Image from "next/image";
 
 import { IoMdArrowDropright } from "react-icons/io";
 import { IoChevronDown, IoChevronUp } from "react-icons/io5";
 
-const ITEMS = [
-    { id: "company-intro", label: "PT. Djavacoal Indonesia" },
-    { id: "team", label: "Djavacoal’s Team" },
-    { id: "global-market", label: "What We Do?" },
-    { id: "certificates", label: "Legal & Certificate" },
-    { id: "factory", label: "Factory" },
-    { id: "gallery", label: "Our Gallery" },
-];
+import { useScrollSpy } from "../../hooks";
+import { SIDEBAR_ITEMS } from "../../lib/constants";
 
-type Props = { idPrefix?: string };
+interface AboutSidebarProps {
+    idPrefix?: string;
+}
 
-export default function AboutSidebar({ idPrefix = "" }: Props) {
-    const [active, setActive] = useState<string | null>(null);
-    const [open, setOpen] = useState(false);
+export default function AboutSidebar({ idPrefix = "" }: AboutSidebarProps) {
+    const { activeId, scrollToSection } = useScrollSpy({
+        items: SIDEBAR_ITEMS,
+        idPrefix,
+    });
 
-    useEffect(() => {
-        const desktopContainer = document.querySelector<HTMLElement>(
-            "#desktop-scroll-container"
-        );
-        const observer = new IntersectionObserver(
-            (entries) => {
-                const visible = entries.find((e) => e.isIntersecting);
-                if (visible?.target?.id) {
-                    const rawId = visible.target.id.replace(idPrefix, "");
-                    setActive(rawId);
-                }
-            },
-            {
-                threshold: 0.3,
-                root: desktopContainer ?? null,
-                rootMargin: "0px 0px -40% 0px",
-            }
-        );
-        ITEMS.forEach(({ id }) => {
-            const section = document.getElementById(idPrefix + id);
-            if (section) observer.observe(section);
-        });
-        return () => observer.disconnect();
-    }, [idPrefix]);
+    const [isMobileOpen, setIsMobileOpen] = useState(false);
 
     const handleClick = (id: string) => {
-        const el = document.getElementById(id);
-        if (!el) return;
-        const isDesktop = window.matchMedia("(min-width: 1024px)").matches;
-        const container = document.querySelector<HTMLElement>(
-            "#desktop-scroll-container"
-        );
-        if (isDesktop && container && container.contains(el)) {
-            container.scrollTo({ top: el.offsetTop - 20, behavior: "smooth" });
-        } else {
-            el.scrollIntoView({ behavior: "smooth", block: "start" });
-        }
-        setActive(id);
-        setOpen(false);
+        scrollToSection(idPrefix + id);
+        setIsMobileOpen(false);
     };
+
+    const activeLabel = activeId
+        ? SIDEBAR_ITEMS.find((i) => i.id === activeId)?.label
+        : "Select Section";
 
     return (
         <>
-            {/* MOBILE */}
-            <div className="sticky top-0 z-40 flex items-center gap-3 border-b border-[#2a2a2a] bg-[#161616] py-3 lg:hidden">
+            {/* Mobile Dropdown */}
+            <div className="bg-primary sticky top-0 z-40 flex items-center gap-3 border-b border-[#2a2a2a] py-3 lg:hidden">
                 <div className="text-xl text-[#EFA12D]">
                     <Image
                         src="/svgs/ic_select.svg"
@@ -76,29 +45,27 @@ export default function AboutSidebar({ idPrefix = "" }: Props) {
                 </div>
                 <div className="relative w-full">
                     <button
-                        onClick={() => setOpen(!open)}
+                        onClick={() => setIsMobileOpen(!isMobileOpen)}
                         className="flex w-full items-center justify-between rounded-sm border border-[#3a3a3a] px-4 py-2 text-sm text-white"
+                        aria-label="Toggle navigation menu"
+                        aria-expanded={isMobileOpen}
                     >
-                        <span className="truncate">
-                            {active
-                                ? ITEMS.find((i) => i.id === active)?.label
-                                : "Select Section"}
-                        </span>
-                        {open ? (
+                        <span className="truncate">{activeLabel}</span>
+                        {isMobileOpen ? (
                             <IoChevronUp className="text-[#EFA12D]" />
                         ) : (
                             <IoChevronDown className="text-[#EFA12D]" />
                         )}
                     </button>
 
-                    {open && (
+                    {isMobileOpen && (
                         <div className="absolute left-0 mt-1 w-full overflow-hidden rounded-sm border border-[#3a3a3a] bg-[#292D32]">
-                            {ITEMS.map(({ id, label }) => (
+                            {SIDEBAR_ITEMS.map(({ id, label }) => (
                                 <button
                                     key={id}
                                     onClick={() => handleClick(id)}
                                     className={`block w-full px-4 py-2 text-left text-sm ${
-                                        active === id
+                                        activeId === id
                                             ? "text-[#EFA12D] underline underline-offset-4"
                                             : "text-white hover:text-[#EFA12D]"
                                     }`}
@@ -111,28 +78,32 @@ export default function AboutSidebar({ idPrefix = "" }: Props) {
                 </div>
             </div>
 
-            {/* DESKTOP */}
-            <nav className="sticky top-[120px] hidden h-fit w-[260px] self-start border-y border-[#2a2a2a] bg-[#222222] lg:block">
+            {/* Desktop Sidebar */}
+            <nav className="sticky top-28 hidden h-fit w-[260px] self-start border-y border-[#2a2a2a] bg-[#222222] lg:block">
                 <div className="scrollbar-none max-h-[calc(100vh-120px)] overflow-y-auto">
                     <div className="flex flex-col space-y-[3px]">
-                        {ITEMS.map(({ id, label }) => (
+                        {SIDEBAR_ITEMS.map(({ id, label }) => (
                             <div
                                 key={id}
-                                className="relative after:absolute after:bottom-0 after:left-0 after:h-[1px] after:w-full after:bg-[#2a2a2a]/60 after:content-[''] last:after:hidden"
+                                className="relative after:absolute after:bottom-0 after:left-0 after:h-px after:w-full after:bg-[#2a2a2a]/60 after:content-[''] last:after:hidden"
                             >
                                 <button
                                     onClick={() => handleClick(id)}
                                     className={`my-2 flex w-full items-center justify-between px-5 py-4 text-sm font-medium transition-all duration-200 ${
-                                        active === id
+                                        activeId === id
                                             ? "bg-[#9D7B19] font-semibold text-white"
                                             : "bg-[#222222] text-gray-300 hover:bg-[#3B5952] hover:font-bold hover:text-white"
                                     }`}
+                                    aria-label={`Navigate to ${label}`}
+                                    aria-current={
+                                        activeId === id ? "true" : undefined
+                                    }
                                 >
                                     <span>{label}</span>
                                     <IoMdArrowDropright
                                         size={12}
                                         className={
-                                            active === id
+                                            activeId === id
                                                 ? "text-white"
                                                 : "text-gray-400"
                                         }

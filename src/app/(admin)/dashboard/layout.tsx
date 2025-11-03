@@ -1,7 +1,8 @@
 import { PropsWithChildren } from "react";
+import React from "react";
 
-import { DashboardLayoutClient } from "./layout-client";
-import { redirectUnauthenticatedUserActions } from "@/features/admin-auth/server/actions";
+import { DashboardLayoutClient } from "@/app/(admin)/dashboard/layout-client";
+import { redirectUnauthenticatedUserActions } from "@/features/dashboard-auth/server/actions";
 
 type Props = PropsWithChildren;
 

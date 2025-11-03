@@ -23,10 +23,8 @@ import {
 import {
     ChangePasswordForm,
     UpdateNameForm,
-} from "@/features/admin-auth/components/molecules";
-import { client } from "@/features/admin-auth/lib/better-auth-client";
-
-/**
+} from "@/features/dashboard-auth/components/molecules";
+import { client } from "@/features/dashboard-auth/lib/better-auth-client"; /**
  * My Profile Page
  * Allows authenticated users to:
  * - View their email and username

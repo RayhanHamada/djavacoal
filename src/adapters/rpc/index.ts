@@ -6,7 +6,7 @@ import { RPCHandler } from "@orpc/server/fetch";
 import z from "zod";
 
 import { RPC_API_PREFIX } from "@/adapters/rpc/constants";
-import { router as admins } from "@/features/admin-auth/server/router";
+import { router as admins } from "@/features/dashboard-auth/server/router";
 import { router as gallery } from "@/features/dashboard-gallery/server/router";
 import { router as dashboardNews } from "@/features/dashboard-news/server";
 import { router as pageSettings } from "@/features/dashboard-page-settings/server";

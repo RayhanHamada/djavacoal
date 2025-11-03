@@ -201,7 +201,7 @@ export const metadata: Metadata = {
 
 ### Internal Dependencies
 - `@/adapters/d1` - Database access and constants
-- `@/features/admin-auth` - Authentication
+- `@/features/dashboard-auth` - Authentication
 - `@/lib/orpc/server` - RPC base configuration
 - `@/lib/rpc` - Client-side RPC client
 
@@ -344,7 +344,7 @@ const commonPages = [
 - **dashboard-news** - News articles have their own SEO metadata
 - **dashboard-product** - Products may have dynamic SEO
 - **sitemap.xml** - Consumes this metadata
-- **admin-auth** - Provides authentication
+- **dashboard-auth** - Provides authentication
 
 ## Future Enhancements
 
