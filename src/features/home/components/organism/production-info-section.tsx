@@ -36,7 +36,7 @@ export function ProductionInfoSection() {
     return (
         <section className="relative w-full bg-[#151515] py-16 md:py-20 lg:py-24">
             {/* 🔹 Section Header */}
-            <div className="mb-10 flex flex-col items-start justify-center pl-[20px] md:items-start md:pl-[60px] lg:pl-[240px]">
+            <div className="mb-10 flex flex-col items-start justify-center px-[20px] md:items-start md:px-[60px] lg:px-[240px]">
                 <div className="flex items-center gap-3">
                     <div className="h-[2px] w-[50px] bg-[#EFA12D]" />
                     <h2 className="font-['Josefin_Sans'] text-[26px] font-bold text-white md:text-[34px] lg:text-[40px]">
@@ -46,7 +46,7 @@ export function ProductionInfoSection() {
             </div>
 
             {/* 🔸 Grid Images */}
-            <div className="grid grid-cols-2 lg:grid-cols-4 lg:gap-3 lg:px-20">
+            <div className="grid grid-cols-2 lg:grid-cols-4 lg:gap-3 lg:px-[100px]">
                 {productionItems.map((item) => (
                     <motion.div
                         key={item.id}

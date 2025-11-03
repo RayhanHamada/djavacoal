@@ -44,70 +44,113 @@ const products = [
     },
 ];
 
-export function DiscoverOurProductSection() {
+// Bagi 2 untuk tampilan tablet
+const chunkBy2 = <T,>(arr: T[]) =>
+    Array.from({ length: Math.ceil(arr.length / 2) }, (_, i) =>
+        arr.slice(i * 2, i * 2 + 2)
+    );
+
+function ProductCard({
+    product,
+    isLastMobile,
+}: {
+    product: (typeof products)[number];
+    isLastMobile?: boolean;
+}) {
     return (
-        <section className="relative w-full overflow-hidden bg-[#0D0D0D] px-6 py-16 md:px-10 md:py-20 lg:px-20 lg:py-24">
+        <motion.div
+            whileHover={{ scale: 1.02 }}
+            transition={{ duration: 0.3 }}
+            className={`flex w-full flex-col items-center pb-8 text-center md:pb-0 ${
+                !isLastMobile ? "border-b border-[#9C9C9C] md:border-0" : ""
+            }`}
+        >
+            <div className="relative flex aspect-square h-[371px] w-full max-w-[415px] items-center justify-center overflow-hidden rounded-[22px] border border-[#FFFFFF25] bg-[radial-gradient(circle_at_center,#000_0%,#171717_50%,_#ffffff30_100%)] shadow-[0_0_30px_#00000040] transition-all duration-500 hover:border-[#EFA12D]/80 hover:shadow-[0_0_30px_#EFA12D40] md:h-[334px] lg:h-[415px]">
+                <Image
+                    src="/images/logo.png"
+                    alt="Djavacoal Logo"
+                    width={150}
+                    height={40}
+                    className="absolute top-5 left-1/2 -translate-x-1/2 scale-60 opacity-90"
+                />
+                <Image
+                    src={product.image}
+                    alt={product.title}
+                    width={400}
+                    height={400}
+                    className="h-full w-full scale-90 object-contain transition-transform duration-700 hover:scale-105"
+                />
+            </div>
+
+            <div className="mt-6 max-w-[415px]">
+                <h3 className="font-['Josefin_Sans'] text-[15px] font-bold text-white uppercase md:text-[16px]">
+                    <span className="text-[#EFA12D]">{product.highlight}</span>{" "}
+                    {product.title}
+                </h3>
+                <p className="mt-3 font-['Open_Sans'] text-[13px] leading-relaxed text-[#C6C6C6] md:text-[14px]">
+                    {product.description}
+                </p>
+                <Link
+                    href={product.href}
+                    className="mt-3 inline-block font-['Open_Sans'] text-[13px] font-semibold text-[#1E90FF] hover:underline md:text-[14px]"
+                >
+                    Detail Products...
+                </Link>
+            </div>
+        </motion.div>
+    );
+}
+
+export function DiscoverOurProductSection() {
+    const rows = chunkBy2(products);
+
+    return (
+        <section className="relative w-full overflow-hidden bg-[#0D0D0D] px-[20px] py-16 md:px-[40px] md:py-12 lg:px-[100px] lg:py-16">
             {/* Garis emas atas */}
             <div className="absolute top-0 left-0 h-[1px] w-full bg-[#EFA12D]" />
 
             {/* Header */}
-            <div className="mb-12 text-center">
+            <div className="md:border-b md:border-[#9C9C9C] md:pb-8 md:text-center lg:border-none">
                 <h2 className="font-['Josefin_Sans'] text-[28px] font-bold text-white uppercase md:text-[36px] lg:text-[42px]">
                     Discover Our{" "}
                     <span className="text-[#EFA12D]">Products</span>
                 </h2>
             </div>
 
-            {/* ✅ Layout: Grid for mobile/tablet, flex row for desktop */}
-            <div className="mx-auto flex max-w-[1600px] flex-wrap justify-center gap-x-8 gap-y-14 md:gap-x-10 lg:flex-nowrap lg:gap-x-8">
-                {products.map((product) => (
-                    <motion.div
-                        key={product.id}
-                        whileHover={{ scale: 1.02 }}
-                        transition={{ duration: 0.3 }}
-                        className="flex w-[85vw] flex-shrink-0 flex-col items-center text-center md:w-[46%] lg:w-[24%] xl:w-[23%]"
+            {/* MOBILE + TABLET */}
+            <div className="lg:hidden">
+                {rows.map((row, rowIndex) => (
+                    <div
+                        key={rowIndex}
+                        className={`grid grid-cols-1 gap-y-14 px-0 py-8 md:grid-cols-2 md:gap-x-10 md:gap-y-16 ${
+                            rowIndex !== rows.length - 1
+                                ? "md:border-b md:border-[#9C9C9C]"
+                                : ""
+                        }`}
                     >
-                        {/* Card */}
-                        <div className="relative flex aspect-square h-[371px] w-full max-w-[415px] items-center justify-center overflow-hidden rounded-[22px] border border-[#FFFFFF25] bg-[radial-gradient(circle_at_center,#000_0%,#171717_50%,_#ffffff30_100%)] shadow-[0_0_30px_#00000040] transition-all duration-500 hover:border-[#EFA12D]/80 hover:shadow-[0_0_30px_#EFA12D40] md:h-[334px] lg:h-[415px]">
-                            {/* Watermark */}
-                            <Image
-                                src="/images/logo.png"
-                                alt="Djavacoal Logo"
-                                width={150}
-                                height={40}
-                                className="absolute top-5 left-1/2 -translate-x-1/2 opacity-80"
-                            />
-                            <Image
-                                src={product.image}
-                                alt={product.title}
-                                width={400}
-                                height={400}
-                                className="h-full w-full object-contain transition-transform duration-700 hover:scale-105"
-                            />
-                        </div>
-
-                        {/* Text */}
-                        <div className="mt-6 max-w-[415px]">
-                            <h3 className="font-['Josefin_Sans'] text-[15px] font-bold text-white uppercase md:text-[16px]">
-                                <span className="text-[#EFA12D]">
-                                    {product.highlight}
-                                </span>{" "}
-                                {product.title}
-                            </h3>
-
-                            <p className="mt-3 font-['Open_Sans'] text-[13px] leading-relaxed text-[#C6C6C6] md:text-[14px]">
-                                {product.description}
-                            </p>
-
-                            <Link
-                                href={product.href}
-                                className="mt-3 inline-block font-['Open_Sans'] text-[13px] font-semibold text-[#1E90FF] hover:underline md:text-[14px]"
-                            >
-                                Detail Products...
-                            </Link>
-                        </div>
-                    </motion.div>
+                        {row.map((p, i) => (
+                            <div key={p.id} className="flex justify-center">
+                                <ProductCard
+                                    product={p}
+                                    isLastMobile={
+                                        rowIndex * 2 + i === products.length - 1
+                                    }
+                                />
+                            </div>
+                        ))}
+                    </div>
                 ))}
+            </div>
+
+            {/* DESKTOP */}
+            <div className="hidden lg:block">
+                <div className="flex flex-nowrap gap-x-4">
+                    {products.map((p) => (
+                        <div key={p.id} className="">
+                            <ProductCard product={p} />
+                        </div>
+                    ))}
+                </div>
             </div>
 
             {/* Garis emas bawah */}
