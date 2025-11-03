@@ -154,28 +154,55 @@ function ThumbnailSlider({
     items: VideoItem[];
     onItemClick: (videoSrc: string) => void;
 }) {
-    const [currentIndex, setCurrentIndex] = useState(0);
-    const itemsPerPage = 4;
-    const totalPages = Math.ceil(items.length / itemsPerPage);
+    const scrollContainerRef = useRef<HTMLDivElement>(null);
+    const [canScrollLeft, setCanScrollLeft] = useState(false);
+    const [canScrollRight, setCanScrollRight] = useState(false);
+
+    // Check scroll position to show/hide navigation buttons
+    const checkScroll = () => {
+        const container = scrollContainerRef.current;
+        if (container) {
+            setCanScrollLeft(container.scrollLeft > 0);
+            setCanScrollRight(
+                container.scrollLeft <
+                    container.scrollWidth - container.clientWidth - 1
+            );
+        }
+    };
+
+    useEffect(() => {
+        checkScroll();
+        const container = scrollContainerRef.current;
+        if (container) {
+            container.addEventListener("scroll", checkScroll);
+            window.addEventListener("resize", checkScroll);
+            return () => {
+                container.removeEventListener("scroll", checkScroll);
+                window.removeEventListener("resize", checkScroll);
+            };
+        }
+    }, [items]);
 
     const handlePrevious = () => {
-        setCurrentIndex((prev) => Math.max(0, prev - itemsPerPage));
+        const container = scrollContainerRef.current;
+        if (container) {
+            const scrollAmount = 180 + 8; // thumbnail width + gap
+            container.scrollBy({ left: -scrollAmount, behavior: "smooth" });
+        }
     };
 
     const handleNext = () => {
-        setCurrentIndex((prev) =>
-            Math.min(items.length - itemsPerPage, prev + itemsPerPage)
-        );
+        const container = scrollContainerRef.current;
+        if (container) {
+            const scrollAmount = 180 + 8; // thumbnail width + gap
+            container.scrollBy({ left: scrollAmount, behavior: "smooth" });
+        }
     };
-
-    const visibleItems = items.slice(currentIndex, currentIndex + itemsPerPage);
-    const canGoPrevious = currentIndex > 0;
-    const canGoNext = currentIndex + itemsPerPage < items.length;
 
     return (
         <div className="relative">
             {/* Navigation Buttons */}
-            {canGoPrevious && (
+            {canScrollLeft && (
                 <button
                     onClick={handlePrevious}
                     className="absolute top-1/2 left-0 z-10 flex h-8 w-8 -translate-x-3 -translate-y-1/2 items-center justify-center rounded-full bg-white/80 text-gray-900 shadow-lg transition-all hover:bg-white"
@@ -197,41 +224,48 @@ function ThumbnailSlider({
                 </button>
             )}
 
-            {/* Thumbnail Grid */}
-            <div className="grid grid-cols-4 gap-2">
-                {visibleItems.map((item, index) => (
+            {/* Thumbnail Grid - Fixed with flex to prevent cramping */}
+            <div
+                ref={scrollContainerRef}
+                className="scrollbar-hide flex gap-2 overflow-x-auto"
+                style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+            >
+                {items.map((item, index) => (
                     <div
-                        key={currentIndex + index}
-                        className="group relative aspect-square cursor-pointer overflow-hidden rounded-lg"
+                        key={index}
+                        className="group relative aspect-square min-h-[180px] min-w-[180px] flex-shrink-0 cursor-pointer overflow-hidden rounded-lg sm:rounded-xl"
                         onClick={() => onItemClick(item.video)}
                     >
+                        {/* Thumbnail */}
                         <Image
                             src={item.thumbnail}
-                            alt={`Thumbnail ${currentIndex + index + 1}`}
+                            alt={`Thumbnail ${index + 1}`}
                             fill
-                            className="object-cover"
+                            className="bg-[radial-gradient(circle_at_center,#000_0%,#171717_50%,_#ffffff40_100%)] object-cover"
                         />
-                        {/* Djavacoal Logo Watermark */}
-                        <div className="absolute top-1 left-1/2 z-10 flex -translate-x-1/2 justify-center">
+
+                        {/* Djavacoal Logo Watermark - Matching main thumbnail style */}
+                        <div className="absolute top-3 left-1/2 z-10 flex -translate-x-1/2 justify-center sm:top-4">
                             <Image
                                 src="/images/logo.png"
                                 alt="Djavacoal Logo"
-                                width={60}
-                                height={24}
-                                className="h-auto w-10 object-contain opacity-90"
+                                width={150}
+                                height={60}
+                                className="h-auto w-16 object-contain opacity-90 sm:w-20"
                             />
                         </div>
-                        {/* Play icon overlay */}
-                        <div className="absolute inset-0 flex items-center justify-center bg-black/30 opacity-0 transition-opacity group-hover:opacity-100">
-                            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-white/20 backdrop-blur-sm">
-                                <Play className="ml-0.5 h-4 w-4 fill-white text-white" />
+
+                        {/* Play Button Overlay - Matching main thumbnail style */}
+                        <div className="absolute inset-0 flex items-center justify-center bg-black/30">
+                            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-white/20 backdrop-blur-sm transition-transform group-hover:scale-110 sm:h-12 sm:w-12">
+                                <Play className="ml-0.5 h-5 w-5 fill-white text-white sm:h-6 sm:w-6" />
                             </div>
                         </div>
                     </div>
                 ))}
             </div>
 
-            {canGoNext && (
+            {canScrollRight && (
                 <button
                     onClick={handleNext}
                     className="absolute top-1/2 right-0 z-10 flex h-8 w-8 translate-x-3 -translate-y-1/2 items-center justify-center rounded-full bg-white/80 text-gray-900 shadow-lg transition-all hover:bg-white"
@@ -251,24 +285,6 @@ function ThumbnailSlider({
                         <polyline points="9 18 15 12 9 6" />
                     </svg>
                 </button>
-            )}
-
-            {/* Page Indicator Dots */}
-            {totalPages > 1 && (
-                <div className="mt-3 flex justify-center gap-1.5">
-                    {Array.from({ length: totalPages }).map((_, idx) => (
-                        <button
-                            key={idx}
-                            onClick={() => setCurrentIndex(idx * itemsPerPage)}
-                            className={`h-1.5 rounded-full transition-all ${
-                                Math.floor(currentIndex / itemsPerPage) === idx
-                                    ? "w-6 bg-white"
-                                    : "w-1.5 bg-white/40 hover:bg-white/60"
-                            }`}
-                            aria-label={`Go to page ${idx + 1}`}
-                        />
-                    ))}
-                </div>
             )}
         </div>
     );
@@ -335,13 +351,13 @@ export function VideoGallerySectionMd({
                             />
                         </div>
                     )}
-
-                    {/* Thumbnail Slider */}
-                    <ThumbnailSlider
-                        items={videoData.gallery.slice(1)}
-                        onItemClick={handleOpenModal}
-                    />
                 </div>
+
+                {/* Thumbnail Slider - Allow overflow */}
+                <ThumbnailSlider
+                    items={videoData.gallery.slice(1)}
+                    onItemClick={handleOpenModal}
+                />
             </div>
 
             {/* Video Modal */}
