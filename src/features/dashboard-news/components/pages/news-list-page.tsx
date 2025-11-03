@@ -43,8 +43,10 @@ function NewsListContent() {
                 titleSearch: filters.title,
                 tags: filters.tags,
                 status: filters.status,
-                dateFrom: filters.dateFrom,
-                dateTo: filters.dateTo,
+                createdFrom: filters.createdFrom,
+                createdTo: filters.createdTo,
+                publishedFrom: filters.publishedFrom,
+                publishedTo: filters.publishedTo,
             },
         })
     );

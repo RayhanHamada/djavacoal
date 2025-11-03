@@ -5,7 +5,7 @@ import type { z } from "zod/v4";
 import { useState, useEffect } from "react";
 
 import { notifications } from "@mantine/notifications";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { useDebounce } from "ahooks";
 
 import { InviteAdminFormSchema } from "@/features/admin-auth/lib/form-schema";
@@ -93,11 +93,9 @@ export function useInviteAdmin() {
  * Hook for removing admin
  */
 export function useRemoveAdmin() {
-    const queryClient = useQueryClient();
-
     const mutation = useMutation(
         rpc.admins.removeAdmin.mutationOptions({
-            onSuccess() {
+            onSuccess: async (_, __, ___, { client }) => {
                 notifications.show({
                     title: "Admin Removed",
                     message: "Admin has been successfully removed",
@@ -105,7 +103,7 @@ export function useRemoveAdmin() {
                 });
 
                 // Invalidate all admin list queries to refresh the data
-                queryClient.invalidateQueries({
+                client.invalidateQueries({
                     queryKey: rpc.admins.listAllAdmins.key(),
                 });
             },

@@ -7,11 +7,11 @@ import { IoMdArrowDropright } from "react-icons/io";
 import { IoChevronDown, IoChevronUp } from "react-icons/io5";
 
 const ITEMS = [
-    { id: "process", label: "Production Process" },
-    { id: "moq", label: "MOQ & Payment Terms" },
-    { id: "shipment", label: "Shipment Terms" },
-    { id: "packaging", label: "Packaging Info" },
-    { id: "faq", label: "FAQ" },
+    { id: "1", label: "Coconut Shell Charcoal Briquette" },
+    { id: "2", label: "Barbeque Charcoal Briquette" },
+    { id: "3", label: "Sawdust Charcoal" },
+    { id: "4", label: "Natural Wood Charcoal" },
+    { id: "5", label: "Djavacoal’s Brand" },
 ];
 
 type Props = {
@@ -82,7 +82,7 @@ export default function OurProductsSidebar({ idPrefix = "" }: Props) {
     return (
         <>
             {/* MOBILE DROPDOWN */}
-            <div className="sticky top-0 z-40 flex items-center gap-3 border-b border-[#2a2a2a] bg-[#161616] py-3 lg:hidden">
+            <div className="bg-primary sticky top-0 z-40 flex items-center gap-3 border-b border-[#2a2a2a] py-3 lg:hidden">
                 <div className="text-xl text-[#EFA12D]">
                     <Image
                         src="/svgs/ic_select.svg"
@@ -136,11 +136,11 @@ export default function OurProductsSidebar({ idPrefix = "" }: Props) {
                         {ITEMS.map(({ id, label }) => (
                             <div
                                 key={id}
-                                className="relative after:absolute after:bottom-0 after:left-0 after:h-[1px] after:w-full after:bg-[#2a2a2a]/60 after:content-[''] last:after:hidden"
+                                className="relative after:absolute after:bottom-0 after:left-0 after:h-px after:w-full after:bg-[#2a2a2a]/60 after:content-[''] last:after:hidden"
                             >
                                 <button
                                     onClick={() => handleClick(id)}
-                                    className={`my-2 flex w-full items-center justify-between px-5 py-4 text-sm font-medium transition-all duration-200 ${
+                                    className={`my-2 flex w-full items-center justify-between px-5 py-4 text-left text-sm font-medium transition-all duration-200 ${
                                         active === id
                                             ? "bg-[#9D7B19] font-semibold text-white"
                                             : "bg-[#222222] text-gray-300 hover:bg-[#3B5952] hover:font-bold hover:text-white"

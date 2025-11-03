@@ -4,16 +4,20 @@
 
 Next.js 15 application deployed to Cloudflare Workers using OpenNext adapter. Features admin authentication, i18n support, and a feature-based architecture with type-safe RPC.
 
+**Documentation Convention**: Each feature has an `AGENTS.md` file in its directory (`src/features/<feature-name>/AGENTS.md`) providing comprehensive implementation details, schemas, and usage examples. Always consult these files when working with specific features.
+
 ## Tech Stack
 
-- **Framework**: Next.js 15 (App Router) + TypeScript
+- **Framework**: Next.js 15 (App Router) + TypeScript + Bun runtime
 - **Deployment**: Cloudflare Workers via `@opennextjs/cloudflare`
 - **Database**: Cloudflare D1 (SQLite) with Drizzle ORM
-- **Auth**: Better Auth (NOT NextAuth) with custom adapter
+- **Storage**: Cloudflare R2 (S3-compatible) via AWS SDK v3
+- **Auth**: Better Auth (NOT NextAuth) with custom D1 adapter
 - **RPC**: oRPC for type-safe client-server communication
-- **UI**: Mantine v8 + Tailwind CSS + Framer Motion
-- **i18n**: next-intl (cookie-based locale storage)
-- **Email**: Resend/Plunk with react-email templates
+- **UI**: Mantine v8 + Tailwind CSS v4 + Framer Motion
+- **i18n**: next-intl (cookie-based locale storage for visitor pages)
+- **Email**: Resend with react-email templates
+- **Rich Text**: TipTap for content editing (news articles)
 
 ## Critical Architecture Patterns
 
@@ -44,27 +48,51 @@ Features live in `src/features/<feature-name>/` with subfolders:
 
 ### RPC System (oRPC)
 
-Type-safe client-server communication without API route boilerplate:
+Type-safe client-server communication without API route boilerplate. RPC functions can be **callable** (for client-side hooks) or **actionable** (for Server Actions with redirects).
+
+**Middleware**: The `injectCFContext` middleware (in `src/lib/orpc/middlewares.ts`) automatically injects Cloudflare context into all RPC handlers, making `env` available in the `context` parameter.
 
 **Server-side** (`src/features/<feature>/server/`):
 
 ```typescript
-// functions.tsx - Define server functions
+// functions.ts - Define server functions
 export const myFunction = base
     .input(MyInputSchema)
+    .output(MyOutputSchema) // Optional but recommended
     .handler(async ({ context: { env }, input }) => {
-        // Access Cloudflare env here
+        const db = getDB(env.DJAVACOAL_DB);
+        // Business logic here
         return { data: "..." };
     })
-    .callable();
+    .callable(); // For RPC calls
+
+// For Server Actions with redirects:
+export const myAction = base
+    .input(MyInputSchema)
+    .handler(async ({ input }) => {
+        // Logic here
+        return { success: true };
+    })
+    .actionable({
+        interceptors: [
+            onSuccess(async function (data) {
+                redirect("/dashboard"); // Next.js redirect
+            }),
+        ],
+    });
 
 // router.ts - Export router
-export const router = { myFunction };
+export const router = {
+    myFunction,
+    // Don't include actionable functions here
+};
 ```
 
-**Register** in `src/adapters/rpc/index.ts`:
+**Register** callable functions in `src/adapters/rpc/index.ts`:
 
 ```typescript
+import { router as myFeature } from "@/features/my-feature/server/router";
+
 const router = {
     myFeature, // Add your feature router
 };
@@ -75,17 +103,26 @@ const router = {
 ```typescript
 import { rpc } from "@/lib/rpc";
 
+// For callable functions (TanStack Query hooks)
 const { data } = rpc.myFeature.myFunction.useQuery({ input: {...} });
+const mutation = rpc.myFeature.myFunction.useMutation();
+
+// For actionable functions (Server Actions)
+import { myActionActions } from "@/features/my-feature/server/actions";
+await myActionActions({ input: {...} }); // Triggers redirect on success
 ```
+
+**RPC Route Handler**: `src/app/api/rpc/[...rest]/route.ts` handles all HTTP methods (GET, POST, etc.) by delegating to `src/adapters/rpc/index.ts`.
 
 ### Better Auth Integration
 
-Custom Better Auth setup with D1 adapter:
+Custom Better Auth setup with D1 adapter in `src/adapters/better-auth/index.ts`:
 
-1. **Server instance**: `src/features/admin-auth/lib/better-auth-server.ts` - Creates `getAuth(env)` function
-2. **Route handler**: `src/app/api/auth/[...all]/route.ts` - Uses `toNextJsHandler` with Cloudflare context
-3. **Custom field mapping**: Maps Better Auth fields to snake_case D1 columns (see constants in `src/adapters/d1/constants.ts`)
+1. **Server instance**: `src/features/admin-auth/lib/better-auth-server.ts` exports `getAuth(env)` function
+2. **Route handler**: `src/app/api/auth/[...all]/route.ts` uses `toNextJsHandler` with Cloudflare context
+3. **Custom field mapping**: Maps Better Auth fields to snake_case D1 columns via constants in `src/adapters/d1/constants.ts`
 4. **Plugins**: Uses `admin` and `magicLink` plugins with custom email templates
+5. **D1 Adapter**: `betterAuthAdapter(env.DJAVACOAL_DB)` wraps Drizzle adapter with SQLite provider
 
 **Authentication Flows:**
 
@@ -147,6 +184,8 @@ await client.resetPassword({ newPassword, token });
 - **Messages**: JSON files in `src/i18n/messages/{locale}.json`
 - **Config**: `src/i18n/request.ts` reads locale from cookies
 - **Usage**: `useTranslations()` hook from `next-intl`
+- **Dashboard UI**: Some dashboard features use hardcoded English text for simplicity (e.g., `dashboard-product`), while product/content data remains bilingual (EN/AR) for public display
+- **Public Pages**: All visitor-facing content uses `next-intl` for full bilingual support
 
 ### Component Organization
 
@@ -160,7 +199,9 @@ Global components in `src/components/` follow Atomic Design:
 Two provider layers:
 
 - `ServerGlobalProvider` - Server-side context (fonts, metadata)
-- `ClientGlobalProvider` - Client-side (Mantine, TanStack Query, i18n)
+- `ClientGlobalProvider` - Client-side (TanStack Query with devtools)
+
+Note: Mantine provider is in root layout, not in ClientGlobalProvider.
 
 ## Development Workflows
 
@@ -168,31 +209,40 @@ Two provider layers:
 
 ```bash
 bun dev                    # Next.js dev server with Turbopack
-bun d1:studio              # Drizzle Studio for DB inspection
-bun email:dev              # Email template preview server
+bun start                  # Start production Next.js server
+bun lint                   # Run ESLint with auto-fix and caching
 ```
 
-### Cloudflare Development
+### Database Management
 
 ```bash
-wrangler dev               # Run with Cloudflare bindings locally
-bun cf:typegen             # Regenerate CloudflareEnv types
-bun d1:migrate:djavacoal   # Apply D1 migrations
+bun d1:generate            # Generate migration from schema changes
+bun d1:migrate:djavacoal   # Apply D1 migrations to remote database
+bun d1:studio              # Open Drizzle Studio for DB inspection
 ```
 
-### Build & Deploy
+### Email Development
 
 ```bash
-bun cf:build               # Build for Cloudflare Workers
+bun email:dev              # Preview email templates in browser
+bun email:build            # Build email templates
+```
+
+### Cloudflare Workflows
+
+```bash
+bun cf:build               # Build for Cloudflare Workers deployment
 bun cf:deploy              # Deploy to Cloudflare
 bun cf:preview             # Preview deployment
+bun cf:typegen             # Regenerate CloudflareEnv types from wrangler.jsonc
+wrangler dev               # Run with Cloudflare bindings locally (alternative to bun dev)
 ```
 
-### Database Changes
+### Database Schema Changes
 
 1. Modify `src/adapters/d1/schema.ts`
-2. Run `bun d1:generate` to create migration
-3. Run `bun d1:migrate:djavacoal` to apply
+2. Run `bun d1:generate` to create migration file
+3. Run `bun d1:migrate:djavacoal` to apply to remote database
 
 ## Key Conventions
 
@@ -252,7 +302,7 @@ SENDER_EMAIL=noreply@yourdomain.com
 # Cloudflare (for migrations/drizzle studio)
 CLOUDFLARE_ACCOUNT_ID=your-account-id
 CLOUDFLARE_DATABASE_ID=your-database-id
-CLOUDFLARE_D1_TOKEN=your-d1-token
+CLOUDFLARE_API_TOKEN=your-d1-token
 ```
 
 **Bindings** (configured in `wrangler.jsonc`, typed in `cloudflare-env.d.ts`):
@@ -268,6 +318,60 @@ CLOUDFLARE_D1_TOKEN=your-d1-token
 bun cf:typegen
 ```
 
+## Feature-Specific Patterns
+
+### Content Management Features (News, Products)
+
+**Status Workflows**: Features like `dashboard-news` use draft→published→unpublished status flows:
+
+- Validate status transitions server-side (can't go draft→unpublished)
+- Track `published_at` and `published_by` fields
+- Support scheduled publishing with "migration" vs "fresh" modes
+
+**Rich Text Content**: Store HTML in R2, not D1:
+
+- Separate files for EN/AR content (`news-content/{id}-en.html`, `news-content/{id}-ar.html`)
+- Use `uploadTextContent()` / `getTextContent()` from R2 adapter
+- Store only R2 keys in database
+
+**Auto-Tag Systems**: Tags are created automatically when referenced:
+
+```typescript
+// Tags in metadata are auto-created if they don't exist
+await db.insert(tags).values(nameSlugPairs).onConflictDoNothing();
+```
+
+### Media Management Patterns
+
+**Direct Upload Flow**: Use presigned URLs for browser-to-R2 uploads:
+
+1. Client requests presigned URL with name/MIME type
+2. Client uploads directly to R2 using PUT request
+3. Client confirms upload to save metadata in D1
+
+**R2 Cleanup**: Always delete R2 objects when removing database records:
+
+```typescript
+// Delete from database AND R2
+await db.delete(photos).where(eq(photos.id, id));
+await deleteObject(env.DJAVACOAL_BUCKET, key);
+```
+
+**Unique Name Validation**: Check availability before upload/rename:
+
+```typescript
+const isAvailable = await isPhotoNameAvailable(db, name, excludeId);
+if (!isAvailable) throw errors.BAD_REQUEST({ message: "Name taken" });
+```
+
+### Drag-and-Drop Reordering
+
+Features with custom ordering (products, variants, specs) use `order_index`:
+
+- 0-based sequential indexing
+- Use `@dnd-kit` libraries for UI
+- Batch update via RPC with array of `{ id, order_index }` pairs
+
 ## Common Pitfalls
 
 1. **Don't use NextAuth** - This project uses Better Auth exclusively
@@ -277,16 +381,25 @@ bun cf:typegen
 5. **Column names** in D1 are snake_case, map via constants, not hardcoded strings
 6. **Locale switching** updates cookie, not URL path
 7. **Environment variables** - Use `env` from Cloudflare context in server code, not `process.env`
+8. **R2 Content Storage** - Store large content (HTML, rich text) in R2, not D1 columns
+9. **Status Transitions** - Validate state machine transitions server-side, don't trust client
+10. **Feature Documentation** - Always check `src/features/<feature>/AGENTS.md` for feature-specific patterns
 
 ## Integration Points
 
-- **Email Service**: `src/adapters/email-service/` provides Resend/Plunk clients
+- **Email Service**: `src/adapters/email-service/` provides Resendclients
     - Use `getResend(env.RESEND_API_KEY)` to send emails
     - Sender email configured via `env.SENDER_EMAIL`
 - **Email Templates**: React components in `src/templates/emails/`
     - Built with `@react-email/components`
     - Preview with `bun email:dev`
+- **R2 Storage**: AWS SDK v3 client for Cloudflare R2 in `src/adapters/r2/`
+    - `getR2Client()` creates S3-compatible client
+    - `generatePresignedUploadUrl()` for client-side uploads
+    - `uploadTextContent()` / `getTextContent()` for HTML content
+    - `deleteObject()` for cleanup
+    - Constants in `src/adapters/r2/constants.ts` (bucket name, prefixes, expiration)
 - **KV Store**: Constants in `src/adapters/kv/constants.ts`
     - Example: `IS_ALREADY_ONBOARDED` flag for first-time setup
 - **Cloudflare Assets**: Configured in `wrangler.jsonc` with ASSETS binding
-- **R2 Bucket**: `DJAVACOAL_BUCKET` binding reserved for future file storage
+    - Static files served from `.open-next/assets` directory
