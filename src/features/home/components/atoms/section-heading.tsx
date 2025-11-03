@@ -1,14 +1,18 @@
+"use client";
+
 import { cn } from "@/lib/utils";
 
 interface SectionHeadingProps {
     title: string;
+    highlight?: string;
     subtitle?: string;
     variant?: "left" | "center";
     className?: string;
 }
 
-export function SectionHeading({
+export default function SectionHeading({
     title,
+    highlight,
     subtitle,
     variant = "center",
     className,
@@ -17,32 +21,37 @@ export function SectionHeading({
         <div
             className={cn(
                 "flex flex-col gap-3",
-                variant === "center" ? "items-center text-center" : "",
+                variant === "center"
+                    ? "items-center text-center"
+                    : "items-start text-left",
                 className
             )}
         >
-            {variant === "left" && (
-                <div className="flex items-center gap-5">
-                    <div className="h-0.5 w-[50px] bg-[#EFA12D]" />
-                    <h2 className="font-['Josefin_Sans'] text-3xl font-bold text-black md:text-4xl lg:text-[36px]">
-                        {title}
-                    </h2>
-                </div>
-            )}
-            {variant === "center" && (
-                <>
-                    <div className="mb-2 flex items-center gap-3">
-                        <div className="h-0.5 w-[50px] bg-[#EFA12D]" />
-                        <h2 className="font-['Josefin_Sans'] text-[28px] font-bold text-white uppercase md:text-[36px] lg:text-[42px]">
-                            {title}
-                        </h2>
-                    </div>
-                    {subtitle && (
-                        <p className="mt-3 max-w-2xl text-center font-['Open_Sans'] text-[14px] text-[#C6C6C6] md:text-[16px]">
-                            {subtitle}
-                        </p>
+            <h2
+                className={cn(
+                    "font-['Josefin_Sans'] font-bold uppercase",
+                    "text-[28px] text-white md:text-[36px] lg:text-[40px]"
+                )}
+            >
+                {title}{" "}
+                {highlight && (
+                    <span className="text-[#EFA12D]">{highlight}</span>
+                )}
+            </h2>
+
+            {subtitle && (
+                <p
+                    className={cn(
+                        "max-w-2xl font-['Open_Sans'] leading-relaxed text-[#C6C6C6]",
+                        "text-[14px] md:text-[16px]"
                     )}
-                </>
+                >
+                    {subtitle}
+                </p>
+            )}
+
+            {variant === "left" && (
+                <div className="mt-3 h-1 w-[60px] rounded bg-[#EFA12D]" />
             )}
         </div>
     );

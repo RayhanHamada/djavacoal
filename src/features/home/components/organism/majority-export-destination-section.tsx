@@ -1,132 +1,174 @@
 "use client";
 
-import { Globe, MapPin, TrendingUp } from "lucide-react";
+import { useState } from "react";
 
-import { CountryTag, ProgressBar, SectionHeading, StatCard } from "../atoms";
+import {
+    ComposableMap,
+    Geographies,
+    Geography,
+    Marker,
+} from "react-simple-maps";
 
-const exportDestinations = [
-    {
-        region: "Middle East",
-        countries: ["Saudi Arabia", "Lebanon", "Iraq", "Turkey"],
-        percentage: 45,
-        colorFrom: "from-[#EFA12D]",
-        colorTo: "to-[#D68F1F]",
-    },
-    {
-        region: "Asia Pacific",
-        countries: ["Japan", "Korea", "Australia"],
-        percentage: 30,
-        colorFrom: "from-[#4CAF50]",
-        colorTo: "to-[#388E3C]",
-    },
-    {
-        region: "Americas",
-        countries: ["USA", "Brazil"],
-        percentage: 15,
-        colorFrom: "from-[#2196F3]",
-        colorTo: "to-[#1976D2]",
-    },
-    {
-        region: "Europe",
-        countries: ["Germany", "Others"],
-        percentage: 10,
-        colorFrom: "from-[#9C27B0]",
-        colorTo: "to-[#7B1FA2]",
-    },
+import { SectionHeading } from "@/features/home/components/atoms";
+
+const highlightedCountries = [
+    "Saudi Arabia",
+    "Lebanon",
+    "Iran",
+    "Iraq",
+    "Bahrain",
+    "Jordan",
+    "Kuwait",
+    "Oman",
+    "Yemen",
+    "Turkey",
+    "Japan",
+    "South Korea",
+    "Australia",
+    "Germany",
+    "Belgium",
+    "Spain",
+    "United States of America",
+    "Brazil",
+    "Russia",
+    "Guinea",
+    "Sierra Leone",
+    "India",
+    "Pakistan",
 ];
 
-const stats = [
-    {
-        icon: Globe,
-        value: "20+",
-        label: "Countries Worldwide",
-    },
-    {
-        icon: MapPin,
-        value: "4",
-        label: "Major Regions",
-    },
-    {
-        icon: TrendingUp,
-        value: "100%",
-        label: "Export Oriented",
-    },
-];
+const semarang = [110.4167, -6.9667];
 
-export function MajorityExportDestinationSection() {
+interface GeoProps {
+    rsmKey: string;
+    properties: { name: string };
+}
+
+export default function MajorityExportDestinationSection() {
+    const [hoveredCountry, setHoveredCountry] = useState<string | null>(null);
+    const [tooltipPos, setTooltipPos] = useState<{
+        x: number;
+        y: number;
+    } | null>(null);
+    const [zoom, setZoom] = useState(false);
+
     return (
-        <section className="relative w-full overflow-hidden bg-[#1D1D1D] px-5 py-16 md:px-10 md:py-20 lg:px-20 lg:py-24">
-            {/* Section Header */}
-            <div className="mb-12 md:mb-16">
-                <SectionHeading
-                    title="Export Destinations"
-                    subtitle="Delivering premium charcoal products to over 20 countries across four major regions worldwide"
-                    variant="center"
-                />
-            </div>
+        <section className="relative w-full overflow-hidden bg-[#1C1C1C] py-12 md:px-10 lg:px-20">
+            {/* 🔹 Garis atas */}
+            <div className="absolute top-0 left-0 h-[1px] w-full bg-[#9C9C9C]" />
 
-            {/* Stats Cards */}
-            <div className="mx-auto mb-12 grid max-w-5xl grid-cols-1 gap-6 md:mb-16 md:grid-cols-3">
-                {stats.map((stat, index) => (
-                    <StatCard key={index} {...stat} />
-                ))}
-            </div>
+            {/* ✅ TITLE */}
+            <SectionHeading
+                title="MAJORITY EXPORT"
+                highlight="DESTINATION"
+                variant="center"
+            />
 
-            {/* Regional Breakdown */}
-            <div className="mx-auto max-w-6xl">
-                <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:gap-8">
-                    {exportDestinations.map((destination, index) => (
-                        <div
-                            key={index}
-                            className="bg-gradient-radial group relative overflow-hidden rounded-[20px] border border-[#4F4F4F] from-[#151515] to-white/5 p-6 backdrop-blur-md transition-all duration-300 hover:border-[#EFA12D] md:p-8"
-                        >
-                            {/* Region Header */}
-                            <div className="mb-6 flex items-start justify-between">
-                                <div className="flex-1">
-                                    <h3 className="mb-2 font-['Josefin_Sans'] text-[22px] font-bold text-white uppercase md:text-[24px]">
-                                        {destination.region}
-                                    </h3>
-                                    <div className="flex flex-wrap gap-2">
-                                        {destination.countries.map(
-                                            (country, idx) => (
-                                                <CountryTag
-                                                    key={idx}
-                                                    name={country}
-                                                />
-                                            )
-                                        )}
-                                    </div>
-                                </div>
-                                <div className="ml-4 text-right">
-                                    <p className="font-['Josefin_Sans'] text-[32px] font-bold text-[#EFA12D] md:text-[36px]">
-                                        {destination.percentage}%
-                                    </p>
-                                    <p className="font-['Open_Sans'] text-[11px] text-[#C6C6C6] uppercase">
-                                        of Exports
-                                    </p>
-                                </div>
-                            </div>
+            {/* ✅ MAP */}
+            <div className="relative mx-auto mt-6 max-w-7xl pb-10">
+                <div
+                    className={`transition-transform duration-500 ease-in-out ${
+                        zoom ? "scale-[1.15]" : "scale-100"
+                    }`}
+                    onClick={() => setZoom(!zoom)}
+                    style={{ cursor: "zoom-in" }}
+                >
+                    <ComposableMap
+                        projectionConfig={{ scale: 155, center: [10, 10] }}
+                        width={980}
+                        height={450}
+                        style={{ width: "100%", height: "auto" }}
+                    >
+                        <Geographies geography="/world-110m.json">
+                            {({ geographies }: { geographies: any[] }) =>
+                                geographies.map((geo: GeoProps) => {
+                                    const name = geo.properties.name;
+                                    const isActive =
+                                        highlightedCountries.includes(name);
 
-                            {/* Progress Bar */}
-                            <ProgressBar
-                                percentage={destination.percentage}
-                                colorFrom={destination.colorFrom}
-                                colorTo={destination.colorTo}
+                                    return (
+                                        <Geography
+                                            key={geo.rsmKey}
+                                            geography={geo}
+                                            fill={
+                                                isActive
+                                                    ? "#EFA12D"
+                                                    : "#d1d1d1ff"
+                                            }
+                                            stroke="#0D0D0D"
+                                            strokeWidth={0.4}
+                                            onMouseEnter={(e: any) => {
+                                                const { clientX, clientY } = e;
+                                                setHoveredCountry(name);
+                                                setTooltipPos({
+                                                    x: clientX,
+                                                    y: clientY,
+                                                });
+                                            }}
+                                            onMouseLeave={() => {
+                                                setHoveredCountry(null);
+                                                setTooltipPos(null);
+                                            }}
+                                            style={{
+                                                default: { outline: "none" },
+                                                hover: {
+                                                    fill: isActive
+                                                        ? "#fdc058ff"
+                                                        : "#BBBBBB",
+                                                    cursor: isActive
+                                                        ? "zoom-in"
+                                                        : "default",
+                                                },
+                                                pressed: { outline: "none" },
+                                                focus: { outline: "none" },
+                                            }}
+                                        />
+                                    );
+                                })
+                            }
+                        </Geographies>
+
+                        {/* ✅ SEMARANG Marker */}
+                        <Marker coordinates={semarang}>
+                            <circle
+                                r={6}
+                                fill="#FF0000"
+                                stroke="#ffffff"
+                                strokeWidth={2}
+                                onMouseEnter={(e: any) => {
+                                    const { clientX, clientY } = e;
+                                    setHoveredCountry(
+                                        "From Semarang, Jawa Tengah"
+                                    );
+                                    setTooltipPos({ x: clientX, y: clientY });
+                                }}
+                                onMouseLeave={() => {
+                                    setHoveredCountry(null);
+                                    setTooltipPos(null);
+                                }}
+                                style={{ cursor: "pointer" }}
                             />
-                        </div>
-                    ))}
+                        </Marker>
+                    </ComposableMap>
                 </div>
 
-                {/* Bottom CTA */}
-                <div className="mt-12 flex flex-col items-center gap-4 text-center md:mt-16">
-                    <p className="max-w-2xl font-['Open_Sans'] text-[15px] leading-relaxed text-[#C6C6C6] md:text-[16px]">
-                        Our commitment to quality and customer satisfaction has
-                        enabled us to build strong partnerships across the
-                        globe. We continue to expand our reach to serve more
-                        markets worldwide.
-                    </p>
-                </div>
+                {/* ✅ TOOLTIP COUNTRY */}
+                {hoveredCountry && tooltipPos && (
+                    <div
+                        className="pointer-events-none fixed z-50 rounded-md bg-black/85 px-2 py-1 text-xs font-semibold text-white shadow-lg"
+                        style={{
+                            top: tooltipPos.y + 10,
+                            left: tooltipPos.x + 10,
+                            transform: "translate(-50%, -120%)",
+                        }}
+                    >
+                        {hoveredCountry}
+                    </div>
+                )}
             </div>
+
+            {/* 🔹 Garis bawah */}
+            <div className="absolute bottom-0 left-0 h-[1px] w-full bg-[#9C9C9C]" />
         </section>
     );
 }
