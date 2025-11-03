@@ -1,8 +1,6 @@
 "use client";
 
-import Image from "next/image";
-
-import { ActionButton } from "../atoms";
+import { ActionButton, VideoGallerySectionMd } from "../atoms";
 
 type ProductHeroSectionProps = {
     productName: string;
@@ -24,23 +22,24 @@ export function ProductHeroSection({
 
             {/* Mobile/Tablet: Vertical Layout | Desktop: Horizontal Layout */}
             <div className="flex flex-col gap-10 lg:flex-row lg:gap-10">
-                {/* Left Side: Product Image (Desktop) / Top (Mobile) */}
-                <div className="flex justify-center lg:hidden lg:w-[365px]">
-                    <Image
-                        src={productImage}
-                        alt={productName}
-                        width={365}
-                        height={365}
-                        className="h-auto w-full max-w-[365px]"
-                    />
-                </div>
-
                 {/* Right Side: Content (Desktop) / Bottom (Mobile) */}
                 <div className="flex flex-col gap-10 lg:flex-1">
                     {/* Product Name */}
                     <h2 className="text-left text-[32px] leading-none font-bold text-white md:text-[46px]">
                         {productName}
                     </h2>
+
+                    {/* Left Side: Product Image (Desktop) / Top (Mobile) */}
+                    <div className="flex justify-center lg:hidden lg:w-[365px]">
+                        <VideoGallerySectionMd />
+                        {/* <Image
+                            src={productImage}
+                            alt={productName}
+                            width={365}
+                            height={365}
+                            className="h-auto w-full max-w-[365px]"
+                        /> */}
+                    </div>
 
                     {/* Action Buttons */}
                     <div className="flex w-auto flex-col gap-5 md:flex-row md:gap-5">

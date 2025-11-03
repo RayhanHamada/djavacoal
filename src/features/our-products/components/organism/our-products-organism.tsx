@@ -130,7 +130,7 @@ export function ProductPage() {
                     <div className="space-y-12 rounded-xl bg-[#222222] lg:mt-16 lg:px-10 lg:py-10">
                         {/* Product Content */}
                         <div className="flex flex-col gap-10">
-                            <div className="grid gap-x-10 lg:grid-cols-[460px_1fr]">
+                            <div className="grid gap-x-10 lg:grid-cols-[420px_1fr]">
                                 <div className="hidden flex-1 lg:block">
                                     <VideoGallerySection />
                                 </div>
@@ -165,7 +165,7 @@ export function ProductPage() {
                                         <h3 className="text-xl font-bold text-white">
                                             Specification & Lab. Test:
                                         </h3>
-                                        <div className="flex flex-wrap items-center justify-center gap-5 md:flex-row md:gap-5">
+                                        <div className="justify-left flex flex-wrap items-center gap-5 md:flex-row md:gap-5">
                                             {currentProduct.specifications.map(
                                                 (spec, idx) => (
                                                     <Image
@@ -174,7 +174,7 @@ export function ProductPage() {
                                                         alt={`Specification ${idx + 1}`}
                                                         width={744}
                                                         height={1054}
-                                                        className="h-auto w-full max-w-[620px]"
+                                                        className="h-auto w-full max-w-[420px]"
                                                     />
                                                 )
                                             )}
