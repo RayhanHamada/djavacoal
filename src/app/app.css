@@ -3,7 +3,7 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme {
-    --color-primary: #161616;
+    --color-primary: #000000;
     --color-secondary: #efa12d;
     --color-h1: #ffffff;
     --color-description: #c6c6c6;
@@ -15,11 +15,44 @@
     --ease-snappy: cubic-bezier(0.2, 0, 0, 1); /* ... */
 }
 
+/* Hide scrollbar for Chrome, Safari, and Edge */
+.scrollbar-hide::-webkit-scrollbar {
+    display: none;
+}
+
+/* Hide scrollbar for Firefox */
 .scrollbar-hide {
-    -ms-overflow-style: none;
     scrollbar-width: none;
 }
 
-.scrollbar-hide::-webkit-scrollbar {
-    display: none;
+/* Hide scrollbar for IE & older Edge */
+.scrollbar-hide {
+    -ms-overflow-style: none;
+}
+
+:focus {
+    outline: none !important;
+}
+svg [tabindex="-1"] {
+    outline: none !important;
+}
+
+.scroll-wrapper {
+    width: 100%;
+    overflow: hidden;
+    position: relative;
+}
+
+.scroll-track {
+    display: flex;
+    animation: infiniteScroll 20s linear infinite;
+}
+
+@keyframes infiniteScroll {
+    0% {
+        transform: translateX(0);
+    }
+    100% {
+        transform: translateX(-50%);
+    }
 }

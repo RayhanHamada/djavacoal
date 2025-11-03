@@ -16,7 +16,7 @@ export function BannerSection() {
     ];
 
     return (
-        <section className="relative h-[800px] w-full bg-[#161616]">
+        <section className="bg-primary relative h-[800px] w-full">
             {/* Hero Carousel */}
             <div className="absolute inset-0">
                 {slides.map((slide, index) => (
@@ -55,7 +55,7 @@ export function BannerSection() {
                     </Link>
                     <Link
                         href="/our-products"
-                        className="flex flex-1 items-center justify-center rounded-[40px] border border-[#EFA12D] bg-black/40 px-8 py-5 font-['Josefin_Sans'] text-base font-bold text-white backdrop-blur-sm transition-colors hover:bg-black/60"
+                        className="flex flex-1 items-center justify-center rounded-[40px] border border-[#EFA12D] bg-black/40 px-8 py-5 text-center font-['Josefin_Sans'] text-base font-bold text-white backdrop-blur-sm transition-colors hover:bg-black/60"
                     >
                         Discover Our Products
                     </Link>

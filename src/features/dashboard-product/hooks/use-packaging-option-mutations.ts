@@ -1,83 +1,95 @@
 import { useRouter } from "next/navigation";
 
 import { notifications } from "@mantine/notifications";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { useTranslations } from "next-intl";
+import { useMutation } from "@tanstack/react-query";
 
 import { rpc } from "@/lib/rpc";
 
 export function usePackagingOptionMutations() {
     const router = useRouter();
-    const queryClient = useQueryClient();
-    const t = useTranslations("PackagingOptions");
 
-    const createMutation = useMutation({
-        ...rpc.dashboardProduct.createPackagingOption.mutationOptions(),
-        onSuccess: () => {
-            notifications.show({
-                title: t("form.success.created"),
-                message: "",
-                color: "green",
-            });
-            queryClient.invalidateQueries({
-                queryKey: rpc.dashboardProduct.listPackagingOptions.key(),
-            });
-            router.push("/dashboard/products/packaging-options");
-        },
-        onError: () => {
-            notifications.show({
-                title: t("form.errors.createFailed"),
-                message: "",
-                color: "red",
-            });
-        },
-    });
-
-    const updateMutation = useMutation({
-        ...rpc.dashboardProduct.updatePackagingOption.mutationOptions(),
-        onSuccess: () => {
-            notifications.show({
-                title: t("form.success.updated"),
-                message: "",
-                color: "green",
-            });
-            queryClient.invalidateQueries({
-                queryKey: rpc.dashboardProduct.listPackagingOptions.key(),
-            });
-            queryClient.invalidateQueries({
-                queryKey: rpc.dashboardProduct.getPackagingOptionById.key(),
-            });
-            router.push("/dashboard/products/packaging-options");
-        },
-        onError: () => {
-            notifications.show({
-                title: t("form.errors.updateFailed"),
-                message: "",
-                color: "red",
-            });
-        },
-    });
-
-    const deleteMutation = useMutation(
-        rpc.dashboardProduct.deletePackagingOption.mutationOptions({
-            onSettled: () => {
-                queryClient.invalidateQueries({
-                    queryKey: rpc.dashboardProduct.listPackagingOptions.key(),
-                });
-                queryClient.invalidateQueries({
-                    queryKey: rpc.dashboardProduct.getPackagingOptionById.key(),
-                });
-            },
-            onSuccess: () => {
+    const createMutation = useMutation(
+        rpc.dashboardProduct.createPackagingOption.mutationOptions({
+            onSuccess: async (_, __, ___, { client }) => {
                 notifications.show({
-                    title: t("deleteModal.success"),
+                    title: "Packaging option created successfully",
                     message: "",
                     color: "green",
                 });
+
+                await Promise.all([
+                    client.invalidateQueries({
+                        queryKey:
+                            rpc.dashboardProduct.listPackagingOptions.key(),
+                    }),
+                ]);
+                router.push("/dashboard/products/packaging-options");
             },
             onError: () => {
                 notifications.show({
-                    title: t("deleteModal.error"),
+                    title: "Failed to create packaging option",
+                    message: "",
+                    color: "red",
+                });
+            },
+        })
+    );
+
+    const updateMutation = useMutation(
+        rpc.dashboardProduct.updatePackagingOption.mutationOptions({
+            onSuccess: async (_, __, ___, { client }) => {
+                notifications.show({
+                    title: "Packaging option updated successfully",
+                    message: "",
+                    color: "green",
+                });
+
+                await Promise.all([
+                    client.invalidateQueries({
+                        queryKey:
+                            rpc.dashboardProduct.listPackagingOptions.key(),
+                    }),
+                    client.invalidateQueries({
+                        queryKey:
+                            rpc.dashboardProduct.getPackagingOptionById.key(),
+                    }),
+                ]);
+
+                router.push("/dashboard/products/packaging-options");
+            },
+            onError: () => {
+                notifications.show({
+                    title: "Failed to update packaging option",
+                    message: "",
+                    color: "red",
+                });
+            },
+        })
+    );
+
+    const deleteMutation = useMutation(
+        rpc.dashboardProduct.deletePackagingOption.mutationOptions({
+            onSuccess: async (_, __, ___, { client }) => {
+                notifications.show({
+                    title: "Packaging option deleted successfully",
+                    message: "",
+                    color: "green",
+                });
+
+                await Promise.all([
+                    client.invalidateQueries({
+                        queryKey:
+                            rpc.dashboardProduct.listPackagingOptions.key(),
+                    }),
+                    client.invalidateQueries({
+                        queryKey:
+                            rpc.dashboardProduct.getPackagingOptionById.key(),
+                    }),
+                ]);
+            },
+            onError: () => {
+                notifications.show({
+                    title: "Failed to delete packaging option",
                     message: "",
                     color: "red",
                 });

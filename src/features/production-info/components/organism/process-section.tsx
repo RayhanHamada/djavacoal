@@ -26,7 +26,7 @@ function StepCard({ image, title, description }: StepCardProps) {
                 />
 
                 {/* Gradasi hitam tipis di bagian atas */}
-                <div className="absolute top-0 left-0 z-10 h-1/3 w-full rounded-t-xl bg-gradient-to-b from-black/70 to-transparent" />
+                <div className="absolute top-0 left-0 z-10 h-1/3 w-full rounded-t-xl bg-linear-to-b from-black/70 to-transparent" />
 
                 {/* Logo watermark di tengah atas */}
                 <div className="absolute top-3 left-1/2 z-20 -translate-x-1/2">
@@ -125,7 +125,7 @@ export default function ProcessSection() {
             {/* Header */}
             <header className="mb-2 pt-4">
                 <div className="mb-2 flex items-center gap-3 px-6">
-                    <div className="h-[1px] w-8 bg-white" />
+                    <div className="h-px w-8 bg-white" />
                     <p className="text-sm font-medium tracking-wide text-[#60A5FF] italic">
                         Production Process
                     </p>
@@ -133,7 +133,7 @@ export default function ProcessSection() {
                 <h2 className="px-6 text-xl leading-snug font-semibold text-white md:text-2xl">
                     How We Craft Quality Charcoal for Global Markets
                 </h2>
-                <div className="mt-4 h-[1px] bg-[#3A3A3A]" />
+                <div className="mt-4 h-px bg-[#3A3A3A]" />
             </header>
 
             {/* Grid adaptif */}

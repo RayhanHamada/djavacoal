@@ -4,6 +4,7 @@ import { PropsWithChildren } from "react";
 
 import { headers } from "next/headers";
 
+import { mantineHtmlProps } from "@mantine/core";
 import { Metadata } from "next";
 
 import { ClientGlobalProvider, ServerGlobalProvider } from "@/components";
@@ -25,7 +26,7 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default async function Layout({ children }: Props) {
     return (
-        <html lang="en">
+        <html lang="en" {...mantineHtmlProps}>
             <body
                 className={`${fonts.josefinSans.variable} ${fonts.openSans.variable} antialiased`}
             >

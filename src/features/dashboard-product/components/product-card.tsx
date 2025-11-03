@@ -2,7 +2,7 @@
 
 import type { ProductListItem } from "../server/schemas";
 
-import { useState } from "react";
+import { useCallback, useState } from "react";
 
 import Link from "next/link";
 
@@ -23,7 +23,7 @@ import {
     IconEyeOff,
     IconTrash,
 } from "@tabler/icons-react";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 
 import { rpc } from "@/lib/rpc";
 
@@ -36,22 +36,23 @@ interface ProductCardProps {
  */
 export function ProductCard({ product }: ProductCardProps) {
     const [imageError, setImageError] = useState(false);
-    const queryClient = useQueryClient();
 
     const toggleVisibilityMutation = useMutation(
         rpc.dashboardProduct.toggleProductVisibility.mutationOptions({
-            onSuccess() {
-                queryClient.invalidateQueries({
-                    queryKey: rpc.dashboardProduct.listProducts.key(),
-                });
-
+            onSuccess: async (_, __, ___, { client }) => {
                 notifications.show({
                     title: "Success",
                     message: "Product visibility updated",
                     color: "green",
                 });
+
+                await Promise.all([
+                    client.invalidateQueries({
+                        queryKey: rpc.dashboardProduct.listProducts.key(),
+                    }),
+                ]);
             },
-            onError(error: Error) {
+            onError: async (error: Error) => {
                 notifications.show({
                     title: "Error",
                     message: error.message,
@@ -63,17 +64,18 @@ export function ProductCard({ product }: ProductCardProps) {
 
     const deleteMutation = useMutation(
         rpc.dashboardProduct.deleteProduct.mutationOptions({
-            async onSuccess() {
-                queryClient.invalidateQueries({
+            onSuccess: async (_, __, ___, { client }) => {
+                client.invalidateQueries({
                     queryKey: rpc.dashboardProduct.listProducts.key(),
                 });
+
                 notifications.show({
                     title: "Success",
                     message: "Product deleted successfully",
                     color: "green",
                 });
             },
-            onError(error: Error) {
+            onError: async (error) => {
                 notifications.show({
                     title: "Error",
                     message: error.message,
@@ -83,11 +85,11 @@ export function ProductCard({ product }: ProductCardProps) {
         })
     );
 
-    const handleToggleVisibility = () => {
+    const handleToggleVisibility = useCallback(() => {
         toggleVisibilityMutation.mutate({
             id: product.id,
         });
-    };
+    }, [product.id, toggleVisibilityMutation]);
 
     const handleDelete = () => {
         if (confirm("Are you sure you want to delete this product?")) {

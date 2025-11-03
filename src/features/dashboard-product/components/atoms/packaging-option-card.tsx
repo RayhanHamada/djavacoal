@@ -4,7 +4,6 @@ import Link from "next/link";
 
 import { ActionIcon, Card, Group, Image, Menu, Text } from "@mantine/core";
 import { IconDotsVertical, IconEdit, IconTrash } from "@tabler/icons-react";
-import { useTranslations } from "next-intl";
 
 type PackagingOptionCardProps = {
     id: number;
@@ -25,8 +24,6 @@ export function PackagingOptionCard({
     onEdit,
     onDelete,
 }: PackagingOptionCardProps) {
-    const t = useTranslations("PackagingOptions");
-
     return (
         <Card shadow="sm" padding="lg" radius="md" withBorder>
             <Card.Section
@@ -55,14 +52,14 @@ export function PackagingOptionCard({
                             leftSection={<IconEdit size={14} />}
                             onClick={() => onEdit(id)}
                         >
-                            {t("actions.edit")}
+                            Edit
                         </Menu.Item>
                         <Menu.Item
                             color="red"
                             leftSection={<IconTrash size={14} />}
                             onClick={() => onDelete(id)}
                         >
-                            {t("actions.delete")}
+                            Delete
                         </Menu.Item>
                     </Menu.Dropdown>
                 </Menu>

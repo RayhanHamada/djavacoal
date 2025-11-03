@@ -27,8 +27,7 @@ type Props = MenuItems;
 export function NavigationMenuButton(props: Props) {
     const pathname = usePathname();
 
-    const isPathMatchCurrentButton =
-        props.href && pathname.includes(props.href ?? "");
+    const isPathMatchCurrentButton = props.href && props.href === pathname;
 
     const classNames = cn(
         "text-sm lg:text-base text-center",
@@ -113,7 +112,7 @@ export function NavigationMenuButton(props: Props) {
                                             fallback={<div>Loading...</div>}
                                         >
                                             {submenus.then((data) =>
-                                                (data ?? []).map((submenu) => (
+                                                data.map((submenu) => (
                                                     <Link
                                                         key={submenu.label}
                                                         href={
