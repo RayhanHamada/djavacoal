@@ -1,6 +1,6 @@
 import { PropsWithChildren } from "react";
 
-import { redirectAuthenticatedUserActions } from "@/features/admin-auth/server/actions";
+import { redirectAuthenticatedUserActions } from "@/features/dashboard-auth/server/actions";
 
 type Props = PropsWithChildren;
 

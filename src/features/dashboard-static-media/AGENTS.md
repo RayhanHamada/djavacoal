@@ -254,7 +254,7 @@ return (
 ### Internal Dependencies
 - `@/adapters/r2` - R2 storage operations
 - `@/adapters/kv` - KV storage (via Cloudflare binding)
-- `@/features/admin-auth` - Authentication (implicit)
+- `@/features/dashboard-auth` - Authentication (implicit)
 - `@/lib/orpc/server` - RPC base configuration
 - `@/lib/rpc` - Client-side RPC client
 
@@ -440,7 +440,7 @@ The `extractYouTubeId()` helper supports:
 - **home** - Displays homepage media
 - **about-company** - Displays company gallery
 - **production-info** - Displays production media
-- **admin-auth** - Authentication for admin operations
+- **dashboard-auth** - Authentication for admin operations
 
 ## Future Enhancements
 

@@ -287,7 +287,7 @@ if (input.metadataTags.length > 0) {
 ### Internal Dependencies
 - `@/adapters/d1` - Database access and constants
 - `@/adapters/r2` - R2 storage operations
-- `@/features/admin-auth` - Authentication
+- `@/features/dashboard-auth` - Authentication
 - `@/lib/orpc/server` - RPC base configuration
 - `@/lib/rpc` - Client-side RPC client
 
@@ -401,7 +401,7 @@ All user-facing content is bilingual:
 ## Related Features
 
 - **dashboard-gallery** - Photos used in articles
-- **admin-auth** - Authentication and user tracking
+- **dashboard-auth** - Authentication and user tracking
 - **home** / **our-products** - May display published articles
 - **dashboard-page-settings** - SEO metadata patterns
 

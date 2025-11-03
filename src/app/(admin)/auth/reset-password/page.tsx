@@ -1,6 +1,6 @@
 import { Box } from "@mantine/core";
 
-import { ResetPasswordCard } from "@/features/admin-auth/components/molecules";
+import { ResetPasswordCard } from "@/features/dashboard-auth/components/molecules";
 
 /**
  * Reset Password Page

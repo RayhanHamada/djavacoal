@@ -27,7 +27,7 @@ import {
     generatePresignedUploadUrl,
     getR2Client,
 } from "@/adapters/r2";
-import { getAuth } from "@/features/admin-auth/lib/better-auth-server";
+import { getAuth } from "@/features/dashboard-auth/lib/better-auth-server";
 import base from "@/lib/orpc/server";
 
 /**

@@ -118,7 +118,7 @@ await myActionActions({ input: {...} }); // Triggers redirect on success
 
 Custom Better Auth setup with D1 adapter in `src/adapters/better-auth/index.ts`:
 
-1. **Server instance**: `src/features/admin-auth/lib/better-auth-server.ts` exports `getAuth(env)` function
+1. **Server instance**: `src/features/dashboard-auth/lib/better-auth-server.ts` exports `getAuth(env)` function
 2. **Route handler**: `src/app/api/auth/[...all]/route.ts` uses `toNextJsHandler` with Cloudflare context
 3. **Custom field mapping**: Maps Better Auth fields to snake_case D1 columns via constants in `src/adapters/d1/constants.ts`
 4. **Plugins**: Uses `admin` and `magicLink` plugins with custom email templates

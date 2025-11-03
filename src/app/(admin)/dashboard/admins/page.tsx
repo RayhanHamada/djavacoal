@@ -1,12 +1,11 @@
 "use client";
 
-import { AdminListTable } from "@/features/admin-auth/components/organism";
+import { AdminListTable } from "@/features/dashboard-auth/components/organism";
 import {
     useAdminList,
     useInviteAdmin,
     useRemoveAdmin,
-} from "@/features/admin-auth/hooks";
-
+} from "@/features/dashboard-auth/hooks";
 export default function AdminsPage() {
     const {
         admins,

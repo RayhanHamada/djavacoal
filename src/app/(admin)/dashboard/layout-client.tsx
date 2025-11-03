@@ -4,9 +4,9 @@ import { PropsWithChildren, useEffect } from "react";
 
 import { useServerAction } from "@orpc/react/hooks";
 
-import { SetPasswordModal } from "@/features/admin-auth/components";
-import { checkNeedsPasswordActions } from "@/features/admin-auth/server/actions";
 import { DashboardShell } from "@/features/dashboard/components";
+import { SetPasswordModal } from "@/features/dashboard-auth/components";
+import { checkNeedsPasswordActions } from "@/features/dashboard-auth/server/actions";
 
 type Props = PropsWithChildren;
 

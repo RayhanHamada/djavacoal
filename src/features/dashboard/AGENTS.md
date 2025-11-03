@@ -145,7 +145,7 @@ const { data: photos } = rpc.gallery.listPhotos.useQuery();
 
 ### Internal Dependencies
 - `@/components/layouts` - AdminLayout component
-- `@/features/admin-auth` - Authentication check
+- `@/features/dashboard-auth` - Authentication check
 - `@/hooks/use-menu-items` - Navigation structure
 - All dashboard-* features - For stats and quick actions
 
@@ -203,7 +203,7 @@ export function DashboardView() {
 
 ## Related Features
 
-- **admin-auth** - Provides authentication
+- **dashboard-auth** - Provides authentication
 - All **dashboard-*** features - Accessible from dashboard
 - **components/layouts/admin-layout** - Layout wrapper
 

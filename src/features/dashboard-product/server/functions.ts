@@ -33,7 +33,7 @@ import {
     PRODUCT_SPECIFICATIONS_PREFIX,
     PRODUCT_VARIANTS_PREFIX,
 } from "@/adapters/r2";
-import { getAuth } from "@/features/admin-auth/lib/better-auth-server";
+import { getAuth } from "@/features/dashboard-auth/lib/better-auth-server";
 import {
     CreatePackagingOptionInputSchema,
     CreatePackagingOptionOutputSchema,

@@ -1,6 +1,6 @@
 import { Box } from "@mantine/core";
 
-import { LoginCard } from "@/features/admin-auth/components";
+import { LoginCard } from "@/features/dashboard-auth/components";
 
 export default async function Page() {
     return (
