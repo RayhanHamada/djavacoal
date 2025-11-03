@@ -5,100 +5,59 @@ import Image from "next/image";
 const shippingPartners = [
     {
         id: "pil",
-        name: "PIL (Pacific International Lines)",
+        name: "Pacific International Lines",
         logo: "/images/shipping-pil.png",
-        width: 1381,
-        height: 576,
     },
-    {
-        id: "msc",
-        name: "MSC (Mediterranean Shipping Company)",
-        logo: "/images/shipping-msc.png",
-        width: 560,
-        height: 560,
-    },
-    {
-        id: "cma",
-        name: "CMA CGM",
-        logo: "/images/shipping-cma-7a75cb.png",
-        width: 847,
-        height: 576,
-    },
-    {
-        id: "esl",
-        name: "ESL Shipping",
-        logo: "/images/shipping-esl.png",
-        width: 578,
-        height: 576,
-    },
-    {
-        id: "asyad",
-        name: "Asyad Shipping",
-        logo: "/images/shipping-asyad.png",
-        width: 1200,
-        height: 448,
-    },
-    {
-        id: "ovp",
-        name: "OVP Shipping",
-        logo: "/images/shipping-ovp.png",
-        width: 875,
-        height: 577,
-    },
+    { id: "msc", name: "MSC Cruises", logo: "/images/shipping-msc.png" },
+    { id: "cma", name: "CMA CGM", logo: "/images/shipping-cma-7a75cb.png" },
+    { id: "esl", name: "ESL Shipping", logo: "/images/shipping-esl.png" },
+    { id: "asyad", name: "Asyad Line", logo: "/images/shipping-asyad.png" },
+    { id: "ovp", name: "OVP Shipping", logo: "/images/shipping-ovp.png" },
     {
         id: "sitc",
         name: "SITC Container Lines",
         logo: "/images/shipping-sitc.png",
-        width: 1057,
-        height: 576,
     },
 ];
 
 export function GlobalShippingPartnerSection() {
+    const duplicated = [...shippingPartners, ...shippingPartners]; // ✅ Loop smooth
+
     return (
-        <section className="relative w-full overflow-hidden bg-[#151515] px-5 py-16 md:px-10 md:py-20 lg:px-20 lg:py-24">
-            {/* Section Header */}
-            <div className="mb-12 flex flex-col items-center justify-center md:mb-16">
-                <div className="mb-2 flex items-center gap-3">
-                    <div className="h-0.5 w-[50px] bg-[#EFA12D]" />
-                    <h2 className="font-['Josefin_Sans'] text-[28px] font-bold text-white uppercase md:text-[36px] lg:text-[42px]">
-                        Global Shipping Partners
-                    </h2>
-                </div>
-                <p className="mt-3 max-w-2xl text-center font-['Open_Sans'] text-[14px] text-[#C6C6C6] md:text-[16px]">
-                    We collaborate with the world&apos;s leading shipping
-                    companies to ensure safe and timely delivery worldwide
-                </p>
+        <section className="relative w-full overflow-hidden bg-[#151515] py-10 lg:py-16">
+            {/* Header */}
+            <div className="mb-8 flex items-center gap-3 px-[20px] md:px-[60px] lg:px-[300px]">
+                <div className="h-[2px] w-[60px] bg-[#EFA12D]" />
+                <h2 className="px-10 font-['Josefin_Sans'] text-[28px] font-bold text-white md:text-[38px] lg:text-[44px]">
+                    Global <span className="text-[#EFA12D]">Shipping</span>{" "}
+                    Partner
+                </h2>
             </div>
 
-            {/* Shipping Partners Grid */}
-            <div className="mx-auto grid max-w-7xl grid-cols-2 gap-6 md:grid-cols-3 lg:grid-cols-4 lg:gap-8">
-                {shippingPartners.map((partner) => (
-                    <div
-                        key={partner.id}
-                        className="group bg-gradient-radial relative flex items-center justify-center overflow-hidden rounded-[20px] border border-[#4F4F4F] from-[#151515] to-white/5 p-8 backdrop-blur-md transition-all duration-300 hover:border-[#EFA12D] md:p-10"
-                    >
-                        <div className="relative h-[80px] w-full md:h-[100px]">
-                            <Image
-                                src={partner.logo}
-                                alt={partner.name}
-                                fill
-                                className="object-contain transition-transform duration-500 group-hover:scale-110"
-                            />
+            {/* ✅ INFINITE CAROUSEL */}
+            <div className="scroll-wrapper overflow-hidden">
+                <div className="scroll-track flex gap-10">
+                    {duplicated.map((p, index) => (
+                        <div
+                            key={index}
+                            className="flex shrink-0 flex-col items-center"
+                        >
+                            <div className="group flex h-[220px] w-[220px] items-center justify-center overflow-hidden rounded-[22px] border border-[#FFFFFF30] bg-[radial-gradient(circle_at_center,_#000_0%,_#171717_50%,_#ffffff40_100%)] p-5 shadow-[0_0_40px_#00000050] transition-all duration-300 hover:border-[#EFA12D] md:h-[220px] md:w-[220px] md:p-6 lg:h-[350px] lg:w-[350px]">
+                                <div className="relative h-full w-full">
+                                    <Image
+                                        src={p.logo}
+                                        alt={p.name}
+                                        fill
+                                        className="object-contain transition duration-300 group-hover:scale-110"
+                                    />
+                                </div>
+                            </div>
+                            <p className="mt-3 text-center font-['Josefin_Sans'] text-[13px] whitespace-nowrap text-[#F0F0F0] md:text-[15px]">
+                                {p.name}
+                            </p>
                         </div>
-                    </div>
-                ))}
-            </div>
-
-            {/* Additional Info */}
-            <div className="mx-auto mt-12 max-w-3xl text-center md:mt-16">
-                <p className="font-['Open_Sans'] text-[14px] leading-relaxed text-[#C6C6C6] md:text-[15px]">
-                    Our partnerships with these industry-leading shipping
-                    companies enable us to provide reliable, efficient, and
-                    cost-effective logistics solutions for our customers across
-                    the globe. We handle all documentation, customs clearance,
-                    and ensure your products arrive safely and on time.
-                </p>
+                    ))}
+                </div>
             </div>
         </section>
     );
