@@ -20,7 +20,7 @@ export default function GlobalMarketSection() {
 
                 <SlideInView yOffset={30} duration={0.65}>
                     <h2 className="text-xl leading-snug font-semibold text-white md:text-2xl">
-                        Bringing Indonesia's Finest Charcoal to the Global
+                        Bringing Indonesia&apos;s Finest Charcoal to the Global
                         Market
                     </h2>
                 </SlideInView>
@@ -75,7 +75,7 @@ export default function GlobalMarketSection() {
                         long-term relationships based on professionalism, trust,
                         and mutual growth. By focusing on quality,
                         sustainability, and reliability, we proudly represent
-                        Indonesia's finest natural resources in the global
+                        Indonesia&apos;s finest natural resources in the global
                         charcoal industry.
                     </p>
                 </article>
