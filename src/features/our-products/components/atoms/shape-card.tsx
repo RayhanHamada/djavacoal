@@ -10,9 +10,9 @@ type ShapeCardProps = {
 
 export function ShapeCard({ name, image, sizes }: ShapeCardProps) {
     return (
-        <div className="flex flex-col items-start gap-5 md:flex-row md:items-center md:gap-5">
+        <div className="mr-32 flex items-start gap-10">
             {/* Image */}
-            <div className="bg-gradient-radial flex h-[130px] w-[130px] flex-shrink-0 items-center justify-center rounded-md border border-[#414141] from-[#151515] to-[rgba(21,21,21,0.18)]">
+            <div className="flex h-[130px] w-[130px] flex-shrink-0 items-center justify-center rounded-md border border-[#414141] bg-[radial-gradient(circle_at_center,#000_0%,#171717_50%,_#ffffff40_100%)] from-[#151515] to-[rgba(21,21,21,0.18)]">
                 <Image
                     src={image}
                     alt={name}

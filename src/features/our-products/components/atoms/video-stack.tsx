@@ -41,19 +41,19 @@ function VideoModal({
 
     return (
         <div
-            className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 backdrop-blur-sm"
+            className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 p-4 backdrop-blur-sm sm:p-6 md:p-8"
             onClick={onClose}
         >
             <button
                 onClick={onClose}
-                className="absolute top-6 right-6 z-10 text-white transition-colors hover:text-orange-500"
+                className="absolute top-4 right-4 z-10 text-white transition-colors hover:text-orange-500 sm:top-6 sm:right-6"
                 aria-label="Close video modal"
             >
-                <X size={32} />
+                <X className="h-6 w-6 sm:h-8 sm:w-8" />
             </button>
 
             <div
-                className="relative mx-4 w-full max-w-5xl"
+                className="relative w-full max-w-xs sm:max-w-lg md:max-w-3xl lg:max-w-5xl"
                 onClick={(e) => e.stopPropagation()}
             >
                 <video
@@ -94,7 +94,7 @@ function VideoSquare({
 
     return (
         <div
-            className="group relative aspect-square w-full cursor-pointer overflow-hidden rounded-xl"
+            className="group relative flex aspect-square flex-1 cursor-pointer overflow-hidden rounded-lg sm:rounded-xl"
             onMouseEnter={() => setIsHovering(true)}
             onMouseLeave={() => setIsHovering(false)}
             onClick={onOpenModal}
@@ -104,7 +104,7 @@ function VideoSquare({
                 src={item.thumbnail}
                 alt="Video thumbnail"
                 fill
-                className={`object-cover transition-opacity duration-300 ${
+                className={`bg-[radial-gradient(circle_at_center,#000_0%,#171717_50%,_#ffffff40_100%)] object-cover transition-opacity duration-300 ${
                     isHovering ? "opacity-0" : "opacity-100"
                 }`}
             />
@@ -121,25 +121,25 @@ function VideoSquare({
                 }`}
             />
 
-            {/* Djavacoal Logo Watermark */}
-            <div className="absolute top-6 left-1/2 z-10 flex -translate-x-1/2 justify-center">
+            {/* Djavacoal Logo Watermark - Responsive sizing */}
+            <div className="absolute top-3 left-1/2 z-10 flex -translate-x-1/2 justify-center sm:top-4 md:top-6">
                 <Image
                     src="/images/logo.png"
                     alt="Djavacoal Logo"
                     width={150}
                     height={60}
-                    className="h-auto w-38 object-contain opacity-90"
+                    className="h-auto w-20 object-contain opacity-90 sm:w-24 md:w-32 lg:w-36"
                 />
             </div>
 
-            {/* Play Button Overlay */}
+            {/* Play Button Overlay - Responsive sizing */}
             <div
                 className={`absolute inset-0 flex items-center justify-center bg-black/30 transition-opacity duration-300 ${
                     isHovering ? "opacity-0" : "opacity-100"
                 }`}
             >
-                <div className="flex h-16 w-16 items-center justify-center rounded-full bg-white/20 backdrop-blur-sm transition-transform group-hover:scale-110">
-                    <Play className="ml-1 h-8 w-8 fill-white text-white" />
+                <div className="flex h-12 w-12 items-center justify-center rounded-full bg-white/20 backdrop-blur-sm transition-transform group-hover:scale-110 sm:h-14 sm:w-14 md:h-16 md:w-16">
+                    <Play className="ml-0.5 h-6 w-6 fill-white text-white sm:h-7 sm:w-7 md:ml-1 md:h-8 md:w-8" />
                 </div>
             </div>
         </div>
@@ -193,9 +193,9 @@ export function VideoGallerySection({
 
     return (
         <div className="w-full">
-            <div className="container mx-auto">
-                {/* Stacked Video Squares */}
-                <div className="mx-auto max-w-[620px] space-y-8">
+            <div className="mx-auto px-4 sm:px-6 lg:px-0">
+                {/* Stacked Video Squares - Responsive sizing and spacing */}
+                <div className="mx-auto flex w-full max-w-xs flex-col space-y-4 sm:max-w-sm sm:space-y-5 xl:max-w-[420px] xl:space-y-6 2xl:max-w-[460px] 2xl:space-y-8">
                     {videoData.gallery.map((item, index) => (
                         <VideoSquare
                             key={index}
@@ -217,3 +217,5 @@ export function VideoGallerySection({
 }
 
 // shadow-[0_0_20px_rgba(255,255,255,0.3)] transition-shadow duration-300 hover:shadow-[0_0_30px_rgba(255,255,255,0.5)] If needed can be added to the main div
+// shadow-[0_0_15px_rgba(255,255,255,0.2)]bg-[radial-gradient(circle_at_center,#000_0%,#171717_50%,_#ffffff40_100%)]
+// transition-shadow duration-300 hover:shadow-[0_0_25px_rgba(255,255,255,0.4)]
