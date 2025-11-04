@@ -4,9 +4,9 @@ import { ProductPage } from "@/features/our-products/components/organism";
 
 export default function OurProductsPage() {
     return (
-        <main className="min-h-screen bg-[#161616] text-white">
+        <main className="bg-primary min-h-screen text-white">
             {/* Hero Section */}
-            <section className="relative w-full overflow-hidden bg-[#1C1C1C] text-white">
+            <section className="bg-primary relative w-full overflow-hidden text-white">
                 {/* Background Image */}
                 <div className="relative h-48 w-full md:h-72">
                     <Image
@@ -27,7 +27,7 @@ export default function OurProductsPage() {
             </section>
 
             {/* Main Content */}
-            <section className="relative w-full overflow-hidden bg-[#1C1C1C] text-white">
+            <section className="bg-primary relative w-full overflow-hidden text-white">
                 <ProductPage />
             </section>
         </main>

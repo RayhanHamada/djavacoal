@@ -127,14 +127,14 @@ export function ProductPage() {
                         <OurProductsSidebar />
                     </div>
 
-                    <div className="space-y-12 rounded-xl bg-[#222222] lg:mt-16 lg:px-10 lg:py-10">
+                    <div className="space-y-12 rounded-xl lg:mt-16 lg:bg-[#222222] lg:px-10 lg:py-10">
                         {/* Product Content */}
                         <div className="flex flex-col gap-10">
-                            <div className="grid gap-x-10 lg:grid-cols-[420px_1fr]">
-                                <div className="hidden flex-1 lg:block">
+                            <div className="flex gap-x-10">
+                                <div className="hidden w-[420px] flex-none lg:block">
                                     <VideoGallerySection />
                                 </div>
-                                <div className="">
+                                <div className="flex-1">
                                     <ProductHeroSection
                                         productName={currentProduct.name}
                                         productImage={currentProduct.image}
