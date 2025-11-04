@@ -19,11 +19,11 @@ export function ProductHeroSection({
             {/* <div className="hidden h-[1px] w-full bg-[#393939]" /> */}
 
             {/* Mobile/Tablet: Vertical Layout | Desktop: Horizontal Layout */}
-            <div className="flex flex-col gap-10 lg:flex-row lg:gap-10">
+            <div className="flex w-full flex-col gap-10 lg:flex-row lg:gap-10">
                 {/* Right Side: Content (Desktop) / Bottom (Mobile) */}
-                <div className="mt-10 flex flex-col gap-10 lg:mt-0 lg:flex-1">
+                <div className="mt-10 flex w-full flex-col gap-10 lg:mt-0 lg:flex-1">
                     {/* Product Name */}
-                    <h2 className="text-left text-[32px] leading-none font-bold text-white md:text-[46px]">
+                    <h2 className="max-w-full text-left text-[32px] leading-none font-bold whitespace-normal text-white md:text-[46px]">
                         {productName}
                     </h2>
 
