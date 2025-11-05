@@ -137,7 +137,6 @@ export function ProductPage() {
                                 <div className="flex-1">
                                     <ProductHeroSection
                                         productName={currentProduct.name}
-                                        productImage={currentProduct.image}
                                         onDownloadCatalogue={
                                             handleDownloadCatalogue
                                         }
