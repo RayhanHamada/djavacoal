@@ -1,7 +1,7 @@
 import { Container, Paper, Title, Text } from "@mantine/core";
 
-import { OnboardingForm } from "@/features/admin-auth/components";
-import { redirectJoinedUserActions } from "@/features/admin-auth/server/actions";
+import { OnboardingForm } from "@/features/dashboard-auth/components";
+import { redirectJoinedUserActions } from "@/features/dashboard-auth/server/actions";
 
 export default async function OnboardingPage() {
     await redirectJoinedUserActions();

@@ -1,13 +1,15 @@
 "use client";
 
-import { AspectRatio, Badge, Box, Image, Text } from "@mantine/core";
+import Image from "next/image";
+
+import { AspectRatio, Badge, Box, Text } from "@mantine/core";
 
 /**
  * Get R2 public URL for image key
  */
 function getImageUrl(key: string): string {
     // TODO: Replace with actual R2 public URL pattern
-    return `${process.env.NEXT_PUBLIC_ASSET_URL}/${key}`;
+    return `${process.env.NEXT_PUBLIC_ASSET_URL}${key}`;
 }
 
 interface ImageCellProps {
@@ -26,8 +28,9 @@ export function NewsImageCell({ imageKey, alt }: ImageCellProps) {
                     <Image
                         src={getImageUrl(imageKey)}
                         alt={alt}
-                        fit="contain"
-                        radius="sm"
+                        width={400}
+                        height={300}
+                        objectFit="cover"
                     />
                 ) : (
                     <Box

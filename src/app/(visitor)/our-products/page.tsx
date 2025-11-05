@@ -1,19 +1,34 @@
-import { OurProductsSidebar } from "@/features/our-products/components/molecules";
+import Image from "next/image";
+
 import { ProductPage } from "@/features/our-products/components/organism";
 
 export default function OurProductsPage() {
     return (
-        <main className="bg-[#161616] text-white">
-            <section className="mx-auto max-w-7xl px-6 py-10 md:px-10 md:py-16 lg:mx-0 lg:mr-10 lg:max-w-none lg:px-0 lg:py-0">
-                <div className="grid grid-cols-1 gap-10 lg:grid-cols-[260px_1fr]">
-                    <div className="bg-[#222222] lg:py-16">
-                        <OurProductsSidebar />
-                    </div>
+        <main className="bg-primary min-h-screen text-white">
+            {/* Hero Section */}
+            <section className="bg-primary relative w-full overflow-hidden text-white">
+                {/* Background Image */}
+                <div className="relative h-48 w-full md:h-72">
+                    <Image
+                        src="/images/bg-banner-header.png"
+                        alt="Production Info Banner"
+                        fill
+                        className="object-cover object-center"
+                        priority
+                    />
 
-                    <div className="space-y-12 lg:py-16">
-                        <ProductPage />
+                    {/* Overlay */}
+                    <div className="absolute inset-0 flex items-center justify-center bg-black/50">
+                        <h1 className="text-2xl font-semibold italic md:text-4xl">
+                            Products
+                        </h1>
                     </div>
                 </div>
+            </section>
+
+            {/* Main Content */}
+            <section className="bg-primary relative w-full overflow-hidden text-white">
+                <ProductPage />
             </section>
         </main>
     );

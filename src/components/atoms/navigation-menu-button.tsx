@@ -27,12 +27,11 @@ type Props = MenuItems;
 export function NavigationMenuButton(props: Props) {
     const pathname = usePathname();
 
-    const isPathMatchCurrentButton =
-        props.href && pathname.includes(props.href ?? "");
+    const isPathMatchCurrentButton = props.href && props.href === pathname;
 
     const classNames = cn(
         "text-sm lg:text-base text-center",
-        "h-full text-white hover:bg-secondary hover:text-white transition-colors min-w-10  px-2",
+        "h-full text-white hover:bg-secondary hover:text-white transition-colors min-w-10 px-2",
         "flex flex-col justify-center hover:cursor-pointer items-center",
 
         isPathMatchCurrentButton && "text-secondary",
@@ -113,7 +112,7 @@ export function NavigationMenuButton(props: Props) {
                                             fallback={<div>Loading...</div>}
                                         >
                                             {submenus.then((data) =>
-                                                (data ?? []).map((submenu) => (
+                                                data.map((submenu) => (
                                                     <Link
                                                         key={submenu.label}
                                                         href={

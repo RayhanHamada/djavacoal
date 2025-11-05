@@ -46,7 +46,7 @@ export default function ProductionInfoPage() {
     };
 
     return (
-        <main className="bg-[#161616] text-white">
+        <main className="bg-primary text-white">
             {/* JSON-LD */}
             <script
                 type="application/ld+json"
@@ -57,7 +57,7 @@ export default function ProductionInfoPage() {
             <HeaderSection />
 
             {/* ===== MAIN LAYOUT WRAPPER ===== */}
-            <section className="mx-auto max-w-7xl px-6 py-10 md:px-10 md:py-16 lg:mx-0 lg:mr-10 lg:max-w-none lg:px-0 lg:py-0">
+            <section className="mx-auto max-w-7xl rounded-xl px-6 py-10 md:px-10 md:py-16 lg:mx-0 lg:mr-10 lg:max-w-none lg:px-0 lg:py-0">
                 <div className="grid grid-cols-1 gap-10 lg:grid-cols-[260px_1fr]">
                     {/* === LEFT SIDEBAR === */}
                     <div className="bg-[#222222] lg:py-16">

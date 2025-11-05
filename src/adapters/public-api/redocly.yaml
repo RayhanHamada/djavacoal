@@ -1,0 +1,5 @@
+apis:
+    djavacoal-public-api@v1:
+        root: http://localhost:3000/api/public/spec.json
+        x-openapi-ts:
+            output: ./typegen.ts

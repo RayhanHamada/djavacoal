@@ -56,7 +56,7 @@ export const NewsImageUpload = forwardRef<
 
     // Get R2 public URL for image key
     function getImageUrl(key: string) {
-        return `${process.env.NEXT_PUBLIC_ASSET_URL}/${key}`;
+        return `${process.env.NEXT_PUBLIC_ASSET_URL}${key}`;
     }
 
     // Expose upload function to parent via ref

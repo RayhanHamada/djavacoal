@@ -5,3 +5,8 @@ export * from "./product-specifications";
 export * from "./product-shapes";
 export * from "./product-header";
 export * from "./product-description-card";
+export { ProductCategoryDropdown } from "./product-category-dropdown";
+export { ProductHeroSection } from "./product-hero-section";
+export { ShapesList } from "./shapes-list";
+export { ProductDetailTable } from "./product-detail-table";
+export { PackagingList } from "./packaging-list";

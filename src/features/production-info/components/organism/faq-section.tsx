@@ -156,7 +156,7 @@ export default function FAQSection() {
             {/* Header */}
             <header className="mb-6 px-6 pt-4">
                 <div className="mb-2 flex items-center gap-3">
-                    <div className="h-[1px] w-8 bg-white" />
+                    <div className="h-px w-8 bg-white" />
                     <p className="text-sm font-medium tracking-wide text-[#60A5FF] italic">
                         FAQ
                     </p>
@@ -164,7 +164,7 @@ export default function FAQSection() {
                 <h2 className="text-xl leading-snug font-semibold text-white md:text-2xl">
                     Frequently Ask Question
                 </h2>
-                <div className="mt-4 h-[1px] bg-[#3A3A3A]" />
+                <div className="mt-4 h-px bg-[#3A3A3A]" />
             </header>
 
             {/* FAQ List */}

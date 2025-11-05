@@ -14,9 +14,9 @@ import {
 import { notifications } from "@mantine/notifications";
 import { IconLogout, IconUser, IconChevronUp } from "@tabler/icons-react";
 
-import { RoleBadge } from "@/features/admin-auth/components/atoms";
-import { client } from "@/features/admin-auth/lib/better-auth-client";
 import { useCurrentUser } from "@/features/dashboard/hooks";
+import { RoleBadge } from "@/features/dashboard-auth/components/atoms";
+import { client } from "@/features/dashboard-auth/lib/better-auth-client";
 
 export function NavigationFooter() {
     const { user, isLoading } = useCurrentUser();
@@ -81,7 +81,7 @@ export function NavigationFooter() {
             <Menu.Dropdown>
                 <Menu.Label>Account</Menu.Label>
                 <Menu.Item leftSection={<IconUser size={16} />}>
-                    <Link href="/dashboard/profile">My Profile</Link>
+                    <Link href="/dashboard/admins/me">My Profile</Link>
                 </Menu.Item>
                 <Menu.Divider />
                 <Menu.Item

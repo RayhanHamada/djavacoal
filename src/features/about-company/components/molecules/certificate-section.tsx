@@ -1,0 +1,107 @@
+"use client";
+
+import type { Certificate } from "../../lib/types";
+
+import { useImageModal } from "../../hooks";
+import { CERTIFICATES } from "../../lib/constants";
+import {
+    CertificateCard,
+    CertificateLightbox,
+    FadeInView,
+    ScaleOnHover,
+    ScaleXView,
+    SlideInView,
+} from "../atoms";
+
+export default function CertificateSection() {
+    const { isOpen, currentItem, open, close } = useImageModal<Certificate>();
+
+    return (
+        <section
+            id="certificates"
+            className="mt-10 scroll-mt-28 space-y-6 rounded-xl bg-[#222222] p-5 lg:p-10"
+        >
+            {/* Heading */}
+            <header className="mb-2">
+                <SlideInView className="mb-2 flex items-center gap-3">
+                    <div className="h-px w-8 bg-white" />
+                    <p className="text-sm font-medium tracking-wide text-[#60A5FF] italic">
+                        Legal & Certificates
+                    </p>
+                </SlideInView>
+
+                <SlideInView
+                    delay={0.05}
+                    duration={0.65}
+                    className="text-xl leading-snug font-semibold text-white md:text-2xl"
+                >
+                    <h2>Trusted Legality, Proven Quality</h2>
+                </SlideInView>
+
+                <SlideInView
+                    delay={0.1}
+                    duration={0.7}
+                    yOffset={35}
+                    className="font-medium text-[#EFA12D]"
+                >
+                    <p>
+                        Comprehensive Legal Documents and Verified Lab
+                        Certificates
+                    </p>
+                </SlideInView>
+
+                <ScaleXView className="mt-4 h-px origin-left bg-[#3A3A3A]">
+                    <div />
+                </ScaleXView>
+            </header>
+
+            {/* Mobile Horizontal Scroll */}
+            <div className="scrollbar-hide overflow-x-auto pr-12 pb-3 lg:hidden">
+                <div className="flex snap-x snap-mandatory gap-6">
+                    {CERTIFICATES.map((certificate, index) => (
+                        <ScaleOnHover
+                            key={index}
+                            scale={1.03}
+                            className="flex w-[250px] shrink-0 snap-start flex-col items-center"
+                        >
+                            <button onClick={() => open(certificate, index)}>
+                                <CertificateCard certificate={certificate} />
+                                <p className="mt-2 text-xs text-gray-300 italic">
+                                    {certificate.alt}
+                                </p>
+                            </button>
+                        </ScaleOnHover>
+                    ))}
+                </div>
+            </div>
+
+            {/* Desktop Grid */}
+            <FadeInView
+                duration={0.4}
+                className="hidden gap-6 lg:grid lg:grid-cols-4"
+            >
+                {CERTIFICATES.map((certificate, index) => (
+                    <ScaleOnHover
+                        key={index}
+                        scale={1.04}
+                        className="flex flex-col items-center"
+                    >
+                        <button onClick={() => open(certificate, index)}>
+                            <CertificateCard certificate={certificate} />
+                            <p className="mt-2 text-center text-sm text-gray-300 italic">
+                                {certificate.alt}
+                            </p>
+                        </button>
+                    </ScaleOnHover>
+                ))}
+            </FadeInView>
+
+            {/* Certificate Lightbox */}
+            <CertificateLightbox
+                isOpen={isOpen}
+                certificate={currentItem}
+                onClose={close}
+            />
+        </section>
+    );
+}

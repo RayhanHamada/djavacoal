@@ -16,7 +16,7 @@ import {
 } from "@mantine/core";
 import { notifications } from "@mantine/notifications";
 import { IconAlertCircle, IconCheck, IconLoader } from "@tabler/icons-react";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 
 import { NewsForm, NewsFormValues } from "..";
 import { client, rpc } from "@/lib/rpc";
@@ -31,7 +31,6 @@ interface NewsEditPageProps {
  */
 export function NewsEditPage({ newsId }: NewsEditPageProps) {
     const router = useRouter();
-    const queryClient = useQueryClient();
     const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
     const [isAutoSaving, setIsAutoSaving] = useState(false);
 
@@ -60,7 +59,7 @@ export function NewsEditPage({ newsId }: NewsEditPageProps) {
                 publishedAt: formData.publishedAt,
             });
         },
-        onSuccess: (_, variables) => {
+        onSuccess: async (_, variables, __, { client }) => {
             const statusMessages = {
                 draft: "News article saved as draft",
                 published: "News article published successfully",
@@ -76,9 +75,16 @@ export function NewsEditPage({ newsId }: NewsEditPageProps) {
             });
             setHasUnsavedChanges(false);
             setIsAutoSaving(false);
-            queryClient.invalidateQueries({
-                queryKey: ["dashboardNews", "getNewsById", newsId],
-            });
+
+            await Promise.all([
+                client.invalidateQueries({
+                    queryKey: rpc.dashboardNews.getNewsById.queryKey({
+                        input: {
+                            id: newsId,
+                        },
+                    }),
+                }),
+            ]);
         },
         onError: (error) => {
             setIsAutoSaving(false);

@@ -10,10 +10,10 @@ export default function useAppLocale() {
     const locale = useLocale();
 
     const setLocale = useCallback(
-        function (newLocale: Locale) {
+        async function (newLocale: Locale) {
             if (newLocale === locale) return;
 
-            setUserLocale(newLocale);
+            await setUserLocale(newLocale);
         },
         [locale]
     );
