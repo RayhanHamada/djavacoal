@@ -18,7 +18,7 @@ export function PackagingList({ packagingOptions }: PackagingListProps) {
             <h3 className="text-[20px] leading-[1.36] font-bold text-white lg:text-xl">
                 Packaging Option:
             </h3>
-            <div className="flex flex-col gap-5 md:flex-row md:gap-5 lg:flex-row lg:gap-[20px]">
+            <div className="flex flex-row gap-5 lg:gap-[20px]">
                 {packagingOptions.map((option, idx) => (
                     <PackagingCard key={idx} {...option} />
                 ))}

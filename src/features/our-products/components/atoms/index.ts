@@ -4,3 +4,4 @@ export { ShapeCard } from "./shape-card";
 export { FilterButton } from "./filter-button";
 export { PackagingCard } from "./packaging-card";
 export { VideoGallerySection } from "./video-stack";
+export { VideoGallerySectionMd } from "./video-stack-md";

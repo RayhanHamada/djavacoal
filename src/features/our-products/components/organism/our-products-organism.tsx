@@ -127,17 +127,16 @@ export function ProductPage() {
                         <OurProductsSidebar />
                     </div>
 
-                    <div className="space-y-12 rounded-xl bg-[#222222] lg:mt-16 lg:px-10 lg:py-10">
+                    <div className="space-y-12 rounded-xl lg:mt-16 lg:bg-[#222222] lg:px-10 lg:py-10">
                         {/* Product Content */}
                         <div className="flex flex-col gap-10">
-                            <div className="grid gap-x-10 lg:grid-cols-[620px_1fr]">
-                                <div className="hidden grid-cols-1 lg:block">
+                            <div className="flex gap-x-10">
+                                <div className="hidden w-[420px] flex-none lg:block">
                                     <VideoGallerySection />
                                 </div>
-                                <div className="">
+                                <div className="flex-1">
                                     <ProductHeroSection
                                         productName={currentProduct.name}
-                                        productImage={currentProduct.image}
                                         onDownloadCatalogue={
                                             handleDownloadCatalogue
                                         }
@@ -165,7 +164,7 @@ export function ProductPage() {
                                         <h3 className="text-xl font-bold text-white">
                                             Specification & Lab. Test:
                                         </h3>
-                                        <div className="flex flex-col gap-5 md:flex-row md:gap-5">
+                                        <div className="justify-left flex flex-wrap items-center gap-5 md:flex-row md:gap-5">
                                             {currentProduct.specifications.map(
                                                 (spec, idx) => (
                                                     <Image
@@ -174,7 +173,7 @@ export function ProductPage() {
                                                         alt={`Specification ${idx + 1}`}
                                                         width={744}
                                                         height={1054}
-                                                        className="h-auto w-full"
+                                                        className="h-auto w-full max-w-[420px]"
                                                     />
                                                 )
                                             )}

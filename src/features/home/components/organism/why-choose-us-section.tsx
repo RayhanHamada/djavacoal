@@ -1,75 +1,62 @@
+"use client";
+
+import { useRef } from "react";
+
 import Image from "next/image";
 
 export function WhyChooseUsSection() {
+    const scrollRef = useRef<HTMLDivElement>(null);
+
     const features = [
-        {
-            icon: "/images/icon-low-ash.png",
-            title: "Low Ash Content",
-        },
-        {
-            icon: "/images/icon-eco-friendly.png",
-            title: "Eco Friendly",
-        },
-        {
-            icon: "/images/icon-long-lasting.png",
-            title: "Long Lasting",
-        },
-        {
-            icon: "/images/icon-odorless.png",
-            title: "Odorless",
-        },
-        {
-            icon: "/images/icon-no-chemical.png",
-            title: "No Chemical",
-        },
-        {
-            icon: "/images/icon-premium-quality.png",
-            title: "Premium Quality",
-        },
-        {
-            icon: "/images/icon-low-water.png",
-            title: "Low Water Content",
-        },
-        {
-            icon: "/images/icon-glowing-heat.png",
-            title: "Glowing Heat",
-        },
+        { icon: "/images/icon-low-ash.png", title: "Low Ash Content" },
+        { icon: "/images/icon-eco-friendly.png", title: "Eco Friendly" },
+        { icon: "/images/icon-long-lasting.png", title: "Long Lasting" },
+        { icon: "/images/icon-odorless.png", title: "Odorless" },
+        { icon: "/images/icon-no-chemical.png", title: "No Chemical" },
+        { icon: "/images/icon-premium-quality.png", title: "Premium Quality" },
+        { icon: "/images/icon-low-water.png", title: "Low Water Content" },
+        { icon: "/images/icon-glowing-heat.png", title: "Glowing Heat" },
     ];
 
     return (
-        <section className="w-full bg-gradient-to-b bg-[url('/images/bg-banner-header.png')] from-[#1D1D1D]/90 to-transparent bg-cover px-5 py-20 md:px-10 md:py-28 lg:px-20 lg:py-32">
-            <div className="container mx-auto">
-                <div className="flex flex-col gap-12 md:gap-16">
-                    {/* Section Title */}
-                    <div className="flex items-center justify-center gap-4 px-5 md:justify-start">
-                        <div className="h-0.5 w-[60px] bg-[#EFA12D]" />
-                        <h2 className="font-['Josefin_Sans'] text-3xl font-bold text-white md:text-4xl lg:text-[40px]">
-                            Why <span className="text-[#EFA12D]">Choose</span>{" "}
-                            Us?
-                        </h2>
-                    </div>
+        <section className="relative w-full overflow-hidden bg-[url('/images/bg-packaging-option.png')] bg-cover bg-center bg-no-repeat py-20 md:py-28 lg:py-32">
+            {/* ✅ Top Border Line */}
+            <div className="absolute top-0 left-0 h-[1px] w-full bg-[#EFA12D]" />
 
-                    {/* Features Grid */}
-                    <div className="grid grid-cols-2 gap-6 px-5 md:grid-cols-4 lg:gap-10">
-                        {features.map((feature, index) => (
-                            <div
-                                key={index}
-                                className="bg-gradient-radial group flex flex-col items-center justify-center gap-6 rounded-[20px] border-2 border-[#414141] from-[#151515] to-white/5 px-5 py-8 backdrop-blur-md transition-all duration-300 hover:border-[#EFA12D] hover:shadow-lg hover:shadow-[#EFA12D]/20 md:px-6 md:py-10"
-                            >
-                                <div className="relative h-[140px] w-full md:h-[160px] lg:h-[180px]">
-                                    <Image
-                                        src={feature.icon}
-                                        alt={feature.title}
-                                        fill
-                                        className="object-contain transition-transform duration-300 group-hover:scale-110"
-                                    />
-                                </div>
-                                <h3 className="text-center font-['Josefin_Sans'] text-[13px] leading-tight font-bold text-[#EFA12D] uppercase transition-colors group-hover:text-white md:text-[15px] lg:text-[17px]">
-                                    {feature.title}
-                                </h3>
+            {/* ✅ Title */}
+            <div className="mb-10 flex flex-col items-start justify-center px-[20px] md:px-[40px] lg:px-[240px]">
+                <div className="flex items-center gap-3">
+                    <div className="h-[2px] w-[50px] bg-[#EFA12D]" />
+                    <h2 className="font-['Josefin_Sans'] text-[26px] font-bold text-white md:text-[34px] lg:text-[40px]">
+                        Why <span className="text-[#EFA12D]">Choose</span> Us?
+                    </h2>
+                </div>
+            </div>
+
+            {/* ✅ Scrollable Wrapper */}
+            <div className="px-[20px] md:px-[40px] lg:px-[100px]">
+                <div
+                    ref={scrollRef}
+                    className="scrollbar-hide flex gap-6 overflow-x-auto scroll-smooth pb-4 lg:flex-wrap lg:justify-start lg:gap-4 lg:overflow-visible lg:pb-0"
+                >
+                    {features.map((feature, index) => (
+                        <div
+                            key={index}
+                            className="group flex h-[269px] w-[197.5px] shrink-0 flex-col items-center justify-center border border-[#EFA12D40] bg-[radial-gradient(circle_at_center,#000_0%,#171717_50%,_#F5980D30_90%)] px-4 py-6 backdrop-blur-sm transition-all duration-300 hover:border-[#EFA12D] hover:shadow-[0_0_10px_#EFA12D50]"
+                        >
+                            <div className="relative h-[120px] w-full md:h-[140px] lg:h-[150px]">
+                                <Image
+                                    src={feature.icon}
+                                    alt={feature.title}
+                                    fill
+                                    className="object-contain transition-transform duration-300 group-hover:scale-105"
+                                />
                             </div>
-                        ))}
-                    </div>
+                            <h3 className="mt-3 text-center font-['Josefin_Sans'] text-[12px] font-semibold text-[#EFA12D] uppercase transition-colors group-hover:text-white md:text-[13px]">
+                                {feature.title}
+                            </h3>
+                        </div>
+                    ))}
                 </div>
             </div>
         </section>
