@@ -181,7 +181,6 @@ export function ProductForm({ product }: ProductFormProps) {
                     {product ? "Update Product" : "Create Product"}
                 </Button>
             </Stack>
-            <p>{JSON.stringify(form.errors)}</p>
         </form>
     );
 }
