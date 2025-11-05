@@ -8,12 +8,14 @@ import {
     ActionIcon,
     useMantineColorScheme,
 } from "@mantine/core";
-import { IconSun, IconMoon } from "@tabler/icons-react";
 
-import { DashboardLogo } from "@/features/dashboard/components/atoms";
+import {
+    DashboardLogo,
+    ThemeIcon,
+} from "@/features/dashboard/components/atoms";
 
 export function DashboardHeader() {
-    const { colorScheme, toggleColorScheme } = useMantineColorScheme({
+    const { toggleColorScheme } = useMantineColorScheme({
         keepTransitions: true,
     });
 
@@ -36,11 +38,7 @@ export function DashboardHeader() {
                 size="lg"
                 aria-label="Toggle color scheme"
             >
-                {colorScheme === "dark" ? (
-                    <IconSun size={20} />
-                ) : (
-                    <IconMoon size={20} />
-                )}
+                <ThemeIcon />
             </ActionIcon>
         </Group>
     );
