@@ -17,7 +17,7 @@
         },
         "Figma": {
             "command": "bunx",
-            "args": ["-y", "figma-developer-mcp", "--figma-api-key=figd_CNr3bWOLseLh_341XFTNEk3VsObKxtjz7193csZE", "--stdio"]
+            "args": ["-y", "figma-developer-mcp", "--figma-api-key={env:FIGMA_API_KEY}", "--stdio"]
         }
     }
 }
