@@ -21,10 +21,10 @@ export function WhyChooseUsSection() {
     return (
         <section className="relative w-full overflow-hidden bg-[url('/images/bg-packaging-option.png')] bg-cover bg-center bg-no-repeat py-20 md:py-28 lg:py-32">
             {/* ✅ Top Border Line */}
-            <div className="absolute top-0 left-0 h-[1px] w-full bg-[#EFA12D]" />
+            <div className="absolute top-0 left-0 h-px w-full bg-[#EFA12D]" />
 
             {/* ✅ Title */}
-            <div className="mb-10 flex flex-col items-start justify-center px-[20px] md:px-[40px] lg:px-[240px]">
+            <div className="mb-10 flex flex-col items-start justify-center px-5 md:px-10 lg:px-60">
                 <div className="flex items-center gap-3">
                     <div className="h-[2px] w-[50px] bg-[#EFA12D]" />
                     <h2 className="font-['Josefin_Sans'] text-[26px] font-bold text-white md:text-[34px] lg:text-[40px]">
@@ -37,12 +37,12 @@ export function WhyChooseUsSection() {
             <div className="px-[20px] md:px-[40px] lg:px-[100px]">
                 <div
                     ref={scrollRef}
-                    className="scrollbar-hide flex gap-6 overflow-x-auto scroll-smooth pb-4 lg:flex-wrap lg:justify-start lg:gap-4 lg:overflow-visible lg:pb-0"
+                    className="scrollbar-hide flex justify-start gap-6 overflow-x-auto scroll-smooth pb-4 2xl:justify-center"
                 >
                     {features.map((feature, index) => (
                         <div
                             key={index}
-                            className="group flex h-[269px] w-[197.5px] shrink-0 flex-col items-center justify-center border border-[#EFA12D40] bg-[radial-gradient(circle_at_center,#000_0%,#171717_50%,_#F5980D30_90%)] px-4 py-6 backdrop-blur-sm transition-all duration-300 hover:border-[#EFA12D] hover:shadow-[0_0_10px_#EFA12D50]"
+                            className="group flex h-[269px] w-[197.5px] shrink-0 flex-col items-center justify-center border border-[#EFA12D40] bg-[radial-gradient(circle_at_center,#000_0%,#171717_50%,#F5980D30_90%)] px-4 py-6 backdrop-blur-sm transition-all duration-300 hover:border-[#EFA12D] hover:shadow-[0_0_10px_#EFA12D50]"
                         >
                             <div className="relative h-[120px] w-full md:h-[140px] lg:h-[150px]">
                                 <Image
