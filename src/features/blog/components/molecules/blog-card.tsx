@@ -41,10 +41,10 @@ export function BlogCard({
                 <DateBadge date={date} />
             </div>
             <div className="flex items-start justify-between gap-5">
-                <h3 className="font-inter group-hover:text-primary flex-1 text-[21px] leading-[1.21em] font-normal text-white transition-colors">
+                <h3 className="font-inter group-hover:text-secondary flex-1 text-[21px] leading-[1.21em] font-normal text-white transition-colors">
                     {title}
                 </h3>
-                <ArrowIcon className="group-hover:text-primary text-secondary mt-2 transition-colors" />
+                <ArrowIcon className="text-secondary mt-2 transition-colors group-hover:text-white" />
             </div>
         </Link>
     );
