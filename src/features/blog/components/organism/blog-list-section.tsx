@@ -35,7 +35,7 @@ export function BlogListSection({
     return (
         <div className={cn("flex flex-col", className)}>
             <BlogHero title={title} />
-            <div className="flex flex-col gap-20 px-5 py-20 md:px-20 md:py-[100px]">
+            <div className="mx-auto flex max-w-[1440px] flex-col items-center gap-20 px-5 py-20 md:px-20 md:py-[100px]">
                 <BlogGrid posts={currentPosts} />
                 {totalPages > 1 && (
                     <Pagination

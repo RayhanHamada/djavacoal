@@ -5,11 +5,11 @@ interface DateBadgeProps {
     className?: string;
 }
 
-export function DateBadge({ date, className }: DateBadgeProps) {
+export function DateBadge({ date = "19 Sep 2025", className }: DateBadgeProps) {
     return (
         <div
             className={cn(
-                "text-primary text-base leading-[1.875em] font-normal",
+                "text-base leading-[1.875em] font-normal text-white",
                 className
             )}
         >

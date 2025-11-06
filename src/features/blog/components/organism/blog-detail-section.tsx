@@ -27,20 +27,20 @@ export function BlogDetailSection({
     relatedArticles,
 }: BlogDetailSectionProps) {
     return (
-        <div className="min-h-screen bg-[#161616]">
-            {/* Hero/Header Section */}
-            <BlogDetailHeader
-                title={article.title}
-                date={article.date}
-                author={article.author}
-                imageUrl={article.imageUrl}
-            />
-
+        <div className="max-w-[1440px] items-center justify-center bg-[#161616]">
             {/* Content Section */}
-            <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
+            <div className="mx-auto max-w-7xl bg-[#161616] px-4 py-12 sm:px-6 lg:px-8">
                 <div className="grid grid-cols-1 gap-8 lg:grid-cols-12">
-                    {/* Main Content - 8 columns on desktop */}
-                    <div className="lg:col-span-8">
+                    <div className="text-justify lg:col-span-8">
+                        {/* Hero/Header Section */}
+                        <BlogDetailHeader
+                            title={article.title}
+                            date={article.date}
+                            author={article.author}
+                            imageUrl={article.imageUrl}
+                        />
+                        {/* Main Content - 8 columns on desktop */}
+
                         <BlogContent content={article.content} />
                     </div>
 

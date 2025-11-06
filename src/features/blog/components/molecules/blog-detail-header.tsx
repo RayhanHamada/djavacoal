@@ -25,7 +25,7 @@ export function BlogDetailHeader({
                     {title}
                 </h1>
                 <div className="flex items-center gap-2">
-                    <span className="font-inter text-primary text-base leading-[1.875em] font-normal">
+                    <span className="font-inter text-secondary text-base leading-[1.875em] font-normal">
                         {author}
                     </span>
                     <span className="text-white">-</span>

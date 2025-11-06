@@ -1,3 +1,5 @@
+import Image from "next/image";
+
 import { DateBadge } from "../atoms";
 import { cn } from "@/lib/utils";
 
@@ -33,21 +35,25 @@ export function RelatedArticles({
                     viewBox="0 0 13 24"
                     fill="none"
                     xmlns="http://www.w3.org/2000/svg"
-                    className="flex-shrink-0"
+                    className="text-secondary flex-shrink-0"
                 >
-                    <path
-                        d="M11.0742 23.0859L1.9375 14.2148L11.0742 5.34375"
+                    <line
+                        x1="3"
+                        y1="5"
+                        x2="3"
+                        y2="19"
                         stroke="currentColor"
-                        strokeWidth="2"
+                        strokeWidth="4"
                         strokeLinecap="round"
-                        strokeLinejoin="round"
                     />
-                    <path
-                        d="M11.0742 23.0859L1.9375 14.2148"
+                    <line
+                        x1="10"
+                        y1="5"
+                        x2="10"
+                        y2="19"
                         stroke="currentColor"
-                        strokeWidth="2"
+                        strokeWidth="4"
                         strokeLinecap="round"
-                        strokeLinejoin="round"
                     />
                 </svg>
                 <h3 className="font-inter text-xl leading-[1.21em] font-extrabold text-white">
@@ -59,10 +65,11 @@ export function RelatedArticles({
                 {articles.map((article) => (
                     <div key={article.id} className="flex flex-col gap-[7px]">
                         <div className="relative aspect-[169/169] w-full overflow-hidden">
-                            <img
+                            <Image
                                 src={article.imageUrl}
                                 alt={article.title}
-                                className="h-full w-full object-cover"
+                                fill
+                                className="object-cover"
                             />
                         </div>
                         <DateBadge

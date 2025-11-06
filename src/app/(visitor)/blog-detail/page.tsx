@@ -5,7 +5,7 @@ import { BlogDetailSection } from "@/features/blog/components/organism";
 // Mock article data
 const mockArticle = {
     title: "Sustainability Practices in the Mining Industry",
-    date: "January 15, 2024",
+    date: "19 Sep 2025",
     author: "Dr. Sarah Mitchell",
     imageUrl: "/images/blog/blog-thumbnail-1.png",
     content: `
@@ -33,19 +33,19 @@ const mockRelatedArticles = [
     {
         id: "2",
         title: "Innovation in Coal Processing Technology",
-        date: "January 10, 2024",
+        date: "19 Sep 2025",
         imageUrl: "/images/blog/blog-thumbnail-2.png",
     },
     {
         id: "3",
         title: "Safety Standards in Modern Mining Operations",
-        date: "January 5, 2024",
+        date: "19 Sep 2025",
         imageUrl: "/images/blog/blog-thumbnail-3.png",
     },
     {
         id: "4",
         title: "The Future of Energy: Coal's Evolving Role",
-        date: "December 28, 2023",
+        date: "19 Sep 2025",
         imageUrl: "/images/blog/blog-thumbnail-4.png",
     },
 ];
@@ -55,6 +55,7 @@ export default function BlogDetailPage() {
         <BlogDetailSection
             article={mockArticle}
             relatedArticles={mockRelatedArticles}
+            className="items-center justify-center"
         />
     );
 }

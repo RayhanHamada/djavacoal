@@ -17,7 +17,7 @@ export function BlogGrid({ posts, className }: BlogGridProps) {
     return (
         <div
             className={cn(
-                "grid gap-10 sm:grid-cols-2 lg:grid-cols-3",
+                "grid max-w-[1280px] gap-10 sm:grid-cols-2 lg:grid-cols-3",
                 className
             )}
         >
