@@ -4,16 +4,14 @@
 
 export interface Product {
     id: string;
-    highlight: string;
-    title: string;
-    description: string;
+    productKey: string;
     image: string;
     href: string;
 }
 
 export interface Feature {
     icon: string;
-    title: string;
+    titleKey: string;
 }
 
 export interface HeroSlide {

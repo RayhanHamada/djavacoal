@@ -16,16 +16,18 @@ import {
 export default async function Home() {
     return (
         <Fragment>
-            <BannerSection />
-            <LogoSlideSection />
-            <AboutUsSection />
-            <WhyChooseUsSection />
-            <DiscoverOurProductSection />
-            <PackagingOptionsSection />
-            <ProductionInfoSection />
-            <VisitOurFactorySection />
-            <MajorityExportDestinationSection />
-            <GlobalShippingPartnerSection />
+            <div dir="rtl">
+                <BannerSection />
+                <LogoSlideSection />
+                <AboutUsSection />
+                <WhyChooseUsSection />
+                <DiscoverOurProductSection />
+                <PackagingOptionsSection />
+                <ProductionInfoSection />
+                <VisitOurFactorySection />
+                <MajorityExportDestinationSection />
+                <GlobalShippingPartnerSection />
+            </div>
         </Fragment>
     );
 }

@@ -5,7 +5,10 @@ import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 
+import { useTranslations } from "next-intl";
+
 export function AboutUsSection() {
+    const t = useTranslations("Home.aboutUs");
     const [isPlaying, setIsPlaying] = useState(false);
 
     return (
@@ -18,7 +21,7 @@ export function AboutUsSection() {
                         <>
                             <Image
                                 src="/images/hero-carousel-1.png"
-                                alt="Djavacoal Company Profile"
+                                alt={t("companyProfile")}
                                 width={1280}
                                 height={720}
                                 className="h-[240px] w-full object-cover md:h-[380px] lg:h-[420px]"
@@ -29,10 +32,7 @@ export function AboutUsSection() {
 
                             {/* Top-left title */}
                             <div className="absolute top-0 left-0 w-full bg-black/40 px-5 py-3 text-[13px] text-white italic md:text-[15px]">
-                                Company Profile -{" "}
-                                <span className="text-[#EFA12D]">
-                                    Djavacoal Indonesia
-                                </span>
+                                {t("companyProfile")}
                             </div>
 
                             {/* Center Play Button */}
@@ -57,7 +57,7 @@ export function AboutUsSection() {
                         <iframe
                             className="h-[240px] w-full md:h-[380px] lg:h-[420px]"
                             src="https://www.youtube.com/embed/NWO_S1Kh6U0?autoplay=1&rel=0&modestbranding=1&showinfo=0&controls=1"
-                            title="Djavacoal Company Profile"
+                            title={t("companyProfile")}
                             allow="autoplay; encrypted-media"
                             allowFullScreen
                         />
@@ -78,41 +78,16 @@ export function AboutUsSection() {
                 {/* ✅ LEFT: Description */}
                 <div className="order-2 flex w-full flex-col items-start justify-center gap-6 text-left lg:order-1 lg:w-1/2">
                     <h2 className="font-['Josefin_Sans'] text-3xl font-bold text-white md:text-4xl lg:text-[42px]">
-                        CV. DJAVACOAL
-                        <span className="text-[#EFA12D]"> INDONESIA</span>{" "}
+                        {t("title")}
+                        <span className="text-[#EFA12D]">
+                            {" "}
+                            {t("highlight")}
+                        </span>{" "}
                     </h2>
                     <div className="space-y-5 text-justify font-['Open_Sans'] text-[15px] leading-[1.8em] text-[#CFCFCF] md:text-[16px]">
-                        <p>
-                            Djavacoal Indonesia is a trusted supplier and
-                            exporter of premium coconut charcoal briquettes, BBQ
-                            charcoal briquettes, sawdust charcoal and natural
-                            wood charcoal. We are dedicated to fostering
-                            innovation within our company and to operating at
-                            the international level within the briquette
-                            industry. We are committed to meeting the needs of
-                            our partners and contributing to the growth of the
-                            Indonesian economy.
-                        </p>
-                        <p>
-                            In addition to producing charcoal briquettes, our
-                            company is also a supplier of natural hardwood
-                            charcoal. This is sourced from tamarind, halaban,
-                            rosewood and a variety of other hardwoods, which are
-                            in high demand for export to various countries.
-                            <br />
-                            Given our extensive experience in the charcoal
-                            industry, we are confident that we would be able to
-                            collaborate and cooperate with your company in the
-                            future.
-                        </p>
-                        <p>
-                            Indonesia is renowned for its high-quality coconut
-                            charcoal. We are confident that we can guarantee the
-                            processing of our products using the finest quality
-                            raw materials. As a supplier, we operate three
-                            factories in close collaboration on Java Island,
-                            Indonesia.
-                        </p>
+                        <p>{t("paragraphs.intro")}</p>
+                        <p>{t("paragraphs.natural")}</p>
+                        <p>{t("paragraphs.quality")}</p>
                     </div>
 
                     {/* ✅ CTA */}
@@ -122,8 +97,10 @@ export function AboutUsSection() {
                             className="group relative mt-2 inline-flex items-center gap-2 pb-1 font-['Open_Sans'] text-lg font-semibold text-[#EFA12D] md:text-xl"
                         >
                             <span className="relative">
-                                <span className="italic">Get</span>&nbsp;to Know
-                                Us!
+                                <span className="italic">
+                                    {t("cta.getToKnow")}
+                                </span>
+                                &nbsp;{t("cta.toKnowUs")}
                                 <span className="absolute bottom-[-3px] left-0 h-[2px] w-[25px] bg-[#EFA12D] transition-all duration-500 ease-out group-hover:w-full group-hover:bg-[#EFA12D]" />
                             </span>
                         </Link>

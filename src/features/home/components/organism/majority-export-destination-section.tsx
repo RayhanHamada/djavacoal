@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 
+import { useTranslations } from "next-intl";
 import {
     ComposableMap,
     Geographies,
@@ -45,6 +46,7 @@ interface GeoProps {
 }
 
 export default function MajorityExportDestinationSection() {
+    const t = useTranslations("Home.exportDestination");
     const [hoveredCountry, setHoveredCountry] = useState<string | null>(null);
     const [tooltipPos, setTooltipPos] = useState<{
         x: number;
@@ -59,8 +61,8 @@ export default function MajorityExportDestinationSection() {
 
             {/* ✅ TITLE */}
             <SectionHeading
-                title="MAJORITY EXPORT"
-                highlight="DESTINATION"
+                title={t("title")}
+                highlight={t("highlight")}
                 variant="center"
             />
 
@@ -137,9 +139,7 @@ export default function MajorityExportDestinationSection() {
                                 strokeWidth={2}
                                 onMouseEnter={(e: any) => {
                                     const { clientX, clientY } = e;
-                                    setHoveredCountry(
-                                        "From Semarang, Jawa Tengah"
-                                    );
+                                    setHoveredCountry(t("fromSemarang"));
                                     setTooltipPos({ x: clientX, y: clientY });
                                 }}
                                 onMouseLeave={() => {

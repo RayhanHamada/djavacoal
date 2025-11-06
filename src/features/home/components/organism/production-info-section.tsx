@@ -4,35 +4,37 @@ import Image from "next/image";
 import Link from "next/link";
 
 import { motion } from "framer-motion";
+import { useTranslations } from "next-intl";
 
 const productionItems = [
     {
         id: "process",
-        title: "Production Process",
+        titleKey: "process",
         image: "/images/home-production-info1.png",
         href: "/production-info#process",
     },
     {
         id: "payment",
-        title: "MOQ & Payment Terms",
+        titleKey: "payment",
         image: "/images/home-production-info2.png",
         href: "/production-info#payment",
     },
     {
         id: "shipment",
-        title: "Shipment Terms",
+        titleKey: "shipment",
         image: "/images/home-production-info3.png",
         href: "/production-info#shipment",
     },
     {
         id: "packaging",
-        title: "Packaging Option",
+        titleKey: "packaging",
         image: "/images/home-production-info4.png",
         href: "/production-info#packaging",
     },
 ];
 
 export function ProductionInfoSection() {
+    const t = useTranslations("Home.productionInfo");
     return (
         <section className="relative w-full bg-[#151515] py-16 md:py-20 lg:py-24">
             {/* 🔹 Section Header */}
@@ -40,7 +42,8 @@ export function ProductionInfoSection() {
                 <div className="flex items-center gap-3">
                     <div className="h-[2px] w-[50px] bg-[#EFA12D]" />
                     <h2 className="font-['Josefin_Sans'] text-[26px] font-bold text-white md:text-[34px] lg:text-[40px]">
-                        Production <span className="text-[#EFA12D]">Info</span>
+                        {t("title")}{" "}
+                        <span className="text-[#EFA12D]">{t("highlight")}</span>
                     </h2>
                 </div>
             </div>
@@ -59,7 +62,7 @@ export function ProductionInfoSection() {
                             <div className="relative h-[205.5px] w-full md:h-[384px] lg:h-[422.5px]">
                                 <Image
                                     src={item.image}
-                                    alt={item.title}
+                                    alt={t(`items.${item.titleKey}` as any)}
                                     fill
                                     className="object-cover transition-transform duration-500 group-hover:scale-105"
                                 />
@@ -68,7 +71,7 @@ export function ProductionInfoSection() {
                                 {/* Judul di bawah */}
                                 <div className="absolute bottom-4 left-0 w-full text-center">
                                     <p className="font-['Open_Sans'] text-[13px] font-semibold text-white md:text-[15px]">
-                                        {item.title}
+                                        {t(`items.${item.titleKey}` as any)}
                                     </p>
                                 </div>
                             </div>

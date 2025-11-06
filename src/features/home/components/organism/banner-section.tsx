@@ -5,6 +5,8 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 
+import { useTranslations } from "next-intl";
+
 import { CAROUSEL_INTERVAL, HERO_SLIDES } from "../../lib/constants";
 
 /**
@@ -12,6 +14,7 @@ import { CAROUSEL_INTERVAL, HERO_SLIDES } from "../../lib/constants";
  * Auto-advances slides every 8 seconds with manual navigation
  */
 export function BannerSection() {
+    const t = useTranslations("Home.banner");
     const [currentSlide, setCurrentSlide] = useState(0);
 
     // Auto-slide carousel
@@ -49,9 +52,11 @@ export function BannerSection() {
             {/* ✅ Content */}
             <div className="relative z-10 flex h-full flex-col items-center justify-center gap-10 px-5 text-center md:px-20 lg:px-32">
                 <h1 className="max-w-[700px] font-['Josefin_Sans'] text-[25px] leading-[1.4em] font-semibold text-white md:text-[36px] lg:text-[42px] lg:leading-[1.1em]">
-                    Power Your Flame with{" "}
-                    <span className="text-[#EFA12D]">Djavacoal Indonesia</span>:
-                    The Ultimate Solution for Clean Energy
+                    {t.rich("title", {
+                        djavacoal: (chunks) => (
+                            <span className="text-[#EFA12D]">{chunks}</span>
+                        ),
+                    })}
                 </h1>
 
                 {/* ✅ Buttons (tetap satu baris & responsif) */}
@@ -60,13 +65,13 @@ export function BannerSection() {
                         href="/about-us"
                         className="flex flex-1 items-center justify-center rounded-[40px] border border-white bg-black/40 px-8 py-4 font-['Josefin_Sans'] text-[15px] font-bold whitespace-nowrap text-white backdrop-blur-sm transition-all duration-300 hover:bg-black/60 sm:text-[16px] md:px-10 md:py-5"
                     >
-                        About Us
+                        {t("buttons.aboutUs")}
                     </Link>
                     <Link
                         href="/our-products"
                         className="flex flex-1 items-center justify-center rounded-[40px] border border-[#EFA12D] bg-black/40 px-8 py-4 font-['Josefin_Sans'] text-[15px] font-bold whitespace-nowrap text-[#EFA12D] backdrop-blur-sm transition-all duration-300 hover:bg-black/60 sm:text-[16px] md:px-10 md:py-5"
                     >
-                        Discover Our Products
+                        {t("buttons.discoverProducts")}
                     </Link>
                 </div>
             </div>
@@ -82,7 +87,9 @@ export function BannerSection() {
                                 ? "border-[#EFA12D] bg-[#EFA12D]"
                                 : "border-[#EFA12D] bg-transparent hover:bg-[#EFA12D]/50"
                         }`}
-                        aria-label={`Go to slide ${index + 1}`}
+                        aria-label={t("carouselAriaLabel", {
+                            index: index + 1,
+                        })}
                     />
                 ))}
             </div>

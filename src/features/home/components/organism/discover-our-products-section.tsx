@@ -6,6 +6,7 @@ import Image from "next/image";
 import Link from "next/link";
 
 import { motion } from "framer-motion";
+import { useTranslations } from "next-intl";
 
 import { PRODUCTS } from "../../lib/constants";
 import { chunkArray } from "../../lib/utils";
@@ -16,6 +17,9 @@ interface ProductCardProps {
 }
 
 function ProductCard({ product, isLastMobile }: ProductCardProps) {
+    const t = useTranslations("Home.discoverProducts");
+    const productKey = `products.${product.productKey}` as any;
+
     return (
         <motion.article
             whileHover={{ scale: 1.02 }}
@@ -25,14 +29,14 @@ function ProductCard({ product, isLastMobile }: ProductCardProps) {
             <div className="relative flex aspect-square items-center justify-center overflow-hidden rounded-[22px] border border-[#FFFFFF25] bg-[radial-gradient(circle_at_center,#000_0%,#171717_50%,#ffffff30_100%)] shadow-[0_0_30px_#00000040] transition-all duration-500 hover:border-[#EFA12D]/80 hover:shadow-[0_0_30px_#EFA12D40]">
                 <Image
                     src="/images/logo.png"
-                    alt="Djavacoal Logo"
+                    alt={t("logoAlt")}
                     width={150}
                     height={40}
                     className="absolute top-5 left-1/2 z-999 -translate-x-1/2 scale-60 opacity-90"
                 />
                 <Image
                     src={product.image}
-                    alt={`${product.highlight} ${product.title}`}
+                    alt={`${t(`${productKey}.highlight` as any)} ${t(`${productKey}.title` as any)}`}
                     width={400}
                     height={400}
                     className="h-full w-full scale-90 object-contain transition-transform duration-700 hover:scale-105"
@@ -41,17 +45,19 @@ function ProductCard({ product, isLastMobile }: ProductCardProps) {
 
             <div className="mt-6 max-w-[415px]">
                 <h3 className="font-['Josefin_Sans'] text-[15px] font-bold text-white uppercase md:text-[16px]">
-                    <span className="text-[#EFA12D]">{product.highlight}</span>{" "}
-                    {product.title}
+                    <span className="text-[#EFA12D]">
+                        {t(`${productKey}.highlight` as any)}
+                    </span>{" "}
+                    {t(`${productKey}.title` as any)}
                 </h3>
                 <p className="mt-3 font-['Open_Sans'] text-[13px] leading-relaxed text-[#C6C6C6] md:text-[14px]">
-                    {product.description}
+                    {t(`${productKey}.description` as any)}
                 </p>
                 <Link
                     href={product.href}
                     className="mt-3 inline-block font-['Open_Sans'] text-[13px] font-semibold text-[#1E90FF] hover:underline md:text-[14px]"
                 >
-                    Detail Products...
+                    {t("detailProducts")}
                 </Link>
             </div>
         </motion.article>
@@ -59,6 +65,7 @@ function ProductCard({ product, isLastMobile }: ProductCardProps) {
 }
 
 export function DiscoverOurProductSection() {
+    const t = useTranslations("Home.discoverProducts");
     const rows = chunkArray(PRODUCTS, 2);
 
     return (
@@ -67,8 +74,8 @@ export function DiscoverOurProductSection() {
 
             <div className="md:border-b md:border-[#9C9C9C] md:pb-8 md:text-center lg:border-none">
                 <h2 className="font-['Josefin_Sans'] text-[28px] font-bold text-white uppercase md:text-[36px] lg:text-[42px]">
-                    Discover Our{" "}
-                    <span className="text-[#EFA12D]">Products</span>
+                    {t("title")}{" "}
+                    <span className="text-[#EFA12D]">{t("highlight")}</span>
                 </h2>
             </div>
 

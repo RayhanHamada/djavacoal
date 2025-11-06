@@ -2,25 +2,28 @@
 
 import Image from "next/image";
 
+import { useTranslations } from "next-intl";
+
 const shippingPartners = [
     {
         id: "pil",
-        name: "Pacific International Lines",
+        nameKey: "pil",
         logo: "/images/shipping-pil.png",
     },
-    { id: "msc", name: "MSC Cruises", logo: "/images/shipping-msc.png" },
-    { id: "cma", name: "CMA CGM", logo: "/images/shipping-cma-7a75cb.png" },
-    { id: "esl", name: "ESL Shipping", logo: "/images/shipping-esl.png" },
-    { id: "asyad", name: "Asyad Line", logo: "/images/shipping-asyad.png" },
-    { id: "ovp", name: "OVP Shipping", logo: "/images/shipping-ovp.png" },
+    { id: "msc", nameKey: "msc", logo: "/images/shipping-msc.png" },
+    { id: "cma", nameKey: "cma", logo: "/images/shipping-cma-7a75cb.png" },
+    { id: "esl", nameKey: "esl", logo: "/images/shipping-esl.png" },
+    { id: "asyad", nameKey: "asyad", logo: "/images/shipping-asyad.png" },
+    { id: "ovp", nameKey: "ovp", logo: "/images/shipping-ovp.png" },
     {
         id: "sitc",
-        name: "SITC Container Lines",
+        nameKey: "sitc",
         logo: "/images/shipping-sitc.png",
     },
 ];
 
 export function GlobalShippingPartnerSection() {
+    const t = useTranslations("Home.shippingPartners");
     const repeated = Array(6).fill(shippingPartners).flat();
 
     const PartnerCard = ({ logo, name }: { logo: string; name: string }) => (
@@ -47,8 +50,9 @@ export function GlobalShippingPartnerSection() {
             <div className="mb-8 flex items-center gap-3 px-[20px] md:px-[40px] lg:px-[240px]">
                 <div className="h-[2px] w-[60px] bg-[#EFA12D]" />
                 <h2 className="font-['Josefin_Sans'] text-[28px] font-bold text-white md:text-[38px] lg:text-[44px]">
-                    Global <span className="text-[#EFA12D]">Shipping</span>{" "}
-                    Partner
+                    {t("title")}{" "}
+                    <span className="text-[#EFA12D]">{t("highlight")}</span>{" "}
+                    {t("suffix")}
                 </h2>
             </div>
 
@@ -59,7 +63,7 @@ export function GlobalShippingPartnerSection() {
                         <PartnerCard
                             key={`track1-${i}`}
                             logo={p.logo}
-                            name={p.name}
+                            name={t(`partners.${p.nameKey}` as any)}
                         />
                     ))}
                 </div>
@@ -72,7 +76,7 @@ export function GlobalShippingPartnerSection() {
                         <PartnerCard
                             key={`track2-${i}`}
                             logo={p.logo}
-                            name={p.name}
+                            name={t(`partners.${p.nameKey}` as any)}
                         />
                     ))}
                 </div>

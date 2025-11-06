@@ -3,6 +3,7 @@ import React from "react";
 import Image from "next/image";
 import Link from "next/link";
 
+import { getTranslations } from "next-intl/server";
 import {
     FaFacebookF,
     FaLinkedinIn,
@@ -17,6 +18,7 @@ import { serverPublicAPIClient } from "@/adapters/public-api/server";
 import { FooterProductList } from "@/components/molecules/footer-product-list";
 
 export default async function VisitorFooter() {
+    const t = await getTranslations("Footer");
     const year = new Date().getFullYear();
 
     const { data } = await serverPublicAPIClient.GET("/footer-content");
@@ -30,7 +32,7 @@ export default async function VisitorFooter() {
                 <div className="flex flex-col items-start md:items-center">
                     <Image
                         src="/svgs/logo.svg"
-                        alt="Logo Djavacoal"
+                        alt={t("logoAlt")}
                         width={160}
                         height={100}
                         className="h-auto w-auto"
@@ -66,33 +68,33 @@ export default async function VisitorFooter() {
                 {/* Company + Products */}
                 <div className="flex-col-2 flex gap-6 md:flex-row md:justify-between">
                     {/* Company */}
+                    {/* Company */}
                     <div className="md:w-1/2">
                         <h3 className="text-secondary border-secondary mb-2 border-b-2 pb-1 text-base font-bold sm:text-xl">
-                            Company
+                            {t("sections.company")}
                         </h3>
                         <ul className="mt-3 space-y-2 text-xs md:text-base">
                             <li>
-                                <Link href="#">CV. Djavacoal Indonesia</Link>
+                                <Link href="#">{t("company.cvDjavacoal")}</Link>
                             </li>
                             <li>
-                                <Link href="#">Djavacoal’s Team</Link>
+                                <Link href="#">{t("company.team")}</Link>
                             </li>
                             <li>
-                                <Link href="#">Legal & Certificate</Link>
+                                <Link href="#">{t("company.legal")}</Link>
                             </li>
                             <li>
-                                <Link href="#">Factory</Link>
+                                <Link href="#">{t("company.factory")}</Link>
                             </li>
                             <li>
-                                <Link href="#">Our Gallery</Link>
+                                <Link href="#">{t("company.gallery")}</Link>
                             </li>
                         </ul>
                     </div>
-
                     {/* Products */}
                     <div className="md:w-1/2">
                         <h3 className="text-secondary border-secondary mb-2 border-b-2 pb-1 text-base font-bold sm:text-xl">
-                            Products
+                            {t("sections.products")}
                         </h3>
                         <FooterProductList />
                     </div>
@@ -103,33 +105,41 @@ export default async function VisitorFooter() {
                     {/* Quick Link */}
                     <div className="md:w-1/2">
                         <h3 className="text-secondary border-secondary mb-2 w-38 border-b-2 pb-1 text-base font-bold sm:text-xl md:w-full lg:w-36">
-                            Quick Link
+                            {t("sections.quickLink")}
                         </h3>
                         <ul className="mt-3 space-y-2 text-xs md:text-base">
                             <li>
-                                <Link href="#">Production Process</Link>
+                                <Link href="#">
+                                    {t("quickLinks.productionProcess")}
+                                </Link>
                             </li>
                             <li>
-                                <Link href="#">Shipment Terms</Link>
+                                <Link href="#">
+                                    {t("quickLinks.shipmentTerms")}
+                                </Link>
                             </li>
                             <li>
-                                <Link href="#">MOQ & Payment Terms</Link>
+                                <Link href="#">
+                                    {t("quickLinks.moqPayment")}
+                                </Link>
                             </li>
                             <li>
-                                <Link href="#">Packaging Info</Link>
+                                <Link href="#">
+                                    {t("quickLinks.packagingInfo")}
+                                </Link>
                             </li>
                             <li>
-                                <Link href="#">FAQ</Link>
+                                <Link href="#">{t("quickLinks.faq")}</Link>
                             </li>
                             <li>
-                                <Link href="#">News & Article</Link>
+                                <Link href="#">{t("quickLinks.news")}</Link>
                             </li>
                         </ul>
                     </div>
                     {/* Contact */}
                     <div className="mt-8 md:mt-0 md:w-1/2">
                         <h3 className="mb-2 pb-1 text-base font-bold sm:text-xl">
-                            Contact Us
+                            {t("sections.contactUs")}
                         </h3>
                         <div className="mt-3 space-y-3">
                             <Link
@@ -141,7 +151,7 @@ export default async function VisitorFooter() {
                                     {data?.data.address || ""}
                                 </span>
                             </Link>
-                            <p className="font-bold">Phone :</p>
+                            <p className="font-bold">{t("contact.phone")}</p>
                             <Link
                                 href={`https://wa.me/${data?.data.phone_number || ""}`}
                                 className="flex items-center gap-2"
@@ -149,7 +159,7 @@ export default async function VisitorFooter() {
                                 <FaPhoneAlt className="size-4" />{" "}
                                 {data?.data.phone_number || ""}
                             </Link>
-                            <p className="font-bold">E-mail :</p>
+                            <p className="font-bold">{t("contact.email")}</p>
                             <Link
                                 href="mailto:marketing@djavacoal.com"
                                 className="flex items-center gap-2"
@@ -166,7 +176,7 @@ export default async function VisitorFooter() {
                 <div className="absolute inset-0 bg-[#EFA12D]"></div>
                 <div className="absolute inset-0 bg-black/50"></div>
                 <span className="relative z-10 text-xs lg:text-base">
-                    © Copyright {year} · CV. Djavacoal Indonesia
+                    {t("copyright", { year })}
                 </span>
             </div>
         </footer>

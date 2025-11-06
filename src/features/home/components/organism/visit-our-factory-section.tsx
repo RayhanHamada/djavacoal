@@ -3,13 +3,17 @@
 import Image from "next/image";
 import Link from "next/link";
 
+import { useTranslations } from "next-intl";
+
 export function VisitOurFactorySection() {
+    const t = useTranslations("Home.visitFactory");
     return (
         <section className="relative w-full overflow-hidden bg-[#151515] text-center text-white">
             {/* ==== Title di atas gambar ==== */}
             <div className="bg-[#151515] pt-12 pb-6 md:pt-16 md:pb-8">
                 <h2 className="font-['Josefin_Sans'] text-[28px] font-bold tracking-wide uppercase md:text-[36px] lg:text-[44px]">
-                    VISIT OUR <span className="text-[#EFA12D]">FACTORY</span>
+                    {t("title")}{" "}
+                    <span className="text-[#EFA12D]">{t("highlight")}</span>
                 </h2>
             </div>
 
@@ -17,7 +21,7 @@ export function VisitOurFactorySection() {
             <div className="relative h-[380px] w-full md:h-[500px] lg:h-[580px]">
                 <Image
                     src="/images/visit-factory.png"
-                    alt="Djavacoal Factory"
+                    alt={t("imageAlt")}
                     fill
                     priority
                     className="object-cover object-center pt-6"
@@ -29,19 +33,16 @@ export function VisitOurFactorySection() {
             {/* ==== Description & Button di bawah gambar ==== */}
             <div className="mx-auto max-w-3xl px-6 pt-10 pb-16 text-[#C6C6C6]">
                 <p className="mb-8 text-[15px] leading-relaxed md:text-[16px]">
-                    At Djavacoal, we are committed to transparency and trust. We
-                    extend an invitation to our partners to visit our factory,
-                    explore our production process, and witness the commitment
-                    to quality that sets us apart.
+                    {t("description")}
                 </p>
 
                 <Link
-                    href="https://wa.me/6282122859318?text=Hi,%20I%20would%20like%20to%20schedule%20a%20factory%20visit"
+                    href={`https://wa.me/6282122859318?text=${encodeURIComponent(t("whatsappMessage"))}`}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="bg-button-whatsapp container mx-auto inline-flex h-[54px] w-[271px] items-center justify-center gap-3 rounded-lg px-6 font-['Open_Sans'] text-[14px] font-semibold text-white transition-all hover:bg-[#1EBE5B] md:h-[54px] md:w-[360px] md:text-[15px] lg:h-[54px] lg:w-[500px]"
                 >
-                    <span>Schedule a Visit</span>
+                    <span>{t("cta")}</span>
                     <svg
                         width="22"
                         height="22"
