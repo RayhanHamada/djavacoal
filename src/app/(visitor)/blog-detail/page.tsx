@@ -48,6 +48,30 @@ const mockRelatedArticles = [
         date: "19 Sep 2025",
         imageUrl: "/images/blog/blog-thumbnail-4.png",
     },
+    {
+        id: "5",
+        title: "The Future of Energy: Coal's Evolving Role",
+        date: "19 Sep 2025",
+        imageUrl: "/images/blog/blog-thumbnail-4.png",
+    },
+    {
+        id: "6",
+        title: "The Future of Energy: Coal's Evolving Role",
+        date: "19 Sep 2025",
+        imageUrl: "/images/blog/blog-thumbnail-4.png",
+    },
+    {
+        id: "7",
+        title: "The Future of Energy: Coal's Evolving Role",
+        date: "19 Sep 2025",
+        imageUrl: "/images/blog/blog-thumbnail-4.png",
+    },
+    {
+        id: "8",
+        title: "The Future of Energy: Coal's Evolving Role",
+        date: "19 Sep 2025",
+        imageUrl: "/images/blog/blog-thumbnail-4.png",
+    },
 ];
 
 export default function BlogDetailPage() {

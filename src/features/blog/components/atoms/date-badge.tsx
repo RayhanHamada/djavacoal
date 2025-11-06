@@ -5,7 +5,7 @@ interface DateBadgeProps {
     className?: string;
 }
 
-export function DateBadge({ date = "19 Sep 2025", className }: DateBadgeProps) {
+export function DateBadge({ date, className }: DateBadgeProps) {
     return (
         <div
             className={cn(

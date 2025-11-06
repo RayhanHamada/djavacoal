@@ -29,7 +29,7 @@ export function BlogDetailSection({
     return (
         <div className="items-center justify-center bg-[#161616]">
             {/* Content Section */}
-            <div className="mx-auto max-w-7xl bg-[#161616] px-10 py-12 lg:px-0">
+            <div className="mx-auto max-w-7xl bg-[#161616] px-10 py-12 lg:px-10">
                 <div className="grid grid-cols-1 gap-8 lg:grid-cols-12">
                     <div className="text-justify lg:col-span-8">
                         {/* Hero/Header Section */}
