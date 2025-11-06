@@ -1,33 +1,41 @@
 "use client";
 
+import type { ButtonVariant } from "../../lib/types";
+
 import React from "react";
 
 import { cn } from "@/lib/utils";
 
-type Props = React.ButtonHTMLAttributes<HTMLButtonElement> & {
-    variant?: "primary" | "secondary";
-};
+interface BannerButtonProps
+    extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+    variant?: ButtonVariant;
+}
 
-export const BannerButton = React.forwardRef<HTMLButtonElement, Props>(
-    function Button(props, ref) {
-        const { variant = "primary", ...rest } = props;
+/**
+ * BannerButton component for hero/banner sections
+ * Supports primary, secondary, and outline variants
+ */
+export const BannerButton = React.forwardRef<
+    HTMLButtonElement,
+    BannerButtonProps
+>(function BannerButton({ variant = "primary", className, ...rest }, ref) {
+    const variantClasses = {
+        primary: "border-white bg-black/40 text-white hover:bg-black/60",
+        secondary:
+            "border-[#EFA12D] bg-black/40 text-[#EFA12D] hover:bg-black/60",
+        outline:
+            "border-[#EFA12D] bg-transparent text-[#EFA12D] hover:bg-[#EFA12D]/10",
+    };
 
-        const classnames = cn(
-            "bg-transparent/25 p-8 rounded-lg",
-            variant === "primary" ? "text-white border-primary" : "",
-            variant === "secondary"
-                ? "text-blue-600 border border-blue-600"
-                : "avoca"
-        );
-
-        return (
-            <button
-                ref={ref}
-                className={`banner-button ${classnames}`}
-                {...rest}
-            >
-                {props.children}
-            </button>
-        );
-    }
-);
+    return (
+        <button
+            ref={ref}
+            className={cn(
+                "rounded-[40px] border px-8 py-4 font-['Josefin_Sans'] text-[15px] font-bold whitespace-nowrap backdrop-blur-sm transition-all duration-300 sm:text-[16px] md:px-10 md:py-5",
+                variantClasses[variant],
+                className
+            )}
+            {...rest}
+        />
+    );
+});

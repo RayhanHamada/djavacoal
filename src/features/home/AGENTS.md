@@ -11,12 +11,29 @@ This feature provides the homepage experience for visitors of the Djavacoal webs
 ```
 home/
 ├── components/          # UI components for homepage
-│   ├── atoms/          # Basic homepage UI elements
-│   ├── molecules/      # Composite components (feature cards, CTAs)
-│   └── organisms/      # Complex sections (hero, features, testimonials)
-├── hooks/              # React hooks for homepage data
+│   ├── atoms/          # Basic homepage UI elements (buttons, icons, headings)
+│   ├── molecules/      # Composite components (cards, CTAs)
+│   └── organisms/      # Complex sections (hero, product grid, features)
+├── hooks/              # React hooks for homepage data (currently empty)
 └── lib/                # Homepage-specific utilities and constants
+    ├── constants.ts    # Centralized data (products, features, slides)
+    ├── types.ts        # Shared TypeScript types
+    └── utils.ts        # Utility functions (chunkArray, etc.)
 ```
+
+### Code Organization Principles
+
+**Atomic Design Pattern:**
+- **Atoms**: Smallest reusable components (BannerButton, SectionHeading, StatCard, etc.)
+- **Molecules**: Combinations of atoms (ProductCard, FeatureCard, CertificateCard, etc.)
+- **Organisms**: Full page sections (BannerSection, DiscoverOurProductSection, etc.)
+
+**Clean Code Practices:**
+- Extract hardcoded data into constants for maintainability
+- Use shared types for consistency across components
+- Proper JSDoc comments for component documentation
+- Consistent naming conventions (PascalCase for components)
+- Export patterns through index.ts barrel files
 
 ## Features
 
@@ -236,6 +253,32 @@ export function HomeView() {
 }
 ```
 
+## Component Guidelines
+
+### Atoms
+All atom components follow these patterns:
+- Accept `className` prop for custom styling
+- Use `cn()` utility for conditional classes
+- Include JSDoc comments
+- Export as named exports (not default)
+- Properly typed with TypeScript interfaces
+
+### Molecules
+Molecule components should:
+- Compose atoms when possible
+- Accept data as props (avoid hardcoding)
+- Include hover/interaction states
+- Use semantic HTML elements
+- Follow accessibility best practices
+
+### Organisms
+Organism components should:
+- Import data from constants file
+- Use utility functions for data transformation
+- Handle responsive layouts internally
+- Include proper section semantics
+- Document complex logic with comments
+
 ## Best Practices for AI Agents
 
 ### When Adding Features
@@ -244,6 +287,8 @@ export function HomeView() {
 3. Use skeleton loaders for data fetching
 4. Maintain bilingual content parity
 5. Test mobile responsiveness
+6. Add new data to `lib/constants.ts`
+7. Create types in `lib/types.ts` first
 
 ### When Modifying
 1. Update both EN and AR translations
@@ -251,6 +296,8 @@ export function HomeView() {
 3. Test with empty states (no products, no news)
 4. Optimize Core Web Vitals
 5. Ensure accessibility
+6. Update constants instead of hardcoding
+7. Maintain atomic design hierarchy
 
 ### When Debugging
 1. Check data fetching queries
@@ -258,6 +305,8 @@ export function HomeView() {
 3. Test with different locale settings
 4. Check responsive breakpoints
 5. Review image loading performance
+6. Verify imports from constants/types
+7. Check barrel exports in index.ts files
 
 ## Performance Optimizations
 
