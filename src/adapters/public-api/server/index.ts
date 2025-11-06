@@ -11,8 +11,9 @@ import { PUBLIC_API_PREFIX } from "@/adapters/public-api/constants";
 import { router } from "@/features/public-api/router";
 
 const handler = new OpenAPIHandler(router, {
-    interceptors: [
+    clientInterceptors: [
         onError(async function (error) {
+            console.log(error);
             /**
              * skip check if not ORPCError or not ValidationError
              */
