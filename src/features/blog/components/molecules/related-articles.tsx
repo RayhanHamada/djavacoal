@@ -61,10 +61,10 @@ export function RelatedArticles({
                 </h3>
             </div>
             <div className="h-px w-full bg-[#474747]" />
-            <div className="flex flex-col gap-10">
+            <div className="grid grid-cols-2 gap-10 md:grid-cols-3 lg:flex lg:flex-col">
                 {articles.map((article) => (
                     <div key={article.id} className="flex flex-col gap-[7px]">
-                        <div className="relative aspect-[169/169] w-full overflow-hidden">
+                        <div className="relative aspect-square w-full overflow-hidden">
                             <Image
                                 src={article.imageUrl}
                                 alt={article.title}
@@ -82,8 +82,8 @@ export function RelatedArticles({
                     </div>
                 ))}
             </div>
-            <div className="flex items-center justify-center border-t border-[#474747] pt-4">
-                <button className="font-inter hover:text-primary text-xl leading-[1.21em] font-bold text-white">
+            <div className="bg-secondary flex items-center justify-center border-t border-[#474747] py-4">
+                <button className="font-inter hover:text-primary items-center justify-center text-xl leading-[1.21em] font-bold text-white">
                     More
                 </button>
             </div>

@@ -21,8 +21,8 @@ export function PaginationButton({
             className={cn(
                 "flex h-[50px] w-[50px] items-center justify-center text-xl leading-[1.5em] font-bold transition-colors",
                 isActive
-                    ? "bg-primary text-background"
-                    : "hover:bg-primary/20 border border-[#8C8C8C] bg-[#8C8C8C] text-[#8C8C8C]",
+                    ? "bg-secondary text-[#161616]"
+                    : "border border-[#8C8C8C] bg-[#161616] text-[#8C8C8C] hover:bg-white/20",
                 className
             )}
             aria-current={isActive ? "page" : undefined}

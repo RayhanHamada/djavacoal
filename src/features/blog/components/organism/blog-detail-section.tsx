@@ -27,9 +27,9 @@ export function BlogDetailSection({
     relatedArticles,
 }: BlogDetailSectionProps) {
     return (
-        <div className="max-w-[1440px] items-center justify-center bg-[#161616]">
+        <div className="items-center justify-center bg-[#161616]">
             {/* Content Section */}
-            <div className="mx-auto max-w-7xl bg-[#161616] px-4 py-12 sm:px-6 lg:px-8">
+            <div className="mx-auto max-w-7xl bg-[#161616] px-10 py-12 lg:px-0">
                 <div className="grid grid-cols-1 gap-8 lg:grid-cols-12">
                     <div className="text-justify lg:col-span-8">
                         {/* Hero/Header Section */}

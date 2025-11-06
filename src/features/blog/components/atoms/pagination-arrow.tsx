@@ -20,7 +20,7 @@ export function PaginationArrow({
             onClick={onClick}
             disabled={disabled}
             className={cn(
-                "flex h-[30px] w-[15px] items-center justify-center text-white transition-opacity hover:opacity-70 disabled:opacity-30",
+                "hover:text-secondary flex h-[30px] w-[15px] items-center justify-center text-white transition-opacity hover:opacity-70 disabled:opacity-30",
                 className
             )}
             aria-label={direction === "prev" ? "Previous page" : "Next page"}

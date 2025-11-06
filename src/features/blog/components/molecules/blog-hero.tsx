@@ -19,8 +19,8 @@ export function BlogHero({ title, className }: BlogHeroProps) {
                 backgroundPosition: "center",
             }}
         >
-            <div className="relative z-10 flex flex-col items-center gap-2.5">
-                <h1 className="font-josefin text-4xl leading-[1.277em] font-bold text-white">
+            <div className="absolute inset-0 flex items-center justify-center bg-black/50">
+                <h1 className="text-2xl font-semibold text-white italic md:text-4xl">
                     {title}
                 </h1>
             </div>

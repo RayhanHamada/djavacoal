@@ -55,7 +55,6 @@ export default function BlogDetailPage() {
         <BlogDetailSection
             article={mockArticle}
             relatedArticles={mockRelatedArticles}
-            className="items-center justify-center"
         />
     );
 }
