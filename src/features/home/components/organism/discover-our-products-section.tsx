@@ -61,17 +61,17 @@ function ProductCard({
         <motion.div
             whileHover={{ scale: 1.02 }}
             transition={{ duration: 0.3 }}
-            className={`flex w-full flex-col items-center pb-8 text-center md:pb-0 ${
+            className={`mb-4 flex w-full flex-col items-center pb-8 text-center md:pb-0 ${
                 !isLastMobile ? "border-b border-[#9C9C9C] md:border-0" : ""
             }`}
         >
-            <div className="relative flex aspect-square h-[371px] w-full max-w-[415px] items-center justify-center overflow-hidden rounded-[22px] border border-[#FFFFFF25] bg-[radial-gradient(circle_at_center,#000_0%,#171717_50%,_#ffffff30_100%)] shadow-[0_0_30px_#00000040] transition-all duration-500 hover:border-[#EFA12D]/80 hover:shadow-[0_0_30px_#EFA12D40] md:h-[334px] lg:h-[415px]">
+            <div className="relative flex aspect-square items-center justify-center overflow-hidden rounded-[22px] border border-[#FFFFFF25] bg-[radial-gradient(circle_at_center,#000_0%,#171717_50%,_#ffffff30_100%)] shadow-[0_0_30px_#00000040] transition-all duration-500 hover:border-[#EFA12D]/80 hover:shadow-[0_0_30px_#EFA12D40]">
                 <Image
                     src="/images/logo.png"
                     alt="Djavacoal Logo"
                     width={150}
                     height={40}
-                    className="absolute top-5 left-1/2 -translate-x-1/2 scale-60 opacity-90"
+                    className="absolute top-5 left-1/2 z-999 -translate-x-1/2 scale-60 opacity-90"
                 />
                 <Image
                     src={product.image}
@@ -144,9 +144,13 @@ export function DiscoverOurProductSection() {
 
             {/* DESKTOP */}
             <div className="hidden lg:block">
-                <div className="flex flex-nowrap gap-x-4">
-                    {products.map((p) => (
-                        <div key={p.id} className="">
+                <div className="grid grid-cols-1 gap-x-4 md:grid-cols-2 lg:grid-cols-4">
+                    {products.map((p, index) => (
+                        <div
+                            key={p.id}
+                            // This line fixes the left alignment when wrapping
+                            className={index === 0 ? "start-0" : ""}
+                        >
                             <ProductCard product={p} />
                         </div>
                     ))}
