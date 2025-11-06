@@ -47,42 +47,35 @@ const handler = new RPCHandler(router, {
             const data = z.flattenError(zodError);
             const cause = error.cause;
 
-            /**
-             * assumes BAD_REQUEST is input validation error
-             */
-            if (errorCode === "BAD_REQUEST") {
-                throw new ORPCError("INPUT_VALIDATION_ERROR", {
+            const map = {
+                BAD_REQUEST: {
+                    code: "INPUT_VALIDATION_ERROR",
                     status: 422,
-                    message,
-                    data,
-                    cause,
-                });
-            }
-
-            /**
-             * assumes INTERNAL_SERVER_ERROR is output validation error
-             */
-            if (errorCode === "INTERNAL_SERVER_ERROR") {
-                throw new ORPCError("OUTPUT_VALIDATION_ERROR", {
+                },
+                INTERNAL_SERVER_ERROR: {
+                    code: "OUTPUT_VALIDATION_ERROR",
                     status: 500,
-                    message,
-                    data,
-                    cause,
-                });
-            }
+                },
+            } as const;
+
+            const m = map[errorCode as keyof typeof map];
+            const err = m
+                ? new ORPCError(m.code, {
+                      status: m.status,
+                      message,
+                      data,
+                      cause,
+                  })
+                : null;
+
+            if (err) throw err;
         }),
     ],
 });
 export default async function getHandler(request: Request) {
-    return handler
-        .handle(request, {
-            prefix: RPC_API_PREFIX,
-        })
-        .catch((error) => {
-            console.error("RPC Handler Error:", error);
-
-            return;
-        });
+    return handler.handle(request, {
+        prefix: RPC_API_PREFIX,
+    });
 }
 
 export type Router = typeof router;

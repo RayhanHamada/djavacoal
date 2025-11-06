@@ -57,6 +57,11 @@ export const KV_KEYS = {
      * email address
      */
     EMAIL_ADDRESS: "footer:email_address",
+
+    /**
+     * caches
+     */
+    HOME_CONTENT_CACHE: "cache:home_content",
 } as const;
 
 type KVKey = typeof KV_KEYS;
