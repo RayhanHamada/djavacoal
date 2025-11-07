@@ -7,6 +7,7 @@ import { cn } from "@/lib/utils";
 interface FeatureCardProps extends Feature {
     description?: string;
     className?: string;
+    title: string;
 }
 
 /**

@@ -9,6 +9,9 @@ import { cn } from "@/lib/utils";
 
 interface ProductCardProps extends Omit<Product, "id"> {
     className?: string;
+    title: string;
+    highlight: string;
+    description: string;
 }
 
 /**
