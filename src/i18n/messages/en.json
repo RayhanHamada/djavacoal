@@ -167,5 +167,183 @@
             "ourProducts": "Our Products",
             "aboutCompany": "About Company"
         }
+    },
+    "Home": {
+        "banner": {
+            "title": "Power Your Flame with Djavacoal Indonesia: The Ultimate Solution for Clean Energy",
+            "djavacoal": "Djavacoal Indonesia",
+            "buttons": {
+                "aboutUs": "About Us",
+                "discoverProducts": "Discover Our Products"
+            },
+            "carouselAriaLabel": "Go to slide {index}"
+        },
+        "aboutUs": {
+            "title": "CV. DJAVACOAL",
+            "highlight": "INDONESIA",
+            "companyProfile": "Company Profile - Djavacoal Indonesia",
+            "paragraphs": {
+                "intro": "Djavacoal Indonesia is a trusted supplier and exporter of premium coconut charcoal briquettes, BBQ charcoal briquettes, sawdust charcoal and natural wood charcoal. We are dedicated to fostering innovation within our company and to operating at the international level within the briquette industry. We are committed to meeting the needs of our partners and contributing to the growth of the Indonesian economy.",
+                "natural": "In addition to producing charcoal briquettes, our company is also a supplier of natural hardwood charcoal. This is sourced from tamarind, halaban, rosewood and a variety of other hardwoods, which are in high demand for export to various countries. Given our extensive experience in the charcoal industry, we are confident that we would be able to collaborate and cooperate with your company in the future.",
+                "quality": "Indonesia is renowned for its high-quality coconut charcoal. We are confident that we can guarantee the processing of our products using the finest quality raw materials. As a supplier, we operate three factories in close collaboration on Java Island, Indonesia."
+            },
+            "cta": {
+                "getToKnow": "Get",
+                "toKnowUs": "to Know Us!"
+            }
+        },
+        "whyChooseUs": {
+            "title": "Why",
+            "highlight": "Choose",
+            "suffix": "Us?",
+            "features": {
+                "lowAsh": "Low Ash Content",
+                "ecoFriendly": "Eco Friendly",
+                "longLasting": "Long Lasting",
+                "odorless": "Odorless",
+                "noChemical": "No Chemical",
+                "premiumQuality": "Premium Quality",
+                "lowWater": "Low Water Content",
+                "glowingHeat": "Glowing Heat"
+            }
+        },
+        "discoverProducts": {
+            "title": "Discover Our",
+            "highlight": "Products",
+            "products": {
+                "coconutShell": {
+                    "highlight": "Coconut Shell",
+                    "title": "Charcoal Briquette",
+                    "description": "For Shisha - This charcoal is perfect for high heat and long burn times, offering a clean and sustainable option for shisha lovers. Its natural properties ensure minimal ash production and even heat distribution."
+                },
+                "barbeque": {
+                    "highlight": "Barbeque",
+                    "title": "Charcoal",
+                    "description": "For Grilling & Industrial Use - Ideal for grilling and industrial purposes, this charcoal is known for its dense structure, providing high heat retention and long-lasting burn, making it a reliable choice for both home and commercial use."
+                },
+                "sawdust": {
+                    "highlight": "Sawdust",
+                    "title": "Charcoal",
+                    "description": "For Grilling & Cooking - Best suited for grilling and slow-cooked meals, this charcoal is made from sawdust, ensuring a consistent and controlled burn, imparting a rich, smoky flavor to food while minimizing harmful emissions."
+                },
+                "naturalWood": {
+                    "highlight": "Natural Wood",
+                    "title": "Charcoal",
+                    "description": "Made from natural hardwoods, this charcoal is designed for open flame grilling, providing intense heat quickly with minimal ash. It's perfect for achieving that classic char-grilled flavor in a short cooking time."
+                }
+            },
+            "detailProducts": "Detail Products...",
+            "logoAlt": "Djavacoal Logo"
+        },
+        "productionInfo": {
+            "title": "Production",
+            "highlight": "Info",
+            "items": {
+                "process": "Production Process",
+                "payment": "MOQ & Payment Terms",
+                "shipment": "Shipment Terms",
+                "packaging": "Packaging Option"
+            }
+        },
+        "visitFactory": {
+            "title": "VISIT OUR",
+            "highlight": "FACTORY",
+            "description": "At Djavacoal, we are committed to transparency and trust. We extend an invitation to our partners to visit our factory, explore our production process, and witness the commitment to quality that sets us apart.",
+            "cta": "Schedule a Visit",
+            "imageAlt": "Djavacoal Factory",
+            "whatsappMessage": "Hi, I would like to schedule a factory visit"
+        },
+        "packagingOptions": {
+            "title": "Packaging",
+            "highlight": "Option",
+            "options": {
+                "full": {
+                    "name": "Full Packaging",
+                    "description": "Complete packaging solution with branded boxes, ensuring maximum protection and premium presentation for retail distribution.",
+                    "features": [
+                        "Branded Boxes",
+                        "Retail Ready",
+                        "Maximum Protection"
+                    ]
+                },
+                "bulk": {
+                    "name": "Bulk Packaging",
+                    "description": "Efficient bulk packaging in large containers, ideal for wholesale distribution and commercial use with cost-effective solutions.",
+                    "features": [
+                        "Large Containers",
+                        "Cost Effective",
+                        "Wholesale Ready"
+                    ]
+                },
+                "bulkLoose": {
+                    "name": "Bulk Loose Packaging",
+                    "description": "Flexible loose bulk packaging for industrial applications, offering the most economical option for large-volume orders.",
+                    "features": [
+                        "Industrial Use",
+                        "Most Economical",
+                        "Large Volume"
+                    ]
+                }
+            },
+            "viewDetails": "View Packaging Details"
+        },
+        "shippingPartners": {
+            "title": "Global",
+            "highlight": "Shipping",
+            "suffix": "Partner",
+            "partners": {
+                "pil": "Pacific International Lines",
+                "msc": "MSC Cruises",
+                "cma": "CMA CGM",
+                "esl": "ESL Shipping",
+                "asyad": "Asyad Line",
+                "ovp": "OVP Shipping",
+                "sitc": "SITC Container Lines"
+            }
+        },
+        "exportDestination": {
+            "title": "MAJORITY EXPORT",
+            "highlight": "DESTINATION",
+            "fromSemarang": "From Semarang, Jawa Tengah",
+            "zoomHint": "Click to zoom"
+        },
+        "certificates": {
+            "logoAlt": "certificate logo",
+            "certifications": {
+                "ministryOfTrade": "Ministry of Trade",
+                "naturalProduct": "100% Natural",
+                "msds": "Material Data Safety Sheets",
+                "carsurin": "Carsurin 1968"
+            }
+        }
+    },
+    "Footer": {
+        "logoAlt": "Logo Djavacoal",
+        "sections": {
+            "company": "Company",
+            "products": "Products",
+            "quickLink": "Quick Link",
+            "contactUs": "Contact Us"
+        },
+        "company": {
+            "cvDjavacoal": "CV. Djavacoal Indonesia",
+            "team": "Djavacoal's Team",
+            "legal": "Legal & Certificate",
+            "factory": "Factory",
+            "gallery": "Our Gallery"
+        },
+        "quickLinks": {
+            "productionProcess": "Production Process",
+            "shipmentTerms": "Shipment Terms",
+            "moqPayment": "MOQ & Payment Terms",
+            "packagingInfo": "Packaging Info",
+            "faq": "FAQ",
+            "news": "News & Article"
+        },
+        "contact": {
+            "phone": "Phone :",
+            "email": "E-mail :"
+        },
+        "copyright": "© Copyright {year} · CV. Djavacoal Indonesia"
     }
 }

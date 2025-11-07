@@ -2,7 +2,10 @@
 
 import Image from "next/image";
 
+import { useTranslations } from "next-intl";
+
 export function LogoSlideSection() {
+    const t = useTranslations("Home.certificates");
     const base = [
         {
             image: "/images/ministry_of_trade_logo.png",
@@ -24,7 +27,7 @@ export function LogoSlideSection() {
         <div className="flex h-[150px] w-[320px] flex-shrink-0 items-center justify-center border border-[#2A2A2A] bg-[radial-gradient(circle_at_center,#000_0%,#171717_50%,_#ffffff10_100%)] shadow-[0_0_20px_#00000030] transition-all duration-300 hover:border-[#EFA12D] hover:shadow-[#EFA12D]/20">
             <Image
                 src={src}
-                alt="certificate logo"
+                alt={t("logoAlt")}
                 width={w}
                 height={h}
                 className="object-contain"
