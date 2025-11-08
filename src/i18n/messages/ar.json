@@ -320,6 +320,62 @@
             }
         }
     },
+    "ContactUs": {
+        "page": {
+            "title": "اتصل بنا",
+            "bannerAlt": "لافتة اتصل بنا"
+        },
+        "info": {
+            "email": {
+                "label": "البريد الإلكتروني",
+                "value": "admin@djavacoal.com"
+            },
+            "phone": {
+                "label": "الهاتف",
+                "value": "+62 821-2285-9318"
+            },
+            "location": {
+                "label": "الموقع",
+                "value": "Jl. Vihara Jin Ku Poh Kp. Jati RT.002 RW.006 Tonjong, Tajurhalang, Bogor Regency, West Java 16320"
+            },
+            "logoAlt": "شعار ديافاكوال"
+        },
+        "form": {
+            "title": "أرسل لنا رسالة",
+            "fields": {
+                "fullName": {
+                    "label": "الاسم الكامل:",
+                    "placeholder": "الاسم الكامل"
+                },
+                "email": {
+                    "label": "البريد الإلكتروني:",
+                    "placeholder": "البريد الإلكتروني"
+                },
+                "phone": {
+                    "label": "رقم الهاتف:",
+                    "placeholder": "رقم الهاتف"
+                },
+                "message": {
+                    "label": "الرسالة:",
+                    "placeholder": "الرسالة"
+                }
+            },
+            "submit": "إرسال",
+            "submitting": "جارٍ الإرسال...",
+            "success": "شكراً لك! سنتواصل معك قريباً.",
+            "error": "فشل إرسال الرسالة. يرجى المحاولة مرة أخرى."
+        },
+        "map": {
+            "title": "موقعنا",
+            "loadingError": "فشل تحميل الخريطة"
+        },
+        "social": {
+            "title": "تابعنا",
+            "facebook": "فيسبوك",
+            "instagram": "إنستغرام",
+            "linkedin": "لينكدإن"
+        }
+    },
     "Footer": {
         "logoAlt": "شعار ديافاكوال",
         "sections": {

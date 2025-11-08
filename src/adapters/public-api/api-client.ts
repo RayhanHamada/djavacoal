@@ -9,11 +9,3 @@ export const _publicApiClient = createClient<paths>({
         process.env.NEXT_PUBLIC_BASE_URL
     ).toString(),
 });
-
-_publicApiClient.use({
-    async onError({ request }) {
-        if (process.env.NODE_ENV !== "development") return;
-
-        console.error("API Error:", request.url);
-    },
-});

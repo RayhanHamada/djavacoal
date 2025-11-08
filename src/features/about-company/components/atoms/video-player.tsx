@@ -5,9 +5,9 @@ import Image from "next/image";
 import { motion } from "framer-motion";
 
 import { LOGO_IMAGE, THUMBNAIL_IMAGE } from "../../lib/constants";
+import { $api } from "@/adapters/public-api/client";
 
 interface VideoPlayerProps {
-    videoId: string;
     title?: string;
     isPlaying: boolean;
     onPlay: () => void;
@@ -15,12 +15,13 @@ interface VideoPlayerProps {
 }
 
 export default function VideoPlayer({
-    videoId,
     title = "Company Video",
     isPlaying,
     onPlay,
     className = "",
 }: VideoPlayerProps) {
+    const { data } = $api.useQuery("get", "/about-company-content");
+
     return (
         <div
             className={`relative aspect-video w-full max-w-[849px] overflow-hidden rounded-xl ${className}`}
@@ -29,7 +30,7 @@ export default function VideoPlayer({
                 <>
                     <iframe
                         className="absolute inset-0 h-full w-full rounded-md"
-                        src={`https://www.youtube.com/embed/${videoId}?autoplay=1&mute=0&rel=0&modestbranding=1&showinfo=0`}
+                        src={data?.data.about_us_video_url ?? ""}
                         title={title}
                         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                         referrerPolicy="strict-origin-when-cross-origin"

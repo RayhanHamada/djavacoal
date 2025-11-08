@@ -1,11 +1,16 @@
+"use client";
+
 import Image from "next/image";
 
+import { useTranslations } from "next-intl";
 import { FaEnvelope, FaPhoneAlt, FaMapMarkerAlt } from "react-icons/fa";
 
 import { ContactInfoItem } from "../molecules/contact-info-item";
 import { ContactSocial } from "../molecules/contact-social";
 
 export default function ContactSection() {
+    const t = useTranslations("ContactUs");
+
     return (
         <section className="relative bg-[#1C1C1C] text-white">
             {/* Header Section */}
@@ -14,7 +19,7 @@ export default function ContactSection() {
                 <div className="relative h-48 w-full md:h-72">
                     <Image
                         src="/images/bg-banner-header.png"
-                        alt="Production Info Banner"
+                        alt={t("page.bannerAlt")}
                         fill
                         className="object-cover object-center"
                         priority
@@ -23,7 +28,7 @@ export default function ContactSection() {
                     {/* Overlay */}
                     <div className="absolute inset-0 flex items-center justify-center bg-black/50">
                         <h1 className="text-2xl font-semibold italic md:text-4xl">
-                            Contact Us
+                            {t("page.title")}
                         </h1>
                     </div>
                 </div>
@@ -35,7 +40,7 @@ export default function ContactSection() {
                 <div className="flex flex-col items-center md:w-1/2">
                     <Image
                         src="/svgs/logoContactUs.svg"
-                        alt="Djavacoal Logo"
+                        alt={t("info.logoAlt")}
                         width={300}
                         height={120}
                         className=""
@@ -46,24 +51,18 @@ export default function ContactSection() {
                 <div className="flex flex-col gap-6 md:w-1/2">
                     <ContactInfoItem
                         icon={<FaEnvelope />}
-                        label="E-Mail"
-                        value="admin@djavacoal.com"
+                        label={t("info.email.label")}
+                        value={t("info.email.value")}
                     />
                     <ContactInfoItem
                         icon={<FaPhoneAlt />}
-                        label="Phone"
-                        value="+62 821-2285-9318"
+                        label={t("info.phone.label")}
+                        value={t("info.phone.value")}
                     />
                     <ContactInfoItem
                         icon={<FaMapMarkerAlt />}
-                        label="Location"
-                        value={
-                            <>
-                                Jl. Vihara Jin Ku Poh Kp. Jati RT.002 RW.006
-                                Tonjong, Tajurhalang, Bogor Regency, West Java
-                                16320
-                            </>
-                        }
+                        label={t("info.location.label")}
+                        value={t("info.location.value")}
                     />
                     <ContactSocial />
                 </div>

@@ -6,6 +6,7 @@ import {
     PACKAGING_OPTION_COLUMNS,
     PRODUCT_COLUMNS,
     PRODUCT_MEDIA_COLUMNS,
+    TEAM_MEMBER_COLUMNS,
 } from "@/adapters/d1/constants";
 import { getDB } from "@/adapters/d1/db";
 import { KV_KEYS } from "@/adapters/kv/constants";
@@ -15,6 +16,7 @@ import {
     HOME_CONTENT_BODY_OUTPUT_SCHEMA,
     LIST_PRODUCT_NAME_QUERY_INPUT_SCHEMA,
     LIST_PRODUCT_NAME_BODY_OUTPUT_SCHEMA,
+    ABOUT_COMPANY_BODY_OUTPUT_SCHEMA,
 } from "@/features/public-api/schemas";
 import { injectNextCookies } from "@/lib/orpc/middlewares";
 import base from "@/lib/orpc/server";
@@ -341,6 +343,135 @@ export const router = {
                         visit_our_factory_photo,
                         featured_products,
                         packaging_options,
+                    },
+                },
+            };
+        }),
+
+    aboutCompanyContent: publicBase
+        .route({
+            method: "GET",
+            path: "/about-company-content",
+            summary: "Fetch about company content data",
+            description: "Get about company page content",
+            outputStructure: "detailed",
+        })
+        .output(
+            z.object({
+                body: ABOUT_COMPANY_BODY_OUTPUT_SCHEMA,
+            })
+        )
+        .handler(async function ({ context: { env } }) {
+            const db = getDB(env.DJAVACOAL_DB);
+            const kv = env.DJAVACOAL_KV;
+
+            const [
+                our_factory_photo,
+                reels,
+                factory_galleries,
+                product_galleries,
+                about_us_video_url,
+            ] = await Promise.all([
+                kv.get(KV_KEYS.VISIT_OUR_FACTORY_PHOTO, "json").then((v) => {
+                    if (!v) return null;
+                    if (!Array.isArray(v)) return null;
+                    if (!v.length) return null;
+                    const [first] = v;
+
+                    return new URL(first, env.NEXT_PUBLIC_ASSET_URL).toString();
+                }),
+
+                kv
+                    .get(KV_KEYS.REELS, "json")
+                    .then((v) => {
+                        if (!v) return [];
+                        if (!Array.isArray(v)) return [];
+                        if (!v.length) return [];
+
+                        return (
+                            v as Array<{ videoId: string; url: string }>
+                        ).map((item) => ({
+                            id: item.videoId,
+                            video_url: item.url,
+                        }));
+                    })
+                    .catch(() => []),
+
+                kv
+                    .get(KV_KEYS.FACTORY_GALLERY_PHOTOS, "json")
+                    .then((v) => {
+                        if (!v) return [];
+                        if (!Array.isArray(v)) return [];
+                        if (!v.length) return [];
+
+                        return v.map((item: string) =>
+                            new URL(item, env.NEXT_PUBLIC_ASSET_URL).toString()
+                        );
+                    })
+                    .catch(() => [] as string[]),
+
+                kv
+                    .get(KV_KEYS.PRODUCT_GALLERY_PHOTOS, "json")
+                    .then((v) => {
+                        if (!v) return [];
+                        if (!Array.isArray(v)) return [];
+                        if (!v.length) return [];
+
+                        return v.map((item: string) =>
+                            new URL(item, env.NEXT_PUBLIC_ASSET_URL).toString()
+                        );
+                    })
+                    .catch(() => [] as string[]),
+
+                kv.get(KV_KEYS.WHO_WE_ARE_VIDEO),
+            ]);
+
+            const team_members = await db.query.teams
+                .findMany({
+                    columns: {
+                        [COMMON_COLUMNS.ID]: true,
+                        [TEAM_MEMBER_COLUMNS.NAME]: true,
+                        [TEAM_MEMBER_COLUMNS.POSITION]: true,
+                        [TEAM_MEMBER_COLUMNS.PHOTO_KEY]: true,
+                    },
+                    orderBy(fields, operators) {
+                        return [
+                            operators.asc(
+                                fields[TEAM_MEMBER_COLUMNS.ORDER_INDEX]
+                            ),
+                        ];
+                    },
+                })
+                .then((items) => {
+                    return items.map((item) => {
+                        const id = item[COMMON_COLUMNS.ID];
+                        const name = item[TEAM_MEMBER_COLUMNS.NAME];
+                        const position = item[TEAM_MEMBER_COLUMNS.POSITION];
+                        const imageKey = item[TEAM_MEMBER_COLUMNS.PHOTO_KEY];
+                        const photo_url = new URL(
+                            imageKey,
+                            env.NEXT_PUBLIC_ASSET_URL
+                        ).toString();
+
+                        return {
+                            id,
+                            name,
+                            position,
+                            photo_url,
+                        };
+                    });
+                })
+                .catch(() => []);
+
+            return {
+                body: {
+                    data: {
+                        our_factory_photo,
+                        reels,
+                        team_members,
+                        factory_galleries,
+                        product_galleries,
+                        about_us_video_url,
                     },
                 },
             };
