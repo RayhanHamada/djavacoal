@@ -7,9 +7,13 @@ import Link from "next/link";
 
 import { useTranslations } from "next-intl";
 
+import { useHomeContentAPI } from "@/features/public-api/hooks";
+
 export function AboutUsSection() {
     const t = useTranslations("Home.aboutUs");
     const [isPlaying, setIsPlaying] = useState(false);
+
+    const { data } = useHomeContentAPI();
 
     return (
         <section className="w-full bg-[#151515] px-[20px] py-16 md:px-[40px] md:py-20 lg:px-[100px] lg:py-24">
@@ -56,7 +60,7 @@ export function AboutUsSection() {
                         // 🎥 Saat play → tampilkan YouTube video
                         <iframe
                             className="h-[240px] w-full md:h-[380px] lg:h-[420px]"
-                            src="https://www.youtube.com/embed/NWO_S1Kh6U0?autoplay=1&rel=0&modestbranding=1&showinfo=0&controls=1"
+                            src={data?.data.who_we_are_video_url ?? ""}
                             title={t("companyProfile")}
                             allow="autoplay; encrypted-media"
                             allowFullScreen

@@ -1,6 +1,6 @@
 "use client";
 
-import type { Product } from "../../lib/types";
+import { useMemo } from "react";
 
 import Image from "next/image";
 import Link from "next/link";
@@ -8,17 +8,26 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import { useTranslations } from "next-intl";
 
-import { PRODUCTS } from "../../lib/constants";
 import { chunkArray } from "../../lib/utils";
+import { useHomeContentAPI } from "@/features/public-api/hooks";
 
 interface ProductCardProps {
-    product: Product;
+    id: number;
+    slug: string;
+    name: string;
+    description: string;
+    image_url: string;
     isLastMobile?: boolean;
 }
 
-function ProductCard({ product, isLastMobile }: ProductCardProps) {
+function ProductCard({
+    image_url,
+    isLastMobile,
+    name,
+    description,
+    slug,
+}: ProductCardProps) {
     const t = useTranslations("Home.discoverProducts");
-    const productKey = `products.${product.productKey}` as any;
 
     return (
         <motion.article
@@ -35,8 +44,8 @@ function ProductCard({ product, isLastMobile }: ProductCardProps) {
                     className="absolute top-5 left-1/2 z-999 -translate-x-1/2 scale-60 opacity-90"
                 />
                 <Image
-                    src={product.image}
-                    alt={`${t(`${productKey}.highlight` as any)} ${t(`${productKey}.title` as any)}`}
+                    src={image_url}
+                    alt={image_url}
                     width={400}
                     height={400}
                     className="h-full w-full scale-90 object-contain transition-transform duration-700 hover:scale-105"
@@ -44,17 +53,17 @@ function ProductCard({ product, isLastMobile }: ProductCardProps) {
             </div>
 
             <div className="mt-6 max-w-[415px]">
-                <h3 className="font-['Josefin_Sans'] text-[15px] font-bold text-white uppercase md:text-[16px]">
-                    <span className="text-[#EFA12D]">
-                        {t(`${productKey}.highlight` as any)}
-                    </span>{" "}
-                    {t(`${productKey}.title` as any)}
+                <h3 className="line-clamp-2 h-[3em] font-['Josefin_Sans'] text-[15px] font-bold text-white uppercase md:text-[16px]">
+                    {name}
                 </h3>
-                <p className="mt-3 font-['Open_Sans'] text-[13px] leading-relaxed text-[#C6C6C6] md:text-[14px]">
-                    {t(`${productKey}.description` as any)}
-                </p>
+                <p
+                    className="mt-3 line-clamp-2 font-['Open_Sans'] text-[13px] leading-relaxed text-[#C6C6C6] md:text-[14px]"
+                    dangerouslySetInnerHTML={{
+                        __html: description,
+                    }}
+                ></p>
                 <Link
-                    href={product.href}
+                    href={`/our-products#${slug}`}
                     className="mt-3 inline-block font-['Open_Sans'] text-[13px] font-semibold text-[#1E90FF] hover:underline md:text-[14px]"
                 >
                     {t("detailProducts")}
@@ -66,7 +75,11 @@ function ProductCard({ product, isLastMobile }: ProductCardProps) {
 
 export function DiscoverOurProductSection() {
     const t = useTranslations("Home.discoverProducts");
-    const rows = chunkArray(PRODUCTS, 2);
+    const { data } = useHomeContentAPI();
+    const rows = useMemo(
+        () => chunkArray(data?.data.featured_products ?? [], 2),
+        [data?.data.featured_products]
+    );
 
     return (
         <section className="relative w-full overflow-hidden bg-[#0D0D0D] px-5 py-16 md:px-10 md:py-12 lg:px-[100px] lg:py-16">
@@ -91,9 +104,14 @@ export function DiscoverOurProductSection() {
                                 className="flex justify-center"
                             >
                                 <ProductCard
-                                    product={product}
+                                    name={product.name}
+                                    image_url={product.image_url}
+                                    description={product.description}
+                                    slug={product.slug}
+                                    id={product.id}
                                     isLastMobile={
-                                        rowIndex * 2 + i === PRODUCTS.length - 1
+                                        rowIndex * 2 + i ===
+                                        rows.flat().length - 1
                                     }
                                 />
                             </div>
@@ -104,9 +122,15 @@ export function DiscoverOurProductSection() {
 
             <div className="hidden lg:block">
                 <div className="grid grid-cols-1 gap-x-4 md:grid-cols-2 lg:grid-cols-4">
-                    {PRODUCTS.map((product) => (
+                    {rows.flat().map((product) => (
                         <div key={product.id}>
-                            <ProductCard product={product} />
+                            <ProductCard
+                                name={product.name}
+                                image_url={product.image_url}
+                                description={product.description}
+                                slug={product.slug}
+                                id={product.id}
+                            />
                         </div>
                     ))}
                 </div>

@@ -7,7 +7,9 @@ import Link from "next/link";
 
 import { useTranslations } from "next-intl";
 
-import { CAROUSEL_INTERVAL, HERO_SLIDES } from "../../lib/constants";
+import { CAROUSEL_INTERVAL } from "../../lib/constants";
+import { useHomeContentAPI } from "@/features/public-api/hooks";
+import { cn } from "@/lib/utils";
 
 /**
  * BannerSection component - Hero carousel with CTA buttons
@@ -17,29 +19,36 @@ export function BannerSection() {
     const t = useTranslations("Home.banner");
     const [currentSlide, setCurrentSlide] = useState(0);
 
+    const { data } = useHomeContentAPI();
+
     // Auto-slide carousel
     useEffect(() => {
+        if (!data?.data.slide_banners.length) return;
+
         const interval = setInterval(() => {
-            setCurrentSlide((prev) => (prev + 1) % HERO_SLIDES.length);
+            setCurrentSlide(
+                (prev) => (prev + 1) % data?.data.slide_banners.length
+            );
         }, CAROUSEL_INTERVAL);
 
         return () => clearInterval(interval);
-    }, []);
+    }, [data?.data.slide_banners.length]);
 
     return (
         <section className="relative h-[800px] w-full overflow-hidden bg-[#161616]">
             {/* Image Carousel */}
             <div className="absolute inset-0">
-                {HERO_SLIDES.map((slide, index) => (
+                {data?.data.slide_banners.map((slide, index) => (
                     <div
-                        key={slide.alt}
-                        className={`absolute inset-0 transition-opacity duration-1500 ease-in-out ${
+                        key={slide}
+                        className={cn(
+                            `absolute inset-0 transition-opacity duration-1500 ease-in-out`,
                             index === currentSlide ? "opacity-100" : "opacity-0"
-                        }`}
+                        )}
                     >
                         <Image
-                            src={slide.src}
-                            alt={slide.alt}
+                            src={slide}
+                            alt={slide}
                             fill
                             className="object-cover"
                             priority={index === 0}
@@ -78,9 +87,9 @@ export function BannerSection() {
 
             {/* Carousel Navigation Dots */}
             <div className="absolute bottom-8 left-1/2 z-20 flex -translate-x-1/2 items-center justify-center gap-5 md:bottom-10">
-                {HERO_SLIDES.map((slide, index) => (
+                {data?.data.slide_banners.map((slide, index) => (
                     <button
-                        key={slide.alt}
+                        key={slide}
                         onClick={() => setCurrentSlide(index)}
                         className={`h-3.5 w-3.5 rounded-full border transition-all duration-300 ${
                             index === currentSlide
