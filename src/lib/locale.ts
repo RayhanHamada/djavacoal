@@ -7,7 +7,7 @@ import { Locale } from "next-intl";
 import { COOKIE_NAME, DEFAULT_LOCALE, LOCALES } from "@/configs";
 
 export async function getUserLocale() {
-    const value = (await cookies()).get(COOKIE_NAME.LOCALE)?.value;
+    const value = (await cookies()).get(COOKIE_NAME.LOCALE)?.value as Locale;
     return value || DEFAULT_LOCALE;
 }
 

@@ -1,9 +1,11 @@
+import { Locale } from "next-intl";
 import z from "zod";
 
 import {
     COMMON_COLUMNS,
     PACKAGING_OPTION_COLUMNS,
     PRODUCT_COLUMNS,
+    PRODUCT_MEDIA_COLUMNS,
 } from "@/adapters/d1/constants";
 import { getDB } from "@/adapters/d1/db";
 import { KV_KEYS } from "@/adapters/kv/constants";
@@ -74,11 +76,11 @@ export const router = {
                                 ? item[PRODUCT_COLUMNS.AR_NAME]
                                 : item[PRODUCT_COLUMNS.EN_NAME];
 
-                            const slug = item[PRODUCT_COLUMNS.EN_NAME]
+                            const slug = `${item[PRODUCT_COLUMNS.EN_NAME]
                                 .replaceAll(" ", "-")
-                                .toLowerCase();
+                                .toLowerCase()}-${item[COMMON_COLUMNS.ID]}`;
                             return {
-                                id: item.id,
+                                id: item[COMMON_COLUMNS.ID],
                                 slug,
                                 name,
                             };
@@ -161,28 +163,10 @@ export const router = {
             context: { env, cookie },
             errors: _errors,
         }) {
-            const locale = cookie.get(COOKIE_NAME.LOCALE)?.value || LOCALES.EN;
+            const locale = (cookie.get(COOKIE_NAME.LOCALE)?.value ||
+                LOCALES.EN) as Locale;
             const db = getDB(env.DJAVACOAL_DB);
             const kv = env.DJAVACOAL_KV;
-
-            /**
-             * get from cache if available
-             */
-            const cachedResponse = await kv.get<Record<string, unknown>>(
-                KV_KEYS.HOME_CONTENT_CACHE,
-                "json"
-            );
-
-            if (cachedResponse) {
-                const { success, data } =
-                    HOME_CONTENT_BODY_OUTPUT_SCHEMA.safeParse(cachedResponse);
-
-                if (success) {
-                    return {
-                        body: data,
-                    };
-                }
-            }
 
             const [
                 slide_banners,
@@ -210,10 +194,14 @@ export const router = {
                 /**
                  * get visit our factory photo
                  */
-                kv.get(KV_KEYS.VISIT_OUR_FACTORY_PHOTO).then((v) => {
+                kv.get(KV_KEYS.VISIT_OUR_FACTORY_PHOTO, "json").then((v) => {
                     if (!v) return null;
+                    if (!Array.isArray(v)) return null;
+                    if (!v.length) return null;
+                    const [first] = v;
+                    console.log(v);
 
-                    return new URL(v, env.NEXT_PUBLIC_ASSET_URL).toString();
+                    return new URL(first, env.NEXT_PUBLIC_ASSET_URL).toString();
                 }),
             ]);
 
@@ -227,13 +215,28 @@ export const router = {
                         [PRODUCT_COLUMNS.EN_DESCRIPTION]: true,
                         [PRODUCT_COLUMNS.AR_DESCRIPTION]: true,
                     },
+                    where(fields, operators) {
+                        return operators.eq(
+                            fields[PRODUCT_COLUMNS.IS_HIDDEN],
+                            false
+                        );
+                    },
                     with: {
                         medias: {
                             where(fields, operators) {
-                                return operators.eq(fields.media_type, "image");
+                                return operators.eq(
+                                    fields[PRODUCT_MEDIA_COLUMNS.MEDIA_TYPE],
+                                    "image"
+                                );
                             },
                             orderBy(fields, operators) {
-                                return [operators.asc(fields.order_index)];
+                                return [
+                                    operators.asc(
+                                        fields[
+                                            PRODUCT_MEDIA_COLUMNS.ORDER_INDEX
+                                        ]
+                                    ),
+                                ];
                             },
                             limit: 1,
                             columns: {
@@ -246,7 +249,10 @@ export const router = {
                     return items.map((item) => {
                         const id = item[COMMON_COLUMNS.ID];
 
-                        const slug = `${item[PRODUCT_COLUMNS.EN_NAME]}-${id}`;
+                        const enName = item[PRODUCT_COLUMNS.EN_NAME]
+                            .toLowerCase()
+                            .replaceAll(" ", "-");
+                        const slug = `${enName}-${id}`;
 
                         const imageKey = item.medias.at(0)!.image_key!;
                         const image_url = new URL(
@@ -297,7 +303,10 @@ export const router = {
                     return items.map((v) => {
                         const id = v[COMMON_COLUMNS.ID];
 
-                        const slug = `${v[PACKAGING_OPTION_COLUMNS.EN_NAME]}-${id}`;
+                        const enName = v[PACKAGING_OPTION_COLUMNS.EN_NAME]
+                            .toLowerCase()
+                            .replaceAll(" ", "-");
+                        const slug = `${enName}-${id}`;
 
                         const image_url = new URL(
                             v[PACKAGING_OPTION_COLUMNS.PHOTO_KEY],
@@ -323,22 +332,6 @@ export const router = {
                         };
                     });
                 });
-
-            kv.put(
-                KV_KEYS.HOME_CONTENT_CACHE,
-                JSON.stringify({
-                    data: {
-                        slide_banners,
-                        who_we_are_video_url,
-                        visit_our_factory_photo,
-                        featured_products,
-                        packaging_options,
-                    },
-                }),
-                {
-                    expiration: 60 * 10, // cache for 10 minutes
-                }
-            );
 
             return {
                 body: {

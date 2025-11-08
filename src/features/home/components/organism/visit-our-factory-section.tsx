@@ -5,8 +5,11 @@ import Link from "next/link";
 
 import { useTranslations } from "next-intl";
 
+import { useHomeContentAPI } from "@/features/public-api/hooks";
+
 export function VisitOurFactorySection() {
     const t = useTranslations("Home.visitFactory");
+    const { data } = useHomeContentAPI();
     return (
         <section className="relative w-full overflow-hidden bg-[#151515] text-center text-white">
             {/* ==== Title di atas gambar ==== */}
@@ -19,13 +22,15 @@ export function VisitOurFactorySection() {
 
             {/* ==== Full-width Image ==== */}
             <div className="relative h-[380px] w-full md:h-[500px] lg:h-[580px]">
-                <Image
-                    src="/images/visit-factory.png"
-                    alt={t("imageAlt")}
-                    fill
-                    priority
-                    className="object-cover object-center pt-6"
-                />
+                {data?.data.visit_our_factory_photo && (
+                    <Image
+                        src={data.data.visit_our_factory_photo}
+                        alt={t("imageAlt")}
+                        fill
+                        priority
+                        className="object-cover object-center pt-6"
+                    />
+                )}
                 {/* Overlay optional, biar kontras sedikit */}
                 <div className="absolute inset-0 bg-gradient-to-t from-[#00000040] to-transparent" />
             </div>

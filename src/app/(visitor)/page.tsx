@@ -16,7 +16,7 @@ import {
 export default async function Home() {
     return (
         <Fragment>
-            <div dir="rtl">
+            <div>
                 <BannerSection />
                 <LogoSlideSection />
                 <AboutUsSection />
