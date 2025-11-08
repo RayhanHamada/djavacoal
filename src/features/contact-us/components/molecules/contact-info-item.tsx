@@ -2,6 +2,7 @@ interface ContactInfoItemProps {
     icon: React.ReactNode;
     label: string;
     value: React.ReactNode;
+    disableRtl?: boolean;
 }
 
 export function ContactInfoItem({ icon, label, value }: ContactInfoItemProps) {

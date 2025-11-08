@@ -317,6 +317,62 @@
             }
         }
     },
+    "ContactUs": {
+        "page": {
+            "title": "Contact Us",
+            "bannerAlt": "Contact Us Banner"
+        },
+        "info": {
+            "email": {
+                "label": "E-Mail",
+                "value": "admin@djavacoal.com"
+            },
+            "phone": {
+                "label": "Phone",
+                "value": "+62 821-2285-9318"
+            },
+            "location": {
+                "label": "Location",
+                "value": "Jl. Vihara Jin Ku Poh Kp. Jati RT.002 RW.006 Tonjong, Tajurhalang, Bogor Regency, West Java 16320"
+            },
+            "logoAlt": "Djavacoal Logo"
+        },
+        "form": {
+            "title": "Send us a message",
+            "fields": {
+                "fullName": {
+                    "label": "Full Name:",
+                    "placeholder": "Full Name"
+                },
+                "email": {
+                    "label": "E-mail:",
+                    "placeholder": "E-mail"
+                },
+                "phone": {
+                    "label": "Phone Number:",
+                    "placeholder": "Phone Number"
+                },
+                "message": {
+                    "label": "Message:",
+                    "placeholder": "Message"
+                }
+            },
+            "submit": "Send",
+            "submitting": "Sending...",
+            "success": "Thank you! We'll get back to you soon.",
+            "error": "Failed to send message. Please try again."
+        },
+        "map": {
+            "title": "Our Location",
+            "loadingError": "Failed to load map"
+        },
+        "social": {
+            "title": "Follow Us",
+            "facebook": "Facebook",
+            "instagram": "Instagram",
+            "linkedin": "LinkedIn"
+        }
+    },
     "Footer": {
         "logoAlt": "Logo Djavacoal",
         "sections": {
