@@ -85,3 +85,41 @@ export const HOME_CONTENT_BODY_OUTPUT_SCHEMA = z.object({
             .describe("URL of the factory photo"),
     }),
 });
+
+export const ABOUT_COMPANY_BODY_OUTPUT_SCHEMA = z.object({
+    data: z.object({
+        //
+        team_members: z.array(
+            z.object({
+                id: z.number().describe("Team member ID"),
+                name: z.string().describe("Team member name"),
+                position: z.string().describe("Team member position"),
+                photo_url: z.url().describe("URL of the team member photo"),
+            })
+        ),
+        our_factory_photo: z
+            .url()
+            .nullable()
+            .describe("URL of the factory photo"),
+
+        reels: z.array(
+            z.object({
+                id: z.string().describe("Reel ID"),
+                video_url: z.url().describe("URL of the reel video"),
+            })
+        ),
+
+        factory_galleries: z.array(
+            z.url().describe("URL of the gallery photo")
+        ),
+
+        product_galleries: z.array(
+            z.url().describe("URL of the gallery photo")
+        ),
+
+        about_us_video_url: z
+            .url()
+            .nullable()
+            .describe("URL of the 'About Us' video"),
+    }),
+});

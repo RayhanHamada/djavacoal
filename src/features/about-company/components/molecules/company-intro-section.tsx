@@ -1,7 +1,6 @@
 "use client";
 
 import { useVideoPlayer } from "../../hooks";
-import { COMPANY_VIDEO_ID } from "../../lib/constants";
 import {
     CompanyLegalTable,
     ExportCountriesGrid,
@@ -35,7 +34,6 @@ export default function CompanyIntroSection() {
 
             <div className="flex w-full">
                 <VideoPlayer
-                    videoId={COMPANY_VIDEO_ID}
                     title="Production Process Coconut Charcoal Briquette From Djavacoal Indonesia"
                     isPlaying={isPlaying}
                     onPlay={play}
