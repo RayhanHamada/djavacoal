@@ -131,10 +131,10 @@ export function ProductPage() {
                         {/* Product Content */}
                         <div className="flex flex-col gap-10">
                             <div className="flex gap-x-10">
-                                <div className="hidden w-[420px] flex-none lg:block">
+                                <div className="hidden max-w-[420px] lg:block lg:flex-1">
                                     <VideoGallerySection />
                                 </div>
-                                <div className="flex-1">
+                                <div className="flex-1 lg:max-w-full">
                                     <ProductHeroSection
                                         productName={currentProduct.name}
                                         onDownloadCatalogue={
@@ -164,7 +164,7 @@ export function ProductPage() {
                                         <h3 className="text-xl font-bold text-white">
                                             Specification & Lab. Test:
                                         </h3>
-                                        <div className="justify-left flex flex-wrap items-center gap-5 md:flex-row md:gap-5">
+                                        <div className="justify-left flex flex-wrap items-center gap-5 md:flex-row md:gap-5 lg:gap-10 [1800px]:flex-nowrap [2330px]:max-w-[600px]">
                                             {currentProduct.specifications.map(
                                                 (spec, idx) => (
                                                     <Image
@@ -173,7 +173,7 @@ export function ProductPage() {
                                                         alt={`Specification ${idx + 1}`}
                                                         width={744}
                                                         height={1054}
-                                                        className="h-auto w-full max-w-[420px]"
+                                                        className="h-auto w-auto max-w-[600px]"
                                                     />
                                                 )
                                             )}
