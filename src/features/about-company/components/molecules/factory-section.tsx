@@ -6,8 +6,11 @@ import Link from "next/link";
 import { FaWhatsapp } from "react-icons/fa";
 
 import { FadeInView, ScaleXView, SlideInView } from "../atoms";
+import { useAboutCompanyContentAPI } from "@/features/public-api/hooks";
 
 export default function FactorySection() {
+    const { data } = useAboutCompanyContentAPI();
+
     return (
         <section
             id="factory"
@@ -43,14 +46,16 @@ export default function FactorySection() {
 
             <FadeInView duration={0.5}>
                 <div className="relative h-56 w-full overflow-hidden rounded-md sm:h-72 md:h-80 lg:h-[520px] lg:max-w-3/4">
-                    <Image
-                        src="/images/factory1.png"
-                        alt="Charcoal Production Factory Djavacoal Indonesia"
-                        fill
-                        className="rounded-md object-cover"
-                        priority
-                        sizes="(max-width: 1024px) 100vw, 850px"
-                    />
+                    {data?.data.our_factory_photo && (
+                        <Image
+                            src={data?.data.our_factory_photo ?? ""}
+                            alt="Charcoal Production Factory Djavacoal Indonesia"
+                            fill
+                            className="rounded-md object-cover"
+                            priority
+                            sizes="(max-width: 1024px) 100vw, 850px"
+                        />
+                    )}
                 </div>
             </FadeInView>
 

@@ -15,3 +15,7 @@ export function useListProductNamesAPI(limit: number = 5) {
         },
     });
 }
+
+export function useAboutCompanyContentAPI() {
+    return $api.useQuery("get", "/about-company-content");
+}

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 
+import { JSONLDScript } from "@/components/molecules/json-ld-script";
 import {
     CompanyIntroSection,
     TeamSection,
@@ -31,28 +32,25 @@ export const metadata: Metadata = {
     },
 };
 
-export default function AboutCompanyPage() {
-    const jsonLd = {
-        "@context": "https://schema.org",
-        "@type": "WebPage",
-        name: "About Company - CV Djavacoal Indonesia",
-        description:
-            "Get to know CV Djavacoal Indonesia — our story, leadership team, certifications, and production excellence in coconut charcoal briquettes.",
-        url: "https://www.djavacoal.com/about-company",
-        publisher: {
-            "@type": "Organization",
-            name: "CV Djavacoal Indonesia",
-            url: "https://www.djavacoal.com",
-        },
-    };
+const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    name: "About Company - CV Djavacoal Indonesia",
+    description:
+        "Get to know CV Djavacoal Indonesia — our story, leadership team, certifications, and production excellence in coconut charcoal briquettes.",
+    url: "https://www.djavacoal.com/about-company",
+    publisher: {
+        "@type": "Organization",
+        name: "CV Djavacoal Indonesia",
+        url: "https://www.djavacoal.com",
+    },
+};
 
+export default async function AboutCompanyPage() {
     return (
-        <main className="bg-primary text-white">
+        <div className="bg-primary text-white">
             {/* JSON-LD SEO Structured Data */}
-            <script
-                type="application/ld+json"
-                dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-            />
+            <JSONLDScript data={jsonLd} />
 
             {/* Hero Header */}
             <HeaderSection />
@@ -76,6 +74,6 @@ export default function AboutCompanyPage() {
                     </div>
                 </div>
             </section>
-        </main>
+        </div>
     );
 }

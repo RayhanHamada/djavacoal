@@ -5,9 +5,9 @@ import Image from "next/image";
 import { motion } from "framer-motion";
 
 import { LOGO_IMAGE, THUMBNAIL_IMAGE } from "../../lib/constants";
-import { $api } from "@/adapters/public-api/client";
 
 interface VideoPlayerProps {
+    src: string;
     title?: string;
     isPlaying: boolean;
     onPlay: () => void;
@@ -19,9 +19,8 @@ export default function VideoPlayer({
     isPlaying,
     onPlay,
     className = "",
+    src,
 }: VideoPlayerProps) {
-    const { data } = $api.useQuery("get", "/about-company-content");
-
     return (
         <div
             className={`relative aspect-video w-full max-w-[849px] overflow-hidden rounded-xl ${className}`}
@@ -30,7 +29,7 @@ export default function VideoPlayer({
                 <>
                     <iframe
                         className="absolute inset-0 h-full w-full rounded-md"
-                        src={data?.data.about_us_video_url ?? ""}
+                        src={src}
                         title={title}
                         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                         referrerPolicy="strict-origin-when-cross-origin"

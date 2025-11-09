@@ -1,11 +1,11 @@
 "use client";
 
-import { useRef } from "react";
+import { useMemo, useRef } from "react";
 
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
-import { GALLERY_REELS } from "../../lib/constants";
 import { ReelCard } from "../atoms";
+import { useAboutCompanyContentAPI } from "@/features/public-api/hooks";
 
 interface ReelGalleryProps {
     onReelClick: (index: number) => void;
@@ -13,6 +13,11 @@ interface ReelGalleryProps {
 
 export default function ReelGallery({ onReelClick }: ReelGalleryProps) {
     const containerRef = useRef<HTMLDivElement>(null);
+
+    const { data: aboutCompanyData } = useAboutCompanyContentAPI();
+    const reels = useMemo(() => {
+        return aboutCompanyData?.data.reels ?? [];
+    }, [aboutCompanyData]);
 
     const scroll = (direction: "left" | "right") => {
         if (!containerRef.current) return;
@@ -31,10 +36,10 @@ export default function ReelGallery({ onReelClick }: ReelGalleryProps) {
                     id="reelsContainer"
                     className="scrollbar-thin scrollbar-thumb-[#444] scrollbar-track-transparent -pr-[40px] -pl-[40px] scrollbar-hide flex snap-x snap-mandatory gap-5 overflow-x-auto scroll-smooth py-4 lg:mx-auto"
                 >
-                    {GALLERY_REELS.map((videoId, index) => (
+                    {reels.map(({ id }, index) => (
                         <ReelCard
-                            key={`${videoId}-${index}`}
-                            videoId={videoId}
+                            key={`${id}-${index}`}
+                            videoId={id}
                             index={index}
                             onClick={() => onReelClick(index)}
                         />
