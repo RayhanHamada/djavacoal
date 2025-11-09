@@ -17,6 +17,7 @@ import {
     LIST_PRODUCT_NAME_QUERY_INPUT_SCHEMA,
     LIST_PRODUCT_NAME_BODY_OUTPUT_SCHEMA,
     ABOUT_COMPANY_BODY_OUTPUT_SCHEMA,
+    PACKAGING_INFO_CONTENT_BODY_OUTPUT_SCHEMA,
 } from "@/features/public-api/schemas";
 import { injectNextCookies } from "@/lib/orpc/middlewares";
 import base from "@/lib/orpc/server";
@@ -474,6 +475,72 @@ export const router = {
                         about_us_video_url,
                     },
                 },
+            };
+        }),
+
+    packagingInfoContent: publicBase
+        .route({
+            method: "GET",
+            path: "/packaging-info-content",
+            summary: "Fetch packaging info content data",
+            description: "Get packaging info page content",
+            outputStructure: "detailed",
+        })
+        .output(
+            z.object({
+                body: PACKAGING_INFO_CONTENT_BODY_OUTPUT_SCHEMA,
+            })
+        )
+        .handler(async function ({ context: { env, locale } }) {
+            const isArabic = locale === LOCALES.AR;
+            const db = getDB(env.DJAVACOAL_DB);
+            const packaging_options = await db.query.packagingOptions
+                .findMany({
+                    orderBy(fields, operators) {
+                        return [
+                            operators.asc(
+                                fields[PACKAGING_OPTION_COLUMNS.EN_NAME]
+                            ),
+                        ];
+                    },
+                })
+                .then((items) => {
+                    return items.map((v) => {
+                        const id = v[COMMON_COLUMNS.ID];
+                        const image_url = new URL(
+                            v[PACKAGING_OPTION_COLUMNS.PHOTO_KEY],
+                            env.NEXT_PUBLIC_ASSET_URL
+                        ).toString();
+
+                        const enName = v[PACKAGING_OPTION_COLUMNS.EN_NAME];
+                        const slug = enName.toLowerCase().replaceAll(" ", "-");
+
+                        const type = isArabic
+                            ? v[PACKAGING_OPTION_COLUMNS.AR_NAME]
+                            : v[PACKAGING_OPTION_COLUMNS.EN_NAME];
+
+                        const description = isArabic
+                            ? v[PACKAGING_OPTION_COLUMNS.AR_DESCRIPTION]
+                            : v[PACKAGING_OPTION_COLUMNS.EN_DESCRIPTION];
+
+                        return {
+                            id,
+                            slug,
+                            type,
+                            description,
+                            image_url,
+                        };
+                    });
+                });
+
+            const body = PACKAGING_INFO_CONTENT_BODY_OUTPUT_SCHEMA.parse({
+                data: {
+                    packaging_options,
+                },
+            });
+
+            return {
+                body,
             };
         }),
 };

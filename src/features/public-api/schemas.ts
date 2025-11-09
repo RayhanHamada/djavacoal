@@ -123,3 +123,19 @@ export const ABOUT_COMPANY_BODY_OUTPUT_SCHEMA = z.object({
             .describe("URL of the 'About Us' video"),
     }),
 });
+
+export const PACKAGING_INFO_CONTENT_BODY_OUTPUT_SCHEMA = z.object({
+    data: z.object({
+        packaging_options: z.array(
+            z.object({
+                id: z.number().describe("Packaging option ID"),
+                slug: z.string().describe("Packaging option slug"),
+                type: z.string().describe("Type of packaging"),
+                description: z
+                    .string()
+                    .describe("Description of the packaging"),
+                image_url: z.url().describe("URL of the packaging image"),
+            })
+        ),
+    }),
+});

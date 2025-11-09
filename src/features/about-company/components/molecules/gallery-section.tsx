@@ -41,7 +41,7 @@ function GallerySubsection({
     );
 
     const images = galleryType === "factory" ? factoryGallery : productGallery;
-    const mainImage = images.at(0)!;
+    const mainImage = images.at(0);
     const thumbnails = images.slice(1);
     const containerId = `${galleryType}Thumbs`;
 
@@ -67,13 +67,15 @@ function GallerySubsection({
                     onClick={() => onImageClick(0)}
                     className="col-span-full block w-full overflow-hidden"
                 >
-                    <Image
-                        src={mainImage}
-                        alt={mainImage}
-                        width={1600}
-                        height={900}
-                        className="h-[300px] w-full rounded-none object-cover md:h-[400px] lg:h-[685px]"
-                    />
+                    {mainImage && (
+                        <Image
+                            src={mainImage}
+                            alt={mainImage}
+                            width={1600}
+                            height={900}
+                            className="h-[300px] w-full rounded-none object-cover md:h-[400px] lg:h-[685px]"
+                        />
+                    )}
                 </button>
             </ScaleOnHover>
 
