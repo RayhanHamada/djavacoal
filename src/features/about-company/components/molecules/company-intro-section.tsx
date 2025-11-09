@@ -7,9 +7,11 @@ import {
     SocialMediaLinks,
     VideoPlayer,
 } from "../atoms";
+import { $api } from "@/adapters/public-api/client";
 
 export default function CompanyIntroSection() {
     const { isPlaying, play } = useVideoPlayer();
+    const { data } = $api.useQuery("get", "/about-company-content");
 
     return (
         <section
@@ -34,6 +36,7 @@ export default function CompanyIntroSection() {
 
             <div className="flex w-full">
                 <VideoPlayer
+                    src={data?.data.about_us_video_url ?? ""}
                     title="Production Process Coconut Charcoal Briquette From Djavacoal Indonesia"
                     isPlaying={isPlaying}
                     onPlay={play}
