@@ -2,7 +2,7 @@
 
 import type { GalleryType } from "../../lib/types";
 
-import { useCallback, useMemo } from "react";
+import { useMemo } from "react";
 
 import Image from "next/image";
 
@@ -10,7 +10,6 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 
 import ReelGallery from "./reel-gallery";
 import { useGalleryViewer } from "../../hooks";
-import { FACTORY_GALLERY, PRODUCT_GALLERY } from "../../lib/constants";
 import { FadeInView, ScaleOnHover, ScaleXView, SlideInView } from "../atoms";
 import { useAboutCompanyContentAPI } from "@/features/public-api/hooks";
 
@@ -27,9 +26,20 @@ function GallerySubsection({
     galleryType,
     onImageClick,
 }: GallerySubsectionProps) {
-    const images =
-        galleryType === "factory" ? FACTORY_GALLERY : PRODUCT_GALLERY;
-    const mainImage = images[0];
+    const { data: aboutCompanyData } = useAboutCompanyContentAPI();
+
+    const factoryGallery = useMemo(
+        () => aboutCompanyData?.data.factory_galleries ?? [],
+        [aboutCompanyData?.data.factory_galleries]
+    );
+
+    const productGallery = useMemo(
+        () => aboutCompanyData?.data.product_galleries ?? [],
+        [aboutCompanyData?.data.product_galleries]
+    );
+
+    const images = galleryType === "factory" ? factoryGallery : productGallery;
+    const mainImage = images.at(0)!;
     const thumbnails = images.slice(1);
     const containerId = `${galleryType}Thumbs`;
 
@@ -56,8 +66,8 @@ function GallerySubsection({
                     className="col-span-full block w-full overflow-hidden"
                 >
                     <Image
-                        src={mainImage.src}
-                        alt={mainImage.alt}
+                        src={mainImage}
+                        alt={mainImage}
                         width={1600}
                         height={900}
                         className="h-[300px] w-full rounded-none object-cover md:h-[400px] lg:h-[685px]"
@@ -65,44 +75,46 @@ function GallerySubsection({
                 </button>
             </ScaleOnHover>
 
-            <div className="relative">
-                <div
-                    id={containerId}
-                    className="scrollbar-hide flex snap-x snap-mandatory gap-3 overflow-x-auto pb-2"
-                >
-                    {thumbnails.map((image, i) => (
-                        <button
-                            key={image.src + crypto.randomUUID()}
-                            onClick={() => onImageClick(i + 1)}
-                            className="group h-[180px] min-w-[180px] snap-start overflow-hidden transition lg:h-[220px] lg:min-w-[220px]"
-                        >
-                            <Image
-                                src={image.src}
-                                alt={image.alt}
-                                width={220}
-                                height={220}
-                                className="h-full w-full object-cover duration-300 group-hover:scale-[1.05]"
-                            />
-                        </button>
-                    ))}
+            {thumbnails.length > 0 && (
+                <div className="relative">
+                    <div
+                        id={containerId}
+                        className="scrollbar-hide flex snap-x snap-mandatory gap-3 overflow-x-auto pb-2"
+                    >
+                        {thumbnails.map((image, i) => (
+                            <button
+                                key={image + crypto.randomUUID()}
+                                onClick={() => onImageClick(i + 1)}
+                                className="group h-[180px] min-w-[180px] snap-start overflow-hidden transition lg:h-[220px] lg:min-w-[220px]"
+                            >
+                                <Image
+                                    src={image}
+                                    alt={image}
+                                    width={220}
+                                    height={220}
+                                    className="h-full w-full object-cover duration-300 group-hover:scale-[1.05]"
+                                />
+                            </button>
+                        ))}
+                    </div>
+
+                    <button
+                        onClick={() => scroll("left")}
+                        className="absolute top-1/2 left-0 z-10 hidden h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-black/60 text-white transition hover:bg-[#EFA12D] lg:flex"
+                        aria-label="Scroll thumbnails left"
+                    >
+                        <ChevronLeft size={24} />
+                    </button>
+
+                    <button
+                        onClick={() => scroll("right")}
+                        className="absolute top-1/2 right-0 z-10 hidden h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-black/60 text-white transition hover:bg-[#EFA12D] lg:flex"
+                        aria-label="Scroll thumbnails right"
+                    >
+                        <ChevronRight size={24} />
+                    </button>
                 </div>
-
-                <button
-                    onClick={() => scroll("left")}
-                    className="absolute top-1/2 left-0 z-10 hidden h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-black/60 text-white transition hover:bg-[#EFA12D] lg:flex"
-                    aria-label="Scroll thumbnails left"
-                >
-                    <ChevronLeft size={24} />
-                </button>
-
-                <button
-                    onClick={() => scroll("right")}
-                    className="absolute top-1/2 right-0 z-10 hidden h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-black/60 text-white transition hover:bg-[#EFA12D] lg:flex"
-                    aria-label="Scroll thumbnails right"
-                >
-                    <ChevronRight size={24} />
-                </button>
-            </div>
+            )}
         </div>
     );
 }
@@ -117,11 +129,21 @@ export default function GallerySection() {
         [aboutCompanyData?.data.reels]
     );
 
-    const getCurrentList = useCallback(() => {
+    const factoryGallery = useMemo(
+        () => aboutCompanyData?.data.factory_galleries ?? [],
+        [aboutCompanyData?.data.factory_galleries]
+    );
+
+    const productGallery = useMemo(
+        () => aboutCompanyData?.data.product_galleries ?? [],
+        [aboutCompanyData?.data.product_galleries]
+    );
+
+    const currentList = useMemo(() => {
         if (!viewer) return [];
         if (viewer.type === "reel") return reels;
-        return viewer.type === "factory" ? FACTORY_GALLERY : PRODUCT_GALLERY;
-    }, [reels, viewer]);
+        return viewer.type === "factory" ? factoryGallery : productGallery;
+    }, [factoryGallery, productGallery, reels, viewer]);
 
     const renderModalContent = () => {
         if (!viewer) return null;
@@ -144,13 +166,14 @@ export default function GallerySection() {
         }
 
         const images =
-            viewer.type === "factory" ? FACTORY_GALLERY : PRODUCT_GALLERY;
-        const currentImage = images[viewer.index];
+            viewer.type === "factory" ? factoryGallery : productGallery;
+        const currentImage = images.at(viewer.index);
+        if (!currentImage) return null;
 
         return (
             <Image
-                src={currentImage.src}
-                alt={currentImage.alt}
+                src={currentImage}
+                alt={currentImage}
                 width={1200}
                 height={1200}
                 className="max-h-[85vh] w-auto object-contain"
@@ -233,7 +256,7 @@ export default function GallerySection() {
                         <button
                             onClick={(e) => {
                                 e.stopPropagation();
-                                prevItem(getCurrentList().length);
+                                prevItem(currentList.length);
                             }}
                             className="absolute top-1/2 left-2 -translate-y-1/2 rounded-full bg-white/10 p-3 text-white transition hover:bg-[#EFA12D] lg:left-[-85px]"
                             aria-label="Previous item"
@@ -244,7 +267,7 @@ export default function GallerySection() {
                         <button
                             onClick={(e) => {
                                 e.stopPropagation();
-                                nextItem(getCurrentList().length);
+                                nextItem(currentList.length);
                             }}
                             className="absolute top-1/2 right-2 -translate-y-1/2 rounded-full bg-white/10 p-3 text-white transition hover:bg-[#EFA12D] lg:right-[-85px]"
                             aria-label="Next item"
