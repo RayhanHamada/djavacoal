@@ -2,6 +2,8 @@
 
 import type { Certificate } from "../../lib/types";
 
+import { useTranslations } from "next-intl";
+
 import { useImageModal } from "../../hooks";
 import { CERTIFICATES } from "../../lib/constants";
 import {
@@ -14,6 +16,7 @@ import {
 } from "../atoms";
 
 export default function CertificateSection() {
+    const t = useTranslations("AboutCompany.certificates");
     const { isOpen, currentItem, open, close } = useImageModal<Certificate>();
 
     return (
@@ -26,7 +29,7 @@ export default function CertificateSection() {
                 <SlideInView className="mb-2 flex items-center gap-3">
                     <div className="h-px w-8 bg-white" />
                     <p className="text-sm font-medium tracking-wide text-[#60A5FF] italic">
-                        Legal & Certificates
+                        {t("subtitle")}
                     </p>
                 </SlideInView>
 
@@ -35,7 +38,7 @@ export default function CertificateSection() {
                     duration={0.65}
                     className="text-xl leading-snug font-semibold text-white md:text-2xl"
                 >
-                    <h2>Trusted Legality, Proven Quality</h2>
+                    <h2>{t("title")}</h2>
                 </SlideInView>
 
                 <SlideInView
@@ -44,10 +47,7 @@ export default function CertificateSection() {
                     yOffset={35}
                     className="font-medium text-[#EFA12D]"
                 >
-                    <p>
-                        Comprehensive Legal Documents and Verified Lab
-                        Certificates
-                    </p>
+                    <p>{t("tagline")}</p>
                 </SlideInView>
 
                 <ScaleXView className="mt-4 h-px origin-left bg-[#3A3A3A]">

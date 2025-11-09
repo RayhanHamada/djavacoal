@@ -2,10 +2,13 @@
 
 import { useMemo } from "react";
 
+import { useTranslations } from "next-intl";
+
 import { FadeInView, ScaleOnHover, TeamCard } from "../atoms";
 import { useAboutCompanyContentAPI } from "@/features/public-api/hooks";
 
 export default function TeamSection() {
+    const t = useTranslations("AboutCompany.team");
     const { data } = useAboutCompanyContentAPI();
 
     const teamMembers = useMemo(
@@ -28,15 +31,13 @@ export default function TeamSection() {
                 <div className="mb-2 flex items-center gap-3">
                     <div className="h-px w-8 bg-white" />
                     <p className="text-sm font-medium tracking-wide text-[#60A5FF] italic">
-                        Djavacoal&apos;s Team
+                        {t("subtitle")}
                     </p>
                 </div>
                 <h2 className="text-xl leading-snug font-semibold text-white md:text-2xl">
-                    The People Behind Our Success
+                    {t("title")}
                 </h2>
-                <p className="font-medium text-[#EFA12D]">
-                    From Indonesia to the World, With Dedication and Care
-                </p>
+                <p className="font-medium text-[#EFA12D]">{t("tagline")}</p>
                 <div className="mt-4 h-px bg-[#3A3A3A] px-6" />
             </header>
 

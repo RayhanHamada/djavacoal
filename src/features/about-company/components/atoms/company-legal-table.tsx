@@ -1,26 +1,32 @@
+"use client";
+
+import { useTranslations } from "next-intl";
+
 import { COMPANY_LEGAL_DATA } from "../../lib/constants";
 
 export default function CompanyLegalTable() {
+    const t = useTranslations("AboutCompany.companyLegal");
+
     const legalDataRows = [
-        { label: "Company Name:", value: COMPANY_LEGAL_DATA.companyName },
-        { label: "Owner's Name:", value: COMPANY_LEGAL_DATA.ownerName },
-        { label: "Address:", value: COMPANY_LEGAL_DATA.address },
-        { label: "Established:", value: COMPANY_LEGAL_DATA.established },
-        { label: "Products:", value: COMPANY_LEGAL_DATA.products },
+        { label: t("companyName"), value: COMPANY_LEGAL_DATA.companyName },
+        { label: t("ownerName"), value: COMPANY_LEGAL_DATA.ownerName },
+        { label: t("address"), value: COMPANY_LEGAL_DATA.address },
+        { label: t("established"), value: COMPANY_LEGAL_DATA.established },
+        { label: t("products"), value: COMPANY_LEGAL_DATA.products },
         {
-            label: "Production Capacity:",
+            label: t("productionCapacity"),
             value: COMPANY_LEGAL_DATA.productionCapacity,
         },
-        { label: "Certification:", value: COMPANY_LEGAL_DATA.certification },
+        { label: t("certification"), value: COMPANY_LEGAL_DATA.certification },
         {
-            label: "Registered Number:",
+            label: t("registeredNumber"),
             value: COMPANY_LEGAL_DATA.registeredNumber,
         },
     ];
 
     return (
         <div className="space-y-4">
-            <h3 className="text-lg font-semibold">Company Legal Data</h3>
+            <h3 className="text-lg font-semibold">{t("title")}</h3>
 
             <div className="overflow-hidden rounded-md border border-[#2A2A2A] text-sm">
                 <table className="w-full border-collapse border border-[#848484] text-sm md:text-base">

@@ -1,4 +1,7 @@
+"use client";
+
 import Image from "next/image";
+import { useTranslations } from "next-intl";
 
 import { BANNER_IMAGE } from "../../lib/constants";
 
@@ -8,15 +11,19 @@ interface HeaderSectionProps {
 }
 
 export default function HeaderSection({
-    title = "About Company",
+    title,
     backgroundImage = BANNER_IMAGE,
 }: HeaderSectionProps) {
+    const t = useTranslations("AboutCompany.header");
+
+    const displayTitle = title ?? t("title");
+
     return (
         <section className="relative w-full overflow-hidden bg-[#1C1C1C] text-white">
             <div className="relative h-48 w-full md:h-72">
                 <Image
                     src={backgroundImage}
-                    alt={`${title} Banner`}
+                    alt={t("bannerAlt")}
                     fill
                     className="object-cover object-center"
                     priority
@@ -24,7 +31,7 @@ export default function HeaderSection({
 
                 <div className="absolute inset-0 flex items-center justify-center bg-black/50">
                     <h1 className="text-2xl font-semibold italic md:text-4xl">
-                        {title}
+                        {displayTitle}
                     </h1>
                 </div>
             </div>

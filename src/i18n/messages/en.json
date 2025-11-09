@@ -401,5 +401,95 @@
             "email": "E-mail :"
         },
         "copyright": "© Copyright {year} · CV. Djavacoal Indonesia"
+    },
+    "AboutCompany": {
+        "pageTitle": "About Company",
+        "header": {
+            "title": "About Company",
+            "bannerAlt": "About Company Banner"
+        },
+        "sidebar": {
+            "selectSection": "Select Section",
+            "companyIntro": "PT. Djavacoal Indonesia",
+            "team": "Djavacoal's Team",
+            "whatWeDo": "What We Do?",
+            "certificates": "Legal & Certificate",
+            "factory": "Factory",
+            "gallery": "Our Gallery"
+        },
+        "companyIntro": {
+            "subtitle": "Production Process",
+            "title": "How We Craft Quality Charcoal for Global Markets",
+            "tagline": "Leading Indonesian Charcoal Manufacturer",
+            "videoTitle": "Production Process Coconut Charcoal Briquette From Djavacoal Indonesia",
+            "paragraph1": "CV Djavacoal Indonesia is a trusted supplier and exporter of premium charcoal products, specializing in coconut shell charcoal briquettes, BBQ briquettes, sawdust charcoal briquettes, and natural hardwood charcoal. With years of expertise in the charcoal industry, we are committed to delivering excellence through innovation, strict quality standards, and reliable service.",
+            "paragraph2": "We operate with three partner factories across Java Island, Indonesia, strategically located with direct access to major international ports in Jakarta, Semarang, and Surabaya. This ensures smooth logistics, competitive shipping costs, and timely delivery for our global partners.",
+            "paragraph3": "At Djavacoal, quality is our priority. We carefully select only the best raw materials, ensuring every product meets international standards for performance, long-lasting burning time, and eco-friendly characteristics. Through advanced production methods and rigorous quality control, we guarantee consistency and reliability in every shipment.",
+            "paragraph4": "Beyond supplying charcoal, we proudly serve the international market with OEM and private label services, offering customized briquette shapes, packaging, and branding to fit our clients' unique needs. Our vision is not only to deliver high-quality products, but also to establish long-term partnerships built on trust, professionalism, and mutual growth."
+        },
+        "companyLegal": {
+            "title": "Company Legal Data",
+            "companyName": "Company Name:",
+            "ownerName": "Owner's Name:",
+            "address": "Address:",
+            "established": "Established:",
+            "products": "Products:",
+            "productionCapacity": "Production Capacity:",
+            "certification": "Certification:",
+            "registeredNumber": "Registered Number:"
+        },
+        "team": {
+            "subtitle": "Djavacoal's Team",
+            "title": "The People Behind Our Success",
+            "tagline": "From Indonesia to the World, With Dedication and Care"
+        },
+        "globalMarket": {
+            "subtitle": "What We Do?",
+            "title": "Bringing Indonesia's Finest Charcoal to the Global Market",
+            "tagline": "Delivering Premium Products With Integrity, Innovation, And Care",
+            "paragraph1": "At Djavacoal Indonesia, we are dedicated to producing and exporting premium charcoal products that are tailored to meet the demands of international markets. Our product line covers a wide range of charcoal briquettes, including coconut shell, BBQ, sawdust, white charcoal (Binchotan), and natural hardwood charcoal. Each product is manufactured with precision and strict quality control, combining traditional expertise with modern technology to ensure consistent heat, long burning duration, minimal ash, and eco-friendly performance.",
+            "paragraph2": "What sets us apart is the quality of our products and the flexibility we offer to our clients. We provide OEM and private label services, along with customised briquette sizes, shapes, and packaging to support different branding strategies. With three strategically located factories in Java and direct access to major international ports, we guarantee efficient production, smooth logistics, and timely delivery to clients worldwide.",
+            "paragraph3": "At Djavacoal, we are not just a supplier but a trusted partner. Our mission is to deliver premium charcoal while building long-term relationships based on professionalism, trust, and mutual growth. By focusing on quality, sustainability, and reliability, we proudly represent Indonesia's finest natural resources in the global charcoal industry."
+        },
+        "certificates": {
+            "subtitle": "Legal & Certificates",
+            "title": "Trusted Legality, Proven Quality",
+            "tagline": "Comprehensive Legal Documents and Verified Lab Certificates",
+            "certificateNames": {
+                "nib": "NIB / Business Registration Number",
+                "roa": "Report Of Analysis (ROA)",
+                "sht1": "Self-Heating Test (SHT) - 1",
+                "sht2": "Self-Heating Test (SHT) - 2",
+                "sht3": "Self-Heating Test (SHT) - 3",
+                "msds1": "Material Safety Data Sheet (MSDS) - 1",
+                "msds2": "Material Safety Data Sheet (MSDS) - 2",
+                "msds3": "Material Safety Data Sheet (MSDS)"
+            }
+        },
+        "factory": {
+            "subtitle": "Our Factory",
+            "title": "Where Quality Meets Production",
+            "tagline": "Three Factories Across Java, Ready To Serve Global Markets",
+            "imageAlt": "Charcoal Production Factory Djavacoal Indonesia",
+            "description": "At Djavacoal Indonesia, we take pride in operating three factories across Java that combine years of expertise, strict quality control, and modern production standards to deliver world-class charcoal products. Every step of our process from selecting premium raw materials to shaping, testing, and packaging is carried out with professionalism and dedication to ensure consistency, safety, and performance. With our proven experience in serving global markets, we welcome you to visit our factories and witness firsthand how we transform Indonesia's finest resources into trusted charcoal products for the world.",
+            "scheduleVisit": "Schedule a Visit"
+        },
+        "gallery": {
+            "subtitle": "Djavacoal's Gallery",
+            "title": "Our Story in Pictures",
+            "tagline": "Experience The Dedication Behind Every Charcoal We Produce",
+            "factoryGallery": "Djavacoal's Factory Gallery",
+            "productsGallery": "Djavacoal's Products Gallery",
+            "factoryTitle": "Djavacoal's",
+            "factoryHighlight": "Factory",
+            "productsTitle": "Djavacoal's",
+            "productsHighlight": "Products",
+            "closeViewer": "Close viewer",
+            "previousItem": "Previous item",
+            "nextItem": "Next item",
+            "scrollLeft": "Scroll thumbnails left",
+            "scrollRight": "Scroll thumbnails right",
+            "videoReel": "Video reel {index}"
+        }
     }
 }
