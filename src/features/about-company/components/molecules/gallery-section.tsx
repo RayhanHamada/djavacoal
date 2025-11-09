@@ -7,6 +7,7 @@ import { useMemo } from "react";
 import Image from "next/image";
 
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 import ReelGallery from "./reel-gallery";
 import { useGalleryViewer } from "../../hooks";
@@ -26,6 +27,7 @@ function GallerySubsection({
     galleryType,
     onImageClick,
 }: GallerySubsectionProps) {
+    const t = useTranslations("AboutCompany.gallery");
     const { data: aboutCompanyData } = useAboutCompanyContentAPI();
 
     const factoryGallery = useMemo(
@@ -103,7 +105,7 @@ function GallerySubsection({
                     <button
                         onClick={() => scroll("left")}
                         className="absolute top-1/2 left-0 z-10 hidden h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-black/60 text-white transition hover:bg-[#EFA12D] lg:flex"
-                        aria-label="Scroll thumbnails left"
+                        aria-label={t("scrollLeft")}
                     >
                         <ChevronLeft size={24} />
                     </button>
@@ -111,7 +113,7 @@ function GallerySubsection({
                     <button
                         onClick={() => scroll("right")}
                         className="absolute top-1/2 right-0 z-10 hidden h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-black/60 text-white transition hover:bg-[#EFA12D] lg:flex"
-                        aria-label="Scroll thumbnails right"
+                        aria-label={t("scrollRight")}
                     >
                         <ChevronRight size={24} />
                     </button>
@@ -122,6 +124,7 @@ function GallerySubsection({
 }
 
 export default function GallerySection() {
+    const t = useTranslations("AboutCompany.gallery");
     const { data: aboutCompanyData } = useAboutCompanyContentAPI();
     const { viewer, openViewer, closeViewer, nextItem, prevItem } =
         useGalleryViewer();
@@ -161,7 +164,7 @@ export default function GallerySection() {
                         className="absolute inset-0 h-full w-full"
                         allow="autoplay; encrypted-media"
                         allowFullScreen
-                        title={`Video reel ${viewer.index + 1}`}
+                        title={t("videoReel", { index: viewer.index + 1 })}
                     />
                 </div>
             );
@@ -193,22 +196,19 @@ export default function GallerySection() {
                     <div className="mb-2 flex items-center gap-3">
                         <div className="h-px w-8 bg-white" />
                         <p className="text-sm font-medium tracking-wide text-[#60A5FF] italic">
-                            Djavacoal&apos;s Gallery
+                            {t("subtitle")}
                         </p>
                     </div>
                 </SlideInView>
 
                 <SlideInView yOffset={30} duration={0.65}>
                     <h2 className="text-xl leading-snug font-semibold text-white md:text-2xl">
-                        Our Story in Pictures
+                        {t("title")}
                     </h2>
                 </SlideInView>
 
                 <SlideInView yOffset={35} duration={0.7}>
-                    <p className="font-medium text-[#EFA12D]">
-                        Experience The Dedication Behind Every Charcoal We
-                        Produce
-                    </p>
+                    <p className="font-medium text-[#EFA12D]">{t("tagline")}</p>
                 </SlideInView>
 
                 <ScaleXView duration={0.6}>
@@ -222,15 +222,15 @@ export default function GallerySection() {
 
             <div className="grid grid-cols-1 gap-8 lg:grid-cols-2">
                 <GallerySubsection
-                    title="Djavacoal's"
-                    highlightWord="Factory"
+                    title={t("factoryTitle")}
+                    highlightWord={t("factoryHighlight")}
                     galleryType="factory"
                     onImageClick={(index) => openViewer("factory", index)}
                 />
 
                 <GallerySubsection
-                    title="Djavacoal's"
-                    highlightWord="Products"
+                    title={t("productsTitle")}
+                    highlightWord={t("productsHighlight")}
                     galleryType="product"
                     onImageClick={(index) => openViewer("product", index)}
                 />
@@ -244,7 +244,7 @@ export default function GallerySection() {
                     <button
                         className="absolute top-6 right-6 rounded-full bg-black/40 p-2 text-white hover:bg-black/70"
                         onClick={closeViewer}
-                        aria-label="Close viewer"
+                        aria-label={t("closeViewer")}
                     >
                         ✕
                     </button>
@@ -261,7 +261,7 @@ export default function GallerySection() {
                                 prevItem(currentList.length);
                             }}
                             className="absolute top-1/2 left-2 -translate-y-1/2 rounded-full bg-white/10 p-3 text-white transition hover:bg-[#EFA12D] lg:left-[-85px]"
-                            aria-label="Previous item"
+                            aria-label={t("previousItem")}
                         >
                             <ChevronLeft size={30} />
                         </button>
@@ -272,7 +272,7 @@ export default function GallerySection() {
                                 nextItem(currentList.length);
                             }}
                             className="absolute top-1/2 right-2 -translate-y-1/2 rounded-full bg-white/10 p-3 text-white transition hover:bg-[#EFA12D] lg:right-[-85px]"
-                            aria-label="Next item"
+                            aria-label={t("nextItem")}
                         >
                             <ChevronRight size={30} />
                         </button>

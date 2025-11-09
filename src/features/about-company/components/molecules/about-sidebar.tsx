@@ -1,20 +1,34 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo } from "react";
 
 import Image from "next/image";
 
+import { useTranslations } from "next-intl";
 import { IoMdArrowDropright } from "react-icons/io";
 import { IoChevronDown, IoChevronUp } from "react-icons/io5";
 
 import { useScrollSpy } from "../../hooks";
-import { SIDEBAR_ITEMS } from "../../lib/constants";
 
 interface AboutSidebarProps {
     idPrefix?: string;
 }
 
 export default function AboutSidebar({ idPrefix = "" }: AboutSidebarProps) {
+    const t = useTranslations("AboutCompany.sidebar");
+
+    const SIDEBAR_ITEMS = useMemo(
+        () => [
+            { id: "company-intro", label: t("companyIntro") },
+            { id: "team", label: t("team") },
+            { id: "global-market", label: t("whatWeDo") },
+            { id: "certificates", label: t("certificates") },
+            { id: "factory", label: t("factory") },
+            { id: "gallery", label: t("gallery") },
+        ],
+        [t]
+    );
+
     const { activeId, scrollToSection } = useScrollSpy({
         items: SIDEBAR_ITEMS,
         idPrefix,
@@ -29,7 +43,7 @@ export default function AboutSidebar({ idPrefix = "" }: AboutSidebarProps) {
 
     const activeLabel = activeId
         ? SIDEBAR_ITEMS.find((i) => i.id === activeId)?.label
-        : "Select Section";
+        : t("selectSection");
 
     return (
         <>

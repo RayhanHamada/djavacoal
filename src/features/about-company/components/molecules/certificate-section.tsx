@@ -2,6 +2,8 @@
 
 import type { Certificate } from "../../lib/types";
 
+import { useTranslations } from "next-intl";
+
 import { useImageModal } from "../../hooks";
 import { CERTIFICATES } from "../../lib/constants";
 import {
@@ -14,7 +16,31 @@ import {
 } from "../atoms";
 
 export default function CertificateSection() {
+    const t = useTranslations("AboutCompany.certificates");
     const { isOpen, currentItem, open, close } = useImageModal<Certificate>();
+
+    const getCertificateName = (alt: string): string => {
+        switch (alt) {
+            case "NIB / Business Registration Number":
+                return t("certificateNames.nib");
+            case "Report Of Analysis (ROA)":
+                return t("certificateNames.roa");
+            case "Self-Heating Test (SHT) - 1":
+                return t("certificateNames.sht1");
+            case "Self-Heating Test (SHT) - 2":
+                return t("certificateNames.sht2");
+            case "Self-Heating Test (SHT) - 3":
+                return t("certificateNames.sht3");
+            case "Material Safety Data Sheet (MSDS) - 1":
+                return t("certificateNames.msds1");
+            case "Material Safety Data Sheet (MSDS) - 2":
+                return t("certificateNames.msds2");
+            case "Material Safety Data Sheet (MSDS)":
+                return t("certificateNames.msds3");
+            default:
+                return alt;
+        }
+    };
 
     return (
         <section
@@ -26,7 +52,7 @@ export default function CertificateSection() {
                 <SlideInView className="mb-2 flex items-center gap-3">
                     <div className="h-px w-8 bg-white" />
                     <p className="text-sm font-medium tracking-wide text-[#60A5FF] italic">
-                        Legal & Certificates
+                        {t("subtitle")}
                     </p>
                 </SlideInView>
 
@@ -35,7 +61,7 @@ export default function CertificateSection() {
                     duration={0.65}
                     className="text-xl leading-snug font-semibold text-white md:text-2xl"
                 >
-                    <h2>Trusted Legality, Proven Quality</h2>
+                    <h2>{t("title")}</h2>
                 </SlideInView>
 
                 <SlideInView
@@ -44,10 +70,7 @@ export default function CertificateSection() {
                     yOffset={35}
                     className="font-medium text-[#EFA12D]"
                 >
-                    <p>
-                        Comprehensive Legal Documents and Verified Lab
-                        Certificates
-                    </p>
+                    <p>{t("tagline")}</p>
                 </SlideInView>
 
                 <ScaleXView className="mt-4 h-px origin-left bg-[#3A3A3A]">
@@ -67,7 +90,7 @@ export default function CertificateSection() {
                             <button onClick={() => open(certificate, index)}>
                                 <CertificateCard certificate={certificate} />
                                 <p className="mt-2 text-xs text-gray-300 italic">
-                                    {certificate.alt}
+                                    {getCertificateName(certificate.alt)}
                                 </p>
                             </button>
                         </ScaleOnHover>
@@ -89,7 +112,7 @@ export default function CertificateSection() {
                         <button onClick={() => open(certificate, index)}>
                             <CertificateCard certificate={certificate} />
                             <p className="mt-2 text-center text-sm text-gray-300 italic">
-                                {certificate.alt}
+                                {getCertificateName(certificate.alt)}
                             </p>
                         </button>
                     </ScaleOnHover>
