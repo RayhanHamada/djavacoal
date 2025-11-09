@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 
+import { JSONLDScript } from "@/components/molecules/json-ld-script";
 import ProductionSidebar from "@/features/production-info/components/molecules/production-sidebar";
 import {
     ProcessSection,
@@ -30,28 +31,25 @@ export const metadata: Metadata = {
     },
 };
 
-export default function ProductionInfoPage() {
-    const jsonLd = {
-        "@context": "https://schema.org",
-        "@type": "WebPage",
-        name: "Production Info - CV Djavacoal Indonesia",
-        description:
-            "Learn how we craft premium coconut shell charcoal briquettes for global markets, including MOQ, shipment terms, and packaging.",
-        url: "https://www.djavacoal.com/production-info",
-        publisher: {
-            "@type": "Organization",
-            name: "CV Djavacoal Indonesia",
-            url: "https://www.djavacoal.com",
-        },
-    };
+const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    name: "Production Info - CV Djavacoal Indonesia",
+    description:
+        "Learn how we craft premium coconut shell charcoal briquettes for global markets, including MOQ, shipment terms, and packaging.",
+    url: "https://www.djavacoal.com/production-info",
+    publisher: {
+        "@type": "Organization",
+        name: "CV Djavacoal Indonesia",
+        url: "https://www.djavacoal.com",
+    },
+};
 
+export default async function ProductionInfoPage() {
     return (
         <main className="bg-primary text-white">
             {/* JSON-LD */}
-            <script
-                type="application/ld+json"
-                dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-            />
+            <JSONLDScript data={jsonLd} />
 
             {/* Hero Header */}
             <HeaderSection />
