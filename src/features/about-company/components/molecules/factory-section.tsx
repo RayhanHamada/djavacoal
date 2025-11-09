@@ -2,8 +2,8 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useTranslations } from "next-intl";
 
+import { useTranslations } from "next-intl";
 import { FaWhatsapp } from "react-icons/fa";
 
 import { FadeInView, ScaleXView, SlideInView } from "../atoms";
@@ -35,9 +35,7 @@ export default function FactorySection() {
                 </SlideInView>
 
                 <SlideInView yOffset={35} duration={0.7}>
-                    <p className="font-medium text-[#EFA12D]">
-                        {t("tagline")}
-                    </p>
+                    <p className="font-medium text-[#EFA12D]">{t("tagline")}</p>
                 </SlideInView>
 
                 <ScaleXView duration={0.6}>

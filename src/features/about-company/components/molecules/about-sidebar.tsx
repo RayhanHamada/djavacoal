@@ -3,8 +3,8 @@
 import { useState, useMemo } from "react";
 
 import Image from "next/image";
-import { useTranslations } from "next-intl";
 
+import { useTranslations } from "next-intl";
 import { IoMdArrowDropright } from "react-icons/io";
 import { IoChevronDown, IoChevronUp } from "react-icons/io5";
 

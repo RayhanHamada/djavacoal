@@ -5,9 +5,9 @@ import type { GalleryType } from "../../lib/types";
 import { useMemo } from "react";
 
 import Image from "next/image";
-import { useTranslations } from "next-intl";
 
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 import ReelGallery from "./reel-gallery";
 import { useGalleryViewer } from "../../hooks";
@@ -208,9 +208,7 @@ export default function GallerySection() {
                 </SlideInView>
 
                 <SlideInView yOffset={35} duration={0.7}>
-                    <p className="font-medium text-[#EFA12D]">
-                        {t("tagline")}
-                    </p>
+                    <p className="font-medium text-[#EFA12D]">{t("tagline")}</p>
                 </SlideInView>
 
                 <ScaleXView duration={0.6}>

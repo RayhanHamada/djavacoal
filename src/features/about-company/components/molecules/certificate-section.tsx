@@ -19,6 +19,29 @@ export default function CertificateSection() {
     const t = useTranslations("AboutCompany.certificates");
     const { isOpen, currentItem, open, close } = useImageModal<Certificate>();
 
+    const getCertificateName = (alt: string): string => {
+        switch (alt) {
+            case "NIB / Business Registration Number":
+                return t("certificateNames.nib");
+            case "Report Of Analysis (ROA)":
+                return t("certificateNames.roa");
+            case "Self-Heating Test (SHT) - 1":
+                return t("certificateNames.sht1");
+            case "Self-Heating Test (SHT) - 2":
+                return t("certificateNames.sht2");
+            case "Self-Heating Test (SHT) - 3":
+                return t("certificateNames.sht3");
+            case "Material Safety Data Sheet (MSDS) - 1":
+                return t("certificateNames.msds1");
+            case "Material Safety Data Sheet (MSDS) - 2":
+                return t("certificateNames.msds2");
+            case "Material Safety Data Sheet (MSDS)":
+                return t("certificateNames.msds3");
+            default:
+                return alt;
+        }
+    };
+
     return (
         <section
             id="certificates"
@@ -67,7 +90,7 @@ export default function CertificateSection() {
                             <button onClick={() => open(certificate, index)}>
                                 <CertificateCard certificate={certificate} />
                                 <p className="mt-2 text-xs text-gray-300 italic">
-                                    {certificate.alt}
+                                    {getCertificateName(certificate.alt)}
                                 </p>
                             </button>
                         </ScaleOnHover>
@@ -89,7 +112,7 @@ export default function CertificateSection() {
                         <button onClick={() => open(certificate, index)}>
                             <CertificateCard certificate={certificate} />
                             <p className="mt-2 text-center text-sm text-gray-300 italic">
-                                {certificate.alt}
+                                {getCertificateName(certificate.alt)}
                             </p>
                         </button>
                     </ScaleOnHover>

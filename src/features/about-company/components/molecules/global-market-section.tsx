@@ -29,9 +29,7 @@ export default function GlobalMarketSection() {
                 </SlideInView>
 
                 <SlideInView yOffset={35} duration={0.7}>
-                    <p className="font-medium text-[#EFA12D]">
-                        {t("tagline")}
-                    </p>
+                    <p className="font-medium text-[#EFA12D]">{t("tagline")}</p>
                 </SlideInView>
 
                 <ScaleXView duration={0.6}>

@@ -490,6 +490,11 @@
             "scrollLeft": "Scroll thumbnails left",
             "scrollRight": "Scroll thumbnails right",
             "videoReel": "Video reel {index}"
+        },
+        "exportCountries": {
+            "title": "Countries We Have Exported To",
+            "description": "Djavacoal Indonesia has successfully exported premium charcoal products to more than 20 countries across the Middle East, Asia, Europe, Africa, Australia, and the Americas. Our global reach demonstrates the trust international partners place in our quality, reliability, and professionalism. From Saudi Arabia to Brazil, from Japan to the USA, Djavacoal continues to serve the world with the finest Indonesian charcoal.",
+            "flagAlt": "{code} flag"
         }
     }
 }
