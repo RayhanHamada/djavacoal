@@ -7,11 +7,11 @@ import {
     SocialMediaLinks,
     VideoPlayer,
 } from "../atoms";
-import { $api } from "@/adapters/public-api/client";
+import { useAboutCompanyContentAPI } from "@/features/public-api/hooks";
 
 export default function CompanyIntroSection() {
     const { isPlaying, play } = useVideoPlayer();
-    const { data } = $api.useQuery("get", "/about-company-content");
+    const { data } = useAboutCompanyContentAPI();
 
     return (
         <section
