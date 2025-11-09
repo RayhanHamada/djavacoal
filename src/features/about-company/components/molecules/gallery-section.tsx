@@ -2,18 +2,17 @@
 
 import type { GalleryType } from "../../lib/types";
 
+import { useCallback, useMemo } from "react";
+
 import Image from "next/image";
 
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
 import ReelGallery from "./reel-gallery";
 import { useGalleryViewer } from "../../hooks";
-import {
-    FACTORY_GALLERY,
-    GALLERY_REELS,
-    PRODUCT_GALLERY,
-} from "../../lib/constants";
+import { FACTORY_GALLERY, PRODUCT_GALLERY } from "../../lib/constants";
 import { FadeInView, ScaleOnHover, ScaleXView, SlideInView } from "../atoms";
+import { useAboutCompanyContentAPI } from "@/features/public-api/hooks";
 
 interface GallerySubsectionProps {
     title: string;
@@ -109,24 +108,32 @@ function GallerySubsection({
 }
 
 export default function GallerySection() {
+    const { data: aboutCompanyData } = useAboutCompanyContentAPI();
     const { viewer, openViewer, closeViewer, nextItem, prevItem } =
         useGalleryViewer();
 
-    const getCurrentList = () => {
+    const reels = useMemo(
+        () => aboutCompanyData?.data.reels ?? [],
+        [aboutCompanyData?.data.reels]
+    );
+
+    const getCurrentList = useCallback(() => {
         if (!viewer) return [];
-        if (viewer.type === "reel") return GALLERY_REELS;
+        if (viewer.type === "reel") return reels;
         return viewer.type === "factory" ? FACTORY_GALLERY : PRODUCT_GALLERY;
-    };
+    }, [reels, viewer]);
 
     const renderModalContent = () => {
         if (!viewer) return null;
 
         if (viewer.type === "reel") {
-            const videoId = GALLERY_REELS[viewer.index];
+            const reel = reels.at(viewer.index);
+            if (!reel) return null;
+
             return (
                 <div className="relative aspect-9/16 w-[85vw] max-w-[400px] overflow-hidden rounded-xl">
                     <iframe
-                        src={`https://www.youtube-nocookie.com/embed/${videoId}?autoplay=1&controls=1&playsinline=1`}
+                        src={`https://www.youtube-nocookie.com/embed/${reel.id}?autoplay=1&controls=1&playsinline=1`}
                         className="absolute inset-0 h-full w-full"
                         allow="autoplay; encrypted-media"
                         allowFullScreen
