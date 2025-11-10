@@ -19,3 +19,7 @@ export function useListProductNamesAPI(limit: number = 5) {
 export function useAboutCompanyContentAPI() {
     return $api.useQuery("get", "/about-company-content");
 }
+
+export function useProductionInfoContentAPI() {
+    return $api.useQuery("get", "/packaging-info-content");
+}
