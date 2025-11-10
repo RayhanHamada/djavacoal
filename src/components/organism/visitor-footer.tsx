@@ -73,22 +73,22 @@ export default async function VisitorFooter() {
                         <h3 className="text-secondary border-secondary mb-2 border-b-2 pb-1 text-base font-bold sm:text-xl">
                             {t("sections.company")}
                         </h3>
-                        <ul className="mt-3 space-y-2 text-xs md:text-base">
-                            <li>
-                                <Link href="#">{t("company.cvDjavacoal")}</Link>
-                            </li>
-                            <li>
-                                <Link href="#">{t("company.team")}</Link>
-                            </li>
-                            <li>
-                                <Link href="#">{t("company.legal")}</Link>
-                            </li>
-                            <li>
-                                <Link href="#">{t("company.factory")}</Link>
-                            </li>
-                            <li>
-                                <Link href="#">{t("company.gallery")}</Link>
-                            </li>
+                        <ul className="decoration-secondary mt-3 w-full space-y-2 text-xs md:text-base [&_a]:hover:underline">
+                            <Link href="/about-company#">
+                                <li>{t("company.cvDjavacoal")}</li>
+                            </Link>
+                            <Link href="/about-company#">
+                                <li>{t("company.team")}</li>
+                            </Link>
+                            <Link href="/about-company#">
+                                <li>{t("company.legal")}</li>
+                            </Link>
+                            <Link href="/about-company#">
+                                <li>{t("company.factory")}</li>
+                            </Link>
+                            <Link href="/about-company#">
+                                <li>{t("company.gallery")}</li>
+                            </Link>
                         </ul>
                     </div>
                     {/* Products */}
@@ -107,33 +107,25 @@ export default async function VisitorFooter() {
                         <h3 className="text-secondary border-secondary mb-2 w-38 border-b-2 pb-1 text-base font-bold sm:text-xl md:w-full lg:w-36">
                             {t("sections.quickLink")}
                         </h3>
-                        <ul className="mt-3 space-y-2 text-xs md:text-base">
-                            <li>
-                                <Link href="#">
-                                    {t("quickLinks.productionProcess")}
-                                </Link>
-                            </li>
-                            <li>
-                                <Link href="#">
-                                    {t("quickLinks.shipmentTerms")}
-                                </Link>
-                            </li>
-                            <li>
-                                <Link href="#">
-                                    {t("quickLinks.moqPayment")}
-                                </Link>
-                            </li>
-                            <li>
-                                <Link href="#">
-                                    {t("quickLinks.packagingInfo")}
-                                </Link>
-                            </li>
-                            <li>
-                                <Link href="#">{t("quickLinks.faq")}</Link>
-                            </li>
-                            <li>
-                                <Link href="#">{t("quickLinks.news")}</Link>
-                            </li>
+                        <ul className="decoration-secondary mt-3 space-y-2 text-xs md:text-base [&_a]:hover:underline">
+                            <Link href="/production-info#">
+                                <li>{t("quickLinks.productionProcess")}</li>
+                            </Link>
+                            <Link href="/production-info#">
+                                <li>{t("quickLinks.shipmentTerms")}</li>
+                            </Link>
+                            <Link href="/production-info#">
+                                <li>{t("quickLinks.moqPayment")}</li>
+                            </Link>
+                            <Link href="/production-info#">
+                                <li>{t("quickLinks.packagingInfo")}</li>
+                            </Link>
+                            <Link href="#/production-info#">
+                                <li>{t("quickLinks.faq")}</li>
+                            </Link>
+                            <Link href="/production-info#">
+                                <li>{t("quickLinks.news")}</li>
+                            </Link>
                         </ul>
                     </div>
                     {/* Contact */}
@@ -141,7 +133,7 @@ export default async function VisitorFooter() {
                         <h3 className="mb-2 pb-1 text-base font-bold sm:text-xl">
                             {t("sections.contactUs")}
                         </h3>
-                        <div className="mt-3 space-y-3">
+                        <div className="decoration-secondary mt-3 space-y-3 [&_a]:hover:underline">
                             <Link
                                 href={data?.data.maps_link || "#"}
                                 className="flex items-start gap-2"

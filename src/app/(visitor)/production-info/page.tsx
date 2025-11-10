@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 
+import { getTranslations } from "next-intl/server";
+
 import { JSONLDScript } from "@/components/molecules/json-ld-script";
 import ProductionSidebar from "@/features/production-info/components/molecules/production-sidebar";
 import {
@@ -11,25 +13,26 @@ import {
 } from "@/features/production-info/components/organism";
 import HeaderSection from "@/features/production-info/components/organism/header-section";
 
-export const metadata: Metadata = {
-    title: "Production Info | CV Djavacoal Indonesia",
-    description:
-        "Learn how CV Djavacoal Indonesia crafts premium charcoal briquettes—from raw material selection to packaging, shipment terms, and FAQs.",
-    openGraph: {
-        title: "Production Info | CV Djavacoal Indonesia",
-        description:
-            "Premium coconut shell charcoal briquettes — production process, MOQ & payment terms, shipment terms, and packaging options.",
-        url: "https://www.djavacoal.com/production-info",
-        siteName: "CV Djavacoal Indonesia",
-        type: "website",
-    },
-    twitter: {
-        card: "summary_large_image",
-        title: "Production Info | CV Djavacoal Indonesia",
-        description:
-            "Premium coconut shell charcoal briquettes — production process, MOQ & terms, shipment, packaging, FAQ.",
-    },
-};
+export async function generateMetadata(): Promise<Metadata> {
+    const t = await getTranslations("ProductionInfo.metadata");
+
+    return {
+        title: t("title"),
+        description: t("description"),
+        openGraph: {
+            title: t("title"),
+            description: t("description"),
+            url: "https://www.djavacoal.com/production-info",
+            siteName: "CV Djavacoal Indonesia",
+            type: "website",
+        },
+        twitter: {
+            card: "summary_large_image",
+            title: t("title"),
+            description: t("description"),
+        },
+    };
+}
 
 const jsonLd = {
     "@context": "https://schema.org",
