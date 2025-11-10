@@ -1,26 +1,31 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import Image from "next/image";
 
+import { useTranslations } from "next-intl";
 import { IoMdArrowDropright } from "react-icons/io";
 import { IoChevronDown, IoChevronUp } from "react-icons/io5";
-
-const ITEMS = [
-    { id: "process", label: "Production Process" },
-    { id: "moq", label: "MOQ & Payment Terms" },
-    { id: "shipment", label: "Shipment Terms" },
-    { id: "packaging", label: "Packaging Info" },
-    { id: "faq", label: "FAQ" },
-];
 
 type Props = {
     idPrefix?: string;
 };
 
 export default function ProductionSidebar({ idPrefix = "" }: Props) {
+    const t = useTranslations("ProductionInfo.sidebar");
     const [active, setActive] = useState<string | null>(null);
     const [open, setOpen] = useState(false);
+
+    const ITEMS = useMemo(
+        () => [
+            { id: "process", label: t("items.process") },
+            { id: "moq", label: t("items.moq") },
+            { id: "shipment", label: t("items.shipment") },
+            { id: "packaging", label: t("items.packaging") },
+            { id: "faq", label: t("items.faq") },
+        ],
+        [t]
+    );
 
     useEffect(() => {
         // pilih root scroll: desktop pakai container khusus, mobile pakai window
@@ -51,7 +56,7 @@ export default function ProductionSidebar({ idPrefix = "" }: Props) {
         });
 
         return () => observer.disconnect();
-    }, [idPrefix]);
+    }, [idPrefix, ITEMS]);
 
     const handleClick = (id: string) => {
         const el = document.getElementById(id);
@@ -100,7 +105,7 @@ export default function ProductionSidebar({ idPrefix = "" }: Props) {
                         <span className="truncate">
                             {active
                                 ? ITEMS.find((i) => i.id === active)?.label
-                                : "Select Topic"}
+                                : t("selectTopic")}
                         </span>
                         {open ? (
                             <IoChevronUp className="text-[#EFA12D]" />

@@ -1,9 +1,10 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import Image from "next/image";
 
 import { motion } from "framer-motion";
+import { useTranslations } from "next-intl";
 
 interface StepCardProps {
     image: string;
@@ -50,6 +51,7 @@ function StepCard({ image, title, description }: StepCardProps) {
 }
 
 export default function ProcessSection() {
+    const t = useTranslations("ProductionInfo.process");
     const [isMd, setIsMd] = useState(false);
 
     // Deteksi ukuran layar real-time
@@ -60,62 +62,56 @@ export default function ProcessSection() {
         return () => window.removeEventListener("resize", handleResize);
     }, []);
 
-    const steps = [
-        {
-            image: "/images/Step1.png",
-            title: "1. Raw Material Selection:",
-            description:
-                "We use only selected, high-quality coconut shells that are clean and fully matured. All materials are carefully inspected to ensure high fixed carbon, low ash, and consistent performance.We select mature, high-density coconut shells from trusted sources for consistent performance and long burn time.",
-        },
-        {
-            image: "/images/Step2.png",
-            title: "2. Carbonization (Shell to Charcoal):",
-            description:
-                "The shells are burned in controlled, low-oxygen kilns to produce charcoal. This process is carefully monitored to achieve the right balance of fixed carbon (≈80%) and ash content (≤2%).",
-        },
-        {
-            image: "/images/Step3.png",
-            title: "3. Crushing & Sieving:",
-            description:
-                "The charcoal is crushed into powder and sieved into a fine, uniform particle size. This ensures consistency in mixing and results in dense, evenly burning briquettes.",
-        },
-        {
-            image: "/images/Step4.png",
-            title: "4. Mixing with Natural Binder:",
-            description:
-                "The charcoal powder is blended with a food-grade natural binder (commonly tapioca starch) and water. No chemicals are added, ensuring the product is safe, odorless, and tasteless when used for shisha.",
-        },
-        {
-            image: "/images/Step5.png",
-            title: "5. Briquetting / Molding:",
-            description:
-                "The mixture is pressed under high pressure into cubic shapes (e.g., 25×25×25 mm, 26×26×26 mm, or custom sizes). The high density allows for longer burn time and consistent heat release.",
-        },
-        {
-            image: "/images/Step6.png",
-            title: "6. Drying & Curing:",
-            description:
-                "The freshly pressed briquettes are dried in ovens or under controlled conditions until moisture levels drop below 5%. Proper drying prevents cracking and ensures durability during transport.",
-        },
-        {
-            image: "/images/Step7.png",
-            title: "7. Quality Control & Lab Testing:",
-            description:
-                "Each batch is tested for ash content, moisture, volatile matter, fixed carbon, calorific value, and burning duration. Briquettes must pass the standards.",
-        },
-        {
-            image: "/images/Step8.png",
-            title: "8. Packaging Process:",
-            description:
-                "Briquettes are sealed in inner plastic bags to protect against moisture, then placed in branded or OEM master boxes. Packaging options can be customized for shisha brands worldwide.",
-        },
-        {
-            image: "/images/Step9.png",
-            title: "9. Storage & Export:",
-            description:
-                "Finished products are stored in a clean, dry warehouse before being shipped via international ports in Jakarta, Semarang, or Surabaya. Export documents and Certificates of Analysis (COA) are provided for transparency.",
-        },
-    ];
+    const steps = useMemo(
+        () => [
+            {
+                image: "/images/Step1.png",
+                title: t("steps.step1.title"),
+                description: t("steps.step1.description"),
+            },
+            {
+                image: "/images/Step2.png",
+                title: t("steps.step2.title"),
+                description: t("steps.step2.description"),
+            },
+            {
+                image: "/images/Step3.png",
+                title: t("steps.step3.title"),
+                description: t("steps.step3.description"),
+            },
+            {
+                image: "/images/Step4.png",
+                title: t("steps.step4.title"),
+                description: t("steps.step4.description"),
+            },
+            {
+                image: "/images/Step5.png",
+                title: t("steps.step5.title"),
+                description: t("steps.step5.description"),
+            },
+            {
+                image: "/images/Step6.png",
+                title: t("steps.step6.title"),
+                description: t("steps.step6.description"),
+            },
+            {
+                image: "/images/Step7.png",
+                title: t("steps.step7.title"),
+                description: t("steps.step7.description"),
+            },
+            {
+                image: "/images/Step8.png",
+                title: t("steps.step8.title"),
+                description: t("steps.step8.description"),
+            },
+            {
+                image: "/images/Step9.png",
+                title: t("steps.step9.title"),
+                description: t("steps.step9.description"),
+            },
+        ],
+        [t]
+    );
 
     const itemsPerRow = isMd ? 3 : 2;
     const rows = Array.from({ length: Math.ceil(steps.length / itemsPerRow) });
@@ -127,11 +123,11 @@ export default function ProcessSection() {
                 <div className="mb-2 flex items-center gap-3 px-6">
                     <div className="h-px w-8 bg-white" />
                     <p className="text-sm font-medium tracking-wide text-[#60A5FF] italic">
-                        Production Process
+                        {t("subtitle")}
                     </p>
                 </div>
                 <h2 className="px-6 text-xl leading-snug font-semibold text-white md:text-2xl">
-                    How We Craft Quality Charcoal for Global Markets
+                    {t("title")}
                 </h2>
                 <div className="mt-4 h-px bg-[#3A3A3A]" />
             </header>

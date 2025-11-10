@@ -1,21 +1,24 @@
 "use client";
 import { motion } from "framer-motion";
+import { useTranslations } from "next-intl";
 
 export default function MOQSection() {
+    const t = useTranslations("ProductionInfo.moq");
+
     return (
         <section id="moq" className="mt-2 scroll-mt-28 rounded-xl bg-[#222222]">
             {/* Header */}
             <header className="mb-4 px-4 pt-4 md:px-6">
                 <div className="mb-2 flex items-center gap-3">
-                    <div className="h-[1px] w-8 bg-white" />
+                    <div className="h-px w-8 bg-white" />
                     <p className="text-sm font-medium tracking-wide text-[#60A5FF] italic">
-                        MOQ & Payment Terms
+                        {t("subtitle")}
                     </p>
                 </div>
                 <h2 className="text-xl leading-snug font-semibold text-white md:text-2xl">
-                    Minimum Order & Payment Terms
+                    {t("title")}
                 </h2>
-                <div className="mt-4 h-[1px] bg-[#3A3A3A]" />
+                <div className="mt-4 h-px bg-[#3A3A3A]" />
             </header>
 
             {/* Content */}
@@ -31,21 +34,16 @@ export default function MOQSection() {
                     {/* === KIRI: Deskripsi === */}
                     <div>
                         <h3 className="mb-2 text-base font-semibold md:text-lg">
-                            <span className="text-white">T/T</span>{" "}
+                            <span className="text-white">
+                                {t("methodTitle")}
+                            </span>{" "}
                             <span className="text-[#EFA12D]">
-                                (Telegraph Transfer)
+                                {t("methodSubtitle")}
                             </span>
                         </h3>
 
                         <p className="mb-6 text-sm leading-relaxed text-[#CCCCCC] md:text-base">
-                            At Djavacoal Indonesia, we keep our business terms
-                            simple and transparent to build long-term trust with
-                            our partners. We apply a minimum order quantity
-                            (MOQ) of one container (20 ft or 40 ft), and we
-                            accept payments only through T/T (Telegraphic
-                            Transfer). These terms ensure smooth processing,
-                            secure transactions, and reliable export handling
-                            for our global buyers.
+                            {t("description")}
                         </p>
                     </div>
 
@@ -55,58 +53,55 @@ export default function MOQSection() {
                             <tbody>
                                 <tr className="border border-[#848484] bg-[#262626]">
                                     <td className="w-44 border border-[#848484] p-3 text-[#FFFFFF] md:w-56 md:p-4">
-                                        MOQ:
+                                        {t("table.moq.label")}
                                     </td>
                                     <td className="border border-[#848484] p-3 text-[#CCCCCC] md:p-4">
-                                        20&quot; Container (18 Tons) / 40&quot;
-                                        Container (26 Tons)
+                                        {t("table.moq.value")}
                                     </td>
                                 </tr>
 
                                 <tr className="border border-[#848484] bg-[#323232]">
                                     <td className="border border-[#848484] p-3 text-[#FFFFFF] md:p-4">
-                                        Payment Method:
+                                        {t("table.paymentMethod.label")}
                                     </td>
                                     <td className="border border-[#848484] p-3 text-[#CCCCCC] md:p-4">
-                                        T/T (Telegraph Transfer)
+                                        {t("table.paymentMethod.value")}
                                     </td>
                                 </tr>
 
                                 <tr className="border border-[#848484] bg-[#262626]">
                                     <td className="border border-[#848484] p-3 text-[#FFFFFF] md:p-4">
-                                        Payment Structure:
+                                        {t("table.paymentStructure.label")}
                                     </td>
                                     <td className="border border-[#848484] p-3 text-[#CCCCCC] md:p-4">
-                                        50% Advance Payment, 50% Balance Before
-                                        Shipment (Can Be Discussed)
+                                        {t("table.paymentStructure.value")}
                                     </td>
                                 </tr>
 
                                 <tr className="border border-[#848484] bg-[#323232]">
                                     <td className="border border-[#848484] p-3 text-[#FFFFFF] md:p-4">
-                                        Shipment Terms:
+                                        {t("table.shipmentTerms.label")}
                                     </td>
                                     <td className="border border-[#848484] p-3 text-[#CCCCCC] md:p-4">
-                                        Freight On Board (FOB)
+                                        {t("table.shipmentTerms.value")}
                                     </td>
                                 </tr>
 
                                 <tr className="border border-[#848484] bg-[#262626]">
                                     <td className="border border-[#848484] p-3 text-[#FFFFFF] md:p-4">
-                                        Currency:
+                                        {t("table.currency.label")}
                                     </td>
                                     <td className="border border-[#848484] p-3 text-[#CCCCCC] md:p-4">
-                                        $USD
+                                        {t("table.currency.value")}
                                     </td>
                                 </tr>
 
                                 <tr className="border border-[#848484] bg-[#323232]">
                                     <td className="border border-[#848484] p-3 text-[#FFFFFF] md:p-4">
-                                        Lead Time:
+                                        {t("table.leadTime.label")}
                                     </td>
                                     <td className="border border-[#848484] p-3 text-[#CCCCCC] md:p-4">
-                                        Approx. 4–6 Weeks After Confirmation &
-                                        Down Payment
+                                        {t("table.leadTime.value")}
                                     </td>
                                 </tr>
                             </tbody>

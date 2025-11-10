@@ -402,6 +402,200 @@
         },
         "copyright": "© Copyright {year} · CV. Djavacoal Indonesia"
     },
+    "ProductionInfo": {
+        "pageTitle": "Production Info",
+        "metadata": {
+            "title": "Production Info | CV Djavacoal Indonesia",
+            "description": "Learn how CV Djavacoal Indonesia crafts premium charcoal briquettes—from raw material selection to packaging, shipment terms, and FAQs."
+        },
+        "header": {
+            "title": "Production Info",
+            "bannerAlt": "Production Info Banner"
+        },
+        "sidebar": {
+            "selectTopic": "Select Topic",
+            "items": {
+                "process": "Production Process",
+                "moq": "MOQ & Payment Terms",
+                "shipment": "Shipment Terms",
+                "packaging": "Packaging Info",
+                "faq": "FAQ"
+            }
+        },
+        "process": {
+            "subtitle": "Production Process",
+            "title": "How We Craft Quality Charcoal for Global Markets",
+            "steps": {
+                "step1": {
+                    "title": "1. Raw Material Selection:",
+                    "description": "We use only selected, high-quality coconut shells that are clean and fully matured. All materials are carefully inspected to ensure high fixed carbon, low ash, and consistent performance.We select mature, high-density coconut shells from trusted sources for consistent performance and long burn time."
+                },
+                "step2": {
+                    "title": "2. Carbonization (Shell to Charcoal):",
+                    "description": "The shells are burned in controlled, low-oxygen kilns to produce charcoal. This process is carefully monitored to achieve the right balance of fixed carbon (≈80%) and ash content (≤2%)."
+                },
+                "step3": {
+                    "title": "3. Crushing & Sieving:",
+                    "description": "The charcoal is crushed into powder and sieved into a fine, uniform particle size. This ensures consistency in mixing and results in dense, evenly burning briquettes."
+                },
+                "step4": {
+                    "title": "4. Mixing with Natural Binder:",
+                    "description": "The charcoal powder is blended with a food-grade natural binder (commonly tapioca starch) and water. No chemicals are added, ensuring the product is safe, odorless, and tasteless when used for shisha."
+                },
+                "step5": {
+                    "title": "5. Briquetting / Molding:",
+                    "description": "The mixture is pressed under high pressure into cubic shapes (e.g., 25×25×25 mm, 26×26×26 mm, or custom sizes). The high density allows for longer burn time and consistent heat release."
+                },
+                "step6": {
+                    "title": "6. Drying & Curing:",
+                    "description": "The freshly pressed briquettes are dried in ovens or under controlled conditions until moisture levels drop below 5%. Proper drying prevents cracking and ensures durability during transport."
+                },
+                "step7": {
+                    "title": "7. Quality Control & Lab Testing:",
+                    "description": "Each batch is tested for ash content, moisture, volatile matter, fixed carbon, calorific value, and burning duration. Briquettes must pass the standards."
+                },
+                "step8": {
+                    "title": "8. Packaging Process:",
+                    "description": "Briquettes are sealed in inner plastic bags to protect against moisture, then placed in branded or OEM master boxes. Packaging options can be customized for shisha brands worldwide."
+                },
+                "step9": {
+                    "title": "9. Storage & Export:",
+                    "description": "Finished products are stored in a clean, dry warehouse before being shipped via international ports in Jakarta, Semarang, or Surabaya. Export documents and Certificates of Analysis (COA) are provided for transparency."
+                }
+            }
+        },
+        "moq": {
+            "subtitle": "MOQ & Payment Terms",
+            "title": "Minimum Order & Payment Terms",
+            "methodTitle": "T/T",
+            "methodSubtitle": "(Telegraph Transfer)",
+            "description": "At Djavacoal Indonesia, we keep our business terms simple and transparent to build long-term trust with our partners. We apply a minimum order quantity (MOQ) of one container (20 ft or 40 ft), and we accept payments only through T/T (Telegraphic Transfer). These terms ensure smooth processing, secure transactions, and reliable export handling for our global buyers.",
+            "table": {
+                "moq": {
+                    "label": "MOQ:",
+                    "value": "20\" Container (18 Tons) / 40\" Container (26 Tons)"
+                },
+                "paymentMethod": {
+                    "label": "Payment Method:",
+                    "value": "T/T (Telegraph Transfer)"
+                },
+                "paymentStructure": {
+                    "label": "Payment Structure:",
+                    "value": "50% Advance Payment, 50% Balance Before Shipment (Can Be Discussed)"
+                },
+                "shipmentTerms": {
+                    "label": "Shipment Terms:",
+                    "value": "Freight On Board (FOB)"
+                },
+                "currency": {
+                    "label": "Currency:",
+                    "value": "$USD"
+                },
+                "leadTime": {
+                    "label": "Lead Time:",
+                    "value": "Approx. 4–6 Weeks After Confirmation & Down Payment"
+                }
+            }
+        },
+        "shipment": {
+            "subtitle": "Shipment Terms",
+            "title": "Reliable Shipping with FOB Terms",
+            "methodTitle": "FOB",
+            "methodSubtitle": "(Freight On Board)",
+            "descriptionPart1": "At Djavacoal Indonesia, all international shipments are provided under",
+            "fobBold": "FOB (Free On Board)",
+            "descriptionPart2": "terms. This means we take full responsibility for",
+            "preparingBold": "preparing, packaging",
+            "descriptionPart3": ", and delivering your order safely to the",
+            "portBold": "designated port in Indonesia",
+            "descriptionPart4": ", covering all local costs until the goods are loaded on board the vessel. From that point, our buyers have the freedom to arrange their preferred shipping line, insurance, and logistics. With access to major international ports in Jakarta, Semarang, and Surabaya, we ensure smooth, efficient, and cost-effective export handling for our global partners.",
+            "imageAlt": "Shipment"
+        },
+        "packaging": {
+            "subtitle": "Packaging Option",
+            "title": "Flexible Packaging to Suit Your Business Needs",
+            "cardTitlePrefix": "Packaging:",
+            "imageAlt": "Packaging"
+        },
+        "faq": {
+            "subtitle": "FAQ",
+            "title": "Frequently Ask Question",
+            "items": {
+                "q1": {
+                    "question": "Can I visit your factory?",
+                    "answer": "Yes, we welcome our clients to visit our factories in Java, Indonesia. We believe in transparency and building trust, so you are invited to see our production process, quality control, and packaging system firsthand. Please schedule your visit in advance so we can prepare accordingly."
+                },
+                "q2": {
+                    "question": "Can you produce hookah/shisha coals with my brand?",
+                    "answer": "Yes, we offer OEM and private label services. We can customize the briquette shape, size, packaging design, and branding to match your company's identity and market strategy."
+                },
+                "q3": {
+                    "question": "What is your guarantee?",
+                    "answer": "We guarantee that all products are manufactured under strict quality control standards. Every order is inspected before shipment to ensure consistent quality, proper packaging, and compliance with international standards."
+                },
+                "q4": {
+                    "question": "How can I be sure that all my orders will be of the same quality?",
+                    "answer": "Our production process follows strict QC procedures at every stage: raw material selection, carbonization, mixing, briquetting, drying, and packaging. We also conduct laboratory tests to verify ash content, calorific value, and moisture levels. This ensures every shipment maintains the same quality standard."
+                },
+                "q5": {
+                    "question": "What are your Payment Terms?",
+                    "answer": "We currently accept T/T (Telegraphic Transfer). A deposit is required before production, and the balance must be settled before shipment."
+                },
+                "q6": {
+                    "question": "What is your production and delivery time?",
+                    "answer": "Production time depends on order size and packaging requirements. On average, production takes about 3–5 weeks. Shipping duration varies depending on the destination country, usually between 2–6 weeks."
+                },
+                "q7": {
+                    "question": "How to order?",
+                    "answer": "You can place an order by contacting us directly through our website, email, or WhatsApp. Our sales team will guide you through the process, from product selection to packaging options, payment, and shipment arrangements."
+                },
+                "q8": {
+                    "question": "What is your production capacity?",
+                    "answer": "Our current production capacity is approximately 250 tons per month, supported by three factories across Java, Indonesia. This allows us to meet both small and large-scale orders consistently."
+                },
+                "q9": {
+                    "question": "How can I get a sample?",
+                    "answer": "We provide samples upon request. Shipping costs for samples are usually covered by the buyer. Please contact us with your sample request and delivery details."
+                },
+                "q10": {
+                    "question": "Do you provide customized packaging?",
+                    "answer": "Yes, we offer a wide range of packaging options, including full packaging (inner plastic, inner box, master box), bulk packaging, and bulk loose packaging. We also provide custom branding and design services for private label clients."
+                },
+                "q11": {
+                    "question": "Which countries have you exported to?",
+                    "answer": "We have exported to more than 20 countries worldwide, including Saudi Arabia, Lebanon, Iraq, Turkey, Japan, Korea, Germany, USA, Brazil, Australia, and many more."
+                },
+                "q12": {
+                    "question": "Do you provide laboratory test reports?",
+                    "answer": "Yes, we can provide lab test results that verify ash content, fixed carbon, moisture level, and calorific value to ensure our products meet international standards."
+                },
+                "q13": {
+                    "question": "Are your products eco-friendly?",
+                    "answer": "Yes, our charcoal products are made from natural and renewable resources such as coconut shells, sawdust, and hardwood. They burn cleanly, produce minimal ash, and do not contain harmful chemicals."
+                },
+                "q14": {
+                    "question": "What is the delivery time for Coconut Charcoal Briquettes?",
+                    "answer": "We ship coconut charcoal briquettes from Semarang (Tanjung Emas, IDSRG) and Surabaya (Tanjung Perak, IDSUB), Indonesia. Transporting containers from our factories to the port typically takes 12–18 hours by truck. Vessel departures are usually scheduled on Thursday, Friday, and Saturday, with CY Closing on Monday, Wednesday, and Friday.",
+                    "transitTitle": "Estimated transit time of containers from Semarang (IDSRG) to major ports:",
+                    "ports": {
+                        "portKlang": "Port Klang (MYPKG): 3–5 days",
+                        "jeddah": "Jeddah (SAJED): 22–32 days",
+                        "portSaid": "Port Said (EGPSD/E): 19–23 days",
+                        "barcelona": "Barcelona (ESBCN): 25–30 days",
+                        "rotterdam": "Rotterdam (NLRTM): 25–30 days",
+                        "hamburg": "Hamburg (DEHAM): 24–29 days",
+                        "antwerp": "Antwerp (BEANER): 25–30 days",
+                        "gdynia": "Gdynia (PLGDY): 40–45 days",
+                        "stPetersburg": "St. Petersburg (RULED): 40–45 days",
+                        "novorossiysk": "Novorossiysk (RUNVS): 30–45 days",
+                        "losAngeles": "Los Angeles (USLAX): 30–36 days",
+                        "newYork": "New York (USNYC): 34–41 days",
+                        "melbourne": "Melbourne (AUMEB): 18–35 days"
+                    }
+                }
+            }
+        }
+    },
     "AboutCompany": {
         "pageTitle": "About Company",
         "header": {

@@ -4,6 +4,7 @@ import { useMemo } from "react";
 import Image from "next/image";
 
 import { motion } from "framer-motion";
+import { useTranslations } from "next-intl";
 
 import { useProductionInfoContentAPI } from "@/features/public-api/hooks";
 
@@ -14,12 +15,16 @@ type Props = {
 };
 
 function PackagingCard({ image, desc, type }: Props) {
+    const t = useTranslations("ProductionInfo.packaging");
+
     return (
         <article className="rounded-xl bg-[#222222] text-left">
             {/* Title */}
             <h3 className="mb-2 px-1 text-base font-semibold text-[#EFA12D] md:px-0 md:text-lg lg:px-0">
                 <span className="font-bold text-[#EFA12D]">{type}</span>{" "}
-                <span className="font-bold text-[#FFFFFF]">Packaging:</span>
+                <span className="font-bold text-[#FFFFFF]">
+                    {t("cardTitlePrefix")}
+                </span>
             </h3>
 
             {/* Image */}
@@ -60,6 +65,7 @@ function PackagingCard({ image, desc, type }: Props) {
 }
 
 export default function PackagingSection() {
+    const t = useTranslations("ProductionInfo.packaging");
     const { data: productionInfo } = useProductionInfoContentAPI();
 
     const packagingOptions = useMemo(
@@ -77,11 +83,11 @@ export default function PackagingSection() {
                 <div className="mb-2 flex items-center gap-3">
                     <div className="h-px w-8 bg-white" />
                     <p className="text-sm font-medium tracking-wide text-[#60A5FF] italic">
-                        Packaging Option
+                        {t("subtitle")}
                     </p>
                 </div>
                 <h2 className="text-xl leading-snug font-semibold text-white md:text-2xl">
-                    Flexible Packaging to Suit Your Business Needs
+                    {t("title")}
                 </h2>
                 <div className="mt-4 h-px bg-[#3A3A3A]" />
             </header>
