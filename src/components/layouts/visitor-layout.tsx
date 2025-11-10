@@ -1,5 +1,6 @@
 import { PropsWithChildren } from "react";
 
+import { WhatsappWidget } from "@/components/molecules/whatsapp-widget";
 import { VisitorFooter, VisitorNavbar } from "@/components/organism";
 import { LOCALES } from "@/configs";
 import { getUserLocale } from "@/lib/locale";
@@ -12,6 +13,8 @@ export default async function VisitorLayout({ children }: Props) {
     return (
         <div className="flex min-h-screen flex-col bg-[#151515]">
             <VisitorNavbar />
+
+            <WhatsappWidget />
 
             {/* main contents */}
             <main
