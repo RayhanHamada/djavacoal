@@ -173,7 +173,7 @@ export function ProductPage() {
                                                         alt={`Specification ${idx + 1}`}
                                                         width={744}
                                                         height={1054}
-                                                        className="h-auto w-auto max-w-[600px]"
+                                                        className="h-auto w-full max-w-full md:w-auto md:max-w-[600px]"
                                                     />
                                                 )
                                             )}

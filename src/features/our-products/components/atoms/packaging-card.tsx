@@ -14,15 +14,15 @@ export function PackagingCard({
     image,
 }: PackagingCardProps) {
     return (
-        <div className="flex w-full flex-col gap-5 lg:gap-[20px]">
+        <div className="group flex max-w-[330px] shrink-0 flex-col gap-5 transition-all duration-300 md:w-full md:min-w-0 lg:gap-5">
             {/* Image */}
-            <div className="flex aspect-square items-center justify-center overflow-hidden rounded-[10px] border border-[#414141] bg-[radial-gradient(circle_at_center,#000_0%,#171717_50%,_#ffffff40_100%)] from-[#323232] to-[#323232]">
+            <div className="relative flex aspect-square items-center justify-center overflow-hidden rounded-[10px] border border-[#414141] bg-[radial-gradient(circle_at_center,#000_0%,#171717_50%,#ffffff40_100%)] from-[#323232] to-[#323232]">
                 <Image
                     src={image}
                     alt={title}
                     width={330}
                     height={330}
-                    className="h-auto w-full object-contain"
+                    className="h-auto w-full object-contain group-hover:scale-110"
                 />
             </div>
 
