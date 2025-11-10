@@ -17,6 +17,22 @@ interface VideoGallerySectionProps {
     };
 }
 
+// Helper function to check if URL is a YouTube video
+function isYouTubeUrl(url: string): boolean {
+    return url.includes("youtube.com") || url.includes("youtu.be");
+}
+
+// Helper function to extract YouTube video ID
+function getYouTubeEmbedUrl(url: string): string {
+    const regExp =
+        /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
+    const match = url.match(regExp);
+    const videoId = match && match[2].length === 11 ? match[2] : null;
+    return videoId
+        ? `https://www.youtube.com/embed/${videoId}?autoplay=1`
+        : url;
+}
+
 // Video Modal Component
 function VideoModal({
     isOpen,
@@ -28,14 +44,15 @@ function VideoModal({
     videoSrc: string;
 }) {
     const videoRef = useRef<HTMLVideoElement>(null);
+    const isYouTube = isYouTubeUrl(videoSrc);
 
     useEffect(() => {
-        if (isOpen && videoRef.current) {
+        if (isOpen && videoRef.current && !isYouTube) {
             videoRef.current
                 .play()
                 .catch((err: Error) => console.log("Play prevented:", err));
         }
-    }, [isOpen]);
+    }, [isOpen, isYouTube]);
 
     if (!isOpen) return null;
 
@@ -56,13 +73,22 @@ function VideoModal({
                 className="relative w-full max-w-xs sm:max-w-lg md:max-w-3xl lg:max-w-5xl"
                 onClick={(e) => e.stopPropagation()}
             >
-                <video
-                    ref={videoRef}
-                    src={videoSrc}
-                    controls
-                    autoPlay
-                    className="w-full rounded-lg shadow-2xl"
-                />
+                {isYouTube ? (
+                    <iframe
+                        src={getYouTubeEmbedUrl(videoSrc)}
+                        className="aspect-video w-full rounded-lg shadow-2xl"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                        allowFullScreen
+                    />
+                ) : (
+                    <video
+                        ref={videoRef}
+                        src={videoSrc}
+                        controls
+                        autoPlay
+                        className="w-full rounded-lg shadow-2xl"
+                    />
+                )}
             </div>
         </div>
     );
@@ -104,7 +130,7 @@ function VideoSquare({
                 src={item.thumbnail}
                 alt="Video thumbnail"
                 fill
-                className={`bg-[radial-gradient(circle_at_center,#000_0%,#171717_50%,_#ffffff40_100%)] object-cover transition-opacity duration-300 ${
+                className={`bg-[radial-gradient(circle_at_center,#000_0%,#171717_50%,#ffffff40_100%)] object-cover transition-opacity duration-300 ${
                     isHovering ? "opacity-0" : "opacity-100"
                 }`}
             />
@@ -157,11 +183,11 @@ export function VideoGallerySection({
     const defaultVideoData: { gallery: VideoItem[] } = {
         gallery: [
             {
-                video: "/videos/product-1.mp4",
+                video: "https://www.youtube.com/watch?v=TwNPKb9ol8Y",
                 thumbnail: "/images/product-hero-image-new.png",
             },
             {
-                video: "/videos/product-2.mp4",
+                video: "https://www.youtube.com/watch?v=TwNPKb9ol8Y",
                 thumbnail: "/images/product-hero-image-new.png",
             },
             {
@@ -195,7 +221,7 @@ export function VideoGallerySection({
         <div className="w-full">
             <div className="mx-auto px-4 sm:px-6 lg:px-0">
                 {/* Stacked Video Squares - Responsive sizing and spacing */}
-                <div className="mx-auto flex w-full max-w-xs flex-col space-y-4 sm:max-w-sm sm:space-y-5 xl:max-w-[420px] xl:space-y-6 2xl:max-w-[460px] 2xl:space-y-8">
+                <div className="mx-auto flex w-full min-w-[110px] flex-col space-y-4 sm:max-w-sm sm:space-y-5 xl:max-w-[420px] xl:space-y-6 2xl:max-w-[460px] 2xl:space-y-8">
                     {videoData.gallery.map((item, index) => (
                         <VideoSquare
                             key={index}

@@ -17,6 +17,22 @@ interface VideoGallerySectionProps {
     };
 }
 
+// Helper function to check if URL is a YouTube video
+function isYouTubeUrl(url: string): boolean {
+    return url.includes("youtube.com") || url.includes("youtu.be");
+}
+
+// Helper function to extract YouTube video ID
+function getYouTubeEmbedUrl(url: string): string {
+    const regExp =
+        /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
+    const match = url.match(regExp);
+    const videoId = match && match[2].length === 11 ? match[2] : null;
+    return videoId
+        ? `https://www.youtube.com/embed/${videoId}?autoplay=1`
+        : url;
+}
+
 // Video Modal Component
 function VideoModal({
     isOpen,
@@ -28,14 +44,15 @@ function VideoModal({
     videoSrc: string;
 }) {
     const videoRef = useRef<HTMLVideoElement>(null);
+    const isYouTube = isYouTubeUrl(videoSrc);
 
     useEffect(() => {
-        if (isOpen && videoRef.current) {
+        if (isOpen && videoRef.current && !isYouTube) {
             videoRef.current
                 .play()
                 .catch((err: Error) => console.log("Play prevented:", err));
         }
-    }, [isOpen]);
+    }, [isOpen, isYouTube]);
 
     if (!isOpen) return null;
 
@@ -56,13 +73,22 @@ function VideoModal({
                 className="relative w-full max-w-xs sm:max-w-lg md:max-w-3xl lg:max-w-5xl"
                 onClick={(e) => e.stopPropagation()}
             >
-                <video
-                    ref={videoRef}
-                    src={videoSrc}
-                    controls
-                    autoPlay
-                    className="w-full rounded-lg shadow-2xl"
-                />
+                {isYouTube ? (
+                    <iframe
+                        src={getYouTubeEmbedUrl(videoSrc)}
+                        className="aspect-video w-full rounded-lg shadow-2xl"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                        allowFullScreen
+                    />
+                ) : (
+                    <video
+                        ref={videoRef}
+                        src={videoSrc}
+                        controls
+                        autoPlay
+                        className="w-full rounded-lg shadow-2xl"
+                    />
+                )}
             </div>
         </div>
     );
@@ -104,7 +130,7 @@ function VideoSquare({
                 src={item.thumbnail}
                 alt="Video thumbnail"
                 fill
-                className={`bg-[radial-gradient(circle_at_center,#000_0%,#171717_50%,_#ffffff40_100%)] object-cover transition-opacity duration-300 ${
+                className={`bg-[radial-gradient(circle_at_center,#000_0%,#171717_50%,#ffffff40_100%)] object-cover transition-opacity duration-300 ${
                     isHovering ? "opacity-0" : "opacity-100"
                 }`}
             />
@@ -186,7 +212,7 @@ function ThumbnailSlider({
     const handlePrevious = () => {
         const container = scrollContainerRef.current;
         if (container) {
-            const scrollAmount = 180 + 8; // thumbnail width + gap
+            const scrollAmount = 160 + 8; // thumbnail width + gap
             container.scrollBy({ left: -scrollAmount, behavior: "smooth" });
         }
     };
@@ -194,7 +220,7 @@ function ThumbnailSlider({
     const handleNext = () => {
         const container = scrollContainerRef.current;
         if (container) {
-            const scrollAmount = 180 + 8; // thumbnail width + gap
+            const scrollAmount = 160 + 8; // thumbnail width + gap
             container.scrollBy({ left: scrollAmount, behavior: "smooth" });
         }
     };
@@ -233,7 +259,7 @@ function ThumbnailSlider({
                 {items.map((item, index) => (
                     <div
                         key={index}
-                        className="group relative aspect-square min-h-[180px] min-w-[180px] flex-shrink-0 cursor-pointer overflow-hidden rounded-lg sm:rounded-xl"
+                        className="group relative aspect-square min-h-40 min-w-40 shrink-0 cursor-pointer overflow-hidden rounded-lg sm:min-h-[180px] sm:min-w-[180px] sm:rounded-xl"
                         onClick={() => onItemClick(item.video)}
                     >
                         {/* Thumbnail */}
@@ -241,7 +267,7 @@ function ThumbnailSlider({
                             src={item.thumbnail}
                             alt={`Thumbnail ${index + 1}`}
                             fill
-                            className="bg-[radial-gradient(circle_at_center,#000_0%,#171717_50%,_#ffffff40_100%)] object-cover"
+                            className="bg-[radial-gradient(circle_at_center,#000_0%,#171717_50%,#ffffff40_100%)] object-cover"
                         />
 
                         {/* Djavacoal Logo Watermark - Matching main thumbnail style */}
@@ -336,13 +362,13 @@ export function VideoGallerySectionMd({
     };
 
     return (
-        <div className="w-full">
-            <div className="mx-auto px-4 sm:px-6">
+        <div className="flex w-full">
+            <div className="mx-auto px-0">
                 {/* Mobile/Tablet Layout - Grid with main video and thumbnails */}
-                <div className="mx-auto max-w-[420px]">
+                <div className="mx-auto w-full">
                     {/* Main Large Video */}
                     {videoData.gallery.length > 0 && (
-                        <div className="mb-4">
+                        <div className="mx-auto mb-4 w-full">
                             <VideoSquare
                                 item={videoData.gallery[0]}
                                 onOpenModal={() =>
