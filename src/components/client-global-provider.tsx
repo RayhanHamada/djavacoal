@@ -16,15 +16,17 @@ export default function ClientGlobalProvider({ children }: Props) {
         <>
             <QueryClientProvider client={queryClient}>
                 <LocaleChangeHandler />
-                <TanStackDevtools
-                    config={{ position: "bottom-right" }}
-                    plugins={[
-                        {
-                            name: "TanStack Query",
-                            render: <ReactQueryDevtoolsPanel />,
-                        },
-                    ]}
-                />
+                {process.env.NODE_ENV === "development" && (
+                    <TanStackDevtools
+                        config={{ position: "bottom-right" }}
+                        plugins={[
+                            {
+                                name: "TanStack Query",
+                                render: <ReactQueryDevtoolsPanel />,
+                            },
+                        ]}
+                    />
+                )}
                 {children}
             </QueryClientProvider>
         </>
