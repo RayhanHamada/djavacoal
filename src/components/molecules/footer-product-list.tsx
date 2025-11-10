@@ -10,9 +10,13 @@ export function FooterProductList() {
     return (
         <ul className="mt-3 space-y-2 text-xs md:text-base">
             {productNames?.data.names.map((item) => (
-                <li key={item.id}>
-                    <Link href="#">{item.name}</Link>
-                </li>
+                <Link
+                    key={item.id}
+                    href="#"
+                    className="decoration-secondary hover:underline"
+                >
+                    <li>{item.name}</li>
+                </Link>
             ))}
         </ul>
     );
