@@ -6,6 +6,9 @@ import {
     PACKAGING_OPTION_COLUMNS,
     PRODUCT_COLUMNS,
     PRODUCT_MEDIA_COLUMNS,
+    PRODUCT_MEDIA_TYPE,
+    PRODUCT_SPECIFICATION_COLUMNS,
+    PRODUCT_VARIANT_COLUMNS,
     TEAM_MEMBER_COLUMNS,
 } from "@/adapters/d1/constants";
 import { getDB } from "@/adapters/d1/db";
@@ -18,6 +21,8 @@ import {
     LIST_PRODUCT_NAME_BODY_OUTPUT_SCHEMA,
     ABOUT_COMPANY_BODY_OUTPUT_SCHEMA,
     PACKAGING_INFO_CONTENT_BODY_OUTPUT_SCHEMA,
+    PRODUCT_DETAIL_BODY_OUTPUT_SCHEMA,
+    PRODUCT_DETAIL_PATH_INPUT_SCHEMA,
 } from "@/features/public-api/schemas";
 import { injectNextCookies } from "@/lib/orpc/middlewares";
 import base from "@/lib/orpc/server";
@@ -541,6 +546,217 @@ export const router = {
 
             return {
                 body,
+            };
+        }),
+
+    productDetail: publicBase
+        .route({
+            method: "GET",
+            path: "/products/:id",
+            summary: "Fetch product detail data",
+            description: "Get product detail by product ID",
+            inputStructure: "detailed",
+            outputStructure: "detailed",
+        })
+        .input(
+            z.object({
+                params: PRODUCT_DETAIL_PATH_INPUT_SCHEMA,
+            })
+        )
+        .output(
+            z.object({
+                body: PRODUCT_DETAIL_BODY_OUTPUT_SCHEMA,
+            })
+        )
+        .handler(async function ({
+            context: { env, locale },
+            errors,
+            input: { params },
+        }) {
+            const isArabic = locale === LOCALES.AR;
+            console.log(locale);
+            const db = getDB(env.DJAVACOAL_DB);
+
+            const product = await db.query.products.findFirst({
+                where(fields, operators) {
+                    return operators.and(
+                        operators.eq(fields[COMMON_COLUMNS.ID], params.id),
+                        operators.eq(fields[PRODUCT_COLUMNS.IS_HIDDEN], false)
+                    );
+                },
+
+                with: {
+                    packagingOptions: {
+                        columns: {},
+                        with: {
+                            packagingOption: true,
+                        },
+                    },
+                    medias: {
+                        orderBy(fields, operators) {
+                            return [
+                                operators.asc(
+                                    fields[PRODUCT_MEDIA_COLUMNS.ORDER_INDEX]
+                                ),
+                            ];
+                        },
+                    },
+                    variants: {
+                        orderBy(fields, operators) {
+                            return [
+                                operators.asc(
+                                    fields[PRODUCT_VARIANT_COLUMNS.ORDER_INDEX]
+                                ),
+                            ];
+                        },
+                    },
+                    specifications: {
+                        orderBy(fields, operators) {
+                            return [
+                                operators.asc(
+                                    fields[
+                                        PRODUCT_SPECIFICATION_COLUMNS
+                                            .ORDER_INDEX
+                                    ]
+                                ),
+                            ];
+                        },
+                    },
+                },
+            });
+
+            if (!product) {
+                throw errors.NOT_FOUND();
+            }
+
+            const slug = product[PRODUCT_COLUMNS.EN_NAME]
+                .replaceAll(" ", "-")
+                .toLowerCase();
+
+            const medias = product.medias.map((media) => {
+                const id = media[COMMON_COLUMNS.ID];
+                const type = media[PRODUCT_MEDIA_COLUMNS.MEDIA_TYPE];
+
+                if (type === PRODUCT_MEDIA_TYPE.IMAGE) {
+                    const imageKey =
+                        media[PRODUCT_MEDIA_COLUMNS.IMAGE_KEY] ?? "";
+                    const image_url = new URL(
+                        imageKey,
+                        env.NEXT_PUBLIC_ASSET_URL
+                    ).toString();
+
+                    return {
+                        type,
+                        id,
+                        image_url,
+                    };
+                }
+
+                const youtube_url = `https://www.youtube.com/watch?v=${media[PRODUCT_MEDIA_COLUMNS.YOUTUBE_VIDEO_ID]}`;
+
+                const thumbnailKey =
+                    media[PRODUCT_MEDIA_COLUMNS.VIDEO_CUSTOM_THUMBNAIL_KEY];
+
+                const custom_thumbnail_url = thumbnailKey
+                    ? new URL(
+                          thumbnailKey,
+                          env.NEXT_PUBLIC_ASSET_URL
+                      ).toString()
+                    : undefined;
+
+                return {
+                    id,
+                    type,
+                    youtube_url,
+                    custom_thumbnail_url,
+                };
+            });
+
+            const specifications = product.specifications.map((spec) => {
+                const id = spec[COMMON_COLUMNS.ID];
+                const imageKey =
+                    spec[PRODUCT_SPECIFICATION_COLUMNS.SPEC_PHOTO_KEY];
+                const image_url = new URL(
+                    imageKey,
+                    env.NEXT_PUBLIC_ASSET_URL
+                ).toString();
+
+                return {
+                    id,
+                    image_url,
+                };
+            });
+
+            const variants = product.variants.map((variant) => {
+                const id = variant[COMMON_COLUMNS.ID];
+                const name = isArabic
+                    ? variant[PRODUCT_VARIANT_COLUMNS.AR_VARIANT_NAME]
+                    : variant[PRODUCT_VARIANT_COLUMNS.EN_VARIANT_NAME];
+                const sizes = variant[PRODUCT_VARIANT_COLUMNS.VARIANT_SIZES];
+                const imageKey =
+                    variant[PRODUCT_VARIANT_COLUMNS.VARIANT_PHOTO_KEY];
+                const image_url = new URL(
+                    imageKey,
+                    env.NEXT_PUBLIC_ASSET_URL
+                ).toString();
+
+                return {
+                    id,
+                    name,
+                    sizes,
+                    image_url,
+                };
+            });
+
+            const packaging_options = product.packagingOptions
+                .map((v) => v.packagingOption)
+                .map((v) => {
+                    const id = v[COMMON_COLUMNS.ID];
+                    const slug = v[PACKAGING_OPTION_COLUMNS.EN_NAME]
+                        .toLowerCase()
+                        .replaceAll(" ", "-");
+                    const type = isArabic
+                        ? v[PACKAGING_OPTION_COLUMNS.AR_NAME]
+                        : v[PACKAGING_OPTION_COLUMNS.EN_NAME];
+                    const description = isArabic
+                        ? v[PACKAGING_OPTION_COLUMNS.AR_DESCRIPTION]
+                        : v[PACKAGING_OPTION_COLUMNS.EN_DESCRIPTION];
+                    const imageKey = v[PACKAGING_OPTION_COLUMNS.PHOTO_KEY];
+                    const image_url = new URL(
+                        imageKey,
+                        env.NEXT_PUBLIC_ASSET_URL
+                    ).toString();
+
+                    return {
+                        id,
+                        slug,
+                        type,
+                        description,
+                        image_url,
+                    };
+                });
+
+            return {
+                body: {
+                    data: {
+                        id: product[COMMON_COLUMNS.ID],
+                        slug,
+                        name: isArabic
+                            ? product[PRODUCT_COLUMNS.AR_NAME]
+                            : product[PRODUCT_COLUMNS.EN_NAME],
+                        description: isArabic
+                            ? product[PRODUCT_COLUMNS.AR_DESCRIPTION]
+                            : product[PRODUCT_COLUMNS.EN_DESCRIPTION],
+                        moq: product[PRODUCT_COLUMNS.MOQ],
+                        production_capacity:
+                            product[PRODUCT_COLUMNS.PRODUCTION_CAPACITY],
+
+                        medias,
+                        specifications,
+                        variants,
+                        packaging_options,
+                    },
+                },
             };
         }),
 };
