@@ -58,6 +58,7 @@ export default function ContactSection() {
                         icon={<FaPhoneAlt />}
                         label={t("info.phone.label")}
                         value={t("info.phone.value")}
+                        disableRtl
                     />
                     <ContactInfoItem
                         icon={<FaMapMarkerAlt />}
