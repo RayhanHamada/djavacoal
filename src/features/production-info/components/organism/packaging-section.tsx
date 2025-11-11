@@ -6,6 +6,7 @@ import Image from "next/image";
 import { motion } from "framer-motion";
 import { useTranslations } from "next-intl";
 
+import { SECTIONS_ELEMENTS_ID } from "@/configs";
 import { useProductionInfoContentAPI } from "@/features/public-api/hooks";
 
 type Props = {
@@ -75,7 +76,7 @@ export default function PackagingSection() {
 
     return (
         <section
-            id="packaging"
+            id={SECTIONS_ELEMENTS_ID.PRODUCTION_INFO.PACKAGING_INFO}
             className="scroll-mt-28 rounded-xl bg-[#222222]"
         >
             {/* Header */}

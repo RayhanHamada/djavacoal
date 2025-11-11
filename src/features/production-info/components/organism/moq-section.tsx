@@ -2,11 +2,16 @@
 import { motion } from "framer-motion";
 import { useTranslations } from "next-intl";
 
+import { SECTIONS_ELEMENTS_ID } from "@/configs";
+
 export default function MOQSection() {
     const t = useTranslations("ProductionInfo.moq");
 
     return (
-        <section id="moq" className="mt-2 scroll-mt-28 rounded-xl bg-[#222222]">
+        <section
+            id={SECTIONS_ELEMENTS_ID.PRODUCTION_INFO.MOQ_PAYMENT_TERMS}
+            className="mt-2 scroll-mt-28 rounded-xl bg-[#222222]"
+        >
             {/* Header */}
             <header className="mb-4 px-4 pt-4 md:px-6">
                 <div className="mb-2 flex items-center gap-3">

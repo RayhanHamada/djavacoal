@@ -9,7 +9,7 @@ export default function GlobalMarketSection() {
 
     return (
         <section
-            id="global-market"
+            id="what-we-do"
             className="mt-2 scroll-mt-28 space-y-4 rounded-xl bg-[#222222] p-5 lg:p-10"
         >
             <header className="mb-2">

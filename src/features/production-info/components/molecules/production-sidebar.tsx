@@ -7,6 +7,8 @@ import { useTranslations } from "next-intl";
 import { IoMdArrowDropright } from "react-icons/io";
 import { IoChevronDown, IoChevronUp } from "react-icons/io5";
 
+import { SECTIONS_ELEMENTS_ID } from "@/configs";
+
 type Props = {
     idPrefix?: string;
 };
@@ -18,11 +20,26 @@ export default function ProductionSidebar({ idPrefix = "" }: Props) {
 
     const ITEMS = useMemo(
         () => [
-            { id: "process", label: t("items.process") },
-            { id: "moq", label: t("items.moq") },
-            { id: "shipment", label: t("items.shipment") },
-            { id: "packaging", label: t("items.packaging") },
-            { id: "faq", label: t("items.faq") },
+            {
+                id: SECTIONS_ELEMENTS_ID.PRODUCTION_INFO.PRODUCTION_PROCESS,
+                label: t("items.process"),
+            },
+            {
+                id: SECTIONS_ELEMENTS_ID.PRODUCTION_INFO.MOQ_PAYMENT_TERMS,
+                label: t("items.moq"),
+            },
+            {
+                id: SECTIONS_ELEMENTS_ID.PRODUCTION_INFO.SHIPMENT_TERMS,
+                label: t("items.shipment"),
+            },
+            {
+                id: SECTIONS_ELEMENTS_ID.PRODUCTION_INFO.PACKAGING_INFO,
+                label: t("items.packaging"),
+            },
+            {
+                id: SECTIONS_ELEMENTS_ID.PRODUCTION_INFO.FAQS,
+                label: t("items.faq"),
+            },
         ],
         [t]
     );

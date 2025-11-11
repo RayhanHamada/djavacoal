@@ -6,6 +6,8 @@ import Image from "next/image";
 import { motion } from "framer-motion";
 import { useTranslations } from "next-intl";
 
+import { SECTIONS_ELEMENTS_ID } from "@/configs";
+
 interface StepCardProps {
     image: string;
     title: string;
@@ -117,7 +119,10 @@ export default function ProcessSection() {
     const rows = Array.from({ length: Math.ceil(steps.length / itemsPerRow) });
 
     return (
-        <section id="process" className="scroll-mt-28 rounded-xl bg-[#222222]">
+        <section
+            id={SECTIONS_ELEMENTS_ID.PRODUCTION_INFO.PRODUCTION_PROCESS}
+            className="scroll-mt-28 rounded-xl bg-[#222222]"
+        >
             {/* Header */}
             <header className="mb-2 pt-4">
                 <div className="mb-2 flex items-center gap-3 px-6">

@@ -23,7 +23,7 @@ export default function TeamSection() {
 
     return (
         <section
-            id="team"
+            id="djavacoals-team"
             className="relative scroll-mt-24 overflow-hidden rounded-2xl border border-[#2A2A2A] bg-[#222222] p-6 md:p-10"
             aria-label="Djavacoal Team Section"
         >

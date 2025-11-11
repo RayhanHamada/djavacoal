@@ -87,6 +87,10 @@ export function useMenuItems() {
                         label: t("productionInfoSubmenus.packagingOption"),
                         href: `/production-info#${SECTIONS_ELEMENTS_ID.PRODUCTION_INFO.PACKAGING_INFO}`,
                     },
+                    {
+                        label: t("productionInfoSubmenus.faq"),
+                        href: `/production-info#${SECTIONS_ELEMENTS_ID.PRODUCTION_INFO.FAQS}`,
+                    },
                 ],
             },
             {
