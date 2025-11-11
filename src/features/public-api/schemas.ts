@@ -290,3 +290,22 @@ export const NEWS_DETAIL_BODY_OUTPUT_SCHEMA = z.object({
             .describe("URL of the article's cover image"),
     }),
 });
+
+export const NEWS_METADATA_PARAMS_INPUT_SCHEMA = z.object({
+    slug: z
+        .string()
+        .describe("The slug of the news article to fetch details for"),
+});
+
+export const NEWS_METADATA_BODY_OUTPUT_SCHEMA = z.object({
+    data: z.object({
+        meta_title: z.string().describe("Meta title"),
+        meta_description: z
+            .string()
+            .describe("Meta description of the article"),
+        cover_image_url: z
+            .url()
+            .nullable()
+            .describe("URL of the article's cover image"),
+    }),
+});

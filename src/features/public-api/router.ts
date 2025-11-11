@@ -32,6 +32,8 @@ import {
     NEWS_LIST_BODY_OUTPUT_SCHEMA,
     NEWS_DETAIL_PARAMS_INPUT_SCHEMA,
     NEWS_DETAIL_BODY_OUTPUT_SCHEMA,
+    NEWS_METADATA_PARAMS_INPUT_SCHEMA,
+    NEWS_METADATA_BODY_OUTPUT_SCHEMA,
 } from "@/features/public-api/schemas";
 import { injectNextCookies } from "@/lib/orpc/middlewares";
 import base from "@/lib/orpc/server";
@@ -946,6 +948,66 @@ export const router = {
                         content,
                         cover_image_url,
                         published_at: article[NEWS_COLUMNS.PUBLISHED_AT]!,
+                    },
+                },
+            };
+        }),
+
+    getNewsMetadata: publicBase
+        .route({
+            method: "GET",
+            path: "/news-metadata",
+            summary: "Fetch news metadata",
+            description: "Get metadata for news articles",
+            inputStructure: "detailed",
+            outputStructure: "detailed",
+        })
+        .input(
+            z.object({
+                params: NEWS_METADATA_PARAMS_INPUT_SCHEMA,
+            })
+        )
+        .output(
+            z.object({
+                body: NEWS_METADATA_BODY_OUTPUT_SCHEMA,
+            })
+        )
+        .handler(async function ({
+            context: { env },
+            input: { params },
+            errors,
+        }) {
+            const db = getDB(env.DJAVACOAL_DB);
+
+            const now = new Date();
+            const article = await db.query.news.findFirst({
+                where(fields, operators) {
+                    return operators.and(
+                        operators.eq(fields[NEWS_COLUMNS.SLUG], params.slug),
+
+                        operators.isNotNull(fields[NEWS_COLUMNS.PUBLISHED_AT]),
+
+                        operators.lte(fields[NEWS_COLUMNS.PUBLISHED_AT], now),
+
+                        operators.eq(
+                            fields[NEWS_COLUMNS.STATUS],
+                            NEWS_STATUS.PUBLISHED
+                        )
+                    );
+                },
+            });
+
+            if (!article) {
+                throw errors.NOT_FOUND();
+            }
+
+            return {
+                body: {
+                    data: {
+                        meta_title: article[NEWS_COLUMNS.METADATA_TITLE],
+                        meta_description:
+                            article[NEWS_COLUMNS.METADATA_DESCRIPTION],
+                        cover_image_url: article[NEWS_COLUMNS.IMAGE_KEY],
                     },
                 },
             };
