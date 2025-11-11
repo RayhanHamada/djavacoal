@@ -1026,18 +1026,19 @@ export const router = {
         .handler(async function ({ context: { env } }) {
             const kv = env.DJAVACOAL_KV;
 
-            const [email, phone_number, address_line] = await Promise.all([
-                kv.get(KV_KEYS.EMAIL_ADDRESS),
-                kv.get(KV_KEYS.WHATSAPP_NUMBER),
-                kv.get(KV_KEYS.ADDRESS_LINE),
-            ]);
+            const [contact_email, contact_phone_number, contact_address_line] =
+                await Promise.all([
+                    kv.get(KV_KEYS.EMAIL_ADDRESS),
+                    kv.get(KV_KEYS.WHATSAPP_NUMBER),
+                    kv.get(KV_KEYS.ADDRESS_LINE),
+                ]);
 
             return {
                 body: {
                     data: {
-                        email,
-                        phone_number,
-                        address_line,
+                        contact_address_line,
+                        contact_email,
+                        contact_phone_number,
                     },
                 },
             };
