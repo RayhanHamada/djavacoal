@@ -1,15 +1,23 @@
+import { and, isNotNull, lte } from "drizzle-orm";
 import { Locale } from "next-intl";
 import z from "zod";
 
 import {
     COMMON_COLUMNS,
+    NEWS_COLUMNS,
+    NEWS_STATUS,
     PACKAGING_OPTION_COLUMNS,
     PRODUCT_COLUMNS,
     PRODUCT_MEDIA_COLUMNS,
+    PRODUCT_MEDIA_TYPE,
+    PRODUCT_SPECIFICATION_COLUMNS,
+    PRODUCT_VARIANT_COLUMNS,
     TEAM_MEMBER_COLUMNS,
 } from "@/adapters/d1/constants";
 import { getDB } from "@/adapters/d1/db";
+import { news } from "@/adapters/d1/schema";
 import { KV_KEYS } from "@/adapters/kv/constants";
+import { getR2Client, getTextContent } from "@/adapters/r2";
 import { COOKIE_NAME, LOCALES } from "@/configs";
 import {
     FOOTER_CONTENT_BODY_OUTPUT_SCHEMA,
@@ -18,6 +26,14 @@ import {
     LIST_PRODUCT_NAME_BODY_OUTPUT_SCHEMA,
     ABOUT_COMPANY_BODY_OUTPUT_SCHEMA,
     PACKAGING_INFO_CONTENT_BODY_OUTPUT_SCHEMA,
+    PRODUCT_DETAIL_BODY_OUTPUT_SCHEMA,
+    PRODUCT_DETAIL_PATH_INPUT_SCHEMA,
+    NEWS_LIST_QUERY_INPUT_SCHEMA,
+    NEWS_LIST_BODY_OUTPUT_SCHEMA,
+    NEWS_DETAIL_PARAMS_INPUT_SCHEMA,
+    NEWS_DETAIL_BODY_OUTPUT_SCHEMA,
+    NEWS_METADATA_PARAMS_INPUT_SCHEMA,
+    NEWS_METADATA_BODY_OUTPUT_SCHEMA,
 } from "@/features/public-api/schemas";
 import { injectNextCookies } from "@/lib/orpc/middlewares";
 import base from "@/lib/orpc/server";
@@ -96,7 +112,7 @@ export const router = {
             };
         }),
 
-    footerContent: publicBase
+    getFooterContent: publicBase
         .route({
             method: "GET",
             path: "/footer-content",
@@ -148,7 +164,7 @@ export const router = {
             };
         }),
 
-    homeContent: publicBase
+    getHomeContent: publicBase
         .route({
             method: "GET",
             path: "/home-content",
@@ -349,7 +365,7 @@ export const router = {
             };
         }),
 
-    aboutCompanyContent: publicBase
+    getAboutCompanyContent: publicBase
         .route({
             method: "GET",
             path: "/about-company-content",
@@ -478,7 +494,7 @@ export const router = {
             };
         }),
 
-    packagingInfoContent: publicBase
+    getPackagingInfoContent: publicBase
         .route({
             method: "GET",
             path: "/packaging-info-content",
@@ -541,6 +557,459 @@ export const router = {
 
             return {
                 body,
+            };
+        }),
+
+    getProductDetail: publicBase
+        .route({
+            method: "GET",
+            path: "/products/:id",
+            summary: "Fetch product detail data",
+            description: "Get product detail by product ID",
+            inputStructure: "detailed",
+            outputStructure: "detailed",
+        })
+        .input(
+            z.object({
+                params: PRODUCT_DETAIL_PATH_INPUT_SCHEMA,
+            })
+        )
+        .output(
+            z.object({
+                body: PRODUCT_DETAIL_BODY_OUTPUT_SCHEMA,
+            })
+        )
+        .handler(async function ({
+            context: { env, locale },
+            errors,
+            input: { params },
+        }) {
+            const isArabic = locale === LOCALES.AR;
+            console.log(locale);
+            const db = getDB(env.DJAVACOAL_DB);
+
+            const product = await db.query.products.findFirst({
+                where(fields, operators) {
+                    return operators.and(
+                        operators.eq(fields[COMMON_COLUMNS.ID], params.id),
+                        operators.eq(fields[PRODUCT_COLUMNS.IS_HIDDEN], false)
+                    );
+                },
+
+                with: {
+                    packagingOptions: {
+                        columns: {},
+                        with: {
+                            packagingOption: true,
+                        },
+                    },
+                    medias: {
+                        orderBy(fields, operators) {
+                            return [
+                                operators.asc(
+                                    fields[PRODUCT_MEDIA_COLUMNS.ORDER_INDEX]
+                                ),
+                            ];
+                        },
+                    },
+                    variants: {
+                        orderBy(fields, operators) {
+                            return [
+                                operators.asc(
+                                    fields[PRODUCT_VARIANT_COLUMNS.ORDER_INDEX]
+                                ),
+                            ];
+                        },
+                    },
+                    specifications: {
+                        orderBy(fields, operators) {
+                            return [
+                                operators.asc(
+                                    fields[
+                                        PRODUCT_SPECIFICATION_COLUMNS
+                                            .ORDER_INDEX
+                                    ]
+                                ),
+                            ];
+                        },
+                    },
+                },
+            });
+
+            if (!product) {
+                throw errors.NOT_FOUND();
+            }
+
+            const slug = product[PRODUCT_COLUMNS.EN_NAME]
+                .replaceAll(" ", "-")
+                .toLowerCase();
+
+            const medias = product.medias.map((media) => {
+                const id = media[COMMON_COLUMNS.ID];
+                const type = media[PRODUCT_MEDIA_COLUMNS.MEDIA_TYPE];
+
+                if (type === PRODUCT_MEDIA_TYPE.IMAGE) {
+                    const imageKey =
+                        media[PRODUCT_MEDIA_COLUMNS.IMAGE_KEY] ?? "";
+                    const image_url = new URL(
+                        imageKey,
+                        env.NEXT_PUBLIC_ASSET_URL
+                    ).toString();
+
+                    return {
+                        type,
+                        id,
+                        image_url,
+                    };
+                }
+
+                const youtube_url = `https://www.youtube.com/watch?v=${media[PRODUCT_MEDIA_COLUMNS.YOUTUBE_VIDEO_ID]}`;
+
+                const thumbnailKey =
+                    media[PRODUCT_MEDIA_COLUMNS.VIDEO_CUSTOM_THUMBNAIL_KEY];
+
+                const custom_thumbnail_url = thumbnailKey
+                    ? new URL(
+                          thumbnailKey,
+                          env.NEXT_PUBLIC_ASSET_URL
+                      ).toString()
+                    : undefined;
+
+                return {
+                    id,
+                    type,
+                    youtube_url,
+                    custom_thumbnail_url,
+                };
+            });
+
+            const specifications = product.specifications.map((spec) => {
+                const id = spec[COMMON_COLUMNS.ID];
+                const imageKey =
+                    spec[PRODUCT_SPECIFICATION_COLUMNS.SPEC_PHOTO_KEY];
+                const image_url = new URL(
+                    imageKey,
+                    env.NEXT_PUBLIC_ASSET_URL
+                ).toString();
+
+                return {
+                    id,
+                    image_url,
+                };
+            });
+
+            const variants = product.variants.map((variant) => {
+                const id = variant[COMMON_COLUMNS.ID];
+                const name = isArabic
+                    ? variant[PRODUCT_VARIANT_COLUMNS.AR_VARIANT_NAME]
+                    : variant[PRODUCT_VARIANT_COLUMNS.EN_VARIANT_NAME];
+                const sizes = variant[PRODUCT_VARIANT_COLUMNS.VARIANT_SIZES];
+                const imageKey =
+                    variant[PRODUCT_VARIANT_COLUMNS.VARIANT_PHOTO_KEY];
+                const image_url = new URL(
+                    imageKey,
+                    env.NEXT_PUBLIC_ASSET_URL
+                ).toString();
+
+                return {
+                    id,
+                    name,
+                    sizes,
+                    image_url,
+                };
+            });
+
+            const packaging_options = product.packagingOptions
+                .map((v) => v.packagingOption)
+                .map((v) => {
+                    const id = v[COMMON_COLUMNS.ID];
+                    const slug = v[PACKAGING_OPTION_COLUMNS.EN_NAME]
+                        .toLowerCase()
+                        .replaceAll(" ", "-");
+                    const type = isArabic
+                        ? v[PACKAGING_OPTION_COLUMNS.AR_NAME]
+                        : v[PACKAGING_OPTION_COLUMNS.EN_NAME];
+                    const description = isArabic
+                        ? v[PACKAGING_OPTION_COLUMNS.AR_DESCRIPTION]
+                        : v[PACKAGING_OPTION_COLUMNS.EN_DESCRIPTION];
+                    const imageKey = v[PACKAGING_OPTION_COLUMNS.PHOTO_KEY];
+                    const image_url = new URL(
+                        imageKey,
+                        env.NEXT_PUBLIC_ASSET_URL
+                    ).toString();
+
+                    return {
+                        id,
+                        slug,
+                        type,
+                        description,
+                        image_url,
+                    };
+                });
+
+            return {
+                body: {
+                    data: {
+                        id: product[COMMON_COLUMNS.ID],
+                        slug,
+                        name: isArabic
+                            ? product[PRODUCT_COLUMNS.AR_NAME]
+                            : product[PRODUCT_COLUMNS.EN_NAME],
+                        description: isArabic
+                            ? product[PRODUCT_COLUMNS.AR_DESCRIPTION]
+                            : product[PRODUCT_COLUMNS.EN_DESCRIPTION],
+                        moq: product[PRODUCT_COLUMNS.MOQ],
+                        production_capacity:
+                            product[PRODUCT_COLUMNS.PRODUCTION_CAPACITY],
+
+                        medias,
+                        specifications,
+                        variants,
+                        packaging_options,
+                    },
+                },
+            };
+        }),
+
+    getNewsList: publicBase
+        .route({
+            method: "GET",
+            path: "/news",
+            summary: "Fetch news list",
+            description: "Get list of news articles",
+            inputStructure: "detailed",
+            outputStructure: "detailed",
+        })
+        .input(
+            z.object({
+                query: NEWS_LIST_QUERY_INPUT_SCHEMA,
+            })
+        )
+        .output(
+            z.object({
+                body: NEWS_LIST_BODY_OUTPUT_SCHEMA,
+            })
+        )
+        .handler(async function ({
+            context: { env, locale },
+            input: {
+                query: { limit, page },
+            },
+        }) {
+            const isArabic = locale === LOCALES.AR;
+            const db = getDB(env.DJAVACOAL_DB);
+
+            const allNewsConditions = and(
+                isNotNull(news[NEWS_COLUMNS.PUBLISHED_AT]),
+                lte(news[NEWS_COLUMNS.PUBLISHED_AT], new Date())
+            );
+
+            const allNews = await db.query.news
+                .findMany({
+                    columns: {
+                        id: true,
+                        slug: true,
+                        ar_title: true,
+                        en_title: true,
+                        published_at: true,
+                        image_key: true,
+                    },
+                    where() {
+                        return allNewsConditions;
+                    },
+                    orderBy(fields, operators) {
+                        return [
+                            operators.desc(fields[NEWS_COLUMNS.PUBLISHED_AT]),
+                        ];
+                    },
+                    limit: limit,
+                    offset: (page - 1) * limit,
+                })
+                .then((item) =>
+                    item
+                        .filter((v) => v[NEWS_COLUMNS.PUBLISHED_AT])
+                        .map((v) => {
+                            const id = v[COMMON_COLUMNS.ID];
+                            const slug = v[NEWS_COLUMNS.SLUG];
+                            const title = isArabic
+                                ? v[NEWS_COLUMNS.AR_TITLE]
+                                : v[NEWS_COLUMNS.EN_TITLE];
+                            const published_at = v[NEWS_COLUMNS.PUBLISHED_AT]!;
+                            const imageKey = v[NEWS_COLUMNS.IMAGE_KEY];
+                            const cover_image_url = imageKey
+                                ? new URL(
+                                      imageKey,
+                                      env.NEXT_PUBLIC_ASSET_URL
+                                  ).toString()
+                                : null;
+
+                            return {
+                                id,
+                                slug,
+                                title,
+                                published_at,
+                                cover_image_url,
+                            };
+                        })
+                );
+
+            const paginatedNewsCount = await db.$count(news, allNewsConditions);
+
+            const total_pages = Math.ceil(paginatedNewsCount / limit);
+
+            return {
+                body: {
+                    data: {
+                        news: {
+                            data: allNews,
+                            page,
+                            limit,
+                            total_pages,
+                        },
+                    },
+                },
+            };
+        }),
+
+    getNewsDetail: publicBase
+        .route({
+            method: "GET",
+            path: "/news/:slug",
+            summary: "Fetch news detail",
+            description: "Get news article detail by slug",
+            inputStructure: "detailed",
+            outputStructure: "detailed",
+        })
+        .input(
+            z.object({
+                params: NEWS_DETAIL_PARAMS_INPUT_SCHEMA,
+            })
+        )
+        .output(
+            z.object({
+                body: NEWS_DETAIL_BODY_OUTPUT_SCHEMA,
+            })
+        )
+        .handler(async function ({
+            context: { env, locale },
+            input: { params },
+            errors,
+        }) {
+            const isArabic = locale === LOCALES.AR;
+            const db = getDB(env.DJAVACOAL_DB);
+            const r2Client = getR2Client({
+                endpoint: env.S3_API,
+                accessKeyId: env.R2_ACCESS_KEY_ID!,
+                secretAccessKey: env.R2_SECRET_ACCESS_KEY!,
+            });
+
+            const now = new Date();
+            const article = await db.query.news.findFirst({
+                where(fields, operators) {
+                    return operators.and(
+                        operators.eq(fields[NEWS_COLUMNS.SLUG], params.slug),
+
+                        operators.isNotNull(fields[NEWS_COLUMNS.PUBLISHED_AT]),
+
+                        operators.lte(fields[NEWS_COLUMNS.PUBLISHED_AT], now),
+
+                        operators.eq(
+                            fields[NEWS_COLUMNS.STATUS],
+                            NEWS_STATUS.PUBLISHED
+                        )
+                    );
+                },
+            });
+
+            if (!article) {
+                throw errors.NOT_FOUND();
+            }
+
+            const title = isArabic
+                ? article[NEWS_COLUMNS.AR_TITLE]
+                : article[NEWS_COLUMNS.EN_TITLE];
+
+            const slug = article[NEWS_COLUMNS.SLUG];
+            const contentKey = isArabic
+                ? article[NEWS_COLUMNS.AR_CONTENT_KEY]
+                : article[NEWS_COLUMNS.EN_CONTENT_KEY];
+
+            const content = await getTextContent(r2Client, contentKey);
+            const imageKey = article[NEWS_COLUMNS.IMAGE_KEY];
+            const cover_image_url = imageKey
+                ? new URL(imageKey, env.NEXT_PUBLIC_ASSET_URL).toString()
+                : null;
+
+            return {
+                body: {
+                    data: {
+                        title,
+                        slug,
+                        content,
+                        cover_image_url,
+                        published_at: article[NEWS_COLUMNS.PUBLISHED_AT]!,
+                    },
+                },
+            };
+        }),
+
+    getNewsMetadata: publicBase
+        .route({
+            method: "GET",
+            path: "/news-metadata",
+            summary: "Fetch news metadata",
+            description: "Get metadata for news articles",
+            inputStructure: "detailed",
+            outputStructure: "detailed",
+        })
+        .input(
+            z.object({
+                params: NEWS_METADATA_PARAMS_INPUT_SCHEMA,
+            })
+        )
+        .output(
+            z.object({
+                body: NEWS_METADATA_BODY_OUTPUT_SCHEMA,
+            })
+        )
+        .handler(async function ({
+            context: { env },
+            input: { params },
+            errors,
+        }) {
+            const db = getDB(env.DJAVACOAL_DB);
+
+            const now = new Date();
+            const article = await db.query.news.findFirst({
+                where(fields, operators) {
+                    return operators.and(
+                        operators.eq(fields[NEWS_COLUMNS.SLUG], params.slug),
+
+                        operators.isNotNull(fields[NEWS_COLUMNS.PUBLISHED_AT]),
+
+                        operators.lte(fields[NEWS_COLUMNS.PUBLISHED_AT], now),
+
+                        operators.eq(
+                            fields[NEWS_COLUMNS.STATUS],
+                            NEWS_STATUS.PUBLISHED
+                        )
+                    );
+                },
+            });
+
+            if (!article) {
+                throw errors.NOT_FOUND();
+            }
+
+            return {
+                body: {
+                    data: {
+                        meta_title: article[NEWS_COLUMNS.METADATA_TITLE],
+                        meta_description:
+                            article[NEWS_COLUMNS.METADATA_DESCRIPTION],
+                        cover_image_url: article[NEWS_COLUMNS.IMAGE_KEY],
+                    },
+                },
             };
         }),
 };
