@@ -73,7 +73,7 @@ function GallerySubsection({
                             alt={mainImage}
                             width={1600}
                             height={900}
-                            className="h-[300px] w-full rounded-none object-cover md:h-[400px] lg:h-[685px]"
+                            className="aspect-square rounded-none object-cover"
                         />
                     )}
                 </button>
