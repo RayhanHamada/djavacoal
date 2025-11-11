@@ -35,7 +35,7 @@ export interface paths {
          * Fetch footer content data
          * @description Get footer content including social media links and contact info
          */
-        get: operations["footerContent"];
+        get: operations["getFooterContent"];
         put?: never;
         post?: never;
         delete?: never;
@@ -55,7 +55,7 @@ export interface paths {
          * Fetch home page content data
          * @description Get home page content including slide banners, featured products, and packaging options
          */
-        get: operations["homeContent"];
+        get: operations["getHomeContent"];
         put?: never;
         post?: never;
         delete?: never;
@@ -75,7 +75,7 @@ export interface paths {
          * Fetch about company content data
          * @description Get about company page content
          */
-        get: operations["aboutCompanyContent"];
+        get: operations["getAboutCompanyContent"];
         put?: never;
         post?: never;
         delete?: never;
@@ -95,7 +95,87 @@ export interface paths {
          * Fetch packaging info content data
          * @description Get packaging info page content
          */
-        get: operations["packagingInfoContent"];
+        get: operations["getPackagingInfoContent"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/products/:id": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Fetch product detail data
+         * @description Get product detail by product ID
+         */
+        get: operations["getProductDetail"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/news": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Fetch news list
+         * @description Get list of news articles
+         */
+        get: operations["getNewsList"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/news/:slug": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Fetch news detail
+         * @description Get news article detail by slug
+         */
+        get: operations["getNewsDetail"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/news-metadata": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Fetch news metadata
+         * @description Get metadata for news articles
+         */
+        get: operations["getNewsMetadata"];
         put?: never;
         post?: never;
         delete?: never;
@@ -261,7 +341,7 @@ export interface operations {
             };
         };
     };
-    footerContent: {
+    getFooterContent: {
         parameters: {
             query?: never;
             header?: never;
@@ -404,7 +484,7 @@ export interface operations {
             };
         };
     };
-    homeContent: {
+    getHomeContent: {
         parameters: {
             query?: never;
             header?: never;
@@ -575,7 +655,7 @@ export interface operations {
             };
         };
     };
-    aboutCompanyContent: {
+    getAboutCompanyContent: {
         parameters: {
             query?: never;
             header?: never;
@@ -738,7 +818,7 @@ export interface operations {
             };
         };
     };
-    packagingInfoContent: {
+    getPackagingInfoContent: {
         parameters: {
             query?: never;
             header?: never;
@@ -770,6 +850,678 @@ export interface operations {
                                  */
                                 image_url: string;
                             }[];
+                        };
+                    };
+                };
+            };
+            /** @description 400 */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json":
+                        | {
+                              /** @constant */
+                              defined: true;
+                              /** @constant */
+                              code: "BAD_REQUEST";
+                              /** @constant */
+                              status: 400;
+                              /** @default The request was invalid or cannot be served. */
+                              message: string;
+                              data?: Record<string, never> | null;
+                          }
+                        | {
+                              /** @constant */
+                              defined: false;
+                              code: string;
+                              status: number;
+                              message: string;
+                              data?: unknown;
+                          };
+                };
+            };
+            /** @description 401 */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json":
+                        | {
+                              /** @constant */
+                              defined: true;
+                              /** @constant */
+                              code: "UNAUTHORIZED";
+                              /** @constant */
+                              status: 401;
+                              /** @default You are not authorized to perform this action. */
+                              message: string;
+                              data?: Record<string, never> | null;
+                          }
+                        | {
+                              /** @constant */
+                              defined: false;
+                              code: string;
+                              status: number;
+                              message: string;
+                              data?: unknown;
+                          };
+                };
+            };
+            /** @description 404 */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json":
+                        | {
+                              /** @constant */
+                              defined: true;
+                              /** @constant */
+                              code: "NOT_FOUND";
+                              /** @constant */
+                              status: 404;
+                              /** @default The requested resource was not found. */
+                              message: string;
+                              data?: Record<string, never> | null;
+                          }
+                        | {
+                              /** @constant */
+                              defined: false;
+                              code: string;
+                              status: number;
+                              message: string;
+                              data?: unknown;
+                          };
+                };
+            };
+            /** @description 500 */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json":
+                        | {
+                              /** @constant */
+                              defined: true;
+                              /** @constant */
+                              code: "INTERNAL_SERVER_ERROR";
+                              /** @constant */
+                              status: 500;
+                              /** @default An internal server error occurred. */
+                              message: string;
+                              data?: Record<string, never> | null;
+                          }
+                        | {
+                              /** @constant */
+                              defined: false;
+                              code: string;
+                              status: number;
+                              message: string;
+                              data?: unknown;
+                          };
+                };
+            };
+        };
+    };
+    getProductDetail: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: {
+                            /** @description Product ID */
+                            id: number;
+                            /** @description Product slug */
+                            slug: string;
+                            /** @description Product name */
+                            name: string;
+                            /** @description Product description */
+                            description: string;
+                            medias: ({
+                                /** @description Media ID */
+                                id: number;
+                            } & (
+                                | {
+                                      /**
+                                       * @description Type of media
+                                       * @constant
+                                       */
+                                      type: "image";
+                                      /**
+                                       * Format: uri
+                                       * @description Image URL if media is an image
+                                       */
+                                      image_url: string;
+                                  }
+                                | {
+                                      /**
+                                       * @description Type of media
+                                       * @constant
+                                       */
+                                      type: "youtube";
+                                      /**
+                                       * Format: uri
+                                       * @description YouTube URL if media is a video
+                                       */
+                                      youtube_url: string;
+                                      /**
+                                       * Format: uri
+                                       * @description Custom thumbnail URL for the video
+                                       */
+                                      custom_thumbnail_url?: string;
+                                  }
+                            ))[];
+                            specifications: {
+                                /** @description Specification ID */
+                                id: number;
+                                /** @description Specification image URL */
+                                image_url: string;
+                            }[];
+                            variants: {
+                                /** @description Variant ID */
+                                id: number;
+                                /** @description Variant name */
+                                name: string;
+                                /** @description Sizes */
+                                sizes: string[];
+                                /**
+                                 * Format: uri
+                                 * @description URL of the variant photo
+                                 */
+                                image_url: string;
+                            }[];
+                            packaging_options: {
+                                /** @description Packaging option ID */
+                                id: number;
+                                /** @description Packaging option slug */
+                                slug: string;
+                                /** @description Type of packaging */
+                                type: string;
+                                /** @description Description of the packaging */
+                                description: string;
+                                /**
+                                 * Format: uri
+                                 * @description URL of the packaging image
+                                 */
+                                image_url: string;
+                            }[];
+                            /** @description Minimum Order Quantity */
+                            moq: string;
+                            /** @description Production capacity information */
+                            production_capacity: string;
+                        };
+                    };
+                };
+            };
+            /** @description 400 */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json":
+                        | {
+                              /** @constant */
+                              defined: true;
+                              /** @constant */
+                              code: "BAD_REQUEST";
+                              /** @constant */
+                              status: 400;
+                              /** @default The request was invalid or cannot be served. */
+                              message: string;
+                              data?: Record<string, never> | null;
+                          }
+                        | {
+                              /** @constant */
+                              defined: false;
+                              code: string;
+                              status: number;
+                              message: string;
+                              data?: unknown;
+                          };
+                };
+            };
+            /** @description 401 */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json":
+                        | {
+                              /** @constant */
+                              defined: true;
+                              /** @constant */
+                              code: "UNAUTHORIZED";
+                              /** @constant */
+                              status: 401;
+                              /** @default You are not authorized to perform this action. */
+                              message: string;
+                              data?: Record<string, never> | null;
+                          }
+                        | {
+                              /** @constant */
+                              defined: false;
+                              code: string;
+                              status: number;
+                              message: string;
+                              data?: unknown;
+                          };
+                };
+            };
+            /** @description 404 */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json":
+                        | {
+                              /** @constant */
+                              defined: true;
+                              /** @constant */
+                              code: "NOT_FOUND";
+                              /** @constant */
+                              status: 404;
+                              /** @default The requested resource was not found. */
+                              message: string;
+                              data?: Record<string, never> | null;
+                          }
+                        | {
+                              /** @constant */
+                              defined: false;
+                              code: string;
+                              status: number;
+                              message: string;
+                              data?: unknown;
+                          };
+                };
+            };
+            /** @description 500 */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json":
+                        | {
+                              /** @constant */
+                              defined: true;
+                              /** @constant */
+                              code: "INTERNAL_SERVER_ERROR";
+                              /** @constant */
+                              status: 500;
+                              /** @default An internal server error occurred. */
+                              message: string;
+                              data?: Record<string, never> | null;
+                          }
+                        | {
+                              /** @constant */
+                              defined: false;
+                              code: string;
+                              status: number;
+                              message: string;
+                              data?: unknown;
+                          };
+                };
+            };
+        };
+    };
+    getNewsList: {
+        parameters: {
+            query?: {
+                search?: string;
+                page?: number;
+                limit?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: {
+                            news: {
+                                data: {
+                                    /** @description Article ID */
+                                    id: number;
+                                    /** @description Article slug */
+                                    slug: string;
+                                    /** @description Article title */
+                                    title: string;
+                                    /**
+                                     * Format: date-time
+                                     * @description Publication date of the article
+                                     */
+                                    published_at: string;
+                                    /** @description URL of the article's cover image */
+                                    cover_image_url: string | null;
+                                }[];
+                                /** @description Current page number */
+                                page: number;
+                                /** @description Number of articles per page */
+                                limit: number;
+                                /** @description Total number of pages */
+                                total_pages: number;
+                            };
+                        };
+                    };
+                };
+            };
+            /** @description 400 */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json":
+                        | {
+                              /** @constant */
+                              defined: true;
+                              /** @constant */
+                              code: "BAD_REQUEST";
+                              /** @constant */
+                              status: 400;
+                              /** @default The request was invalid or cannot be served. */
+                              message: string;
+                              data?: Record<string, never> | null;
+                          }
+                        | {
+                              /** @constant */
+                              defined: false;
+                              code: string;
+                              status: number;
+                              message: string;
+                              data?: unknown;
+                          };
+                };
+            };
+            /** @description 401 */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json":
+                        | {
+                              /** @constant */
+                              defined: true;
+                              /** @constant */
+                              code: "UNAUTHORIZED";
+                              /** @constant */
+                              status: 401;
+                              /** @default You are not authorized to perform this action. */
+                              message: string;
+                              data?: Record<string, never> | null;
+                          }
+                        | {
+                              /** @constant */
+                              defined: false;
+                              code: string;
+                              status: number;
+                              message: string;
+                              data?: unknown;
+                          };
+                };
+            };
+            /** @description 404 */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json":
+                        | {
+                              /** @constant */
+                              defined: true;
+                              /** @constant */
+                              code: "NOT_FOUND";
+                              /** @constant */
+                              status: 404;
+                              /** @default The requested resource was not found. */
+                              message: string;
+                              data?: Record<string, never> | null;
+                          }
+                        | {
+                              /** @constant */
+                              defined: false;
+                              code: string;
+                              status: number;
+                              message: string;
+                              data?: unknown;
+                          };
+                };
+            };
+            /** @description 500 */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json":
+                        | {
+                              /** @constant */
+                              defined: true;
+                              /** @constant */
+                              code: "INTERNAL_SERVER_ERROR";
+                              /** @constant */
+                              status: 500;
+                              /** @default An internal server error occurred. */
+                              message: string;
+                              data?: Record<string, never> | null;
+                          }
+                        | {
+                              /** @constant */
+                              defined: false;
+                              code: string;
+                              status: number;
+                              message: string;
+                              data?: unknown;
+                          };
+                };
+            };
+        };
+    };
+    getNewsDetail: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                slug: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: {
+                            /** @description Article slug */
+                            slug: string;
+                            /** @description Article title */
+                            title: string;
+                            /** @description Content of the article */
+                            content: string;
+                            /**
+                             * Format: date-time
+                             * @description Publication date of the article
+                             */
+                            published_at: string;
+                            /** @description URL of the article's cover image */
+                            cover_image_url: string | null;
+                        };
+                    };
+                };
+            };
+            /** @description 400 */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json":
+                        | {
+                              /** @constant */
+                              defined: true;
+                              /** @constant */
+                              code: "BAD_REQUEST";
+                              /** @constant */
+                              status: 400;
+                              /** @default The request was invalid or cannot be served. */
+                              message: string;
+                              data?: Record<string, never> | null;
+                          }
+                        | {
+                              /** @constant */
+                              defined: false;
+                              code: string;
+                              status: number;
+                              message: string;
+                              data?: unknown;
+                          };
+                };
+            };
+            /** @description 401 */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json":
+                        | {
+                              /** @constant */
+                              defined: true;
+                              /** @constant */
+                              code: "UNAUTHORIZED";
+                              /** @constant */
+                              status: 401;
+                              /** @default You are not authorized to perform this action. */
+                              message: string;
+                              data?: Record<string, never> | null;
+                          }
+                        | {
+                              /** @constant */
+                              defined: false;
+                              code: string;
+                              status: number;
+                              message: string;
+                              data?: unknown;
+                          };
+                };
+            };
+            /** @description 404 */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json":
+                        | {
+                              /** @constant */
+                              defined: true;
+                              /** @constant */
+                              code: "NOT_FOUND";
+                              /** @constant */
+                              status: 404;
+                              /** @default The requested resource was not found. */
+                              message: string;
+                              data?: Record<string, never> | null;
+                          }
+                        | {
+                              /** @constant */
+                              defined: false;
+                              code: string;
+                              status: number;
+                              message: string;
+                              data?: unknown;
+                          };
+                };
+            };
+            /** @description 500 */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json":
+                        | {
+                              /** @constant */
+                              defined: true;
+                              /** @constant */
+                              code: "INTERNAL_SERVER_ERROR";
+                              /** @constant */
+                              status: 500;
+                              /** @default An internal server error occurred. */
+                              message: string;
+                              data?: Record<string, never> | null;
+                          }
+                        | {
+                              /** @constant */
+                              defined: false;
+                              code: string;
+                              status: number;
+                              message: string;
+                              data?: unknown;
+                          };
+                };
+            };
+        };
+    };
+    getNewsMetadata: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                slug: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: {
+                            /** @description Meta title */
+                            meta_title: string;
+                            /** @description Meta description of the article */
+                            meta_description: string;
+                            /** @description URL of the article's cover image */
+                            cover_image_url: string | null;
                         };
                     };
                 };
