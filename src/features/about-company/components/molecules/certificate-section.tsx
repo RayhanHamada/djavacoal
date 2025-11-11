@@ -44,7 +44,7 @@ export default function CertificateSection() {
 
     return (
         <section
-            id="certificates"
+            id="legal-certificate"
             className="mt-10 scroll-mt-28 space-y-6 rounded-xl bg-[#222222] p-5 lg:p-10"
         >
             {/* Heading */}

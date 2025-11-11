@@ -6,6 +6,8 @@ import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import { useTranslations } from "next-intl";
 
+import { SECTIONS_ELEMENTS_ID } from "@/configs";
+
 function FAQItem({
     q,
     a,
@@ -116,7 +118,10 @@ export default function FAQSection() {
     ];
 
     return (
-        <section id="faq" className="scroll-mt-28 rounded-xl bg-[#222222]">
+        <section
+            id={SECTIONS_ELEMENTS_ID.PRODUCTION_INFO.FAQS}
+            className="scroll-mt-28 rounded-xl bg-[#222222]"
+        >
             {/* Header */}
             <header className="mb-6 px-6 pt-4">
                 <div className="mb-2 flex items-center gap-3">

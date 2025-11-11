@@ -11,7 +11,7 @@ import type {
 
 // Sidebar Navigation Items
 export const SIDEBAR_ITEMS: SidebarItem[] = [
-    { id: "company-intro", label: "PT. Djavacoal Indonesia" },
+    { id: "company-intro", label: "CV. Djavacoal Indonesia" },
     { id: "team", label: "Djavacoal's Team" },
     { id: "global-market", label: "What We Do?" },
     { id: "certificates", label: "Legal & Certificate" },

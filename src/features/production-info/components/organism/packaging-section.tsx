@@ -6,6 +6,7 @@ import Image from "next/image";
 import { motion } from "framer-motion";
 import { useTranslations } from "next-intl";
 
+import { SECTIONS_ELEMENTS_ID } from "@/configs";
 import { useProductionInfoContentAPI } from "@/features/public-api/hooks";
 
 type Props = {
@@ -18,7 +19,7 @@ function PackagingCard({ image, desc, type }: Props) {
     const t = useTranslations("ProductionInfo.packaging");
 
     return (
-        <article className="rounded-xl bg-[#222222] text-left">
+        <div className="rounded-xl bg-[#222222] text-left">
             {/* Title */}
             <h3 className="mb-2 px-1 text-base font-semibold text-[#EFA12D] md:px-0 md:text-lg lg:px-0">
                 <span className="font-bold text-[#EFA12D]">{type}</span>{" "}
@@ -60,7 +61,7 @@ function PackagingCard({ image, desc, type }: Props) {
                     __html: desc,
                 }}
             />
-        </article>
+        </div>
     );
 }
 
@@ -75,7 +76,7 @@ export default function PackagingSection() {
 
     return (
         <section
-            id="packaging"
+            id={SECTIONS_ELEMENTS_ID.PRODUCTION_INFO.PACKAGING_INFO}
             className="scroll-mt-28 rounded-xl bg-[#222222]"
         >
             {/* Header */}
@@ -98,7 +99,7 @@ export default function PackagingSection() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, amount: 0.2 }}
                 transition={{ duration: 0.4 }}
-                className="group grid grid-cols-1 gap-6 px-4 pb-8 md:grid-cols-3 md:px-6"
+                className="grid grid-cols-1 gap-6 px-4 pb-8 md:grid-cols-3 md:px-6"
             >
                 {packagingOptions.map((option) => (
                     <PackagingCard

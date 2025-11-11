@@ -19,12 +19,12 @@ export default function AboutSidebar({ idPrefix = "" }: AboutSidebarProps) {
 
     const SIDEBAR_ITEMS = useMemo(
         () => [
-            { id: "company-intro", label: t("companyIntro") },
-            { id: "team", label: t("team") },
-            { id: "global-market", label: t("whatWeDo") },
-            { id: "certificates", label: t("certificates") },
+            { id: "cv-djavacoal-indonesia", label: t("companyIntro") },
+            { id: "djavacoals-team", label: t("team") },
+            { id: "what-we-do", label: t("whatWeDo") },
+            { id: "legal-certificate", label: t("certificates") },
             { id: "factory", label: t("factory") },
-            { id: "gallery", label: t("gallery") },
+            { id: "our-gallery", label: t("gallery") },
         ],
         [t]
     );

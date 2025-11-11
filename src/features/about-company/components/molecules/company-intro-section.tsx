@@ -18,7 +18,7 @@ export default function CompanyIntroSection() {
 
     return (
         <section
-            id="company-intro"
+            id="cv-djavacoal-indonesia"
             className="mt-2 scroll-mt-28 space-y-4 rounded-xl bg-[#222222] p-5 lg:p-10"
         >
             <header className="mb-2">

@@ -23,7 +23,7 @@ export default function TeamSection() {
 
     return (
         <section
-            id="team"
+            id="djavacoals-team"
             className="relative scroll-mt-24 overflow-hidden rounded-2xl border border-[#2A2A2A] bg-[#222222] p-6 md:p-10"
             aria-label="Djavacoal Team Section"
         >
@@ -56,9 +56,9 @@ export default function TeamSection() {
                 </div>
 
                 {/* Desktop: grid layout */}
-                <div className="hidden lg:grid lg:grid-cols-4">
+                <div className="hidden grid-cols-4 gap-y-4 md:grid lg:flex lg:flex-wrap lg:space-x-1">
                     {teamMembers.map((member, i) => (
-                        <FadeInView key={i} delay={i * 0.05}>
+                        <FadeInView key={i} delay={i * 0.05} className="w-fit">
                             <ScaleOnHover scale={1.02}>
                                 <TeamCard member={member} />
                             </ScaleOnHover>
