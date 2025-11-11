@@ -224,3 +224,55 @@ export const PRODUCT_DETAIL_BODY_OUTPUT_SCHEMA = z.object({
 export type ProductDetailBodyOutputSchema = z.infer<
     typeof PRODUCT_DETAIL_BODY_OUTPUT_SCHEMA
 >;
+
+export const NEWS_LIST_QUERY_INPUT_SCHEMA = z
+    .object({
+        search: z
+            .string()
+            .optional()
+            .describe("Search term to filter news articles"),
+        page: z
+            .number()
+            .min(1)
+            .default(1)
+            .describe("Page number for pagination"),
+        limit: z
+            .number()
+            .min(1)
+            .max(100)
+            .default(10)
+            .describe("Number of articles per page"),
+    })
+    .default({
+        page: 1,
+        limit: 10,
+    });
+
+export const NEWS_LIST_BODY_OUTPUT_SCHEMA = z.object({
+    data: z.object({
+        news: z.object({
+            data: z.array(
+                z.object({
+                    slug: z.string().describe("Article slug"),
+                    title: z.string().describe("Article title"),
+                    published_at: z
+                        .date()
+                        .describe("Publication date of the article"),
+                    cover_image_url: z
+                        .url()
+                        .nullable()
+                        .describe("URL of the article's cover image"),
+                })
+            ),
+            page: z.number().describe("Current page number"),
+            limit: z.number().describe("Number of articles per page"),
+            total_pages: z.number().describe("Total number of pages"),
+        }),
+    }),
+});
+
+export const NEWS_DETAIL_PATH_INPUT_SCHEMA = z.object({
+    slug: z
+        .string()
+        .describe("The slug of the news article to fetch details for"),
+});

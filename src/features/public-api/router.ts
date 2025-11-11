@@ -1,8 +1,10 @@
+import { and, isNotNull, lte } from "drizzle-orm";
 import { Locale } from "next-intl";
 import z from "zod";
 
 import {
     COMMON_COLUMNS,
+    NEWS_COLUMNS,
     PACKAGING_OPTION_COLUMNS,
     PRODUCT_COLUMNS,
     PRODUCT_MEDIA_COLUMNS,
@@ -12,6 +14,7 @@ import {
     TEAM_MEMBER_COLUMNS,
 } from "@/adapters/d1/constants";
 import { getDB } from "@/adapters/d1/db";
+import { news } from "@/adapters/d1/schema";
 import { KV_KEYS } from "@/adapters/kv/constants";
 import { COOKIE_NAME, LOCALES } from "@/configs";
 import {
@@ -23,6 +26,8 @@ import {
     PACKAGING_INFO_CONTENT_BODY_OUTPUT_SCHEMA,
     PRODUCT_DETAIL_BODY_OUTPUT_SCHEMA,
     PRODUCT_DETAIL_PATH_INPUT_SCHEMA,
+    NEWS_LIST_QUERY_INPUT_SCHEMA,
+    NEWS_LIST_BODY_OUTPUT_SCHEMA,
 } from "@/features/public-api/schemas";
 import { injectNextCookies } from "@/lib/orpc/middlewares";
 import base from "@/lib/orpc/server";
@@ -755,6 +760,103 @@ export const router = {
                         specifications,
                         variants,
                         packaging_options,
+                    },
+                },
+            };
+        }),
+
+    newsList: publicBase
+        .route({
+            method: "GET",
+            path: "/news",
+            summary: "Fetch news list",
+            description: "Get list of news articles",
+            inputStructure: "detailed",
+            outputStructure: "detailed",
+        })
+        .input(
+            z.object({
+                query: NEWS_LIST_QUERY_INPUT_SCHEMA,
+            })
+        )
+        .output(
+            z.object({
+                body: NEWS_LIST_BODY_OUTPUT_SCHEMA,
+            })
+        )
+        .handler(async function ({
+            context: { env, locale },
+            input: {
+                query: { limit, page },
+            },
+        }) {
+            const isArabic = locale === LOCALES.AR;
+            const db = getDB(env.DJAVACOAL_DB);
+
+            const allNewsConditions = and(
+                isNotNull(news[NEWS_COLUMNS.PUBLISHED_AT]),
+                lte(news[NEWS_COLUMNS.PUBLISHED_AT], new Date())
+            );
+
+            const allNews = await db.query.news
+                .findMany({
+                    columns: {
+                        slug: true,
+                        ar_title: true,
+                        en_title: true,
+                        published_at: true,
+                        image_key: true,
+                    },
+                    where() {
+                        return allNewsConditions;
+                    },
+                    orderBy(fields, operators) {
+                        return [
+                            operators.desc(fields[NEWS_COLUMNS.PUBLISHED_AT]),
+                        ];
+                    },
+                    limit: limit,
+                    offset: (page - 1) * limit,
+                })
+                .then((item) =>
+                    item
+                        .filter((v) => v[NEWS_COLUMNS.PUBLISHED_AT])
+                        .map((v) => {
+                            const slug = v[NEWS_COLUMNS.SLUG];
+                            const title = isArabic
+                                ? v[NEWS_COLUMNS.AR_TITLE]
+                                : v[NEWS_COLUMNS.EN_TITLE];
+                            const published_at = v[NEWS_COLUMNS.PUBLISHED_AT]!;
+                            const imageKey = v[NEWS_COLUMNS.IMAGE_KEY];
+                            const cover_image_url = imageKey
+                                ? new URL(
+                                      imageKey,
+                                      env.NEXT_PUBLIC_ASSET_URL
+                                  ).toString()
+                                : null;
+
+                            return {
+                                slug,
+                                title,
+                                published_at,
+                                cover_image_url,
+                            };
+                        })
+                );
+
+            const paginatedNewsCount = await db.$count(news, allNewsConditions);
+
+            const total_pages = Math.ceil(paginatedNewsCount / limit);
+
+            return {
+                body: {
+                    data: {
+                        news: {
+                            data: allNews,
+                            page,
+                            limit,
+                            total_pages,
+                        },
                     },
                 },
             };
