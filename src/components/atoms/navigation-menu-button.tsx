@@ -26,112 +26,97 @@ type Props = MenuItems;
 
 export function NavigationMenuButton(props: Props) {
     const pathname = usePathname();
-
     const isPathMatchCurrentButton = props.href && props.href === pathname;
 
-    const classNames = cn(
+    const buttonClass = cn(
         "text-sm lg:text-base text-center",
         "h-full text-white hover:bg-secondary hover:text-white transition-colors min-w-10 px-2",
         "flex flex-col justify-center hover:cursor-pointer items-center",
-
         isPathMatchCurrentButton && "text-secondary",
-
         "md:min-w-20"
     );
 
-    return (
-        match(props)
-            /**
-             * jika ada href, maka render Link
-             */
-            .with({ href: P.string }, (props) => {
-                return (
-                    <Link
-                        key={props.label}
-                        href={props.href}
-                        className={cn(classNames, "")}
+    return match(props)
+        .with({ href: P.string }, (props) => (
+            <Link key={props.label} href={props.href} className={buttonClass}>
+                {props.label}
+            </Link>
+        ))
+        .with({ submenus: P.nonNullable }, (props) => {
+            return (
+                <div className="group relative h-full border-b-2">
+                    {/* Parent Button */}
+                    <button
+                        className={cn(
+                            buttonClass,
+                            "flex w-full flex-row items-center gap-1"
+                        )}
                     >
                         {props.label}
-                    </Link>
-                );
-            })
+                        <ChevronDown
+                            size={16}
+                            fill="currentColor"
+                            className="pt-1"
+                        />
+                    </button>
 
-            /**
-             * jika ada submenus, maka render dropdown
-             */
-            .with({ submenus: P.nonNullable }, (props) => {
-                return (
-                    <div key={props.label} className="group relative h-full">
-                        <button
-                            className={cn(
-                                classNames,
-                                "flex flex-row items-center"
-                            )}
-                        >
-                            {props.label}{" "}
-                            <ChevronDown
-                                size={16}
-                                fill="currentColor"
-                                className="pt-1"
-                            />
-                        </button>
-                        <div
-                            className={cn(
-                                "absolute hidden transition-transform duration-300 group-hover:block",
-                                "left-0 z-10 min-w-[326px] border bg-[#353535]/90 py-2",
-                                "rounded-b-lg border-[#353535] backdrop-blur-lg"
-                            )}
-                        >
-                            {match(props.submenus)
-                                /**
-                                 * jika submenus berupa array, maka render langsung
-                                 */
-                                .with(P.array(), (submenus) =>
-                                    submenus.map((submenu) => (
-                                        <Link
-                                            key={submenu.label}
-                                            href={submenu.href ?? "#"}
-                                            className="block px-4 py-2 text-white hover:font-bold"
-                                        >
-                                            {submenu.label}
-                                        </Link>
-                                    ))
-                                )
+                    <div className="absolute inset-x-0 top-full -z-10 h-1 bg-transparent"></div>
 
-                                /**
-                                 * jika submenus berupa function yang mengembalikan Promise,
-                                 * maka render dengan Suspense
-                                 */
-                                .otherwise((submenusPromise) => {
-                                    const submenus = submenusPromise().catch(
-                                        () => []
-                                    );
-
-                                    return (
-                                        <Suspense
-                                            fallback={<div>Loading...</div>}
-                                        >
-                                            {submenus.then((data) =>
-                                                data.map((submenu) => (
-                                                    <Link
-                                                        key={submenu.label}
-                                                        href={
-                                                            submenu.href ?? "#"
-                                                        }
-                                                        className="block px-4 py-2 text-sm text-white hover:font-bold lg:text-base"
-                                                    >
-                                                        {submenu.label}
-                                                    </Link>
-                                                ))
-                                            )}
-                                        </Suspense>
-                                    );
-                                })}
-                        </div>
+                    {/* Submenu - appears on group hover */}
+                    <div
+                        className={cn(
+                            "absolute top-full left-0 z-50 mt-0 w-[326px]",
+                            "border border-[#353535] bg-[#353535]/90 backdrop-blur-lg",
+                            "rounded-b-lg py-2",
+                            "invisible translate-y-1 scale-y-95 opacity-0",
+                            "group-hover:visible group-hover:translate-y-0 group-hover:scale-y-100 group-hover:opacity-100",
+                            "transition-all duration-300 ease-out",
+                            "pointer-events-none group-hover:pointer-events-auto",
+                            "[&_a:not(:last-child)]:border-b",
+                            "[&_a:not(:last-child)]:border-[#3A3A3A]"
+                        )}
+                    >
+                        {match(props.submenus)
+                            .with(P.array(), (submenus) =>
+                                submenus.map((submenu) => (
+                                    <Link
+                                        key={submenu.label}
+                                        href={submenu.href ?? "#"}
+                                        className="transition-font block px-4 py-2 text-white duration-300 hover:font-bold"
+                                    >
+                                        {submenu.label}
+                                    </Link>
+                                ))
+                            )
+                            .otherwise((submenusPromise) => {
+                                const submenus = submenusPromise().catch(
+                                    () => []
+                                );
+                                return (
+                                    <Suspense
+                                        fallback={
+                                            <div className="px-4 py-2">
+                                                Loading...
+                                            </div>
+                                        }
+                                    >
+                                        {submenus.then((data) =>
+                                            data.map((submenu) => (
+                                                <Link
+                                                    key={submenu.label}
+                                                    href={submenu.href ?? "#"}
+                                                    className="block px-4 py-2 text-sm text-white hover:font-bold lg:text-base"
+                                                >
+                                                    {submenu.label}
+                                                </Link>
+                                            ))
+                                        )}
+                                    </Suspense>
+                                );
+                            })}
                     </div>
-                );
-            })
-
-            .exhaustive()
-    );
+                </div>
+            );
+        })
+        .exhaustive();
 }
