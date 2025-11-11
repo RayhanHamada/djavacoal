@@ -309,3 +309,17 @@ export const NEWS_METADATA_BODY_OUTPUT_SCHEMA = z.object({
             .describe("URL of the article's cover image"),
     }),
 });
+
+export const CONTACT_US_BODY_OUTPUT_SCHEMA = z.object({
+    data: z.object({
+        contact_email: z
+            .string()
+            .describe("Email address to send contact inquiries to"),
+        contact_phone_number: z
+            .string()
+            .describe("Phone number for contact inquiries"),
+        contact_address_line: z
+            .string()
+            .describe("Address line for contact inquiries"),
+    }),
+});

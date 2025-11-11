@@ -34,6 +34,7 @@ import {
     NEWS_DETAIL_BODY_OUTPUT_SCHEMA,
     NEWS_METADATA_PARAMS_INPUT_SCHEMA,
     NEWS_METADATA_BODY_OUTPUT_SCHEMA,
+    CONTACT_US_BODY_OUTPUT_SCHEMA,
 } from "@/features/public-api/schemas";
 import { injectNextCookies } from "@/lib/orpc/middlewares";
 import base from "@/lib/orpc/server";
@@ -1008,6 +1009,35 @@ export const router = {
                         meta_description:
                             article[NEWS_COLUMNS.METADATA_DESCRIPTION],
                         cover_image_url: article[NEWS_COLUMNS.IMAGE_KEY],
+                    },
+                },
+            };
+        }),
+
+    getContactUs: publicBase
+        .route({
+            method: "GET",
+        })
+        .output(
+            z.object({
+                body: CONTACT_US_BODY_OUTPUT_SCHEMA,
+            })
+        )
+        .handler(async function ({ context: { env } }) {
+            const kv = env.DJAVACOAL_KV;
+
+            const [email, phone_number, address_line] = await Promise.all([
+                kv.get(KV_KEYS.EMAIL_ADDRESS),
+                kv.get(KV_KEYS.WHATSAPP_NUMBER),
+                kv.get(KV_KEYS.ADDRESS_LINE),
+            ]);
+
+            return {
+                body: {
+                    data: {
+                        email,
+                        phone_number,
+                        address_line,
                     },
                 },
             };
