@@ -253,6 +253,7 @@ export const NEWS_LIST_BODY_OUTPUT_SCHEMA = z.object({
         news: z.object({
             data: z.array(
                 z.object({
+                    id: z.number().describe("Article ID"),
                     slug: z.string().describe("Article slug"),
                     title: z.string().describe("Article title"),
                     published_at: z
@@ -271,8 +272,21 @@ export const NEWS_LIST_BODY_OUTPUT_SCHEMA = z.object({
     }),
 });
 
-export const NEWS_DETAIL_PATH_INPUT_SCHEMA = z.object({
+export const NEWS_DETAIL_PARAMS_INPUT_SCHEMA = z.object({
     slug: z
         .string()
         .describe("The slug of the news article to fetch details for"),
+});
+
+export const NEWS_DETAIL_BODY_OUTPUT_SCHEMA = z.object({
+    data: z.object({
+        slug: z.string().describe("Article slug"),
+        title: z.string().describe("Article title"),
+        content: z.string().describe("Content of the article"),
+        published_at: z.date().describe("Publication date of the article"),
+        cover_image_url: z
+            .url()
+            .nullable()
+            .describe("URL of the article's cover image"),
+    }),
 });

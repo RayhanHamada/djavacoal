@@ -5,6 +5,7 @@ import z from "zod";
 import {
     COMMON_COLUMNS,
     NEWS_COLUMNS,
+    NEWS_STATUS,
     PACKAGING_OPTION_COLUMNS,
     PRODUCT_COLUMNS,
     PRODUCT_MEDIA_COLUMNS,
@@ -16,6 +17,7 @@ import {
 import { getDB } from "@/adapters/d1/db";
 import { news } from "@/adapters/d1/schema";
 import { KV_KEYS } from "@/adapters/kv/constants";
+import { getR2Client, getTextContent } from "@/adapters/r2";
 import { COOKIE_NAME, LOCALES } from "@/configs";
 import {
     FOOTER_CONTENT_BODY_OUTPUT_SCHEMA,
@@ -28,6 +30,8 @@ import {
     PRODUCT_DETAIL_PATH_INPUT_SCHEMA,
     NEWS_LIST_QUERY_INPUT_SCHEMA,
     NEWS_LIST_BODY_OUTPUT_SCHEMA,
+    NEWS_DETAIL_PARAMS_INPUT_SCHEMA,
+    NEWS_DETAIL_BODY_OUTPUT_SCHEMA,
 } from "@/features/public-api/schemas";
 import { injectNextCookies } from "@/lib/orpc/middlewares";
 import base from "@/lib/orpc/server";
@@ -106,7 +110,7 @@ export const router = {
             };
         }),
 
-    footerContent: publicBase
+    getFooterContent: publicBase
         .route({
             method: "GET",
             path: "/footer-content",
@@ -158,7 +162,7 @@ export const router = {
             };
         }),
 
-    homeContent: publicBase
+    getHomeContent: publicBase
         .route({
             method: "GET",
             path: "/home-content",
@@ -359,7 +363,7 @@ export const router = {
             };
         }),
 
-    aboutCompanyContent: publicBase
+    getAboutCompanyContent: publicBase
         .route({
             method: "GET",
             path: "/about-company-content",
@@ -488,7 +492,7 @@ export const router = {
             };
         }),
 
-    packagingInfoContent: publicBase
+    getPackagingInfoContent: publicBase
         .route({
             method: "GET",
             path: "/packaging-info-content",
@@ -554,7 +558,7 @@ export const router = {
             };
         }),
 
-    productDetail: publicBase
+    getProductDetail: publicBase
         .route({
             method: "GET",
             path: "/products/:id",
@@ -765,7 +769,7 @@ export const router = {
             };
         }),
 
-    newsList: publicBase
+    getNewsList: publicBase
         .route({
             method: "GET",
             path: "/news",
@@ -801,6 +805,7 @@ export const router = {
             const allNews = await db.query.news
                 .findMany({
                     columns: {
+                        id: true,
                         slug: true,
                         ar_title: true,
                         en_title: true,
@@ -822,6 +827,7 @@ export const router = {
                     item
                         .filter((v) => v[NEWS_COLUMNS.PUBLISHED_AT])
                         .map((v) => {
+                            const id = v[COMMON_COLUMNS.ID];
                             const slug = v[NEWS_COLUMNS.SLUG];
                             const title = isArabic
                                 ? v[NEWS_COLUMNS.AR_TITLE]
@@ -836,6 +842,7 @@ export const router = {
                                 : null;
 
                             return {
+                                id,
                                 slug,
                                 title,
                                 published_at,
@@ -857,6 +864,88 @@ export const router = {
                             limit,
                             total_pages,
                         },
+                    },
+                },
+            };
+        }),
+
+    getNewsDetail: publicBase
+        .route({
+            method: "GET",
+            path: "/news/:slug",
+            summary: "Fetch news detail",
+            description: "Get news article detail by slug",
+            inputStructure: "detailed",
+            outputStructure: "detailed",
+        })
+        .input(
+            z.object({
+                params: NEWS_DETAIL_PARAMS_INPUT_SCHEMA,
+            })
+        )
+        .output(
+            z.object({
+                body: NEWS_DETAIL_BODY_OUTPUT_SCHEMA,
+            })
+        )
+        .handler(async function ({
+            context: { env, locale },
+            input: { params },
+            errors,
+        }) {
+            const isArabic = locale === LOCALES.AR;
+            const db = getDB(env.DJAVACOAL_DB);
+            const r2Client = getR2Client({
+                endpoint: env.S3_API,
+                accessKeyId: env.R2_ACCESS_KEY_ID!,
+                secretAccessKey: env.R2_SECRET_ACCESS_KEY!,
+            });
+
+            const now = new Date();
+            const article = await db.query.news.findFirst({
+                where(fields, operators) {
+                    return operators.and(
+                        operators.eq(fields[NEWS_COLUMNS.SLUG], params.slug),
+
+                        operators.isNotNull(fields[NEWS_COLUMNS.PUBLISHED_AT]),
+
+                        operators.lte(fields[NEWS_COLUMNS.PUBLISHED_AT], now),
+
+                        operators.eq(
+                            fields[NEWS_COLUMNS.STATUS],
+                            NEWS_STATUS.PUBLISHED
+                        )
+                    );
+                },
+            });
+
+            if (!article) {
+                throw errors.NOT_FOUND();
+            }
+
+            const title = isArabic
+                ? article[NEWS_COLUMNS.AR_TITLE]
+                : article[NEWS_COLUMNS.EN_TITLE];
+
+            const slug = article[NEWS_COLUMNS.SLUG];
+            const contentKey = isArabic
+                ? article[NEWS_COLUMNS.AR_CONTENT_KEY]
+                : article[NEWS_COLUMNS.EN_CONTENT_KEY];
+
+            const content = await getTextContent(r2Client, contentKey);
+            const imageKey = article[NEWS_COLUMNS.IMAGE_KEY];
+            const cover_image_url = imageKey
+                ? new URL(imageKey, env.NEXT_PUBLIC_ASSET_URL).toString()
+                : null;
+
+            return {
+                body: {
+                    data: {
+                        title,
+                        slug,
+                        content,
+                        cover_image_url,
+                        published_at: article[NEWS_COLUMNS.PUBLISHED_AT]!,
                     },
                 },
             };
