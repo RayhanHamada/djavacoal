@@ -314,12 +314,15 @@ export const CONTACT_US_BODY_OUTPUT_SCHEMA = z.object({
     data: z.object({
         contact_email: z
             .string()
+            .nullable()
             .describe("Email address to send contact inquiries to"),
         contact_phone_number: z
             .string()
+            .nullable()
             .describe("Phone number for contact inquiries"),
         contact_address_line: z
             .string()
+            .nullable()
             .describe("Address line for contact inquiries"),
     }),
 });

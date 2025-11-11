@@ -249,24 +249,26 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": {
-                        /** @constant */
-                        defined: true;
-                        /** @constant */
-                        code: "BAD_REQUEST";
-                        /** @constant */
-                        status: 400;
-                        /** @default The request was invalid or cannot be served. */
-                        message: string;
-                        data?: Record<string, never> | null;
-                    } | {
-                        /** @constant */
-                        defined: false;
-                        code: string;
-                        status: number;
-                        message: string;
-                        data?: unknown;
-                    };
+                    "application/json":
+                        | {
+                              /** @constant */
+                              defined: true;
+                              /** @constant */
+                              code: "BAD_REQUEST";
+                              /** @constant */
+                              status: 400;
+                              /** @default The request was invalid or cannot be served. */
+                              message: string;
+                              data?: Record<string, never> | null;
+                          }
+                        | {
+                              /** @constant */
+                              defined: false;
+                              code: string;
+                              status: number;
+                              message: string;
+                              data?: unknown;
+                          };
                 };
             };
             /** @description 401 */
@@ -275,24 +277,26 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": {
-                        /** @constant */
-                        defined: true;
-                        /** @constant */
-                        code: "UNAUTHORIZED";
-                        /** @constant */
-                        status: 401;
-                        /** @default You are not authorized to perform this action. */
-                        message: string;
-                        data?: Record<string, never> | null;
-                    } | {
-                        /** @constant */
-                        defined: false;
-                        code: string;
-                        status: number;
-                        message: string;
-                        data?: unknown;
-                    };
+                    "application/json":
+                        | {
+                              /** @constant */
+                              defined: true;
+                              /** @constant */
+                              code: "UNAUTHORIZED";
+                              /** @constant */
+                              status: 401;
+                              /** @default You are not authorized to perform this action. */
+                              message: string;
+                              data?: Record<string, never> | null;
+                          }
+                        | {
+                              /** @constant */
+                              defined: false;
+                              code: string;
+                              status: number;
+                              message: string;
+                              data?: unknown;
+                          };
                 };
             };
             /** @description 404 */
@@ -301,24 +305,26 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": {
-                        /** @constant */
-                        defined: true;
-                        /** @constant */
-                        code: "NOT_FOUND";
-                        /** @constant */
-                        status: 404;
-                        /** @default The requested resource was not found. */
-                        message: string;
-                        data?: Record<string, never> | null;
-                    } | {
-                        /** @constant */
-                        defined: false;
-                        code: string;
-                        status: number;
-                        message: string;
-                        data?: unknown;
-                    };
+                    "application/json":
+                        | {
+                              /** @constant */
+                              defined: true;
+                              /** @constant */
+                              code: "NOT_FOUND";
+                              /** @constant */
+                              status: 404;
+                              /** @default The requested resource was not found. */
+                              message: string;
+                              data?: Record<string, never> | null;
+                          }
+                        | {
+                              /** @constant */
+                              defined: false;
+                              code: string;
+                              status: number;
+                              message: string;
+                              data?: unknown;
+                          };
                 };
             };
             /** @description 500 */
@@ -327,24 +333,26 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": {
-                        /** @constant */
-                        defined: true;
-                        /** @constant */
-                        code: "INTERNAL_SERVER_ERROR";
-                        /** @constant */
-                        status: 500;
-                        /** @default An internal server error occurred. */
-                        message: string;
-                        data?: Record<string, never> | null;
-                    } | {
-                        /** @constant */
-                        defined: false;
-                        code: string;
-                        status: number;
-                        message: string;
-                        data?: unknown;
-                    };
+                    "application/json":
+                        | {
+                              /** @constant */
+                              defined: true;
+                              /** @constant */
+                              code: "INTERNAL_SERVER_ERROR";
+                              /** @constant */
+                              status: 500;
+                              /** @default An internal server error occurred. */
+                              message: string;
+                              data?: Record<string, never> | null;
+                          }
+                        | {
+                              /** @constant */
+                              defined: false;
+                              code: string;
+                              status: number;
+                              message: string;
+                              data?: unknown;
+                          };
                 };
             };
         };
@@ -384,24 +392,26 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": {
-                        /** @constant */
-                        defined: true;
-                        /** @constant */
-                        code: "BAD_REQUEST";
-                        /** @constant */
-                        status: 400;
-                        /** @default The request was invalid or cannot be served. */
-                        message: string;
-                        data?: Record<string, never> | null;
-                    } | {
-                        /** @constant */
-                        defined: false;
-                        code: string;
-                        status: number;
-                        message: string;
-                        data?: unknown;
-                    };
+                    "application/json":
+                        | {
+                              /** @constant */
+                              defined: true;
+                              /** @constant */
+                              code: "BAD_REQUEST";
+                              /** @constant */
+                              status: 400;
+                              /** @default The request was invalid or cannot be served. */
+                              message: string;
+                              data?: Record<string, never> | null;
+                          }
+                        | {
+                              /** @constant */
+                              defined: false;
+                              code: string;
+                              status: number;
+                              message: string;
+                              data?: unknown;
+                          };
                 };
             };
             /** @description 401 */
@@ -410,24 +420,26 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": {
-                        /** @constant */
-                        defined: true;
-                        /** @constant */
-                        code: "UNAUTHORIZED";
-                        /** @constant */
-                        status: 401;
-                        /** @default You are not authorized to perform this action. */
-                        message: string;
-                        data?: Record<string, never> | null;
-                    } | {
-                        /** @constant */
-                        defined: false;
-                        code: string;
-                        status: number;
-                        message: string;
-                        data?: unknown;
-                    };
+                    "application/json":
+                        | {
+                              /** @constant */
+                              defined: true;
+                              /** @constant */
+                              code: "UNAUTHORIZED";
+                              /** @constant */
+                              status: 401;
+                              /** @default You are not authorized to perform this action. */
+                              message: string;
+                              data?: Record<string, never> | null;
+                          }
+                        | {
+                              /** @constant */
+                              defined: false;
+                              code: string;
+                              status: number;
+                              message: string;
+                              data?: unknown;
+                          };
                 };
             };
             /** @description 404 */
@@ -436,24 +448,26 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": {
-                        /** @constant */
-                        defined: true;
-                        /** @constant */
-                        code: "NOT_FOUND";
-                        /** @constant */
-                        status: 404;
-                        /** @default The requested resource was not found. */
-                        message: string;
-                        data?: Record<string, never> | null;
-                    } | {
-                        /** @constant */
-                        defined: false;
-                        code: string;
-                        status: number;
-                        message: string;
-                        data?: unknown;
-                    };
+                    "application/json":
+                        | {
+                              /** @constant */
+                              defined: true;
+                              /** @constant */
+                              code: "NOT_FOUND";
+                              /** @constant */
+                              status: 404;
+                              /** @default The requested resource was not found. */
+                              message: string;
+                              data?: Record<string, never> | null;
+                          }
+                        | {
+                              /** @constant */
+                              defined: false;
+                              code: string;
+                              status: number;
+                              message: string;
+                              data?: unknown;
+                          };
                 };
             };
             /** @description 500 */
@@ -462,24 +476,26 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": {
-                        /** @constant */
-                        defined: true;
-                        /** @constant */
-                        code: "INTERNAL_SERVER_ERROR";
-                        /** @constant */
-                        status: 500;
-                        /** @default An internal server error occurred. */
-                        message: string;
-                        data?: Record<string, never> | null;
-                    } | {
-                        /** @constant */
-                        defined: false;
-                        code: string;
-                        status: number;
-                        message: string;
-                        data?: unknown;
-                    };
+                    "application/json":
+                        | {
+                              /** @constant */
+                              defined: true;
+                              /** @constant */
+                              code: "INTERNAL_SERVER_ERROR";
+                              /** @constant */
+                              status: 500;
+                              /** @default An internal server error occurred. */
+                              message: string;
+                              data?: Record<string, never> | null;
+                          }
+                        | {
+                              /** @constant */
+                              defined: false;
+                              code: string;
+                              status: number;
+                              message: string;
+                              data?: unknown;
+                          };
                 };
             };
         };
@@ -547,24 +563,26 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": {
-                        /** @constant */
-                        defined: true;
-                        /** @constant */
-                        code: "BAD_REQUEST";
-                        /** @constant */
-                        status: 400;
-                        /** @default The request was invalid or cannot be served. */
-                        message: string;
-                        data?: Record<string, never> | null;
-                    } | {
-                        /** @constant */
-                        defined: false;
-                        code: string;
-                        status: number;
-                        message: string;
-                        data?: unknown;
-                    };
+                    "application/json":
+                        | {
+                              /** @constant */
+                              defined: true;
+                              /** @constant */
+                              code: "BAD_REQUEST";
+                              /** @constant */
+                              status: 400;
+                              /** @default The request was invalid or cannot be served. */
+                              message: string;
+                              data?: Record<string, never> | null;
+                          }
+                        | {
+                              /** @constant */
+                              defined: false;
+                              code: string;
+                              status: number;
+                              message: string;
+                              data?: unknown;
+                          };
                 };
             };
             /** @description 401 */
@@ -573,24 +591,26 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": {
-                        /** @constant */
-                        defined: true;
-                        /** @constant */
-                        code: "UNAUTHORIZED";
-                        /** @constant */
-                        status: 401;
-                        /** @default You are not authorized to perform this action. */
-                        message: string;
-                        data?: Record<string, never> | null;
-                    } | {
-                        /** @constant */
-                        defined: false;
-                        code: string;
-                        status: number;
-                        message: string;
-                        data?: unknown;
-                    };
+                    "application/json":
+                        | {
+                              /** @constant */
+                              defined: true;
+                              /** @constant */
+                              code: "UNAUTHORIZED";
+                              /** @constant */
+                              status: 401;
+                              /** @default You are not authorized to perform this action. */
+                              message: string;
+                              data?: Record<string, never> | null;
+                          }
+                        | {
+                              /** @constant */
+                              defined: false;
+                              code: string;
+                              status: number;
+                              message: string;
+                              data?: unknown;
+                          };
                 };
             };
             /** @description 404 */
@@ -599,24 +619,26 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": {
-                        /** @constant */
-                        defined: true;
-                        /** @constant */
-                        code: "NOT_FOUND";
-                        /** @constant */
-                        status: 404;
-                        /** @default The requested resource was not found. */
-                        message: string;
-                        data?: Record<string, never> | null;
-                    } | {
-                        /** @constant */
-                        defined: false;
-                        code: string;
-                        status: number;
-                        message: string;
-                        data?: unknown;
-                    };
+                    "application/json":
+                        | {
+                              /** @constant */
+                              defined: true;
+                              /** @constant */
+                              code: "NOT_FOUND";
+                              /** @constant */
+                              status: 404;
+                              /** @default The requested resource was not found. */
+                              message: string;
+                              data?: Record<string, never> | null;
+                          }
+                        | {
+                              /** @constant */
+                              defined: false;
+                              code: string;
+                              status: number;
+                              message: string;
+                              data?: unknown;
+                          };
                 };
             };
             /** @description 500 */
@@ -625,24 +647,26 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": {
-                        /** @constant */
-                        defined: true;
-                        /** @constant */
-                        code: "INTERNAL_SERVER_ERROR";
-                        /** @constant */
-                        status: 500;
-                        /** @default An internal server error occurred. */
-                        message: string;
-                        data?: Record<string, never> | null;
-                    } | {
-                        /** @constant */
-                        defined: false;
-                        code: string;
-                        status: number;
-                        message: string;
-                        data?: unknown;
-                    };
+                    "application/json":
+                        | {
+                              /** @constant */
+                              defined: true;
+                              /** @constant */
+                              code: "INTERNAL_SERVER_ERROR";
+                              /** @constant */
+                              status: 500;
+                              /** @default An internal server error occurred. */
+                              message: string;
+                              data?: Record<string, never> | null;
+                          }
+                        | {
+                              /** @constant */
+                              defined: false;
+                              code: string;
+                              status: number;
+                              message: string;
+                              data?: unknown;
+                          };
                 };
             };
         };
@@ -702,24 +726,26 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": {
-                        /** @constant */
-                        defined: true;
-                        /** @constant */
-                        code: "BAD_REQUEST";
-                        /** @constant */
-                        status: 400;
-                        /** @default The request was invalid or cannot be served. */
-                        message: string;
-                        data?: Record<string, never> | null;
-                    } | {
-                        /** @constant */
-                        defined: false;
-                        code: string;
-                        status: number;
-                        message: string;
-                        data?: unknown;
-                    };
+                    "application/json":
+                        | {
+                              /** @constant */
+                              defined: true;
+                              /** @constant */
+                              code: "BAD_REQUEST";
+                              /** @constant */
+                              status: 400;
+                              /** @default The request was invalid or cannot be served. */
+                              message: string;
+                              data?: Record<string, never> | null;
+                          }
+                        | {
+                              /** @constant */
+                              defined: false;
+                              code: string;
+                              status: number;
+                              message: string;
+                              data?: unknown;
+                          };
                 };
             };
             /** @description 401 */
@@ -728,24 +754,26 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": {
-                        /** @constant */
-                        defined: true;
-                        /** @constant */
-                        code: "UNAUTHORIZED";
-                        /** @constant */
-                        status: 401;
-                        /** @default You are not authorized to perform this action. */
-                        message: string;
-                        data?: Record<string, never> | null;
-                    } | {
-                        /** @constant */
-                        defined: false;
-                        code: string;
-                        status: number;
-                        message: string;
-                        data?: unknown;
-                    };
+                    "application/json":
+                        | {
+                              /** @constant */
+                              defined: true;
+                              /** @constant */
+                              code: "UNAUTHORIZED";
+                              /** @constant */
+                              status: 401;
+                              /** @default You are not authorized to perform this action. */
+                              message: string;
+                              data?: Record<string, never> | null;
+                          }
+                        | {
+                              /** @constant */
+                              defined: false;
+                              code: string;
+                              status: number;
+                              message: string;
+                              data?: unknown;
+                          };
                 };
             };
             /** @description 404 */
@@ -754,24 +782,26 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": {
-                        /** @constant */
-                        defined: true;
-                        /** @constant */
-                        code: "NOT_FOUND";
-                        /** @constant */
-                        status: 404;
-                        /** @default The requested resource was not found. */
-                        message: string;
-                        data?: Record<string, never> | null;
-                    } | {
-                        /** @constant */
-                        defined: false;
-                        code: string;
-                        status: number;
-                        message: string;
-                        data?: unknown;
-                    };
+                    "application/json":
+                        | {
+                              /** @constant */
+                              defined: true;
+                              /** @constant */
+                              code: "NOT_FOUND";
+                              /** @constant */
+                              status: 404;
+                              /** @default The requested resource was not found. */
+                              message: string;
+                              data?: Record<string, never> | null;
+                          }
+                        | {
+                              /** @constant */
+                              defined: false;
+                              code: string;
+                              status: number;
+                              message: string;
+                              data?: unknown;
+                          };
                 };
             };
             /** @description 500 */
@@ -780,24 +810,26 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": {
-                        /** @constant */
-                        defined: true;
-                        /** @constant */
-                        code: "INTERNAL_SERVER_ERROR";
-                        /** @constant */
-                        status: 500;
-                        /** @default An internal server error occurred. */
-                        message: string;
-                        data?: Record<string, never> | null;
-                    } | {
-                        /** @constant */
-                        defined: false;
-                        code: string;
-                        status: number;
-                        message: string;
-                        data?: unknown;
-                    };
+                    "application/json":
+                        | {
+                              /** @constant */
+                              defined: true;
+                              /** @constant */
+                              code: "INTERNAL_SERVER_ERROR";
+                              /** @constant */
+                              status: 500;
+                              /** @default An internal server error occurred. */
+                              message: string;
+                              data?: Record<string, never> | null;
+                          }
+                        | {
+                              /** @constant */
+                              defined: false;
+                              code: string;
+                              status: number;
+                              message: string;
+                              data?: unknown;
+                          };
                 };
             };
         };
@@ -844,24 +876,26 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": {
-                        /** @constant */
-                        defined: true;
-                        /** @constant */
-                        code: "BAD_REQUEST";
-                        /** @constant */
-                        status: 400;
-                        /** @default The request was invalid or cannot be served. */
-                        message: string;
-                        data?: Record<string, never> | null;
-                    } | {
-                        /** @constant */
-                        defined: false;
-                        code: string;
-                        status: number;
-                        message: string;
-                        data?: unknown;
-                    };
+                    "application/json":
+                        | {
+                              /** @constant */
+                              defined: true;
+                              /** @constant */
+                              code: "BAD_REQUEST";
+                              /** @constant */
+                              status: 400;
+                              /** @default The request was invalid or cannot be served. */
+                              message: string;
+                              data?: Record<string, never> | null;
+                          }
+                        | {
+                              /** @constant */
+                              defined: false;
+                              code: string;
+                              status: number;
+                              message: string;
+                              data?: unknown;
+                          };
                 };
             };
             /** @description 401 */
@@ -870,24 +904,26 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": {
-                        /** @constant */
-                        defined: true;
-                        /** @constant */
-                        code: "UNAUTHORIZED";
-                        /** @constant */
-                        status: 401;
-                        /** @default You are not authorized to perform this action. */
-                        message: string;
-                        data?: Record<string, never> | null;
-                    } | {
-                        /** @constant */
-                        defined: false;
-                        code: string;
-                        status: number;
-                        message: string;
-                        data?: unknown;
-                    };
+                    "application/json":
+                        | {
+                              /** @constant */
+                              defined: true;
+                              /** @constant */
+                              code: "UNAUTHORIZED";
+                              /** @constant */
+                              status: 401;
+                              /** @default You are not authorized to perform this action. */
+                              message: string;
+                              data?: Record<string, never> | null;
+                          }
+                        | {
+                              /** @constant */
+                              defined: false;
+                              code: string;
+                              status: number;
+                              message: string;
+                              data?: unknown;
+                          };
                 };
             };
             /** @description 404 */
@@ -896,24 +932,26 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": {
-                        /** @constant */
-                        defined: true;
-                        /** @constant */
-                        code: "NOT_FOUND";
-                        /** @constant */
-                        status: 404;
-                        /** @default The requested resource was not found. */
-                        message: string;
-                        data?: Record<string, never> | null;
-                    } | {
-                        /** @constant */
-                        defined: false;
-                        code: string;
-                        status: number;
-                        message: string;
-                        data?: unknown;
-                    };
+                    "application/json":
+                        | {
+                              /** @constant */
+                              defined: true;
+                              /** @constant */
+                              code: "NOT_FOUND";
+                              /** @constant */
+                              status: 404;
+                              /** @default The requested resource was not found. */
+                              message: string;
+                              data?: Record<string, never> | null;
+                          }
+                        | {
+                              /** @constant */
+                              defined: false;
+                              code: string;
+                              status: number;
+                              message: string;
+                              data?: unknown;
+                          };
                 };
             };
             /** @description 500 */
@@ -922,24 +960,26 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": {
-                        /** @constant */
-                        defined: true;
-                        /** @constant */
-                        code: "INTERNAL_SERVER_ERROR";
-                        /** @constant */
-                        status: 500;
-                        /** @default An internal server error occurred. */
-                        message: string;
-                        data?: Record<string, never> | null;
-                    } | {
-                        /** @constant */
-                        defined: false;
-                        code: string;
-                        status: number;
-                        message: string;
-                        data?: unknown;
-                    };
+                    "application/json":
+                        | {
+                              /** @constant */
+                              defined: true;
+                              /** @constant */
+                              code: "INTERNAL_SERVER_ERROR";
+                              /** @constant */
+                              status: 500;
+                              /** @default An internal server error occurred. */
+                              message: string;
+                              data?: Record<string, never> | null;
+                          }
+                        | {
+                              /** @constant */
+                              defined: false;
+                              code: string;
+                              status: number;
+                              message: string;
+                              data?: unknown;
+                          };
                 };
             };
         };
@@ -974,34 +1014,37 @@ export interface operations {
                             medias: ({
                                 /** @description Media ID */
                                 id: number;
-                            } & ({
-                                /**
-                                 * @description Type of media
-                                 * @constant
-                                 */
-                                type: "image";
-                                /**
-                                 * Format: uri
-                                 * @description Image URL if media is an image
-                                 */
-                                image_url: string;
-                            } | {
-                                /**
-                                 * @description Type of media
-                                 * @constant
-                                 */
-                                type: "youtube";
-                                /**
-                                 * Format: uri
-                                 * @description YouTube URL if media is a video
-                                 */
-                                youtube_url: string;
-                                /**
-                                 * Format: uri
-                                 * @description Custom thumbnail URL for the video
-                                 */
-                                custom_thumbnail_url?: string;
-                            }))[];
+                            } & (
+                                | {
+                                      /**
+                                       * @description Type of media
+                                       * @constant
+                                       */
+                                      type: "image";
+                                      /**
+                                       * Format: uri
+                                       * @description Image URL if media is an image
+                                       */
+                                      image_url: string;
+                                  }
+                                | {
+                                      /**
+                                       * @description Type of media
+                                       * @constant
+                                       */
+                                      type: "youtube";
+                                      /**
+                                       * Format: uri
+                                       * @description YouTube URL if media is a video
+                                       */
+                                      youtube_url: string;
+                                      /**
+                                       * Format: uri
+                                       * @description Custom thumbnail URL for the video
+                                       */
+                                      custom_thumbnail_url?: string;
+                                  }
+                            ))[];
                             specifications: {
                                 /** @description Specification ID */
                                 id: number;
@@ -1050,24 +1093,26 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": {
-                        /** @constant */
-                        defined: true;
-                        /** @constant */
-                        code: "BAD_REQUEST";
-                        /** @constant */
-                        status: 400;
-                        /** @default The request was invalid or cannot be served. */
-                        message: string;
-                        data?: Record<string, never> | null;
-                    } | {
-                        /** @constant */
-                        defined: false;
-                        code: string;
-                        status: number;
-                        message: string;
-                        data?: unknown;
-                    };
+                    "application/json":
+                        | {
+                              /** @constant */
+                              defined: true;
+                              /** @constant */
+                              code: "BAD_REQUEST";
+                              /** @constant */
+                              status: 400;
+                              /** @default The request was invalid or cannot be served. */
+                              message: string;
+                              data?: Record<string, never> | null;
+                          }
+                        | {
+                              /** @constant */
+                              defined: false;
+                              code: string;
+                              status: number;
+                              message: string;
+                              data?: unknown;
+                          };
                 };
             };
             /** @description 401 */
@@ -1076,24 +1121,26 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": {
-                        /** @constant */
-                        defined: true;
-                        /** @constant */
-                        code: "UNAUTHORIZED";
-                        /** @constant */
-                        status: 401;
-                        /** @default You are not authorized to perform this action. */
-                        message: string;
-                        data?: Record<string, never> | null;
-                    } | {
-                        /** @constant */
-                        defined: false;
-                        code: string;
-                        status: number;
-                        message: string;
-                        data?: unknown;
-                    };
+                    "application/json":
+                        | {
+                              /** @constant */
+                              defined: true;
+                              /** @constant */
+                              code: "UNAUTHORIZED";
+                              /** @constant */
+                              status: 401;
+                              /** @default You are not authorized to perform this action. */
+                              message: string;
+                              data?: Record<string, never> | null;
+                          }
+                        | {
+                              /** @constant */
+                              defined: false;
+                              code: string;
+                              status: number;
+                              message: string;
+                              data?: unknown;
+                          };
                 };
             };
             /** @description 404 */
@@ -1102,24 +1149,26 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": {
-                        /** @constant */
-                        defined: true;
-                        /** @constant */
-                        code: "NOT_FOUND";
-                        /** @constant */
-                        status: 404;
-                        /** @default The requested resource was not found. */
-                        message: string;
-                        data?: Record<string, never> | null;
-                    } | {
-                        /** @constant */
-                        defined: false;
-                        code: string;
-                        status: number;
-                        message: string;
-                        data?: unknown;
-                    };
+                    "application/json":
+                        | {
+                              /** @constant */
+                              defined: true;
+                              /** @constant */
+                              code: "NOT_FOUND";
+                              /** @constant */
+                              status: 404;
+                              /** @default The requested resource was not found. */
+                              message: string;
+                              data?: Record<string, never> | null;
+                          }
+                        | {
+                              /** @constant */
+                              defined: false;
+                              code: string;
+                              status: number;
+                              message: string;
+                              data?: unknown;
+                          };
                 };
             };
             /** @description 500 */
@@ -1128,24 +1177,26 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": {
-                        /** @constant */
-                        defined: true;
-                        /** @constant */
-                        code: "INTERNAL_SERVER_ERROR";
-                        /** @constant */
-                        status: 500;
-                        /** @default An internal server error occurred. */
-                        message: string;
-                        data?: Record<string, never> | null;
-                    } | {
-                        /** @constant */
-                        defined: false;
-                        code: string;
-                        status: number;
-                        message: string;
-                        data?: unknown;
-                    };
+                    "application/json":
+                        | {
+                              /** @constant */
+                              defined: true;
+                              /** @constant */
+                              code: "INTERNAL_SERVER_ERROR";
+                              /** @constant */
+                              status: 500;
+                              /** @default An internal server error occurred. */
+                              message: string;
+                              data?: Record<string, never> | null;
+                          }
+                        | {
+                              /** @constant */
+                              defined: false;
+                              code: string;
+                              status: number;
+                              message: string;
+                              data?: unknown;
+                          };
                 };
             };
         };
@@ -1204,24 +1255,26 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": {
-                        /** @constant */
-                        defined: true;
-                        /** @constant */
-                        code: "BAD_REQUEST";
-                        /** @constant */
-                        status: 400;
-                        /** @default The request was invalid or cannot be served. */
-                        message: string;
-                        data?: Record<string, never> | null;
-                    } | {
-                        /** @constant */
-                        defined: false;
-                        code: string;
-                        status: number;
-                        message: string;
-                        data?: unknown;
-                    };
+                    "application/json":
+                        | {
+                              /** @constant */
+                              defined: true;
+                              /** @constant */
+                              code: "BAD_REQUEST";
+                              /** @constant */
+                              status: 400;
+                              /** @default The request was invalid or cannot be served. */
+                              message: string;
+                              data?: Record<string, never> | null;
+                          }
+                        | {
+                              /** @constant */
+                              defined: false;
+                              code: string;
+                              status: number;
+                              message: string;
+                              data?: unknown;
+                          };
                 };
             };
             /** @description 401 */
@@ -1230,24 +1283,26 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": {
-                        /** @constant */
-                        defined: true;
-                        /** @constant */
-                        code: "UNAUTHORIZED";
-                        /** @constant */
-                        status: 401;
-                        /** @default You are not authorized to perform this action. */
-                        message: string;
-                        data?: Record<string, never> | null;
-                    } | {
-                        /** @constant */
-                        defined: false;
-                        code: string;
-                        status: number;
-                        message: string;
-                        data?: unknown;
-                    };
+                    "application/json":
+                        | {
+                              /** @constant */
+                              defined: true;
+                              /** @constant */
+                              code: "UNAUTHORIZED";
+                              /** @constant */
+                              status: 401;
+                              /** @default You are not authorized to perform this action. */
+                              message: string;
+                              data?: Record<string, never> | null;
+                          }
+                        | {
+                              /** @constant */
+                              defined: false;
+                              code: string;
+                              status: number;
+                              message: string;
+                              data?: unknown;
+                          };
                 };
             };
             /** @description 404 */
@@ -1256,24 +1311,26 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": {
-                        /** @constant */
-                        defined: true;
-                        /** @constant */
-                        code: "NOT_FOUND";
-                        /** @constant */
-                        status: 404;
-                        /** @default The requested resource was not found. */
-                        message: string;
-                        data?: Record<string, never> | null;
-                    } | {
-                        /** @constant */
-                        defined: false;
-                        code: string;
-                        status: number;
-                        message: string;
-                        data?: unknown;
-                    };
+                    "application/json":
+                        | {
+                              /** @constant */
+                              defined: true;
+                              /** @constant */
+                              code: "NOT_FOUND";
+                              /** @constant */
+                              status: 404;
+                              /** @default The requested resource was not found. */
+                              message: string;
+                              data?: Record<string, never> | null;
+                          }
+                        | {
+                              /** @constant */
+                              defined: false;
+                              code: string;
+                              status: number;
+                              message: string;
+                              data?: unknown;
+                          };
                 };
             };
             /** @description 500 */
@@ -1282,24 +1339,26 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": {
-                        /** @constant */
-                        defined: true;
-                        /** @constant */
-                        code: "INTERNAL_SERVER_ERROR";
-                        /** @constant */
-                        status: 500;
-                        /** @default An internal server error occurred. */
-                        message: string;
-                        data?: Record<string, never> | null;
-                    } | {
-                        /** @constant */
-                        defined: false;
-                        code: string;
-                        status: number;
-                        message: string;
-                        data?: unknown;
-                    };
+                    "application/json":
+                        | {
+                              /** @constant */
+                              defined: true;
+                              /** @constant */
+                              code: "INTERNAL_SERVER_ERROR";
+                              /** @constant */
+                              status: 500;
+                              /** @default An internal server error occurred. */
+                              message: string;
+                              data?: Record<string, never> | null;
+                          }
+                        | {
+                              /** @constant */
+                              defined: false;
+                              code: string;
+                              status: number;
+                              message: string;
+                              data?: unknown;
+                          };
                 };
             };
         };
@@ -1346,24 +1405,26 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": {
-                        /** @constant */
-                        defined: true;
-                        /** @constant */
-                        code: "BAD_REQUEST";
-                        /** @constant */
-                        status: 400;
-                        /** @default The request was invalid or cannot be served. */
-                        message: string;
-                        data?: Record<string, never> | null;
-                    } | {
-                        /** @constant */
-                        defined: false;
-                        code: string;
-                        status: number;
-                        message: string;
-                        data?: unknown;
-                    };
+                    "application/json":
+                        | {
+                              /** @constant */
+                              defined: true;
+                              /** @constant */
+                              code: "BAD_REQUEST";
+                              /** @constant */
+                              status: 400;
+                              /** @default The request was invalid or cannot be served. */
+                              message: string;
+                              data?: Record<string, never> | null;
+                          }
+                        | {
+                              /** @constant */
+                              defined: false;
+                              code: string;
+                              status: number;
+                              message: string;
+                              data?: unknown;
+                          };
                 };
             };
             /** @description 401 */
@@ -1372,24 +1433,26 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": {
-                        /** @constant */
-                        defined: true;
-                        /** @constant */
-                        code: "UNAUTHORIZED";
-                        /** @constant */
-                        status: 401;
-                        /** @default You are not authorized to perform this action. */
-                        message: string;
-                        data?: Record<string, never> | null;
-                    } | {
-                        /** @constant */
-                        defined: false;
-                        code: string;
-                        status: number;
-                        message: string;
-                        data?: unknown;
-                    };
+                    "application/json":
+                        | {
+                              /** @constant */
+                              defined: true;
+                              /** @constant */
+                              code: "UNAUTHORIZED";
+                              /** @constant */
+                              status: 401;
+                              /** @default You are not authorized to perform this action. */
+                              message: string;
+                              data?: Record<string, never> | null;
+                          }
+                        | {
+                              /** @constant */
+                              defined: false;
+                              code: string;
+                              status: number;
+                              message: string;
+                              data?: unknown;
+                          };
                 };
             };
             /** @description 404 */
@@ -1398,24 +1461,26 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": {
-                        /** @constant */
-                        defined: true;
-                        /** @constant */
-                        code: "NOT_FOUND";
-                        /** @constant */
-                        status: 404;
-                        /** @default The requested resource was not found. */
-                        message: string;
-                        data?: Record<string, never> | null;
-                    } | {
-                        /** @constant */
-                        defined: false;
-                        code: string;
-                        status: number;
-                        message: string;
-                        data?: unknown;
-                    };
+                    "application/json":
+                        | {
+                              /** @constant */
+                              defined: true;
+                              /** @constant */
+                              code: "NOT_FOUND";
+                              /** @constant */
+                              status: 404;
+                              /** @default The requested resource was not found. */
+                              message: string;
+                              data?: Record<string, never> | null;
+                          }
+                        | {
+                              /** @constant */
+                              defined: false;
+                              code: string;
+                              status: number;
+                              message: string;
+                              data?: unknown;
+                          };
                 };
             };
             /** @description 500 */
@@ -1424,24 +1489,26 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": {
-                        /** @constant */
-                        defined: true;
-                        /** @constant */
-                        code: "INTERNAL_SERVER_ERROR";
-                        /** @constant */
-                        status: 500;
-                        /** @default An internal server error occurred. */
-                        message: string;
-                        data?: Record<string, never> | null;
-                    } | {
-                        /** @constant */
-                        defined: false;
-                        code: string;
-                        status: number;
-                        message: string;
-                        data?: unknown;
-                    };
+                    "application/json":
+                        | {
+                              /** @constant */
+                              defined: true;
+                              /** @constant */
+                              code: "INTERNAL_SERVER_ERROR";
+                              /** @constant */
+                              status: 500;
+                              /** @default An internal server error occurred. */
+                              message: string;
+                              data?: Record<string, never> | null;
+                          }
+                        | {
+                              /** @constant */
+                              defined: false;
+                              code: string;
+                              status: number;
+                              message: string;
+                              data?: unknown;
+                          };
                 };
             };
         };
@@ -1481,24 +1548,26 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": {
-                        /** @constant */
-                        defined: true;
-                        /** @constant */
-                        code: "BAD_REQUEST";
-                        /** @constant */
-                        status: 400;
-                        /** @default The request was invalid or cannot be served. */
-                        message: string;
-                        data?: Record<string, never> | null;
-                    } | {
-                        /** @constant */
-                        defined: false;
-                        code: string;
-                        status: number;
-                        message: string;
-                        data?: unknown;
-                    };
+                    "application/json":
+                        | {
+                              /** @constant */
+                              defined: true;
+                              /** @constant */
+                              code: "BAD_REQUEST";
+                              /** @constant */
+                              status: 400;
+                              /** @default The request was invalid or cannot be served. */
+                              message: string;
+                              data?: Record<string, never> | null;
+                          }
+                        | {
+                              /** @constant */
+                              defined: false;
+                              code: string;
+                              status: number;
+                              message: string;
+                              data?: unknown;
+                          };
                 };
             };
             /** @description 401 */
@@ -1507,24 +1576,26 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": {
-                        /** @constant */
-                        defined: true;
-                        /** @constant */
-                        code: "UNAUTHORIZED";
-                        /** @constant */
-                        status: 401;
-                        /** @default You are not authorized to perform this action. */
-                        message: string;
-                        data?: Record<string, never> | null;
-                    } | {
-                        /** @constant */
-                        defined: false;
-                        code: string;
-                        status: number;
-                        message: string;
-                        data?: unknown;
-                    };
+                    "application/json":
+                        | {
+                              /** @constant */
+                              defined: true;
+                              /** @constant */
+                              code: "UNAUTHORIZED";
+                              /** @constant */
+                              status: 401;
+                              /** @default You are not authorized to perform this action. */
+                              message: string;
+                              data?: Record<string, never> | null;
+                          }
+                        | {
+                              /** @constant */
+                              defined: false;
+                              code: string;
+                              status: number;
+                              message: string;
+                              data?: unknown;
+                          };
                 };
             };
             /** @description 404 */
@@ -1533,24 +1604,26 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": {
-                        /** @constant */
-                        defined: true;
-                        /** @constant */
-                        code: "NOT_FOUND";
-                        /** @constant */
-                        status: 404;
-                        /** @default The requested resource was not found. */
-                        message: string;
-                        data?: Record<string, never> | null;
-                    } | {
-                        /** @constant */
-                        defined: false;
-                        code: string;
-                        status: number;
-                        message: string;
-                        data?: unknown;
-                    };
+                    "application/json":
+                        | {
+                              /** @constant */
+                              defined: true;
+                              /** @constant */
+                              code: "NOT_FOUND";
+                              /** @constant */
+                              status: 404;
+                              /** @default The requested resource was not found. */
+                              message: string;
+                              data?: Record<string, never> | null;
+                          }
+                        | {
+                              /** @constant */
+                              defined: false;
+                              code: string;
+                              status: number;
+                              message: string;
+                              data?: unknown;
+                          };
                 };
             };
             /** @description 500 */
@@ -1559,24 +1632,26 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": {
-                        /** @constant */
-                        defined: true;
-                        /** @constant */
-                        code: "INTERNAL_SERVER_ERROR";
-                        /** @constant */
-                        status: 500;
-                        /** @default An internal server error occurred. */
-                        message: string;
-                        data?: Record<string, never> | null;
-                    } | {
-                        /** @constant */
-                        defined: false;
-                        code: string;
-                        status: number;
-                        message: string;
-                        data?: unknown;
-                    };
+                    "application/json":
+                        | {
+                              /** @constant */
+                              defined: true;
+                              /** @constant */
+                              code: "INTERNAL_SERVER_ERROR";
+                              /** @constant */
+                              status: 500;
+                              /** @default An internal server error occurred. */
+                              message: string;
+                              data?: Record<string, never> | null;
+                          }
+                        | {
+                              /** @constant */
+                              defined: false;
+                              code: string;
+                              status: number;
+                              message: string;
+                              data?: unknown;
+                          };
                 };
             };
         };
@@ -1600,11 +1675,11 @@ export interface operations {
                         body: {
                             data: {
                                 /** @description Email address to send contact inquiries to */
-                                contact_email: string;
+                                contact_email: string | null;
                                 /** @description Phone number for contact inquiries */
-                                contact_phone_number: string;
+                                contact_phone_number: string | null;
                                 /** @description Address line for contact inquiries */
-                                contact_address_line: string;
+                                contact_address_line: string | null;
                             };
                         };
                     };
@@ -1616,24 +1691,26 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": {
-                        /** @constant */
-                        defined: true;
-                        /** @constant */
-                        code: "BAD_REQUEST";
-                        /** @constant */
-                        status: 400;
-                        /** @default The request was invalid or cannot be served. */
-                        message: string;
-                        data?: Record<string, never> | null;
-                    } | {
-                        /** @constant */
-                        defined: false;
-                        code: string;
-                        status: number;
-                        message: string;
-                        data?: unknown;
-                    };
+                    "application/json":
+                        | {
+                              /** @constant */
+                              defined: true;
+                              /** @constant */
+                              code: "BAD_REQUEST";
+                              /** @constant */
+                              status: 400;
+                              /** @default The request was invalid or cannot be served. */
+                              message: string;
+                              data?: Record<string, never> | null;
+                          }
+                        | {
+                              /** @constant */
+                              defined: false;
+                              code: string;
+                              status: number;
+                              message: string;
+                              data?: unknown;
+                          };
                 };
             };
             /** @description 401 */
@@ -1642,24 +1719,26 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": {
-                        /** @constant */
-                        defined: true;
-                        /** @constant */
-                        code: "UNAUTHORIZED";
-                        /** @constant */
-                        status: 401;
-                        /** @default You are not authorized to perform this action. */
-                        message: string;
-                        data?: Record<string, never> | null;
-                    } | {
-                        /** @constant */
-                        defined: false;
-                        code: string;
-                        status: number;
-                        message: string;
-                        data?: unknown;
-                    };
+                    "application/json":
+                        | {
+                              /** @constant */
+                              defined: true;
+                              /** @constant */
+                              code: "UNAUTHORIZED";
+                              /** @constant */
+                              status: 401;
+                              /** @default You are not authorized to perform this action. */
+                              message: string;
+                              data?: Record<string, never> | null;
+                          }
+                        | {
+                              /** @constant */
+                              defined: false;
+                              code: string;
+                              status: number;
+                              message: string;
+                              data?: unknown;
+                          };
                 };
             };
             /** @description 404 */
@@ -1668,24 +1747,26 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": {
-                        /** @constant */
-                        defined: true;
-                        /** @constant */
-                        code: "NOT_FOUND";
-                        /** @constant */
-                        status: 404;
-                        /** @default The requested resource was not found. */
-                        message: string;
-                        data?: Record<string, never> | null;
-                    } | {
-                        /** @constant */
-                        defined: false;
-                        code: string;
-                        status: number;
-                        message: string;
-                        data?: unknown;
-                    };
+                    "application/json":
+                        | {
+                              /** @constant */
+                              defined: true;
+                              /** @constant */
+                              code: "NOT_FOUND";
+                              /** @constant */
+                              status: 404;
+                              /** @default The requested resource was not found. */
+                              message: string;
+                              data?: Record<string, never> | null;
+                          }
+                        | {
+                              /** @constant */
+                              defined: false;
+                              code: string;
+                              status: number;
+                              message: string;
+                              data?: unknown;
+                          };
                 };
             };
             /** @description 500 */
@@ -1694,24 +1775,26 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": {
-                        /** @constant */
-                        defined: true;
-                        /** @constant */
-                        code: "INTERNAL_SERVER_ERROR";
-                        /** @constant */
-                        status: 500;
-                        /** @default An internal server error occurred. */
-                        message: string;
-                        data?: Record<string, never> | null;
-                    } | {
-                        /** @constant */
-                        defined: false;
-                        code: string;
-                        status: number;
-                        message: string;
-                        data?: unknown;
-                    };
+                    "application/json":
+                        | {
+                              /** @constant */
+                              defined: true;
+                              /** @constant */
+                              code: "INTERNAL_SERVER_ERROR";
+                              /** @constant */
+                              status: 500;
+                              /** @default An internal server error occurred. */
+                              message: string;
+                              data?: Record<string, never> | null;
+                          }
+                        | {
+                              /** @constant */
+                              defined: false;
+                              code: string;
+                              status: number;
+                              message: string;
+                              data?: unknown;
+                          };
                 };
             };
         };
