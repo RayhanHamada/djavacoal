@@ -68,11 +68,7 @@ export default function MajorityExportDestinationSection() {
 
             {/* ✅ DESCRIPTION */}
             <p className="mx-auto mt-4 max-w-5xl text-center text-base leading-relaxed text-[#D3D3D3] md:text-lg lg:text-xl">
-                Our premium coconut charcoal briquettes have reached customers
-                across the globe — from the Middle East to Europe, Asia, and the
-                Americas. This wide export network reflects our commitment to
-                consistent quality, sustainable production, and long-term
-                business partnerships worldwide.
+                {t("description")}
             </p>
 
             {/* ✅ MAP */}

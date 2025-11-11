@@ -33,13 +33,14 @@ export function WhyChooseUsSection() {
                 </div>
             </div>
 
-            <div className="px-5 md:px-10 lg:px-[80px] 2xl:px-[120px]">
+            <div className="px-3 sm:px-5 md:px-10 lg:px-[80px] 2xl:px-[120px]">
                 <div
                     ref={scrollRef}
-                    className="scrollbar-hide flex justify-center gap-[clamp(1rem,1.5vw,1.5rem)] overflow-x-auto scroll-smooth pb-4 md:overflow-x-auto lg:flex-wrap lg:justify-center lg:overflow-x-visible [@media(min-width:1800px)]:flex-nowrap"
+                    className="scrollbar-hide flex justify-start gap-[clamp(1rem,1.5vw,1.25rem)] overflow-x-auto scroll-smooth pb-4 md:overflow-x-auto lg:flex-wrap lg:justify-center lg:overflow-x-visible [@media(min-width:1800px)]:flex-nowrap"
                     style={{
                         maxWidth: "min(95vw, 1800px)",
                         margin: "0 auto",
+                        scrollPadding: "1rem",
                     }}
                 >
                     {FEATURES.map((feature, index) => {
@@ -47,7 +48,7 @@ export function WhyChooseUsSection() {
                         return (
                             <div
                                 key={index}
-                                className="group flex h-[269px] w-[197.5px] shrink-0 flex-col items-center justify-center border border-[#EFA12D40] bg-[radial-gradient(circle_at_center,#000_0%,#171717_50%,#F5980D30_90%)] px-4 py-6 backdrop-blur-sm transition-all duration-300 hover:border-[#EFA12D] hover:shadow-[0_0_10px_#EFA12D50]"
+                                className="group flex h-[269px] w-[197.5px] shrink-0 flex-col items-center justify-center border border-[#EFA12D40] bg-[radial-gradient(circle_at_center,#000_0%,#171717_50%,#F5980D30_90%)] px-4 py-6 backdrop-blur-sm transition-all duration-300 hover:border-[#EFA12D] hover:shadow-[0_0_10px_#EFA12D50] lg:mx-0"
                             >
                                 <div className="relative h-[120px] w-full md:h-[140px] lg:h-[150px]">
                                     <Image
