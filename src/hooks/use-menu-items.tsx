@@ -90,7 +90,7 @@ export function useMenuItems() {
             },
             {
                 label: t("newsArticles"),
-                href: "/news",
+                href: "/blog",
             },
             {
                 label: t("contact"),

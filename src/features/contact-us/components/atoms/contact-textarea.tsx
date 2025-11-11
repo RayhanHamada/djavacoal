@@ -10,7 +10,7 @@ export function ContactTextarea({ label, placeholder }: ContactTextareaProps) {
             <textarea
                 placeholder={placeholder}
                 rows={4}
-                className="w-full rounded-md bg-[#2B2B2B] px-3 py-2 text-white placeholder-gray-400 focus:ring-2 focus:ring-orange-400 focus:outline-none lg:h-[92px]"
+                className="w-full rounded-md bg-[#2B2B2B] px-3 py-2 text-white placeholder-gray-400 focus:ring-2 focus:ring-orange-400 focus:outline-none lg:h-[188px]"
             />
         </div>
     );

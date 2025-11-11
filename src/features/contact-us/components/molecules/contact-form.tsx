@@ -10,7 +10,7 @@ export function ContactForm() {
     const t = useTranslations("ContactUs.form");
 
     return (
-        <form className="flex w-full flex-col gap-4">
+        <form className="flex w-full flex-col gap-2 lg:gap-0">
             <ContactInput
                 label={t("fields.fullName.label")}
                 placeholder={t("fields.fullName.placeholder")}

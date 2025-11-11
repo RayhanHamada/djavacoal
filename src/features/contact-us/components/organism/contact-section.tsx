@@ -35,7 +35,7 @@ export default function ContactSection() {
             </div>
 
             {/* Content Section */}
-            <div className="mx-auto flex max-w-6xl flex-col px-6 py-10 md:flex-row md:items-center md:justify-between">
+            <div className="mx-auto flex max-w-7xl flex-col gap-8 px-6 py-10 md:flex-row md:items-center md:justify-between">
                 {/* Logo */}
                 <div className="flex flex-col items-center md:w-1/2">
                     <Image
@@ -48,7 +48,7 @@ export default function ContactSection() {
                 </div>
 
                 {/* Contact Info */}
-                <div className="flex flex-col gap-6 md:w-1/2">
+                <div className="flex flex-col gap-3 md:w-1/2">
                     <ContactInfoItem
                         icon={<FaEnvelope />}
                         label={t("info.email.label")}
