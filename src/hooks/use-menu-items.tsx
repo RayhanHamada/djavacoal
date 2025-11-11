@@ -5,6 +5,7 @@ import { useMemo } from "react";
 import { useTranslations } from "next-intl";
 
 import { $api } from "@/adapters/public-api/client";
+import { SECTIONS_ELEMENTS_ID } from "@/configs";
 
 export type MenuItem = {
     label: string;
@@ -39,27 +40,27 @@ export function useMenuItems() {
                 submenus: [
                     {
                         label: t("aboutCompanySubmenus.cvDjavacoal"),
-                        href: "/about-company#cv-djavacoal-indonesia",
+                        href: `/about-company#${SECTIONS_ELEMENTS_ID.ABOUT_COMPANY.PT_DJAVACOAL_INDONESIA}`,
                     },
                     {
                         label: t("aboutCompanySubmenus.team"),
-                        href: "/about-company#djavacoals-team",
+                        href: `/about-company#${SECTIONS_ELEMENTS_ID.ABOUT_COMPANY.DJAVACOALS_TEAM}`,
                     },
                     {
                         label: t("aboutCompanySubmenus.whatWeDo"),
-                        href: "/about-company#what-we-do",
+                        href: `/about-company#${SECTIONS_ELEMENTS_ID.ABOUT_COMPANY.WHAT_WE_DO}`,
                     },
                     {
                         label: t("aboutCompanySubmenus.legalCertificate"),
-                        href: "/about-company#legal-certificate",
+                        href: `/about-company#${SECTIONS_ELEMENTS_ID.ABOUT_COMPANY.LEGAL_CERTIFICATE}`,
                     },
                     {
                         label: t("aboutCompanySubmenus.factory"),
-                        href: "/about-company#factory",
+                        href: `/about-company#${SECTIONS_ELEMENTS_ID.ABOUT_COMPANY.FACTORY}`,
                     },
                     {
                         label: t("aboutCompanySubmenus.gallery"),
-                        href: "/about-company#our-gallery",
+                        href: `/about-company#${SECTIONS_ELEMENTS_ID.ABOUT_COMPANY.OUR_GALLERY}`,
                     },
                 ],
             },
@@ -72,25 +73,25 @@ export function useMenuItems() {
                 submenus: [
                     {
                         label: t("productionInfoSubmenus.process"),
-                        href: "/production-info#production-process",
+                        href: `/production-info#${SECTIONS_ELEMENTS_ID.PRODUCTION_INFO.PRODUCTION_PROCESS}`,
                     },
                     {
                         label: t("productionInfoSubmenus.moqPayment"),
-                        href: "/production-info#moq-payment",
+                        href: `/production-info#${SECTIONS_ELEMENTS_ID.PRODUCTION_INFO.MOQ_PAYMENT_TERMS}`,
                     },
                     {
                         label: t("productionInfoSubmenus.shipment"),
-                        href: "/production-info#shipment-terms",
+                        href: `/production-info#${SECTIONS_ELEMENTS_ID.PRODUCTION_INFO.SHIPMENT_TERMS}`,
                     },
                     {
                         label: t("productionInfoSubmenus.packagingOption"),
-                        href: "/production-info#packaging-option",
+                        href: `/production-info#${SECTIONS_ELEMENTS_ID.PRODUCTION_INFO.PACKAGING_INFO}`,
                     },
                 ],
             },
             {
                 label: t("newsArticles"),
-                href: "/news",
+                href: "/blog",
             },
             {
                 label: t("contact"),

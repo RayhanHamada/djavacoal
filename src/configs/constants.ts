@@ -16,3 +16,24 @@ export const DEFAULT_LOCALE = LOCALES.EN;
 export const TIME_STRING_FORMAT = {
     DD_MMMM_YYYY: "dd MMMM yyyy",
 } as const;
+
+export const SECTIONS_ELEMENTS_ID = {
+    ABOUT_COMPANY: {
+        PT_DJAVACOAL_INDONESIA: "cv-djavacoal-indonesia",
+        DJAVACOALS_TEAM: "djavacoals-team",
+        WHAT_WE_DO: "what-we-do",
+        LEGAL_CERTIFICATE: "legal-certificate",
+        FACTORY: "factory",
+        OUR_GALLERY: "our-gallery",
+    },
+    OUR_PRODUCTS: {
+        PRODUCTS_LIST: "products-list",
+    },
+    PRODUCTION_INFO: {
+        PRODUCTION_PROCESS: "production-process",
+        MOQ_PAYMENT_TERMS: "moq-payment-terms",
+        SHIPMENT_TERMS: "shipment-terms",
+        PACKAGING_INFO: "packaging-info",
+        FAQS: "faqs",
+    },
+} as const;
