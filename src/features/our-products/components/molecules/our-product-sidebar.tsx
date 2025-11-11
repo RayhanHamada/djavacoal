@@ -143,7 +143,7 @@ export default function OurProductsSidebar({ idPrefix = "" }: Props) {
                                     className={`my-2 flex w-full items-center justify-between px-5 py-4 text-left text-sm font-medium transition-all duration-200 ${
                                         active === id
                                             ? "bg-[#9D7B19] font-semibold text-white"
-                                            : "bg-[#222222] text-gray-300 hover:bg-[#3B5952] hover:font-bold hover:text-white"
+                                            : "hover:bg-secondary bg-[#222222] text-gray-300 hover:font-bold hover:text-white"
                                     }`}
                                 >
                                     <span>{label}</span>

@@ -33,11 +33,14 @@ export function WhyChooseUsSection() {
                 </div>
             </div>
 
-            {/* Scrollable Feature Cards */}
-            <div className="px-5 md:px-10 lg:px-[100px]">
+            <div className="px-5 md:px-10 lg:px-[80px] 2xl:px-[120px]">
                 <div
                     ref={scrollRef}
-                    className="scrollbar-hide flex justify-start gap-6 overflow-x-auto scroll-smooth pb-4 2xl:justify-center"
+                    className="scrollbar-hide flex justify-center gap-[clamp(1rem,1.5vw,1.5rem)] overflow-x-auto scroll-smooth pb-4 md:overflow-x-auto lg:flex-wrap lg:justify-center lg:overflow-x-visible [@media(min-width:1800px)]:flex-nowrap"
+                    style={{
+                        maxWidth: "min(95vw, 1800px)",
+                        margin: "0 auto",
+                    }}
                 >
                     {FEATURES.map((feature, index) => {
                         const titleKey = `features.${feature.titleKey}` as any;

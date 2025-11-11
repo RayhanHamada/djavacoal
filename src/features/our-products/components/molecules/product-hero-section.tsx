@@ -28,19 +28,12 @@ export function ProductHeroSection({
                     </h2>
 
                     {/* Left Side: Product Image (Desktop) / Top (Mobile) */}
-                    <div className="flex justify-center lg:hidden lg:w-[365px]">
+                    <div className="flex w-full max-w-full justify-center overflow-hidden lg:hidden">
                         <VideoGallerySectionMd />
-                        {/* <Image
-                            src={productImage}
-                            alt={productName}
-                            width={365}
-                            height={365}
-                            className="h-auto w-full max-w-[365px]"
-                        /> */}
                     </div>
 
                     {/* Action Buttons */}
-                    <div className="max-w-auto flex flex-row gap-5">
+                    <div className="flex w-full max-w-full flex-row gap-3 sm:gap-5">
                         <ActionButton
                             label="Catalogue"
                             icon="/images/icon-download.svg"
