@@ -1,6 +1,8 @@
+import { getCloudflareContext } from "@opennextjs/cloudflare";
 import { render } from "@react-email/components";
+import console from "console";
 
-import { getNodemailerTransporter } from "@/adapters/email-service";
+import { getResend } from "@/adapters/email-service";
 import { ContactFormNotificationEmail } from "@/templates/emails";
 
 export async function POST(req: Request) {
@@ -14,6 +16,11 @@ export async function POST(req: Request) {
 
         const { name, email, phone, message } = body;
 
+        /**
+         * check if todays limit reached
+         */
+        const { env } = await getCloudflareContext({ async: true });
+
         // ✅ Template email modern khas Djavacoal
         const htmlContent = await render(
             <ContactFormNotificationEmail
@@ -24,15 +31,21 @@ export async function POST(req: Request) {
             />
         );
 
-        const transporter = getNodemailerTransporter();
+        const emailService = getResend(env.RESEND_API_KEY);
 
-        // ✅ Kirim email
-        await transporter.sendMail({
-            from: `"Website Contact Form" <${process.env.SMTP_USER}>`,
-            to: process.env.RECIPIENT_EMAIL,
-            subject: `[Website Djavacoal] New Message from ${name}`,
-            html: htmlContent,
-        });
+        try {
+            await emailService.emails.send({
+                from: `Djavacoal Notification <${env.SENDER_EMAIL}>`,
+                to: env.RECIPIENT_EMAIL,
+                subject: `[Website Djavacoal] New Message from ${name}`,
+                html: htmlContent,
+            });
+        } catch {
+            return Response.json(
+                { success: false, error: "Failed to send email via Resend" },
+                { status: 500 }
+            );
+        }
 
         return Response.json({ success: true });
     } catch (error) {

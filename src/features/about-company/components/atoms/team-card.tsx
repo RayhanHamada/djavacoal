@@ -16,7 +16,7 @@ export default function TeamCard({
                 alt={name}
                 width={300}
                 height={300}
-                className="aspect-3/4 rounded-md object-cover"
+                className="aspect-3/4 border border-gray-600 bg-radial from-black via-[#222222] to-[#444444] object-cover"
             />
             <p className="text-sm text-gray-400">{role}</p>
             <p className="font-medium">{name}</p>

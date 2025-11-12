@@ -1,5 +1,3 @@
-import type { Metadata } from "next";
-
 import { JSONLDScript } from "@/components/molecules/json-ld-script";
 import {
     CompanyIntroSection,
@@ -11,26 +9,6 @@ import {
 } from "@/features/about-company/components/molecules";
 import AboutSidebar from "@/features/about-company/components/molecules/about-sidebar";
 import HeaderSection from "@/features/about-company/components/organism/header-section";
-
-export const metadata: Metadata = {
-    title: "About Company | CV Djavacoal Indonesia",
-    description:
-        "Get to know CV Djavacoal Indonesia — a trusted exporter of premium coconut shell charcoal briquettes. Learn about our history, team, global reach, and production excellence.",
-    openGraph: {
-        title: "About Company | CV Djavacoal Indonesia",
-        description:
-            "Discover CV Djavacoal Indonesia, a leading supplier of eco-friendly coconut shell charcoal briquettes, trusted worldwide for quality and sustainability.",
-        url: "https://www.djavacoal.com/about-company",
-        siteName: "CV Djavacoal Indonesia",
-        type: "website",
-    },
-    twitter: {
-        card: "summary_large_image",
-        title: "About Company | CV Djavacoal Indonesia",
-        description:
-            "Learn about CV Djavacoal Indonesia — our story, team, certifications, and dedication to sustainable charcoal production.",
-    },
-};
 
 const jsonLd = {
     "@context": "https://schema.org",

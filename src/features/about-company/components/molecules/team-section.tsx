@@ -56,7 +56,7 @@ export default function TeamSection() {
                 </div>
 
                 {/* Desktop: grid layout */}
-                <div className="hidden grid-cols-4 gap-y-4 md:grid lg:flex lg:flex-wrap lg:space-x-1">
+                <div className="hidden grid-cols-4 gap-y-4 md:grid lg:flex lg:flex-wrap">
                     {teamMembers.map((member, i) => (
                         <FadeInView key={i} delay={i * 0.05} className="w-fit">
                             <ScaleOnHover scale={1.02}>
