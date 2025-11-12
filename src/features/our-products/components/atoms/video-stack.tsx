@@ -221,7 +221,7 @@ export function VideoGallerySection({
         <div className="w-full">
             <div className="mx-auto px-4 sm:px-6 lg:px-0">
                 {/* Stacked Video Squares - Responsive sizing and spacing */}
-                <div className="mx-auto flex w-full min-w-[110px] flex-col space-y-4 sm:max-w-sm sm:space-y-5 xl:max-w-[420px] xl:space-y-6 2xl:max-w-[460px] 2xl:space-y-8">
+                <div className="mx-auto flex w-full min-w-[110px] flex-col space-y-4 sm:max-w-sm sm:space-y-5 xl:space-y-6 2xl:space-y-8">
                     {videoData.gallery.map((item, index) => (
                         <VideoSquare
                             key={index}

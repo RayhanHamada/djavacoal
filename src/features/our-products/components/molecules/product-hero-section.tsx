@@ -49,25 +49,23 @@ export function ProductHeroSection({
                     </h2>
 
                     {/* Left Side: Product Image (Desktop) / Top (Mobile) */}
-                    <div className="flex w-full max-w-full justify-center overflow-hidden lg:hidden">
+                    <div className="flex w-full max-w-full justify-center lg:hidden">
                         <VideoGallerySectionMd />
                     </div>
 
                     {/* Action Buttons */}
-                    <div className="flex w-full max-w-full flex-row gap-3 sm:gap-5">
+                    <div className="flex w-full max-w-full flex-row flex-wrap gap-3 sm:gap-5">
                         <ActionButton
                             label="Catalogue"
                             icon="/images/icon-download.svg"
                             variant="primary"
                             onClick={onDownloadCatalogue}
-                            className="flex-1"
                         />
                         <ActionButton
                             label="Ask More"
                             icon="/images/icon-whatsapp.svg"
                             variant="success"
                             onClick={onAskMore}
-                            className="flex-1"
                         />
                     </div>
                 </div>

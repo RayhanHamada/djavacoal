@@ -253,7 +253,7 @@ function ThumbnailSlider({
             {/* Thumbnail Grid - Fixed with flex to prevent cramping */}
             <div
                 ref={scrollContainerRef}
-                className="scrollbar-hide flex gap-2 overflow-x-auto"
+                className="scrollbar-hide mx-8 flex gap-2 overflow-x-auto"
                 style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
             >
                 {items.map((item, index) => (
@@ -362,10 +362,10 @@ export function VideoGallerySectionMd({
     };
 
     return (
-        <div className="flex w-full">
-            <div className="px-0">
+        <div className="flex w-full justify-center">
+            <div className="flex flex-col items-center px-0">
                 {/* Mobile/Tablet Layout - Grid with main video and thumbnails */}
-                <div className="flex w-full max-w-[372px] justify-center">
+                <div className="flex w-full justify-center">
                     {/* Main Large Video */}
                     {videoData.gallery.length > 0 && (
                         <div className="mb-4 w-full">
