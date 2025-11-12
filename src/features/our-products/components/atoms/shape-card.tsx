@@ -10,7 +10,7 @@ type ShapeCardProps = {
 
 export function ShapeCard({ name, image, sizes }: ShapeCardProps) {
     return (
-        <div className="group mr-32 flex items-start gap-10 transition-all duration-300">
+        <div className="flex items-start gap-10 transition-all duration-300">
             {/* Image */}
             <div className="relative flex h-[130px] w-[130px] flex-shrink-0 items-center justify-center rounded-md border border-[#414141] bg-[radial-gradient(circle_at_center,#000_0%,#171717_50%,_#ffffff40_100%)] from-[#151515] to-[rgba(21,21,21,0.18)]">
                 <Image

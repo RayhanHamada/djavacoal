@@ -34,7 +34,7 @@ export function ProductHeroSection({
               ? " " + parts.slice(2).join(" ")
               : "";
     return (
-        <div className="flex w-full flex-col gap-10">
+        <div className="flex w-full min-w-[372px] flex-col gap-10">
             {/* Divider */}
             {/* <div className="hidden h-[1px] w-full bg-[#393939]" /> */}
 
@@ -60,12 +60,14 @@ export function ProductHeroSection({
                             icon="/images/icon-download.svg"
                             variant="primary"
                             onClick={onDownloadCatalogue}
+                            className="flex-1"
                         />
                         <ActionButton
                             label="Ask More"
                             icon="/images/icon-whatsapp.svg"
                             variant="success"
                             onClick={onAskMore}
+                            className="flex-1"
                         />
                     </div>
                 </div>

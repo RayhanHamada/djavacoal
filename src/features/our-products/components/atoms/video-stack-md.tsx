@@ -363,12 +363,12 @@ export function VideoGallerySectionMd({
 
     return (
         <div className="flex w-full">
-            <div className="mx-auto px-0">
+            <div className="px-0">
                 {/* Mobile/Tablet Layout - Grid with main video and thumbnails */}
-                <div className="mx-auto w-full">
+                <div className="flex w-full max-w-[372px] justify-center">
                     {/* Main Large Video */}
                     {videoData.gallery.length > 0 && (
-                        <div className="mx-auto mb-4 w-full">
+                        <div className="mb-4 w-full">
                             <VideoSquare
                                 item={videoData.gallery[0]}
                                 onOpenModal={() =>
