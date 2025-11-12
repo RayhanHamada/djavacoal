@@ -28,9 +28,14 @@ export function PackagingCard({
 
             {/* Content */}
             <div className="flex flex-col gap-[10px]">
-                <h4 className="text-[20px] leading-[1.36] font-bold text-white">
-                    {title}
-                </h4>
+                <div className="flex gap-0">
+                    <h4 className="text-secondary text-[20px] leading-[1.36] font-bold">
+                        {title}
+                        <span className="ml-1 text-[20px] leading-[1.36] font-bold text-white">
+                            Packaging
+                        </span>
+                    </h4>
+                </div>
                 <p className="text-[16px] leading-[1.36] font-normal text-[#C6C6C6]">
                     {description}
                 </p>

@@ -73,19 +73,19 @@ const PRODUCT_DATA = {
         ],
         packagingOptions: [
             {
-                title: "Full Packaging",
+                title: "Full",
                 description:
                     "Designed for retail and private label brands, this option includes inner plastic, inner box, and master box. It ensures your brand stands out on the market while keeping products safe and ready for direct distribution to customers.",
                 image: "/images/packaging-full.png",
             },
             {
-                title: "Bulk Packaging",
+                title: "Bulk",
                 description:
                     "Best suited for wholesale buyers and large distributors, this packaging includes inner plastic and master box only. It reduces costs while still maintaining protection and efficient handling during export.",
                 image: "/images/packaging-bulk.png",
             },
             {
-                title: "Bulk Loose Packaging",
+                title: "Bulk Loose",
                 description:
                     "Ideal for high-volume and cost-sensitive shipments, this option uses only inner plastic (10 kg) packed directly into the master box without inner boxes. It maximizes container space and efficiency, making it the most economical choice.",
                 image: "/images/packaging-bulk-loose.png",
