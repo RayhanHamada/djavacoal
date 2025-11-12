@@ -119,8 +119,8 @@ export function ProductPage() {
     };
 
     return (
-        <div className="flex flex-col gap-10 px-5 py-0 md:gap-10 lg:gap-0 lg:px-0">
-            <section className="mx-auto max-w-7xl px-6 py-10 md:px-10 md:py-16 lg:mx-0 lg:mr-10 lg:max-w-none lg:px-0 lg:py-0">
+        <div className="flex flex-col gap-10 px-5 py-0 md:gap-10 md:px-10 lg:gap-0 lg:px-0">
+            <section className="mx-auto max-w-7xl py-10 md:py-16 lg:mx-0 lg:mr-10 lg:max-w-none lg:px-0 lg:py-0">
                 <div className="grid grid-cols-1 gap-10 lg:grid-cols-[260px_1fr]">
                     {/* === LEFT SIDEBAR === */}
                     <div className="bg-[#222222] lg:py-16">
@@ -134,7 +134,7 @@ export function ProductPage() {
                                 <div className="hidden max-w-[420px] lg:block lg:flex-1">
                                     <VideoGallerySection />
                                 </div>
-                                <div className="flex-1 lg:max-w-full">
+                                <div className="min-w-[372px] flex-1 lg:max-w-full">
                                     <ProductHeroSection
                                         productName={currentProduct.name}
                                         onDownloadCatalogue={
@@ -202,7 +202,7 @@ export function ProductPage() {
                                     <div className="my-6 h-px w-full bg-[#393939]" />
 
                                     {/* Detail Information Section */}
-                                    <div className="flex flex-col gap-5">
+                                    <div className="flex min-w-[372px] flex-col gap-5">
                                         <h3 className="text-xl font-bold text-white">
                                             Detail Information:
                                         </h3>
