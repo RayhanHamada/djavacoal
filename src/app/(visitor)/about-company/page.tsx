@@ -1,4 +1,7 @@
+import { getLocale } from "next-intl/server";
+
 import { JSONLDScript } from "@/components/molecules/json-ld-script";
+import { LOCALES } from "@/configs";
 import {
     CompanyIntroSection,
     TeamSection,
@@ -9,6 +12,7 @@ import {
 } from "@/features/about-company/components/molecules";
 import AboutSidebar from "@/features/about-company/components/molecules/about-sidebar";
 import HeaderSection from "@/features/about-company/components/organism/header-section";
+import { cn } from "@/lib/utils";
 
 const jsonLd = {
     "@context": "https://schema.org",
@@ -25,6 +29,7 @@ const jsonLd = {
 };
 
 export default async function AboutCompanyPage() {
+    const locale = await getLocale();
     return (
         <div className="bg-primary text-white">
             {/* JSON-LD SEO Structured Data */}
@@ -34,7 +39,12 @@ export default async function AboutCompanyPage() {
             <HeaderSection />
 
             {/* ===== MAIN LAYOUT WRAPPER ===== */}
-            <section className="mx-auto max-w-7xl px-6 py-10 md:px-10 md:py-16 lg:mx-0 lg:mr-10 lg:max-w-none lg:px-0 lg:py-0">
+            <section
+                className={cn(
+                    `mx-auto max-w-7xl px-6 py-10 md:px-10 md:py-16 lg:mx-0 lg:max-w-none lg:px-0 lg:py-0`,
+                    locale === LOCALES.AR ? "lg:ml-10" : "lg:mr-10"
+                )}
+            >
                 <div className="grid grid-cols-1 gap-10 lg:grid-cols-[260px_1fr]">
                     {/* === LEFT SIDEBAR === */}
                     <div className="bg-[#222222] lg:py-16">
