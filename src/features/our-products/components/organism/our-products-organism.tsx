@@ -1,8 +1,11 @@
 "use client";
+import "react-photo-view/dist/react-photo-view.css";
 
 import { useState } from "react";
 
 import Image from "next/image";
+
+import { PhotoProvider, PhotoView } from "react-photo-view";
 
 import { VideoGallerySection } from "../atoms";
 import {
@@ -119,103 +122,110 @@ export function ProductPage() {
     };
 
     return (
-        <div className="flex flex-col gap-10 px-5 py-0 md:gap-10 md:px-10 lg:gap-0 lg:px-0">
-            <section className="mx-auto max-w-7xl py-10 md:py-16 lg:mx-0 lg:mr-10 lg:max-w-none lg:px-0 lg:py-0">
-                <div className="grid grid-cols-1 gap-10 lg:grid-cols-[260px_1fr]">
-                    {/* === LEFT SIDEBAR === */}
-                    <div className="bg-[#222222] lg:py-16">
-                        <OurProductsSidebar />
-                    </div>
+        <PhotoProvider>
+            <div className="flex flex-col gap-10 px-5 py-0 md:gap-10 md:px-10 lg:gap-0 lg:px-0">
+                <section className="mx-auto max-w-7xl py-10 md:py-16 lg:mx-0 lg:mr-10 lg:max-w-none lg:px-0 lg:py-0">
+                    <div className="grid grid-cols-1 gap-10 lg:grid-cols-[260px_1fr]">
+                        {/* === LEFT SIDEBAR === */}
+                        <div className="bg-[#222222] lg:py-16">
+                            <OurProductsSidebar />
+                        </div>
 
-                    <div className="space-y-12 rounded-xl lg:mt-16 lg:bg-[#222222] lg:px-10 lg:py-10">
-                        {/* Product Content */}
-                        <div className="flex flex-col gap-10">
-                            <div className="flex gap-x-10">
-                                <div className="hidden max-w-[420px] lg:block lg:flex-1">
-                                    <VideoGallerySection />
-                                </div>
-                                <div className="min-w-[372px] flex-1 lg:max-w-full">
-                                    <ProductHeroSection
-                                        productName={currentProduct.name}
-                                        onDownloadCatalogue={
-                                            handleDownloadCatalogue
-                                        }
-                                        onAskMore={handleAskMore}
-                                    />
-
-                                    {/* Divider */}
-                                    <div className="my-6 h-px w-full bg-[#393939]" />
-
-                                    {/* Description Section */}
-                                    <div className="flex flex-col gap-3">
-                                        <h3 className="text-xl font-bold text-white">
-                                            Description:
-                                        </h3>
-                                        <p className="text-justify text-base leading-[23px] text-[#B3B3B3]">
-                                            {currentProduct.description}
-                                        </p>
+                        <div className="space-y-12 rounded-xl lg:mt-16 lg:bg-[#222222] lg:px-10 lg:py-10">
+                            {/* Product Content */}
+                            <div className="flex flex-col gap-10">
+                                <div className="flex gap-x-10">
+                                    <div className="hidden max-w-[420px] lg:block lg:flex-1">
+                                        <VideoGallerySection />
                                     </div>
-
-                                    {/* Divider */}
-                                    <div className="my-6 h-px w-full bg-[#393939]" />
-
-                                    {/* Specifications Section */}
-                                    <div className="flex flex-col gap-5">
-                                        <h3 className="text-xl font-bold text-white">
-                                            Specification & Lab. Test:
-                                        </h3>
-                                        <div className="justify-left flex flex-wrap items-center gap-5 md:flex-row md:gap-5 lg:gap-10 [1800px]:flex-nowrap [2330px]:max-w-[600px]">
-                                            {currentProduct.specifications.map(
-                                                (spec, idx) => (
-                                                    <Image
-                                                        key={idx}
-                                                        src={spec.image}
-                                                        alt={`Specification ${idx + 1}`}
-                                                        width={744}
-                                                        height={1054}
-                                                        className="h-auto w-full max-w-full md:w-auto md:max-w-[600px]"
-                                                    />
-                                                )
-                                            )}
-                                        </div>
-                                    </div>
-
-                                    {/* Divider */}
-                                    <div className="my-6 h-px w-full bg-[#393939]" />
-
-                                    {/* Shapes Section */}
-                                    <ShapesList
-                                        shapes={currentProduct.shapes}
-                                    />
-
-                                    {/* Divider */}
-                                    <div className="my-6 h-px w-full bg-[#393939]" />
-
-                                    {/* Packaging Options Section */}
-                                    <PackagingList
-                                        packagingOptions={
-                                            currentProduct.packagingOptions
-                                        }
-                                    />
-
-                                    {/* Divider */}
-                                    <div className="my-6 h-px w-full bg-[#393939]" />
-
-                                    {/* Detail Information Section */}
-                                    <div className="flex min-w-[372px] flex-col gap-5">
-                                        <h3 className="text-xl font-bold text-white">
-                                            Detail Information:
-                                        </h3>
-                                        <ProductDetailTable
-                                            rows={currentProduct.details}
+                                    <div className="min-w-[372px] flex-1 lg:max-w-full">
+                                        <ProductHeroSection
+                                            productName={currentProduct.name}
+                                            onDownloadCatalogue={
+                                                handleDownloadCatalogue
+                                            }
+                                            onAskMore={handleAskMore}
                                         />
+
+                                        {/* Divider */}
+                                        <div className="my-6 h-px w-full bg-[#393939]" />
+
+                                        {/* Description Section */}
+                                        <div className="flex flex-col gap-3">
+                                            <h3 className="text-xl font-bold text-white">
+                                                Description:
+                                            </h3>
+                                            <p className="text-justify text-base leading-[23px] text-[#B3B3B3]">
+                                                {currentProduct.description}
+                                            </p>
+                                        </div>
+
+                                        {/* Divider */}
+                                        <div className="my-6 h-px w-full bg-[#393939]" />
+
+                                        {/* Specifications Section */}
+                                        <div className="flex flex-col gap-5">
+                                            <h3 className="text-xl font-bold text-white">
+                                                Specification & Lab. Test:
+                                            </h3>
+
+                                            <div className="justify-left flex flex-wrap items-center gap-5 md:flex-row md:gap-5 lg:gap-10 [1800px]:flex-nowrap [2330px]:max-w-[600px]">
+                                                {currentProduct.specifications.map(
+                                                    (spec, idx) => (
+                                                        <PhotoView
+                                                            key={idx}
+                                                            src={spec.image}
+                                                        >
+                                                            <Image
+                                                                src={spec.image}
+                                                                alt={`Specification ${idx + 1}`}
+                                                                width={744}
+                                                                height={1054}
+                                                                className="h-auto w-full max-w-full md:w-auto lg:max-w-[400px]"
+                                                            />
+                                                        </PhotoView>
+                                                    )
+                                                )}
+                                            </div>
+                                        </div>
+
+                                        {/* Divider */}
+                                        <div className="my-6 h-px w-full bg-[#393939]" />
+
+                                        {/* Shapes Section */}
+                                        <ShapesList
+                                            shapes={currentProduct.shapes}
+                                        />
+
+                                        {/* Divider */}
+                                        <div className="my-6 h-px w-full bg-[#393939]" />
+
+                                        {/* Packaging Options Section */}
+                                        <PackagingList
+                                            packagingOptions={
+                                                currentProduct.packagingOptions
+                                            }
+                                        />
+
+                                        {/* Divider */}
+                                        <div className="my-6 h-px w-full bg-[#393939]" />
+
+                                        {/* Detail Information Section */}
+                                        <div className="flex min-w-[372px] flex-col gap-5">
+                                            <h3 className="text-xl font-bold text-white">
+                                                Detail Information:
+                                            </h3>
+                                            <ProductDetailTable
+                                                rows={currentProduct.details}
+                                            />
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
-            </section>
-        </div>
+                </section>
+            </div>
+        </PhotoProvider>
     );
 }
