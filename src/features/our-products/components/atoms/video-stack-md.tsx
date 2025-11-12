@@ -120,7 +120,7 @@ function VideoSquare({
 
     return (
         <div
-            className="group relative flex aspect-square flex-1 cursor-pointer overflow-hidden rounded-lg sm:rounded-xl"
+            className="group relative flex aspect-square w-full cursor-pointer overflow-hidden rounded-lg sm:rounded-xl"
             onMouseEnter={() => setIsHovering(true)}
             onMouseLeave={() => setIsHovering(false)}
             onClick={onOpenModal}
@@ -181,80 +181,13 @@ function ThumbnailSlider({
     onItemClick: (videoSrc: string) => void;
 }) {
     const scrollContainerRef = useRef<HTMLDivElement>(null);
-    const [canScrollLeft, setCanScrollLeft] = useState(false);
-    const [canScrollRight, setCanScrollRight] = useState(false);
-
-    // Check scroll position to show/hide navigation buttons
-    const checkScroll = () => {
-        const container = scrollContainerRef.current;
-        if (container) {
-            setCanScrollLeft(container.scrollLeft > 0);
-            setCanScrollRight(
-                container.scrollLeft <
-                    container.scrollWidth - container.clientWidth - 1
-            );
-        }
-    };
-
-    useEffect(() => {
-        checkScroll();
-        const container = scrollContainerRef.current;
-        if (container) {
-            container.addEventListener("scroll", checkScroll);
-            window.addEventListener("resize", checkScroll);
-            return () => {
-                container.removeEventListener("scroll", checkScroll);
-                window.removeEventListener("resize", checkScroll);
-            };
-        }
-    }, [items]);
-
-    const handlePrevious = () => {
-        const container = scrollContainerRef.current;
-        if (container) {
-            const scrollAmount = 160 + 8; // thumbnail width + gap
-            container.scrollBy({ left: -scrollAmount, behavior: "smooth" });
-        }
-    };
-
-    const handleNext = () => {
-        const container = scrollContainerRef.current;
-        if (container) {
-            const scrollAmount = 160 + 8; // thumbnail width + gap
-            container.scrollBy({ left: scrollAmount, behavior: "smooth" });
-        }
-    };
 
     return (
-        <div className="relative">
-            {/* Navigation Buttons */}
-            {canScrollLeft && (
-                <button
-                    onClick={handlePrevious}
-                    className="absolute top-1/2 left-0 z-10 flex h-8 w-8 -translate-x-3 -translate-y-1/2 items-center justify-center rounded-full bg-white/80 text-gray-900 shadow-lg transition-all hover:bg-white"
-                    aria-label="Previous videos"
-                >
-                    <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="16"
-                        height="16"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="3"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                    >
-                        <polyline points="15 18 9 12 15 6" />
-                    </svg>
-                </button>
-            )}
-
+        <div className="relative w-full">
             {/* Thumbnail Grid - Fixed with flex to prevent cramping */}
             <div
                 ref={scrollContainerRef}
-                className="scrollbar-hide mx-8 flex gap-2 overflow-x-auto"
-                style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+                className="flex gap-2 overflow-x-auto [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
             >
                 {items.map((item, index) => (
                     <div
@@ -290,28 +223,6 @@ function ThumbnailSlider({
                     </div>
                 ))}
             </div>
-
-            {canScrollRight && (
-                <button
-                    onClick={handleNext}
-                    className="absolute top-1/2 right-0 z-10 flex h-8 w-8 translate-x-3 -translate-y-1/2 items-center justify-center rounded-full bg-white/80 text-gray-900 shadow-lg transition-all hover:bg-white"
-                    aria-label="Next videos"
-                >
-                    <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="16"
-                        height="16"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="3"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                    >
-                        <polyline points="9 18 15 12 9 6" />
-                    </svg>
-                </button>
-            )}
         </div>
     );
 }
@@ -363,12 +274,12 @@ export function VideoGallerySectionMd({
 
     return (
         <div className="flex w-full justify-center">
-            <div className="flex flex-col items-center px-0">
+            <div className="flex w-full max-w-2xl flex-col items-center px-0">
                 {/* Mobile/Tablet Layout - Grid with main video and thumbnails */}
                 <div className="flex w-full justify-center">
                     {/* Main Large Video */}
                     {videoData.gallery.length > 0 && (
-                        <div className="mb-4 w-full">
+                        <div className="mb-4 w-full max-w-md md:max-w-lg">
                             <VideoSquare
                                 item={videoData.gallery[0]}
                                 onOpenModal={() =>
