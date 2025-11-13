@@ -1017,6 +1017,10 @@ export const router = {
     getContactUs: publicBase
         .route({
             method: "GET",
+            path: "/getContactUs",
+            summary: "Fetch contact us information",
+            description: "Get contact us information",
+            outputStructure: "detailed",
         })
         .output(
             z.object({
@@ -1026,12 +1030,23 @@ export const router = {
         .handler(async function ({ context: { env } }) {
             const kv = env.DJAVACOAL_KV;
 
-            const [contact_email, contact_phone_number, contact_address_line] =
-                await Promise.all([
-                    kv.get(KV_KEYS.EMAIL_ADDRESS),
-                    kv.get(KV_KEYS.WHATSAPP_NUMBER),
-                    kv.get(KV_KEYS.ADDRESS_LINE),
-                ]);
+            const [
+                contact_email,
+                contact_phone_number,
+                contact_address_line,
+                facebook_link,
+                linkedin_link,
+                instagram_link,
+                tiktok_link,
+            ] = await Promise.all([
+                kv.get(KV_KEYS.EMAIL_ADDRESS),
+                kv.get(KV_KEYS.WHATSAPP_NUMBER),
+                kv.get(KV_KEYS.ADDRESS_LINE),
+                kv.get(KV_KEYS.FACEBOOK_LINK),
+                kv.get(KV_KEYS.LINKEDIN_LINK),
+                kv.get(KV_KEYS.INSTAGRAM_LINK),
+                kv.get(KV_KEYS.TIKTOK_LINK),
+            ]);
 
             return {
                 body: {
@@ -1039,6 +1054,10 @@ export const router = {
                         contact_address_line,
                         contact_email,
                         contact_phone_number,
+                        facebook_link,
+                        linkedin_link,
+                        instagram_link,
+                        tiktok_link,
                     },
                 },
             };

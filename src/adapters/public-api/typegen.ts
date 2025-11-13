@@ -191,6 +191,10 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
+        /**
+         * Fetch contact us information
+         * @description Get contact us information
+         */
         get: operations["getContactUs"];
         put?: never;
         post?: never;
@@ -1672,15 +1676,21 @@ export interface operations {
                 };
                 content: {
                     "application/json": {
-                        body: {
-                            data: {
-                                /** @description Email address to send contact inquiries to */
-                                contact_email: string | null;
-                                /** @description Phone number for contact inquiries */
-                                contact_phone_number: string | null;
-                                /** @description Address line for contact inquiries */
-                                contact_address_line: string | null;
-                            };
+                        data: {
+                            /** @description Email address to send contact inquiries to */
+                            contact_email: string | null;
+                            /** @description Phone number for contact inquiries */
+                            contact_phone_number: string | null;
+                            /** @description Address line for contact inquiries */
+                            contact_address_line: string | null;
+                            /** @description Facebook page link */
+                            facebook_link: string | null;
+                            /** @description LinkedIn page link */
+                            linkedin_link: string | null;
+                            /** @description Instagram page link */
+                            instagram_link: string | null;
+                            /** @description TikTok page link */
+                            tiktok_link: string | null;
                         };
                     };
                 };
