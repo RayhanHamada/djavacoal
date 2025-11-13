@@ -7,9 +7,11 @@ import { FaEnvelope, FaPhoneAlt, FaMapMarkerAlt } from "react-icons/fa";
 
 import { ContactInfoItem } from "../molecules/contact-info-item";
 import { ContactSocial } from "../molecules/contact-social";
+import { useContactInfoContentAPI } from "@/features/public-api/hooks";
 
 export default function ContactSection() {
     const t = useTranslations("ContactUs");
+    const { data: contactUsData } = useContactInfoContentAPI();
 
     return (
         <section className="relative bg-[#1C1C1C] text-white">
@@ -52,18 +54,18 @@ export default function ContactSection() {
                     <ContactInfoItem
                         icon={<FaEnvelope />}
                         label={t("info.email.label")}
-                        value={t("info.email.value")}
+                        value={contactUsData?.data.contact_email}
                     />
                     <ContactInfoItem
                         icon={<FaPhoneAlt />}
                         label={t("info.phone.label")}
-                        value={t("info.phone.value")}
+                        value={contactUsData?.data.contact_phone_number}
                         disableRtl
                     />
                     <ContactInfoItem
                         icon={<FaMapMarkerAlt />}
                         label={t("info.location.label")}
-                        value={t("info.location.value")}
+                        value={contactUsData?.data.contact_address_line}
                     />
                     <ContactSocial />
                 </div>

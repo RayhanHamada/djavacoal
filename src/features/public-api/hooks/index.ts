@@ -23,3 +23,7 @@ export function useAboutCompanyContentAPI() {
 export function useProductionInfoContentAPI() {
     return $api.useQuery("get", "/packaging-info-content");
 }
+
+export function useContactInfoContentAPI() {
+    return $api.useQuery("get", "/getContactUs");
+}

@@ -324,5 +324,9 @@ export const CONTACT_US_BODY_OUTPUT_SCHEMA = z.object({
             .string()
             .nullable()
             .describe("Address line for contact inquiries"),
+        facebook_link: z.url().nullable().describe("Facebook page link"),
+        linkedin_link: z.url().nullable().describe("LinkedIn page link"),
+        instagram_link: z.url().nullable().describe("Instagram page link"),
+        tiktok_link: z.url().nullable().describe("TikTok page link"),
     }),
 });
