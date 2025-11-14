@@ -27,3 +27,21 @@ export function useProductionInfoContentAPI() {
 export function useContactInfoContentAPI() {
     return $api.useQuery("get", "/getContactUs");
 }
+
+export function useNewsListAPI({
+    page = 1,
+    limit = 10,
+    search,
+}: {
+    page?: number;
+    limit?: number;
+    search?: string;
+} = {}) {
+    return $api.useQuery("get", "/news", {
+        query: {
+            page,
+            limit,
+            search,
+        },
+    });
+}

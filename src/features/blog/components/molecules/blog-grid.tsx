@@ -2,10 +2,11 @@ import { BlogCard } from "./blog-card";
 import { cn } from "@/lib/utils";
 
 interface BlogPost {
-    id: string;
+    id: number;
+    slug: string;
     title: string;
-    date: string;
-    imageUrl: string;
+    published_at: Date;
+    cover_image_url: string | null;
 }
 
 interface BlogGridProps {
@@ -17,7 +18,7 @@ export function BlogGrid({ posts, className }: BlogGridProps) {
     return (
         <div
             className={cn(
-                "grid max-w-[1280px] gap-10 sm:grid-cols-2 lg:grid-cols-3",
+                "grid max-w-7xl gap-10 sm:grid-cols-2 lg:grid-cols-3",
                 className
             )}
         >
@@ -25,9 +26,10 @@ export function BlogGrid({ posts, className }: BlogGridProps) {
                 <BlogCard
                     key={post.id}
                     id={post.id}
+                    slug={post.slug}
                     title={post.title}
-                    date={post.date}
-                    imageUrl={post.imageUrl}
+                    published_at={post.published_at}
+                    cover_image_url={post.cover_image_url}
                 />
             ))}
         </div>
