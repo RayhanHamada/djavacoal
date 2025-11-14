@@ -30,7 +30,7 @@ export function useContactInfoContentAPI() {
 
 export function useNewsListAPI({
     page = 1,
-    limit = 10,
+    limit,
     search,
 }: {
     page?: number;
@@ -38,10 +38,12 @@ export function useNewsListAPI({
     search?: string;
 } = {}) {
     return $api.useQuery("get", "/news", {
-        query: {
-            page,
-            limit,
-            search,
+        params: {
+            query: {
+                page,
+                limit,
+                search,
+            },
         },
     });
 }

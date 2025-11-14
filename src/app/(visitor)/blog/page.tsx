@@ -1,13 +1,16 @@
 "use client";
 
-import { useState } from "react";
+import { parseAsInteger, useQueryState } from "nuqs";
 
 import { BlogListSection } from "@/features/blog/components";
 import { useNewsListAPI } from "@/features/public-api/hooks";
 
 export default function BlogPage() {
-    const [currentPage, setCurrentPage] = useState(1);
-    const postsPerPage = 6;
+    const [currentPage, setCurrentPage] = useQueryState(
+        "page",
+        parseAsInteger.withDefault(1)
+    );
+    const postsPerPage = 9;
 
     const {
         data: newsResponse,

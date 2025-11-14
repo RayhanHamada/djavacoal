@@ -31,7 +31,7 @@ export function BlogCard({
 
     return (
         <Link
-            href={`/blog-detail/${slug}`}
+            href={`/blog/${slug}`}
             className={cn(
                 "group flex max-w-[400px] flex-col gap-2.5",
                 className
@@ -49,7 +49,7 @@ export function BlogCard({
                 <DateBadge date={formattedDate} />
             </div>
             <div className="flex items-start justify-between gap-5">
-                <h3 className="font-inter group-hover:text-secondary flex-1 text-[21px] leading-[1.21em] font-normal text-white transition-colors">
+                <h3 className="font-inter group-hover:text-secondary line-clamp-2 flex-1 text-[21px] leading-[1.21em] font-normal text-white transition-colors">
                     {title}
                 </h3>
                 <ArrowIcon className="text-secondary mt-2 transition-colors group-hover:text-white" />

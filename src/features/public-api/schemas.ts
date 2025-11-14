@@ -232,14 +232,13 @@ export const NEWS_LIST_QUERY_INPUT_SCHEMA = z
             .optional()
             .describe("Search term to filter news articles"),
         page: z
-            .number()
-            .min(1)
+            .string()
+            .transform((val) => parseInt(val, 10))
             .default(1)
             .describe("Page number for pagination"),
         limit: z
-            .number()
-            .min(1)
-            .max(100)
+            .string()
+            .transform((val) => parseInt(val, 10))
             .default(10)
             .describe("Number of articles per page"),
     })
