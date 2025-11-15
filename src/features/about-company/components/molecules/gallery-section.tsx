@@ -96,7 +96,7 @@ function GallerySubsection({
                                     alt={image}
                                     width={220}
                                     height={220}
-                                    className="h-full w-full object-cover duration-300 group-hover:scale-[1.05]"
+                                    className="aspect-square object-cover duration-300 group-hover:scale-[1.05]"
                                 />
                             </button>
                         ))}
