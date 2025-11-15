@@ -564,7 +564,7 @@ export const router = {
     getProductDetail: publicBase
         .route({
             method: "GET",
-            path: "/products/:id",
+            path: "/products/{id}",
             summary: "Fetch product detail data",
             description: "Get product detail by product ID",
             inputStructure: "detailed",
@@ -875,7 +875,7 @@ export const router = {
     getNewsDetail: publicBase
         .route({
             method: "GET",
-            path: "/news/:slug",
+            path: "/news/{slug}",
             summary: "Fetch news detail",
             description: "Get news article detail by slug",
             inputStructure: "detailed",
@@ -903,6 +903,9 @@ export const router = {
                 accessKeyId: env.R2_ACCESS_KEY_ID!,
                 secretAccessKey: env.R2_SECRET_ACCESS_KEY!,
             });
+
+            console.log(`slug : `, params.slug);
+            console.log(`isArabic : `, locale);
 
             const now = new Date();
             const article = await db.query.news.findFirst({

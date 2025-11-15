@@ -1,5 +1,3 @@
-"use client";
-
 import React from "react";
 
 import { BlogContent } from "../atoms";
@@ -11,7 +9,7 @@ export interface BlogDetailSectionProps {
         title: string;
         date: string;
         author: string;
-        imageUrl: string;
+        imageUrl?: string;
         content: string;
     };
     relatedArticles: Array<{
