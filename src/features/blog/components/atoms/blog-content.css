@@ -1,0 +1,21 @@
+/* 1. Reset the inline image to behave like normal text */
+.node-image .image-component img {
+    display: inline-block; /* respects text-align */
+    width: auto; /* ignore the inline width="309" */
+    height: auto; /* ignore the inline height="309" */
+    max-width: 100%; /* responsive – never overflows container */
+    vertical-align: middle; /* removes unwanted bottom gap */
+    text-align: inherit; /* inherit alignment from <p> */
+}
+
+/* 2. Optional: keep the original 309 px max size only on large screens */
+@media (min-width: 768px) {
+    .node-image .image-component img {
+        max-width: 309px;
+    }
+}
+
+/* 3. If you still want the <p> centered (fallback) */
+p[style*="text-align: center"] .node-image .image-component {
+    text-align: center;
+}
