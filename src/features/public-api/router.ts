@@ -564,7 +564,7 @@ export const router = {
     getProductDetail: publicBase
         .route({
             method: "GET",
-            path: "/products/:id",
+            path: "/products/{id}",
             summary: "Fetch product detail data",
             description: "Get product detail by product ID",
             inputStructure: "detailed",
@@ -875,7 +875,7 @@ export const router = {
     getNewsDetail: publicBase
         .route({
             method: "GET",
-            path: "/news/:slug",
+            path: "/news/{slug}",
             summary: "Fetch news detail",
             description: "Get news article detail by slug",
             inputStructure: "detailed",
@@ -957,7 +957,7 @@ export const router = {
     getNewsMetadata: publicBase
         .route({
             method: "GET",
-            path: "/news-metadata",
+            path: "/news/{slug}/metadata",
             summary: "Fetch news metadata",
             description: "Get metadata for news articles",
             inputStructure: "detailed",
@@ -1002,13 +1002,20 @@ export const router = {
                 throw errors.NOT_FOUND();
             }
 
+            const imageKey = article[NEWS_COLUMNS.IMAGE_KEY];
             return {
                 body: {
                     data: {
                         meta_title: article[NEWS_COLUMNS.METADATA_TITLE],
                         meta_description:
                             article[NEWS_COLUMNS.METADATA_DESCRIPTION],
-                        cover_image_url: article[NEWS_COLUMNS.IMAGE_KEY],
+                        cover_image_url: imageKey
+                            ? new URL(
+                                  imageKey,
+                                  env.NEXT_PUBLIC_ASSET_URL
+                              ).toString()
+                            : null,
+                        published_at: article[NEWS_COLUMNS.PUBLISHED_AT]!,
                     },
                 },
             };

@@ -104,7 +104,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/products/:id": {
+    "/products/{id}": {
         parameters: {
             query?: never;
             header?: never;
@@ -144,7 +144,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/news/:slug": {
+    "/news/{slug}": {
         parameters: {
             query?: never;
             header?: never;
@@ -164,7 +164,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/news-metadata": {
+    "/news/{slug}/metadata": {
         parameters: {
             query?: never;
             header?: never;
@@ -1209,8 +1209,8 @@ export interface operations {
         parameters: {
             query?: {
                 search?: string;
-                page?: number;
-                limit?: number;
+                page?: string;
+                limit?: string;
             };
             header?: never;
             path?: never;
@@ -1542,6 +1542,11 @@ export interface operations {
                             meta_description: string;
                             /** @description URL of the article's cover image */
                             cover_image_url: string | null;
+                            /**
+                             * Format: date-time
+                             * @description Publication date of the article
+                             */
+                            published_at: string;
                         };
                     };
                 };

@@ -6,15 +6,13 @@ import { cn } from "@/lib/utils";
 interface BlogDetailHeaderProps {
     title: string;
     date: string;
-    author: string;
-    imageUrl: string;
+    imageUrl?: string;
     className?: string;
 }
 
 export function BlogDetailHeader({
     title,
     date,
-    author,
     imageUrl,
     className,
 }: BlogDetailHeaderProps) {
@@ -26,16 +24,16 @@ export function BlogDetailHeader({
                 </h1>
                 <div className="flex items-center gap-2">
                     <span className="font-inter text-secondary text-base leading-[1.875em] font-normal">
-                        {author}
+                        Djavacoal Team
                     </span>
                     <span className="text-white">-</span>
                     <DateBadge date={date} />
                 </div>
                 <div className="h-px w-full bg-[#474747]" />
             </div>
-            <div className="relative aspect-[16/9] w-full overflow-hidden">
+            <div className="relative aspect-video w-full overflow-hidden">
                 <Image
-                    src={imageUrl}
+                    src={imageUrl ?? "/images/logo.png"}
                     alt={title}
                     fill
                     className="object-cover"

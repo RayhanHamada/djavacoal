@@ -40,10 +40,42 @@ export function useNewsListAPI({
     return $api.useQuery("get", "/news", {
         params: {
             query: {
-                page,
-                limit,
+                page: page.toString(),
+                limit: limit?.toString(),
                 search,
             },
         },
     });
+}
+
+export function useRelatedArticlesAPI({
+    limit,
+}: {
+    limit?: number;
+} = {}) {
+    return $api.useInfiniteQuery(
+        "get",
+        "/news",
+        {
+            params: {
+                query: {
+                    limit: limit?.toString(),
+                },
+            },
+        },
+        {
+            pageParamName: "page",
+            initialPageParam: 1,
+            getNextPageParam(lastPage) {
+                const hasMore =
+                    lastPage.data.news.page !== lastPage.data.news.total_pages;
+
+                if (hasMore) {
+                    return lastPage.data.news.page + 1;
+                }
+
+                return null;
+            },
+        }
+    );
 }
