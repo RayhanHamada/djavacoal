@@ -4,6 +4,7 @@ import { headers } from "next/headers";
 import { notFound } from "next/navigation";
 
 import dayjs from "dayjs";
+import { Metadata } from "next";
 
 import { serverPublicAPIClient } from "@/adapters/public-api/server";
 import { BlogDetailSection } from "@/features/blog/components/organism";
@@ -61,6 +62,42 @@ type Props = {
         slug: string;
     }>;
 };
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+    const { slug } = await params;
+
+    const { error, data } = await serverPublicAPIClient.GET(
+        "/news/{slug}/metadata",
+        {
+            params: {
+                path: {
+                    slug,
+                },
+            },
+        }
+    );
+
+    if (error) {
+        return {};
+    }
+
+    const metadata = data.data;
+
+    return {
+        title: metadata.meta_title,
+        description: metadata.meta_description,
+        openGraph: {
+            type: "article",
+            title: metadata.meta_title,
+            description: metadata.meta_description,
+            images: metadata.cover_image_url ? [metadata.cover_image_url] : [],
+            authors: "Djavacoal Team",
+            alternateLocale: ["ar-SA", "en-US"],
+            locale: "en-US",
+            publishedTime: metadata.published_at,
+        },
+    };
+}
 
 export default async function Page({ params }: Props) {
     const { slug } = await params;

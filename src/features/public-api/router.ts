@@ -960,7 +960,7 @@ export const router = {
     getNewsMetadata: publicBase
         .route({
             method: "GET",
-            path: "/news-metadata",
+            path: "/news/{slug}/metadata",
             summary: "Fetch news metadata",
             description: "Get metadata for news articles",
             inputStructure: "detailed",
@@ -1012,6 +1012,7 @@ export const router = {
                         meta_description:
                             article[NEWS_COLUMNS.METADATA_DESCRIPTION],
                         cover_image_url: article[NEWS_COLUMNS.IMAGE_KEY],
+                        published_at: article[NEWS_COLUMNS.PUBLISHED_AT]!,
                     },
                 },
             };

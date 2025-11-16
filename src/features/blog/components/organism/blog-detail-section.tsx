@@ -34,7 +34,6 @@ export function BlogDetailSection({
                         <BlogDetailHeader
                             title={article.title}
                             date={article.date}
-                            author={article.author}
                             imageUrl={article.imageUrl}
                         />
                         {/* Main Content - 8 columns on desktop */}

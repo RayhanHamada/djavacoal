@@ -6,7 +6,6 @@ import { cn } from "@/lib/utils";
 interface BlogDetailHeaderProps {
     title: string;
     date: string;
-    author: string;
     imageUrl?: string;
     className?: string;
 }
@@ -14,7 +13,6 @@ interface BlogDetailHeaderProps {
 export function BlogDetailHeader({
     title,
     date,
-    author,
     imageUrl,
     className,
 }: BlogDetailHeaderProps) {
@@ -33,7 +31,7 @@ export function BlogDetailHeader({
                 </div>
                 <div className="h-px w-full bg-[#474747]" />
             </div>
-            <div className="relative aspect-[16/9] w-full overflow-hidden">
+            <div className="relative aspect-video w-full overflow-hidden">
                 <Image
                     src={imageUrl ?? "/images/logo.png"}
                     alt={title}

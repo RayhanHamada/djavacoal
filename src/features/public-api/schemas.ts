@@ -306,6 +306,7 @@ export const NEWS_METADATA_BODY_OUTPUT_SCHEMA = z.object({
             .url()
             .nullable()
             .describe("URL of the article's cover image"),
+        published_at: z.date().describe("Publication date of the article"),
     }),
 });
 
