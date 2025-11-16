@@ -78,9 +78,12 @@ export function RelatedArticles({
 
             {/* Loading State */}
             {isLoading && (
-                <div className="flex items-center justify-center py-8">
-                    <div className="text-white/70">
-                        Loading related articles...
+                <div className="flex flex-col gap-4">
+                    <div className="relative aspect-square w-full animate-pulse overflow-hidden rounded bg-gray-700"></div>
+                    <div className="h-4 w-20 animate-pulse rounded bg-gray-700"></div>
+                    <div className="space-y-2">
+                        <div className="h-4 w-full animate-pulse rounded bg-gray-700"></div>
+                        <div className="h-4 w-3/4 animate-pulse rounded bg-gray-700"></div>
                     </div>
                 </div>
             )}
@@ -95,7 +98,7 @@ export function RelatedArticles({
             )}
 
             {/* Articles Grid */}
-            {!isLoading && !error && (
+            {!error && (
                 <div className="grid grid-cols-2 gap-10 md:grid-cols-3 lg:flex lg:flex-col">
                     {articles.map((article) => {
                         // Show/hide logic based on breakpoint
@@ -104,9 +107,9 @@ export function RelatedArticles({
                             <Link
                                 href={`/blog/${article.slug}`}
                                 key={article.id}
-                                className={cn("flex-col gap-[7px]")}
+                                className={cn("flex flex-col gap-y-1")}
                             >
-                                <div className="relative aspect-square w-full overflow-hidden">
+                                <div className="relative aspect-square w-full gap-y-4 overflow-hidden">
                                     <Image
                                         src={article.imageUrl}
                                         alt={article.title}
@@ -118,12 +121,22 @@ export function RelatedArticles({
                                     date={article.date}
                                     className="text-secondary text-sm"
                                 />
-                                <h4 className="font-inter text-base leading-[1.21em] font-normal text-white">
+                                <h4 className="font-inter line-clamp-2 text-base leading-[1.21em] font-normal text-white">
                                     {article.title}
                                 </h4>
                             </Link>
                         );
                     })}
+                    {isLoading && (
+                        <div className="flex flex-col gap-4">
+                            <div className="relative aspect-square w-full animate-pulse overflow-hidden rounded bg-gray-700"></div>
+                            <div className="h-4 w-20 animate-pulse rounded bg-gray-700"></div>
+                            <div className="space-y-2">
+                                <div className="h-4 w-full animate-pulse rounded bg-gray-700"></div>
+                                <div className="h-4 w-3/4 animate-pulse rounded bg-gray-700"></div>
+                            </div>
+                        </div>
+                    )}
                 </div>
             )}
 
