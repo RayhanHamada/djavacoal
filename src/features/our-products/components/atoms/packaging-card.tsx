@@ -45,9 +45,10 @@ export function PackagingCard({
                         </span>
                     </h4>
                 </div>
-                <p className="text-[16px] leading-[1.36] font-normal text-[#C6C6C6]">
-                    {description}
-                </p>
+                <p
+                    className="text-[16px] leading-[1.36] font-normal text-[#C6C6C6]"
+                    dangerouslySetInnerHTML={{ __html: description }}
+                />
             </div>
         </div>
     );
