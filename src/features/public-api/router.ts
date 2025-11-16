@@ -1002,13 +1002,19 @@ export const router = {
                 throw errors.NOT_FOUND();
             }
 
+            const imageKey = article[NEWS_COLUMNS.IMAGE_KEY];
             return {
                 body: {
                     data: {
                         meta_title: article[NEWS_COLUMNS.METADATA_TITLE],
                         meta_description:
                             article[NEWS_COLUMNS.METADATA_DESCRIPTION],
-                        cover_image_url: article[NEWS_COLUMNS.IMAGE_KEY],
+                        cover_image_url: imageKey
+                            ? new URL(
+                                  imageKey,
+                                  env.NEXT_PUBLIC_ASSET_URL
+                              ).toString()
+                            : null,
                         published_at: article[NEWS_COLUMNS.PUBLISHED_AT]!,
                     },
                 },
