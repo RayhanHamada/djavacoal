@@ -904,9 +904,6 @@ export const router = {
                 secretAccessKey: env.R2_SECRET_ACCESS_KEY!,
             });
 
-            console.log(`slug : `, params.slug);
-            console.log(`isArabic : `, locale);
-
             const now = new Date();
             const article = await db.query.news.findFirst({
                 where(fields, operators) {

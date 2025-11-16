@@ -10,9 +10,11 @@ import { Box, Group, Text } from "@mantine/core";
 import { notifications } from "@mantine/notifications";
 import { RichTextEditor } from "@mantine/tiptap";
 import {
+    IconArrowsSplit,
     IconColumnInsertLeft,
     IconColumnInsertRight,
     IconColumnRemove,
+    IconJoinStraight,
     IconPhoto,
     IconRowInsertBottom,
     IconRowInsertTop,
@@ -101,10 +103,25 @@ export function NewsRichTextEditor({
             TableKit.configure({
                 table: {
                     resizable: true,
+                    HTMLAttributes: {
+                        align: {
+                            default: "center",
+                            parseHTML: (element: HTMLElement) =>
+                                element.getAttribute("align"),
+                            renderHTML: function (
+                                attributes: Record<string, unknown>
+                            ) {
+                                if (attributes.align === null) {
+                                    return {};
+                                }
+                                return { align: attributes.align };
+                            },
+                        },
+                    },
                 },
             }),
             TextAlign.configure({
-                types: ["heading", "paragraph"],
+                types: ["heading", "paragraph", "table"],
             }),
             ResizableImage.configure({
                 defaultWidth: 200,
@@ -234,6 +251,14 @@ export function NewsRichTextEditor({
         editor?.chain().focus().deleteTable().run();
     }, [editor]);
 
+    const handleJoinCells = useCallback(() => {
+        editor?.chain().focus().mergeCells().run();
+    }, [editor]);
+
+    const handleSplitCell = useCallback(() => {
+        editor?.chain().focus().splitCell().run();
+    }, [editor]);
+
     const handleGallerySelect = useCallback(
         (photo: { id: string; name: string; key: string; url: string }) => {
             if (!editor) return;
@@ -314,10 +339,18 @@ export function NewsRichTextEditor({
                 </RichTextEditor.ControlsGroup>
 
                 <RichTextEditor.ControlsGroup>
-                    <RichTextEditor.AlignLeft />
-                    <RichTextEditor.AlignCenter />
-                    <RichTextEditor.AlignJustify />
-                    <RichTextEditor.AlignRight />
+                    <RichTextEditor.AlignLeft
+                        active={editor?.isActive("textAlign", "left")}
+                    />
+                    <RichTextEditor.AlignCenter
+                        active={editor?.isActive("textAlign", "center")}
+                    />
+                    <RichTextEditor.AlignJustify
+                        active={editor?.isActive("textAlign", "justify")}
+                    />
+                    <RichTextEditor.AlignRight
+                        active={editor?.isActive("textAlign", "right")}
+                    />
                 </RichTextEditor.ControlsGroup>
 
                 <RichTextEditor.ControlsGroup>
@@ -400,6 +433,24 @@ export function NewsRichTextEditor({
                         disabled={!editor?.can().deleteTable()}
                     >
                         <IconTableOff size={16} stroke={1.5} />
+                    </RichTextEditor.Control>
+
+                    <RichTextEditor.Control
+                        onClick={handleJoinCells}
+                        aria-label="Merge cells"
+                        title="Merge cells"
+                        disabled={!editor?.can().mergeCells()}
+                    >
+                        <IconJoinStraight size={16} stroke={1.5} />
+                    </RichTextEditor.Control>
+
+                    <RichTextEditor.Control
+                        onClick={handleSplitCell}
+                        aria-label="Split cells"
+                        title="Split cells"
+                        disabled={!editor?.can().splitCell()}
+                    >
+                        <IconArrowsSplit size={16} stroke={1.5} />
                     </RichTextEditor.Control>
                 </RichTextEditor.ControlsGroup>
 

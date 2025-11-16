@@ -19,3 +19,77 @@
 p[style*="text-align: center"] .node-image .image-component {
     text-align: center;
 }
+
+/* 4. Table styling for blog content */
+table {
+    border-collapse: collapse;
+    table-layout: auto;
+    width: auto;
+    max-width: 100%;
+    margin: 1.5rem auto;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow:
+        0 4px 6px -1px rgb(0 0 0 / 0.1),
+        0 2px 4px -2px rgb(0 0 0 / 0.1);
+}
+
+table th {
+    background-color: #1f1f1f;
+    color: #ffffff;
+    font-weight: 600;
+    padding: 0.75rem 1rem;
+    text-align: left;
+    border-bottom: 2px solid #efa12d;
+    font-size: 0.875rem;
+    letter-spacing: 0.025em;
+    text-transform: uppercase;
+}
+
+table td {
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid #333333;
+    color: #c6c6c6;
+    font-size: 0.875rem;
+    line-height: 1.5;
+}
+
+table tbody tr {
+    background-color: #0a0a0a;
+    transition: background-color 0.15s ease-in-out;
+}
+
+table tbody tr:hover {
+    background-color: #1a1a1a;
+}
+
+table tbody tr:nth-child(even) {
+    background-color: #111111;
+}
+
+table tbody tr:nth-child(even):hover {
+    background-color: #1a1a1a;
+}
+
+/* Remove bottom border from last row */
+table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+/* Responsive table styling */
+@media (max-width: 768px) {
+    table {
+        font-size: 0.75rem;
+        margin: 1rem 0;
+    }
+
+    table th,
+    table td {
+        padding: 0.5rem 0.75rem;
+    }
+
+    /* Make table horizontally scrollable on mobile if needed */
+    table {
+        min-width: 600px;
+    }
+}
