@@ -2,7 +2,7 @@ import React from "react";
 
 import { BlogContent } from "../atoms";
 import { BlogDetailHeader } from "../molecules";
-import { RelatedArticles } from "../molecules";
+import { RelatedArticlesApi } from "../molecules";
 
 export interface BlogDetailSectionProps {
     article: {
@@ -11,19 +11,11 @@ export interface BlogDetailSectionProps {
         author: string;
         imageUrl?: string;
         content: string;
+        slug?: string; // Add slug for excluding current article
     };
-    relatedArticles: Array<{
-        id: string;
-        title: string;
-        date: string;
-        imageUrl: string;
-    }>;
 }
 
-export function BlogDetailSection({
-    article,
-    relatedArticles,
-}: BlogDetailSectionProps) {
+export function BlogDetailSection({ article }: BlogDetailSectionProps) {
     return (
         <div className="items-center justify-center bg-[#161616]">
             {/* Content Section */}
@@ -44,7 +36,10 @@ export function BlogDetailSection({
                     {/* Sidebar - 4 columns on desktop */}
                     <aside className="lg:col-span-4">
                         <div className="lg:sticky lg:top-8">
-                            <RelatedArticles articles={relatedArticles} />
+                            <RelatedArticlesApi
+                                excludeSlug={article.slug}
+                                limit={5}
+                            />
                         </div>
                     </aside>
                 </div>
