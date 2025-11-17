@@ -1,29 +1,28 @@
-import { getCloudflareContext } from "@opennextjs/cloudflare";
-
-import { getDB } from "@/adapters/d1/db";
+import { SITEMAP_CACHE_HEADERS } from "@/features/sitemap/lib/constants";
+import {
+    generateSitemapIndexFooter,
+    generateSitemapIndexHeader,
+} from "@/features/sitemap/server/helpers";
 
 export async function GET(_request: Request) {
-    const _baseURL = process.env.NEXT_PUBLIC_BASE_URL;
+    const baseURL = process.env.NEXT_PUBLIC_BASE_URL;
 
-    const { env } = await getCloudflareContext({ async: true });
-    const _db = getDB(env.DJAVACOAL_DB);
+    if (!baseURL) {
+        return new Response("Base URL not configured", { status: 500 });
+    }
 
-    // TODO: generate sitemaps for static page, news, products,
-    const staticSitemap = new URL("/sitemap.xml", _baseURL).toString();
+    const staticSitemap = new URL("/static/sitemap.xml", baseURL).toString();
+    const blogSitemap = new URL("/blog/sitemap.xml", baseURL).toString();
 
-    let sitemapIndex = `<?xml version="1.0" encoding="UTF-8"?>
-    <sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">`;
-
-    sitemapIndex += `
+    const sitemapIndex = `${generateSitemapIndexHeader()}
     <sitemap>
         <loc>${staticSitemap}</loc>
-    </sitemap>`;
-
-    sitemapIndex += `</sitemapindex>`;
+    </sitemap>
+    <sitemap>
+        <loc>${blogSitemap}</loc>
+    </sitemap>${generateSitemapIndexFooter()}`;
 
     return new Response(sitemapIndex, {
-        headers: {
-            "Content-Type": "application/xml",
-        },
+        headers: SITEMAP_CACHE_HEADERS,
     });
 }
