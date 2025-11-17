@@ -14,8 +14,9 @@ Next.js 15 application deployed to Cloudflare Workers using OpenNext adapter. Fe
 - **Storage**: Cloudflare R2 (S3-compatible) via AWS SDK v3
 - **Auth**: Better Auth (NOT NextAuth) with custom D1 adapter
 - **RPC**: oRPC for type-safe client-server communication
+- **Public API**: RESTful API with OpenAPI/Redocly documentation
 - **UI**: Mantine v8 + Tailwind CSS v4 + Framer Motion
-- **i18n**: next-intl (cookie-based locale storage for visitor pages)
+- **i18n**: next-intl (cookie-based locale storage)
 - **Email**: Resend with react-email templates
 - **Rich Text**: TipTap for content editing (news articles)
 
@@ -50,7 +51,10 @@ Features live in `src/features/<feature-name>/` with subfolders:
 
 Type-safe client-server communication without API route boilerplate. RPC functions can be **callable** (for client-side hooks) or **actionable** (for Server Actions with redirects).
 
-**Middleware**: The `injectCFContext` middleware (in `src/lib/orpc/middlewares.ts`) automatically injects Cloudflare context into all RPC handlers, making `env` available in the `context` parameter.
+**Middleware**:
+
+- `injectCFContext` - Automatically injects Cloudflare context into all RPC handlers, making `env` available in the `context` parameter
+- `injectNextCookies` - Injects Next.js cookies (including locale) into context for public API routes
 
 **Server-side** (`src/features/<feature>/server/`):
 
@@ -387,7 +391,7 @@ Features with custom ordering (products, variants, specs) use `order_index`:
 
 ## Integration Points
 
-- **Email Service**: `src/adapters/email-service/` provides Resendclients
+- **Email Service**: `src/adapters/email-service/` provides Resend clients
     - Use `getResend(env.RESEND_API_KEY)` to send emails
     - Sender email configured via `env.SENDER_EMAIL`
 - **Email Templates**: React components in `src/templates/emails/`
@@ -400,6 +404,11 @@ Features with custom ordering (products, variants, specs) use `order_index`:
     - `deleteObject()` for cleanup
     - Constants in `src/adapters/r2/constants.ts` (bucket name, prefixes, expiration)
 - **KV Store**: Constants in `src/adapters/kv/constants.ts`
+    - Used for page settings (social links, contact info, galleries, etc.)
     - Example: `IS_ALREADY_ONBOARDED` flag for first-time setup
 - **Cloudflare Assets**: Configured in `wrangler.jsonc` with ASSETS binding
     - Static files served from `.open-next/assets` directory
+- **Public API**: RESTful API in `src/features/public-api/` for external consumers
+    - OpenAPI documentation with Redocly
+    - Type-safe client generation
+    - Uses oRPC with custom routes for REST endpoints
