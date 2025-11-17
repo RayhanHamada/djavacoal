@@ -10,7 +10,7 @@ export default function robots(): MetadataRoute.Robots {
             },
         ],
         sitemap: new URL(
-            "/sitemap.xml",
+            "/sitemap-index.xml",
             process.env.NEXT_PUBLIC_BASE_URL
         ).toString(),
     };
