@@ -1,19 +1,14 @@
 "use client";
+import type { MediaItem } from "../../lib/types";
+
 import { useRef, useState } from "react";
 
 import Image from "next/image";
 
 import { Play } from "lucide-react";
 
+import { getYouTubeThumbnailUrl } from "../../lib/utils";
 import { ImageModal, YouTubeModal } from "../atoms";
-
-interface MediaItem {
-    id: number;
-    type: "image" | "youtube";
-    image_url?: string;
-    youtube_url?: string;
-    custom_thumbnail_url?: string;
-}
 
 interface MediaGalleryHorizontalProps {
     medias: MediaItem[];
@@ -21,7 +16,12 @@ interface MediaGalleryHorizontalProps {
 
 /**
  * MediaGalleryHorizontal - Horizontal slider layout for mobile/tablet
- * Shows main media on top with horizontal scrollable thumbnails below
+ * Used in ProductHeroSection for responsive display
+ *
+ * Features:
+ * - Main large media displayed prominently on top
+ * - Horizontal scrollable thumbnail strip below for additional media
+ * - Supports both images and YouTube videos with appropriate overlays
  */
 export function MediaGalleryHorizontal({
     medias,
@@ -48,26 +48,6 @@ export function MediaGalleryHorizontal({
     const handleYoutubeClick = (youtubeUrl: string) => {
         setSelectedYoutubeUrl(youtubeUrl);
         setYoutubeModalOpen(true);
-    };
-
-    // Helper function to get YouTube thumbnail URL
-    const getYouTubeThumbnail = (youtubeUrl: string): string => {
-        try {
-            const url = new URL(youtubeUrl);
-            let videoId = "";
-
-            if (url.hostname.includes("youtube.com")) {
-                videoId = url.searchParams.get("v") || "";
-            } else if (url.hostname.includes("youtu.be")) {
-                videoId = url.pathname.slice(1);
-            }
-
-            return videoId
-                ? `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`
-                : "/images/placeholder.png";
-        } catch {
-            return "/images/placeholder.png";
-        }
     };
 
     const renderMediaItem = (media: MediaItem, isMainItem: boolean = false) => {
@@ -97,7 +77,7 @@ export function MediaGalleryHorizontal({
         if (media.type === "youtube" && media.youtube_url) {
             const thumbnailUrl =
                 media.custom_thumbnail_url ||
-                getYouTubeThumbnail(media.youtube_url);
+                getYouTubeThumbnailUrl(media.youtube_url);
 
             return (
                 <div

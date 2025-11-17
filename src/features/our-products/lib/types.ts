@@ -1,3 +1,19 @@
+/**
+ * Media item type definition
+ * Used across all media gallery components
+ */
+export interface MediaItem {
+    id: number;
+    type: "image" | "youtube";
+    image_url?: string;
+    youtube_url?: string;
+    custom_thumbnail_url?: string;
+}
+
+/**
+ * Legacy types - kept for backwards compatibility
+ * These may be removed in future refactoring
+ */
 export interface ProductImage {
     src: string;
     alt: string;

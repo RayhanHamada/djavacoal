@@ -1,6 +1,8 @@
 "use client";
 import { X } from "lucide-react";
 
+import { getYouTubeEmbedUrl } from "../../lib/utils";
+
 interface YouTubeModalProps {
     isOpen: boolean;
     onClose: () => void;
@@ -9,7 +11,11 @@ interface YouTubeModalProps {
 
 /**
  * YouTubeModal component displays a YouTube video in a full-screen modal
- * Converts YouTube URL to embed format with autoplay
+ * Features:
+ * - Full-screen responsive iframe player
+ * - Autoplay enabled on open
+ * - Click outside or X button to close
+ * - Backdrop blur effect
  */
 export function YouTubeModal({
     isOpen,
@@ -17,26 +23,6 @@ export function YouTubeModal({
     youtubeUrl,
 }: YouTubeModalProps) {
     if (!isOpen || !youtubeUrl) return null;
-
-    // Convert YouTube URL to embed format
-    const getYouTubeEmbedUrl = (url: string): string => {
-        try {
-            const urlObj = new URL(url);
-            let videoId = "";
-
-            if (urlObj.hostname.includes("youtube.com")) {
-                videoId = urlObj.searchParams.get("v") || "";
-            } else if (urlObj.hostname.includes("youtu.be")) {
-                videoId = urlObj.pathname.slice(1);
-            }
-
-            return videoId
-                ? `https://www.youtube.com/embed/${videoId}?autoplay=1`
-                : "";
-        } catch {
-            return "";
-        }
-    };
 
     const embedUrl = getYouTubeEmbedUrl(youtubeUrl);
 
