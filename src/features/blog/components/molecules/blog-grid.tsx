@@ -1,5 +1,6 @@
-import { BlogCard } from "./blog-card";
 import type { BlogPost } from "../../lib/types";
+
+import { BlogCard } from "./blog-card";
 import { cn } from "@/lib/utils";
 
 interface BlogGridProps {

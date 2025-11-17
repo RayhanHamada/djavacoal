@@ -1,11 +1,12 @@
 "use client";
 
+import type { BlogPost } from "../../lib/types";
+
 import Image from "next/image";
 import Link from "next/link";
 
-import { DateBadge, ArrowIcon } from "../atoms";
 import { formatBlogDate, getBlogPlaceholderImage } from "../../lib/utils";
-import type { BlogPost } from "../../lib/types";
+import { DateBadge, ArrowIcon } from "../atoms";
 import { cn } from "@/lib/utils";
 
 interface BlogCardProps extends BlogPost {

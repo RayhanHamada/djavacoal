@@ -1,5 +1,4 @@
 import { getCloudflareContext } from "@opennextjs/cloudflare";
-import { eq } from "drizzle-orm";
 
 import { COMMON_COLUMNS, PAGE_METADATA_COLUMNS } from "@/adapters/d1/constants";
 import { getDB } from "@/adapters/d1/db";
