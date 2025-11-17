@@ -5,6 +5,10 @@ interface DateBadgeProps {
     className?: string;
 }
 
+/**
+ * DateBadge - Displays formatted date for blog posts
+ * Simple text component with consistent styling
+ */
 export function DateBadge({ date, className }: DateBadgeProps) {
     return (
         <div

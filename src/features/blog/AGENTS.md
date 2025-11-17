@@ -10,7 +10,11 @@ This feature provides the public-facing blog/news display for visitors of the Dj
 
 ```
 blog/
-├── components/          # UI components organized by atomic design
+├── lib/                # Shared utilities and types
+│   ├── types.ts        # TypeScript interfaces (BlogPost, RelatedArticle, BlogDetail)
+│   ├── utils.ts        # Helper functions (formatBlogDate, getBlogPlaceholderImage, truncateText)
+│   └── index.ts        # Barrel export for lib
+├── components/         # UI components organized by atomic design
 │   ├── atoms/          # Basic blog UI elements
 │   │   ├── arrow-icon.tsx           # Directional arrow icons
 │   │   ├── back-button.tsx          # Navigation back button
@@ -18,7 +22,8 @@ blog/
 │   │   ├── blog-content.tsx         # HTML content renderer
 │   │   ├── date-badge.tsx           # Date display component
 │   │   ├── pagination-arrow.tsx     # Pagination arrow button
-│   │   └── pagination-button.tsx    # Pagination number button
+│   │   ├── pagination-button.tsx    # Pagination number button
+│   │   └── index.ts                 # Barrel export for atoms
 │   ├── molecules/      # Composite blog components
 │   │   ├── blog-card.tsx            # Individual article card
 │   │   ├── blog-detail-header.tsx   # Article detail header
@@ -27,10 +32,13 @@ blog/
 │   │   ├── blog-hero.tsx            # Blog page hero section
 │   │   ├── pagination.tsx           # Pagination controls
 │   │   ├── related-articles-api.tsx # Related articles from API
-│   │   └── related-articles.tsx     # Related articles display
-│   └── organisms/      # Complex blog sections
-│       ├── blog-detail-section.tsx  # Full article view
-│       └── blog-list-section.tsx    # Article list with pagination
+│   │   ├── related-articles.tsx     # Related articles display
+│   │   └── index.ts                 # Barrel export for molecules
+│   ├── organisms/      # Complex blog sections
+│   │   ├── blog-detail-section.tsx  # Full article view
+│   │   ├── blog-list-section.tsx    # Article list with pagination
+│   │   └── index.ts                 # Barrel export for organisms
+│   └── index.ts        # Component barrel export
 └── index.ts            # Feature barrel export
 ```
 
@@ -70,6 +78,53 @@ blog/
    - Semantic HTML
 
 ## Technical Implementation
+
+### Shared Utilities and Types
+
+The feature uses centralized utilities and types in the `lib/` folder:
+
+**Types** (`lib/types.ts`):
+```typescript
+// Core blog post interface
+interface BlogPost {
+  id: string;
+  slug: string;
+  title: string;
+  excerpt: string;
+  cover_image_url: string | null;
+  published_at: string;
+}
+
+// Related article interface (lighter data)
+interface RelatedArticle {
+  id: string;
+  slug: string;
+  title: string;
+  cover_image_url: string | null;
+  published_at: string;
+}
+
+// Full blog detail interface
+interface BlogDetail extends BlogPost {
+  content: string; // HTML content from R2
+  meta_title: string;
+  meta_description: string;
+}
+```
+
+**Utilities** (`lib/utils.ts`):
+```typescript
+// Format publish date with locale support
+formatBlogDate(dateString: string, locale: string = "en"): string
+
+// Get placeholder image URL for missing blog covers
+getBlogPlaceholderImage(): string
+
+// Truncate text to specified length with ellipsis
+truncateText(text: string, maxLength: number): string
+```
+
+These shared resources eliminate code duplication and ensure consistency across all blog components.
 
 ### Data Fetching
 
@@ -116,30 +171,35 @@ BlogDetailSection
 
 ### Component Organization
 
-Following Atomic Design principles:
+Following Atomic Design principles with centralized types and utilities:
+
+**Shared Resources** (`lib/`):
+- `types.ts` - Centralized TypeScript interfaces (BlogPost, RelatedArticle, BlogDetail)
+- `utils.ts` - Reusable helper functions (formatBlogDate, getBlogPlaceholderImage, truncateText)
+- All components import from shared lib to avoid duplication
 
 **Atoms** - Basic building blocks:
 - `ArrowIcon` - Directional arrows for navigation
 - `BackButton` - Navigate back to article list
 - `BlogCardSkeleton` - Loading placeholder for article cards
 - `BlogContent` - Renders sanitized HTML content
-- `DateBadge` - Displays formatted publish date
+- `DateBadge` - Displays formatted publish date using `formatBlogDate` utility
 - `PaginationArrow` - Arrow buttons for pagination
 - `PaginationButton` - Individual page number buttons
 
 **Molecules** - Composite components:
-- `BlogCard` - Article preview card with image, title, excerpt, date
+- `BlogCard` - Article preview card with image, title, excerpt, date (uses BlogPost type and shared utilities)
 - `BlogDetailHeader` - Article header with title, date, cover image
-- `BlogGrid` - Responsive grid layout for article cards
+- `BlogGrid` - Responsive grid layout for article cards (uses BlogPost type)
 - `BlogGridSkeleton` - Loading state for article grid
-- `BlogHero` - Hero section with page title
-- `Pagination` - Complete pagination controls
-- `RelatedArticles` - Display related articles
+- `BlogHero` - Hero section with page title and gradient background
+- `Pagination` - Complete pagination controls combining PaginationButton and PaginationArrow atoms
+- `RelatedArticles` - Display related articles (uses RelatedArticle type and getBlogPlaceholderImage utility)
 - `RelatedArticlesApi` - Fetch and display related articles from API
 
 **Organisms** - Complex sections:
-- `BlogDetailSection` - Complete article detail view
-- `BlogListSection` - Complete article list with pagination
+- `BlogDetailSection` - Complete article detail view (uses BlogDetail type)
+- `BlogListSection` - Complete article list with pagination (uses BlogPost type)
 
 ## Styling
 
@@ -324,6 +384,44 @@ export async function generateMetadata({
 - Lazy loading below fold
 - R2 CDN delivery
 
+## Code Organization Best Practices
+
+### Centralized Resources
+- **Types**: All TypeScript interfaces are defined in `lib/types.ts` to avoid duplication
+- **Utilities**: Shared helper functions live in `lib/utils.ts` for reusability
+- **Imports**: Components import from `@/features/blog/lib` for types and utilities
+- **Barrel Exports**: Each component level (atoms, molecules, organisms) has an `index.ts` with documentation
+
+### Component Documentation
+All components include JSDoc comments explaining their purpose:
+```typescript
+/**
+ * BlogCard - Individual blog post card component
+ * Displays article preview with image, title, excerpt, and date
+ */
+```
+
+### Type Safety
+Components use centralized interfaces:
+```typescript
+// ✅ Good - Use shared types
+import { BlogPost } from "../../lib/types";
+
+// ❌ Bad - Don't duplicate interfaces
+interface BlogPost { ... }
+```
+
+### Utility Functions
+Use shared utilities instead of duplicating logic:
+```typescript
+// ✅ Good - Use shared utility
+import { formatBlogDate } from "../../lib/utils";
+const formattedDate = formatBlogDate(published_at, locale);
+
+// ❌ Bad - Don't duplicate date formatting
+const formattedDate = new Date(published_at).toLocaleDateString(...);
+```
+
 ## Best Practices for AI Agents
 
 ### When Adding Features
@@ -331,7 +429,10 @@ export async function generateMetadata({
 2. Use Public API for all data fetching
 3. Implement loading states with skeletons
 4. Support both EN and AR locales
-5. Add proper TypeScript types
+5. Add proper TypeScript types in `lib/types.ts`
+6. Create reusable utilities in `lib/utils.ts` if needed
+7. Add JSDoc comments to new components
+8. Update barrel exports with documentation
 
 ### When Modifying
 1. Test with both English and Arabic content
@@ -339,6 +440,9 @@ export async function generateMetadata({
 3. Check responsive design on all screen sizes
 4. Ensure pagination works correctly
 5. Test with various content lengths
+6. Use shared types and utilities instead of duplicating code
+7. Maintain existing JSDoc documentation
+8. Run linter to catch Tailwind CSS optimizations
 
 ### When Debugging
 1. Check Public API responses in Network tab

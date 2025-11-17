@@ -9,6 +9,10 @@ interface PaginationButtonProps {
     className?: string;
 }
 
+/**
+ * PaginationButton - Individual page number button
+ * Displays page number with active state styling
+ */
 export function PaginationButton({
     page,
     isActive = false,

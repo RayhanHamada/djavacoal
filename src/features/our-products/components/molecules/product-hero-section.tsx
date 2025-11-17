@@ -1,18 +1,12 @@
 "use client";
 
+import type { MediaItem } from "../../lib/types";
+
 import { useLocale } from "next-intl";
 
 import { ActionButton } from "../atoms";
 import { MediaGalleryHorizontal } from "../molecules";
 import { LOCALES } from "@/configs";
-
-interface MediaItem {
-    id: number;
-    type: "image" | "youtube";
-    image_url?: string;
-    youtube_url?: string;
-    custom_thumbnail_url?: string;
-}
 
 type ProductHeroSectionProps = {
     productName: string;

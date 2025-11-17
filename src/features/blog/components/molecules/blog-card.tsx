@@ -4,17 +4,18 @@ import Image from "next/image";
 import Link from "next/link";
 
 import { DateBadge, ArrowIcon } from "../atoms";
+import { formatBlogDate, getBlogPlaceholderImage } from "../../lib/utils";
+import type { BlogPost } from "../../lib/types";
 import { cn } from "@/lib/utils";
 
-interface BlogCardProps {
-    id: number;
-    slug: string;
-    title: string;
-    published_at: Date;
-    cover_image_url: string | null;
+interface BlogCardProps extends BlogPost {
     className?: string;
 }
 
+/**
+ * BlogCard - Individual blog post card component
+ * Displays blog post preview with image, date, and title
+ */
 export function BlogCard({
     slug,
     title,
@@ -22,12 +23,7 @@ export function BlogCard({
     cover_image_url,
     className,
 }: BlogCardProps) {
-    // Format date for display
-    const formattedDate = published_at.toLocaleDateString("en-US", {
-        day: "numeric",
-        month: "short",
-        year: "numeric",
-    });
+    const formattedDate = formatBlogDate(published_at);
 
     return (
         <Link
@@ -39,7 +35,7 @@ export function BlogCard({
         >
             <div className="relative aspect-square w-full overflow-hidden">
                 <Image
-                    src={cover_image_url || "/images/blog/blog-placeholder.png"}
+                    src={cover_image_url || getBlogPlaceholderImage()}
                     alt={title}
                     fill
                     className="object-cover transition-transform duration-300 group-hover:scale-105"

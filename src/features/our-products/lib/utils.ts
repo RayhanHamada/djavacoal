@@ -5,10 +5,86 @@ import type {
     VideoItem,
 } from "./types";
 
+/**
+ * Utility Functions
+ */
+
 export function getRandomInt(min: number, max: number) {
     min = Math.ceil(min);
     max = Math.floor(max);
     return Math.floor(Math.random() * (max - min)) + min; // The maximum is exclusive and the minimum is inclusive
+}
+
+/**
+ * Extract YouTube video ID from various YouTube URL formats
+ * @param youtubeUrl - YouTube URL (youtube.com or youtu.be)
+ * @returns Video ID or empty string if not found
+ */
+export function extractYouTubeVideoId(youtubeUrl: string): string {
+    try {
+        const url = new URL(youtubeUrl);
+
+        // Handle youtube.com format
+        if (url.hostname.includes("youtube.com")) {
+            return url.searchParams.get("v") || "";
+        }
+
+        // Handle youtu.be format
+        if (url.hostname.includes("youtu.be")) {
+            return url.pathname.slice(1);
+        }
+
+        return "";
+    } catch {
+        return "";
+    }
+}
+
+/**
+ * Get YouTube thumbnail URL from video URL
+ * @param youtubeUrl - YouTube video URL
+ * @param quality - Thumbnail quality (default, hq, mq, sd, maxres)
+ * @returns Thumbnail URL or placeholder
+ */
+export function getYouTubeThumbnailUrl(
+    youtubeUrl: string,
+    quality: "default" | "hq" | "mq" | "sd" | "maxres" = "maxres"
+): string {
+    const videoId = extractYouTubeVideoId(youtubeUrl);
+
+    if (!videoId) {
+        return "/images/placeholder.png";
+    }
+
+    const qualityMap = {
+        default: "default",
+        hq: "hqdefault",
+        mq: "mqdefault",
+        sd: "sddefault",
+        maxres: "maxresdefault",
+    };
+
+    return `https://img.youtube.com/vi/${videoId}/${qualityMap[quality]}.jpg`;
+}
+
+/**
+ * Convert YouTube watch URL to embed URL
+ * @param youtubeUrl - YouTube watch URL
+ * @param autoplay - Enable autoplay (default: true)
+ * @returns Embed URL or empty string if invalid
+ */
+export function getYouTubeEmbedUrl(
+    youtubeUrl: string,
+    autoplay: boolean = true
+): string {
+    const videoId = extractYouTubeVideoId(youtubeUrl);
+
+    if (!videoId) {
+        return "";
+    }
+
+    const autoplayParam = autoplay ? "?autoplay=1" : "";
+    return `https://www.youtube.com/embed/${videoId}${autoplayParam}`;
 }
 
 // Product Data Constants

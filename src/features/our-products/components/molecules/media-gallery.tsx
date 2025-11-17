@@ -1,28 +1,27 @@
 "use client";
+import type { MediaItem } from "../../lib/types";
+
 import { useState } from "react";
 
 import Image from "next/image";
 
 import { Play } from "lucide-react";
 
+import { getYouTubeThumbnailUrl } from "../../lib/utils";
 import { ImageModal, YouTubeModal } from "../atoms";
-
-interface MediaItem {
-    id: number;
-    type: "image" | "youtube";
-    image_url?: string;
-    youtube_url?: string;
-    custom_thumbnail_url?: string;
-}
 
 interface MediaGalleryProps {
     medias: MediaItem[];
 }
 
 /**
- * MediaGallery component displays product media (images and YouTube videos)
- * - For images: Shows image, opens in modal on click
- * - For YouTube videos: Shows thumbnail (custom or default), opens video modal on click
+ * MediaGallery component displays product media in a vertical stacked layout
+ * Used for desktop sidebar display
+ *
+ * Features:
+ * - Displays images with hover effects and lightbox
+ * - Shows YouTube videos with custom/default thumbnails and play button overlay
+ * - Click to open respective modals (ImageModal/YouTubeModal)
  */
 export function MediaGallery({ medias }: MediaGalleryProps) {
     const [imageModalOpen, setImageModalOpen] = useState(false);
@@ -46,26 +45,6 @@ export function MediaGallery({ medias }: MediaGalleryProps) {
     const handleYoutubeClick = (youtubeUrl: string) => {
         setSelectedYoutubeUrl(youtubeUrl);
         setYoutubeModalOpen(true);
-    };
-
-    // Helper function to get YouTube thumbnail URL
-    const getYouTubeThumbnail = (youtubeUrl: string): string => {
-        try {
-            const url = new URL(youtubeUrl);
-            let videoId = "";
-
-            if (url.hostname.includes("youtube.com")) {
-                videoId = url.searchParams.get("v") || "";
-            } else if (url.hostname.includes("youtu.be")) {
-                videoId = url.pathname.slice(1);
-            }
-
-            return videoId
-                ? `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`
-                : "/images/placeholder.png";
-        } catch {
-            return "/images/placeholder.png";
-        }
     };
 
     return (
@@ -93,7 +72,7 @@ export function MediaGallery({ medias }: MediaGalleryProps) {
                 if (media.type === "youtube" && media.youtube_url) {
                     const thumbnailUrl =
                         media.custom_thumbnail_url ||
-                        getYouTubeThumbnail(media.youtube_url);
+                        getYouTubeThumbnailUrl(media.youtube_url);
 
                     return (
                         <div

@@ -1,8 +1,11 @@
-// Atoms
+/**
+ * Blog Feature Components
+ * Organized by Atomic Design principles:
+ * - Atoms: Basic UI elements (badges, buttons, icons)
+ * - Molecules: Composite components (cards, grids, pagination)
+ * - Organisms: Complex sections (blog list, blog detail)
+ */
+
 export * from "./atoms";
-
-// Molecules
 export * from "./molecules";
-
-// Organisms
 export * from "./organism";

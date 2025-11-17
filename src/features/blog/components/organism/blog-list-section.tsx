@@ -1,15 +1,8 @@
 "use client";
 
 import { BlogHero, BlogGrid, BlogGridSkeleton, Pagination } from "../molecules";
+import type { BlogPost } from "../../lib/types";
 import { cn } from "@/lib/utils";
-
-interface BlogPost {
-    id: number;
-    slug: string;
-    title: string;
-    published_at: Date;
-    cover_image_url: string | null;
-}
 
 interface BlogListSectionProps {
     posts: BlogPost[];
@@ -21,6 +14,10 @@ interface BlogListSectionProps {
     isLoading?: boolean;
 }
 
+/**
+ * BlogListSection - Main blog list page organism
+ * Combines hero, grid, and pagination for complete blog listing experience
+ */
 export function BlogListSection({
     posts,
     title = "News & Article",
