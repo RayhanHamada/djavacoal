@@ -11,7 +11,7 @@ export async function GET(_request: Request) {
         return new Response("Base URL not configured", { status: 500 });
     }
 
-    const staticSitemap = new URL("/static/sitemap.xml", baseURL).toString();
+    const staticSitemap = new URL("/sitemap.xml", baseURL).toString();
     const blogSitemap = new URL("/blog/sitemap.xml", baseURL).toString();
 
     const sitemapIndex = `${generateSitemapIndexHeader()}
