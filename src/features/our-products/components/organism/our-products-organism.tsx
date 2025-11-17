@@ -84,13 +84,12 @@ export function ProductPage() {
                                                 productName={
                                                     selectedProduct.name
                                                 }
+                                                medias={selectedProduct.medias}
                                                 onDownloadCatalogue={
                                                     handleDownloadCatalogue
                                                 }
                                                 onAskMore={handleAskMore}
                                             />
-
-                                            {/* Mobile MediaGallery - shown only on small screens */}
 
                                             {/* Divider */}
                                             <div className="my-6 h-px w-full bg-[#393939]" />

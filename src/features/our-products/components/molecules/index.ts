@@ -11,3 +11,4 @@ export { ShapesList } from "./shapes-list";
 export { ProductDetailTable } from "./product-detail-table";
 export { PackagingList } from "./packaging-list";
 export { MediaGallery } from "./media-gallery";
+export { MediaGalleryHorizontal } from "./media-gallery-horizontal";
