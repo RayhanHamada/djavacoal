@@ -1,13 +1,14 @@
 "use client";
 
+import type { RelatedArticle } from "../../lib/types";
+
 import Image from "next/image";
 import Link from "next/link";
 
 import { FaSpinner } from "react-icons/fa";
 
-import { DateBadge } from "../atoms";
 import { getBlogPlaceholderImage } from "../../lib/utils";
-import type { RelatedArticle } from "../../lib/types";
+import { DateBadge } from "../atoms";
 import { cn } from "@/lib/utils";
 
 interface RelatedArticlesProps {

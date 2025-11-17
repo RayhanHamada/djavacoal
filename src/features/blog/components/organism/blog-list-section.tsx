@@ -1,7 +1,8 @@
 "use client";
 
-import { BlogHero, BlogGrid, BlogGridSkeleton, Pagination } from "../molecules";
 import type { BlogPost } from "../../lib/types";
+
+import { BlogHero, BlogGrid, BlogGridSkeleton, Pagination } from "../molecules";
 import { cn } from "@/lib/utils";
 
 interface BlogListSectionProps {
