@@ -6,6 +6,8 @@ import { useCallback, useState } from "react";
 
 import Link from "next/link";
 
+import { useSortable } from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
 import {
     ActionIcon,
     Badge,
@@ -21,6 +23,7 @@ import {
     IconDotsVertical,
     IconEye,
     IconEyeOff,
+    IconGripVertical,
     IconTrash,
 } from "@tabler/icons-react";
 import { useMutation } from "@tanstack/react-query";
@@ -36,6 +39,23 @@ interface ProductCardProps {
  */
 export function ProductCard({ product }: ProductCardProps) {
     const [imageError, setImageError] = useState(false);
+
+    const {
+        attributes,
+        listeners,
+        setNodeRef,
+        transform,
+        transition,
+        isDragging,
+    } = useSortable({
+        id: product.id,
+    });
+
+    const style = {
+        transform: CSS.Transform.toString(transform),
+        transition,
+        opacity: isDragging ? 0.5 : 1,
+    };
 
     const toggleVisibilityMutation = useMutation(
         rpc.dashboardProduct.toggleProductVisibility.mutationOptions({
@@ -111,7 +131,15 @@ export function ProductCard({ product }: ProductCardProps) {
     }
 
     return (
-        <Card shadow="sm" padding="lg" radius="md" withBorder h={450}>
+        <Card
+            ref={setNodeRef}
+            style={style}
+            shadow="sm"
+            padding="lg"
+            radius="md"
+            withBorder
+            h={450}
+        >
             <Card.Section
                 component={Link}
                 href={`/dashboard/products/${product.id}/edit`}
@@ -130,9 +158,21 @@ export function ProductCard({ product }: ProductCardProps) {
 
             <Stack gap="xs" mt="md">
                 <Group justify="space-between" align="flex-start">
-                    <Text fw={500} lineClamp={2} flex={1}>
-                        {product.en_name}
-                    </Text>
+                    <Group gap="xs" flex={1}>
+                        <ActionIcon
+                            size="sm"
+                            variant="subtle"
+                            color="gray"
+                            style={{ cursor: "grab" }}
+                            {...listeners}
+                            {...attributes}
+                        >
+                            <IconGripVertical size={16} />
+                        </ActionIcon>
+                        <Text fw={500} lineClamp={2} flex={1}>
+                            {product.en_name}
+                        </Text>
+                    </Group>
                     <Menu shadow="md" width={200}>
                         <Menu.Target>
                             <ActionIcon variant="subtle" color="gray">

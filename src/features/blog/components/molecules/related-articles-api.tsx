@@ -19,18 +19,19 @@ export function RelatedArticlesApi({
     className,
 }: RelatedArticlesApiProps) {
     const {
-        data: blogResponse,
-        isLoading,
-        error,
-        hasNextPage,
-        fetchNextPage,
+        data: blogData,
+        isFetching: isFetchingBlogs,
+        error: blogError,
+        hasNextPage: hasNextPageBlogs,
+        fetchNextPage: fetchNextPageBlogs,
     } = useRelatedArticlesAPI({
         limit,
     });
     // Transform the API response data to match the RelatedArticles component interface
     const articles = useMemo(() => {
-        const blogs =
-            blogResponse?.pages.flatMap((page) => page.data.news.data) || [];
+        if (!blogData) return [];
+
+        const blogs = blogData.pages.flatMap((page) => page.data.news.data);
         if (!blogs.length) return [];
 
         return blogs
@@ -44,15 +45,13 @@ export function RelatedArticlesApi({
                     month: "short",
                     year: "numeric",
                 }),
-                imageUrl:
-                    blog.cover_image_url ||
-                    "/images/blog/default-thumbnail.png",
+                imageUrl: blog.cover_image_url ?? undefined,
             }));
-    }, [blogResponse, excludeSlug]);
+    }, [blogData, excludeSlug]);
 
     // Convert API error to standard Error if needed
-    const errorObject = error
-        ? new Error(error.message || "Failed to load articles")
+    const errorObject = blogError
+        ? new Error(blogError.message || "Failed to load articles")
         : null;
 
     return (
@@ -60,10 +59,10 @@ export function RelatedArticlesApi({
             articles={articles}
             title={title}
             className={className}
-            isLoading={isLoading}
+            isLoading={isFetchingBlogs}
             error={errorObject}
-            hasMore={hasNextPage}
-            loadMore={fetchNextPage}
+            hasMore={hasNextPageBlogs}
+            loadMore={fetchNextPageBlogs}
         />
     );
 }

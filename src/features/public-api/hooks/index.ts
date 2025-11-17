@@ -8,10 +8,10 @@ export function useFooterContentAPI() {
     return $api.useQuery("get", "/footer-content");
 }
 
-export function useListProductNamesAPI(limit: number = 5) {
+export function useListProductNamesAPI() {
     return $api.useQuery("get", "/products-names", {
         query: {
-            limit,
+            limit: 20,
         },
     });
 }
@@ -26,6 +26,16 @@ export function useProductionInfoContentAPI() {
 
 export function useContactInfoContentAPI() {
     return $api.useQuery("get", "/getContactUs");
+}
+
+export function useProductDetailAPI(id: number) {
+    return $api.useQuery("get", "/products/{id}", {
+        params: {
+            path: {
+                id: id.toString(),
+            },
+        },
+    });
 }
 
 export function useNewsListAPI({

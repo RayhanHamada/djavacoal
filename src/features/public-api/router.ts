@@ -84,7 +84,13 @@ export const router = {
                     [PRODUCT_COLUMNS.EN_NAME]: true,
                 },
                 orderBy(products, { asc }) {
-                    return [asc(products[COMMON_COLUMNS.CREATED_AT])];
+                    return [asc(products[PRODUCT_COLUMNS.ORDER_INDEX])];
+                },
+                where(fields, operators) {
+                    return operators.eq(
+                        fields[PRODUCT_COLUMNS.IS_HIDDEN],
+                        false
+                    );
                 },
             });
 

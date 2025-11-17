@@ -1,4 +1,17 @@
+"use client";
+
 import Image from "next/image";
+
+import {
+    FacebookShareButton,
+    TwitterShareButton,
+    LinkedinShareButton,
+    PinterestShareButton,
+    FacebookIcon,
+    LinkedinIcon,
+    PinterestIcon,
+    XIcon,
+} from "react-share";
 
 import { DateBadge } from "../atoms";
 import { cn } from "@/lib/utils";
@@ -13,11 +26,14 @@ interface BlogDetailHeaderProps {
 export function BlogDetailHeader({
     title,
     date,
-    imageUrl,
+    imageUrl = "/images/logo.png",
     className,
 }: BlogDetailHeaderProps) {
+    const url = typeof window !== "undefined" ? window.location.href : "";
+    const iconSize = 32;
+
     return (
-        <div className={cn("flex flex-col gap-5 md:gap-10", className)}>
+        <div className={cn("flex flex-col gap-5 md:gap-5", className)}>
             <div className="flex flex-col gap-5">
                 <h1 className="font-inter text-2xl leading-[1.21em] font-bold text-white md:text-[25px]">
                     {title}
@@ -31,13 +47,29 @@ export function BlogDetailHeader({
                 </div>
                 <div className="h-px w-full bg-[#474747]" />
             </div>
-            <div className="relative aspect-video w-full overflow-hidden">
-                <Image
-                    src={imageUrl ?? "/images/logo.png"}
-                    alt={title}
-                    fill
-                    className="object-cover"
-                />
+            <div className="flex flex-col items-center gap-y-2">
+                <div className="flex gap-x-2 self-start">
+                    <FacebookShareButton url={url}>
+                        <FacebookIcon size={iconSize} round />
+                    </FacebookShareButton>
+                    <TwitterShareButton url={url}>
+                        <XIcon size={iconSize} round />
+                    </TwitterShareButton>
+                    <LinkedinShareButton url={url}>
+                        <LinkedinIcon size={iconSize} round />
+                    </LinkedinShareButton>
+                    <PinterestShareButton url={url} media={imageUrl}>
+                        <PinterestIcon size={iconSize} round />
+                    </PinterestShareButton>
+                </div>
+                <div className="relative aspect-video w-full overflow-hidden">
+                    <Image
+                        src={imageUrl}
+                        alt={title}
+                        fill
+                        className="object-cover"
+                    />
+                </div>
             </div>
         </div>
     );

@@ -3,6 +3,8 @@
 import Image from "next/image";
 import Link from "next/link";
 
+import { FaSpinner } from "react-icons/fa";
+
 import { DateBadge } from "../atoms";
 import { cn } from "@/lib/utils";
 
@@ -11,7 +13,7 @@ interface RelatedPost {
     slug: string;
     title: string;
     date: string;
-    imageUrl: string;
+    imageUrl?: string;
 }
 
 interface RelatedArticlesProps {
@@ -111,7 +113,10 @@ export function RelatedArticles({
                             >
                                 <div className="relative aspect-square w-full gap-y-4 overflow-hidden">
                                     <Image
-                                        src={article.imageUrl}
+                                        src={
+                                            article.imageUrl ??
+                                            "/images/logo.png"
+                                        }
                                         alt={article.title}
                                         fill
                                         className="object-cover"
@@ -141,10 +146,10 @@ export function RelatedArticles({
             )}
 
             {/* Show More Button - only show if there are articles and no loading/error */}
-            {!isLoading && !error && articles.length && (
+            {!error && hasMore && articles.length && (
                 <button
                     onClick={loadMore}
-                    disabled={!hasMore}
+                    disabled={isLoading}
                     className={cn(
                         "bg-secondary flex items-center justify-center border-t border-[#474747] py-4",
                         "font-inter items-center justify-center text-xl leading-[1.21em] font-bold text-white transition-opacity",
@@ -153,7 +158,11 @@ export function RelatedArticles({
                             : "cursor-not-allowed opacity-50"
                     )}
                 >
-                    More
+                    {isLoading ? (
+                        <FaSpinner className="animate-spin" />
+                    ) : (
+                        "Show More"
+                    )}
                 </button>
             )}
         </div>

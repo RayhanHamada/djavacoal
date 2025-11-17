@@ -138,12 +138,29 @@ function ProductCard({ product }) {
 - MOQ and production capacity
 - Contact/inquiry CTA
 
-### MediaGallery
-- Main image/video viewer
-- Thumbnail navigation
-- Lightbox for images
-- YouTube player for videos
-- Custom video thumbnails
+### MediaGallery (`components/molecules/media-gallery.tsx`)
+- Handles both image and YouTube video media
+- Responsive stacked layout
+- Click to open modal for full view
+- Image media: displays image, opens ImageModal on click
+- YouTube media: displays thumbnail with play button, opens YouTubeModal on click
+- Custom thumbnail support for YouTube videos
+- Djavacoal logo watermark on video thumbnails
+- Hover effects and transitions
+
+### ImageModal (`components/atoms/image-modal.tsx`)
+- Full-screen image viewer
+- Responsive sizing (max 90vh height)
+- Click outside or X button to close
+- Backdrop blur effect
+
+### YouTubeModal (`components/atoms/youtube-modal.tsx`)
+- Full-screen YouTube video player
+- Converts YouTube URLs to embed format
+- Autoplay enabled
+- Responsive iframe with 16:9 aspect ratio
+- Click outside or X button to close
+- Backdrop blur effect
 
 ### SpecificationsDisplay
 - Grid of specification images
@@ -238,21 +255,82 @@ Products are displayed in the order defined by `order_index` in the database. Ad
 
 ## Media Handling
 
-### Images
+The MediaGallery component handles both images and YouTube videos with modal popups:
+
+### Product Media Structure
 ```typescript
-// First media from product
-const firstImageUrl = product.medias.find(m => m.media_type === "image")?.image_key;
-const imageUrl = `${env.NEXT_PUBLIC_ASSET_URL}/_r2/${firstImageUrl}`;
+interface MediaItem {
+  id: number;
+  type: "image" | "youtube";
+  image_url?: string;           // For image type
+  youtube_url?: string;          // For YouTube type (e.g., "https://www.youtube.com/watch?v=VIDEO_ID")
+  custom_thumbnail_url?: string; // Optional custom thumbnail for YouTube videos
+}
 ```
 
-### YouTube Videos
+### MediaGallery Component
+Located at `components/molecules/media-gallery.tsx`, this component:
+
+1. **Image Media**:
+   - Displays the image
+   - Opens ImageModal on click showing full-size image
+   - Hover effect with scale transform
+
+2. **YouTube Video Media**:
+   - Shows video thumbnail (custom if provided, or YouTube default)
+   - Displays Djavacoal logo watermark on thumbnail
+   - Shows play button overlay
+   - Opens YouTubeModal on click with embedded video (autoplay enabled)
+
+### Usage Example
 ```typescript
-const videoMedia = product.medias.find(m => m.media_type === "youtube");
-if (videoMedia) {
-  const videoId = videoMedia.youtube_video_id;
-  const thumbnailUrl = videoMedia.video_custom_thumbnail_key
-    ? `${env.NEXT_PUBLIC_ASSET_URL}/_r2/${videoMedia.video_custom_thumbnail_key}`
-    : `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`;
+import { MediaGallery } from "@/features/our-products/components/molecules";
+
+function ProductDetail({ product }) {
+  return (
+    <MediaGallery medias={product.medias} />
+  );
+}
+```
+
+### Modal Components
+
+**ImageModal** (`components/atoms/image-modal.tsx`):
+- Full-screen modal displaying product images
+- Click outside or X button to close
+- Responsive sizing with max-height constraint
+
+**YouTubeModal** (`components/atoms/youtube-modal.tsx`):
+- Full-screen modal with YouTube embed
+- Converts YouTube watch URLs to embed format
+- Autoplay enabled
+- Responsive iframe with proper aspect ratio
+
+### Getting YouTube Thumbnails
+```typescript
+// Default YouTube thumbnail
+const thumbnail = `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`;
+
+// Or use custom thumbnail if provided
+const customThumbnail = media.custom_thumbnail_url;
+```
+
+### Extracting YouTube Video ID
+```typescript
+function getVideoId(youtubeUrl: string): string {
+  const url = new URL(youtubeUrl);
+  
+  // For youtube.com format
+  if (url.hostname.includes("youtube.com")) {
+    return url.searchParams.get("v") || "";
+  }
+  
+  // For youtu.be format
+  if (url.hostname.includes("youtu.be")) {
+    return url.pathname.slice(1);
+  }
+  
+  return "";
 }
 ```
 

@@ -2,17 +2,28 @@
 
 import { useLocale } from "next-intl";
 
-import { ActionButton, VideoGallerySectionMd } from "../atoms";
+import { ActionButton } from "../atoms";
+import { MediaGalleryHorizontal } from "../molecules";
 import { LOCALES } from "@/configs";
+
+interface MediaItem {
+    id: number;
+    type: "image" | "youtube";
+    image_url?: string;
+    youtube_url?: string;
+    custom_thumbnail_url?: string;
+}
 
 type ProductHeroSectionProps = {
     productName: string;
+    medias: MediaItem[];
     onDownloadCatalogue: () => void;
     onAskMore: () => void;
 };
 
 export function ProductHeroSection({
     productName,
+    medias,
     onDownloadCatalogue,
     onAskMore,
 }: ProductHeroSectionProps) {
@@ -35,9 +46,6 @@ export function ProductHeroSection({
               : "";
     return (
         <div className="flex w-full min-w-[372px] flex-col gap-10">
-            {/* Divider */}
-            {/* <div className="hidden h-[1px] w-full bg-[#393939]" /> */}
-
             {/* Mobile/Tablet: Vertical Layout | Desktop: Horizontal Layout */}
             <div className="flex w-full flex-col gap-10 lg:flex-row lg:gap-10">
                 {/* Right Side: Content (Desktop) / Bottom (Mobile) */}
@@ -48,13 +56,13 @@ export function ProductHeroSection({
                         <span className="text-white">{remainingName}</span>
                     </h2>
 
-                    {/* Left Side: Product Image (Desktop) / Top (Mobile) */}
+                    {/* Product Media Gallery - Mobile/Tablet only */}
                     <div className="flex h-auto w-full max-w-full justify-center overflow-hidden lg:hidden">
-                        <VideoGallerySectionMd />
+                        <MediaGalleryHorizontal medias={medias} />
                     </div>
 
                     {/* Action Buttons */}
-                    <div className="flex w-full max-w-full flex-row gap-3 sm:gap-5">
+                    <div className="flex w-full max-w-full flex-row flex-wrap gap-3 sm:gap-5">
                         <ActionButton
                             label="Catalogue"
                             icon="/images/icon-download.svg"

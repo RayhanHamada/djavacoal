@@ -2,6 +2,8 @@
 
 import { useEffect, useState } from "react";
 
+import Link from "next/link";
+
 import {
     closestCenter,
     DndContext,
@@ -395,6 +397,15 @@ function SortableMediaItem({
                                             size="sm"
                                             value={youtubeItem.youtube_video_id}
                                         />
+
+                                        <Link
+                                            href={`https://www.youtube.com/watch?v=${youtubeItem.youtube_video_id}`}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="w-fit text-xs text-blue-300 hover:underline"
+                                        >
+                                            Watch on YouTube
+                                        </Link>
 
                                         {youtubeItem.youtube_video_id && (
                                             <Group align="flex-start" gap="md">

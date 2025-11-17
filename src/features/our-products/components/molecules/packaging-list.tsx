@@ -3,9 +3,11 @@
 import { PackagingCard } from "../atoms";
 
 export type PackagingOption = {
-    title: string;
+    id: number;
+    slug: string;
+    type: string;
     description: string;
-    image: string;
+    image_url: string;
 };
 
 type PackagingListProps = {
@@ -19,8 +21,13 @@ export function PackagingList({ packagingOptions }: PackagingListProps) {
                 Packaging Option:
             </h3>
             <div className="scrollbar-hide flex flex-row gap-5 overflow-x-auto md:flex-row lg:gap-5">
-                {packagingOptions.map((option, idx) => (
-                    <PackagingCard key={idx} {...option} />
+                {packagingOptions.map((option) => (
+                    <PackagingCard
+                        key={option.id}
+                        title={option.type}
+                        description={option.description}
+                        image={option.image_url}
+                    />
                 ))}
             </div>
         </div>

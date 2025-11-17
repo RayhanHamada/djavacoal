@@ -355,6 +355,16 @@ const { data, isLoading } = rpc.dashboardProduct.listProducts.useQuery({
 
 ### Reordering Products
 
+The product list view includes drag-and-drop functionality for reordering products using `@dnd-kit`:
+
+**Features:**
+- Drag products by the grip handle (top-left corner of each card)
+- Visual feedback during drag (50% opacity on dragged item)
+- DragOverlay shows a preview of the card being dragged
+- Automatic server sync on drop
+- Toast notifications for success/error states
+
+**Implementation:**
 ```typescript
 const reorderMutation = rpc.dashboardProduct.reorderProducts.useMutation();
 
@@ -366,6 +376,12 @@ await reorderMutation.mutateAsync({
   ]
 });
 ```
+
+**Key Components:**
+- `ProductCard` - Uses `useSortable` hook from `@dnd-kit/sortable`
+- `ProductListView` - Wraps grid with `DndContext` and `SortableContext`
+- `IconGripVertical` - Drag handle positioned at top-left of each card
+- `rectSortingStrategy` - Optimized for grid layouts
 
 ### Toggle Visibility
 
@@ -419,6 +435,59 @@ Product: Premium Indonesian Coal
     ├── Jumbo Bags
     └── Bulk Container
 ```
+
+## Drag-and-Drop Reordering
+
+### Product Cards
+
+Product cards in the list view can be reordered via drag-and-drop:
+
+**User Experience:**
+1. Hover over the grip icon (☰) in the top-left corner of any product card
+2. Click and hold to start dragging
+3. Drag the card to the desired position in the grid
+4. Release to drop - the card will animate into place
+5. Changes are automatically saved to the server
+
+**Technical Details:**
+- **Drag Handle**: `IconGripVertical` positioned at top-left with `cursor: grab`
+- **Visual Feedback**: 
+  - Dragged card opacity: 50%
+  - DragOverlay shows full card preview during drag
+  - Smooth CSS transitions for all cards
+- **Collision Detection**: `closestCenter` algorithm from `@dnd-kit/core`
+- **Sorting Strategy**: `rectSortingStrategy` optimized for grid layouts
+- **Server Sync**: Mutation triggers on `handleDragEnd`, updates all product order indices
+- **Error Handling**: Toast notifications for success/failure
+
+**Implementation Pattern:**
+```typescript
+// ProductCard.tsx
+const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id: product.id });
+
+// Apply transform and transition
+<Card ref={setNodeRef} style={{ transform, transition, opacity: isDragging ? 0.5 : 1 }}>
+  <ActionIcon {...listeners} {...attributes}>
+    <IconGripVertical />
+  </ActionIcon>
+</Card>
+
+// ProductListView.tsx
+<DndContext onDragEnd={handleDragEnd}>
+  <SortableContext items={productIds} strategy={rectSortingStrategy}>
+    <Grid>{/* Product cards */}</Grid>
+  </SortableContext>
+  <DragOverlay>{activeCard}</DragOverlay>
+</DndContext>
+```
+
+**Similar Patterns:**
+This implementation follows the same pattern used for:
+- Media reordering in product editor
+- Specification reordering in product editor
+- Variant reordering in product editor
+
+All use `@dnd-kit` with consistent UX patterns.
 
 ## Error Handling
 
