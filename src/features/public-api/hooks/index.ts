@@ -8,10 +8,10 @@ export function useFooterContentAPI() {
     return $api.useQuery("get", "/footer-content");
 }
 
-export function useListProductNamesAPI(limit: number = 5) {
+export function useListProductNamesAPI() {
     return $api.useQuery("get", "/products-names", {
         query: {
-            limit,
+            limit: 20,
         },
     });
 }

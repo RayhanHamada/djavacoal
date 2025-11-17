@@ -14,7 +14,7 @@ type Product = {
 
 type Props = {
     products: Product[];
-    selectedProductId: number | null;
+    selectedProductId?: number;
     onProductSelect: (productId: number) => void;
 };
 

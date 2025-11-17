@@ -10,28 +10,26 @@ import {
  * Provides products list, selected product details, and selection handlers
  */
 export function useProducts() {
-    const [selectedProductId, setSelectedProductId] = useState<number | null>(
-        null
-    );
+    const [selectedProductId, setSelectedProductId] = useState<number>();
 
     // Fetch product list
     const {
         data: productListData,
         isLoading: isLoadingProducts,
         error: productListError,
-    } = useListProductNamesAPI(10);
+    } = useListProductNamesAPI();
 
     // Fetch selected product details
     const {
         data: productDetailData,
         isLoading: isLoadingDetail,
         error: productDetailError,
-    } = useProductDetailAPI(selectedProductId || 0);
+    } = useProductDetailAPI(selectedProductId ?? 0);
 
     // Set first product as default when products are loaded
     useEffect(() => {
         if (productListData?.data?.names?.length && !selectedProductId) {
-            setSelectedProductId(productListData.data.names[0].id);
+            setSelectedProductId(productListData.data.names.at(0)?.id);
         }
     }, [productListData, selectedProductId]);
 
