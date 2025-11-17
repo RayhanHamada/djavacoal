@@ -75,11 +75,10 @@ export default async function Page({ params }: Props) {
                 author: "",
                 title: news.title,
                 content: news.content,
-                imageUrl: news.cover_image_url ?? undefined,
+                imageUrl: news.cover_image_url ?? "/images/logo.png",
                 date: dayjs(news.published_at).format("DD MMMM YYYY"),
                 slug: news.slug,
             }}
-            useAPI={true}
         />
     );
 }
