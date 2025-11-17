@@ -5,13 +5,13 @@ import Image from "next/image";
 
 import { PhotoProvider, PhotoView } from "react-photo-view";
 
-import { VideoGallerySection } from "../atoms";
 import {
     ProductHeroSection,
     ProductDetailTable,
     ShapesList,
     PackagingList,
     OurProductsSidebar,
+    MediaGallery,
 } from "../molecules";
 import { useProducts } from "@/features/our-products/hooks";
 
@@ -75,7 +75,9 @@ export function ProductPage() {
                                 <div className="flex flex-col gap-10">
                                     <div className="flex gap-x-10">
                                         <div className="hidden max-w-[420px] lg:block lg:flex-1">
-                                            <VideoGallerySection />
+                                            <MediaGallery
+                                                medias={selectedProduct.medias}
+                                            />
                                         </div>
                                         <div className="min-w-[372px] flex-1 lg:max-w-full">
                                             <ProductHeroSection
@@ -87,6 +89,8 @@ export function ProductPage() {
                                                 }
                                                 onAskMore={handleAskMore}
                                             />
+
+                                            {/* Mobile MediaGallery - shown only on small screens */}
 
                                             {/* Divider */}
                                             <div className="my-6 h-px w-full bg-[#393939]" />

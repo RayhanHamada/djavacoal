@@ -10,3 +10,4 @@ export { ProductHeroSection } from "./product-hero-section";
 export { ShapesList } from "./shapes-list";
 export { ProductDetailTable } from "./product-detail-table";
 export { PackagingList } from "./packaging-list";
+export { MediaGallery } from "./media-gallery";

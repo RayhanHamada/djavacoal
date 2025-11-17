@@ -5,3 +5,5 @@ export { FilterButton } from "./filter-button";
 export { PackagingCard } from "./packaging-card";
 export { VideoGallerySection } from "./video-stack";
 export { VideoGallerySectionMd } from "./video-stack-md";
+export { ImageModal } from "./image-modal";
+export { YouTubeModal } from "./youtube-modal";
