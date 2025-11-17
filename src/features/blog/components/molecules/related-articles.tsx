@@ -6,18 +6,12 @@ import Link from "next/link";
 import { FaSpinner } from "react-icons/fa";
 
 import { DateBadge } from "../atoms";
+import { getBlogPlaceholderImage } from "../../lib/utils";
+import type { RelatedArticle } from "../../lib/types";
 import { cn } from "@/lib/utils";
 
-interface RelatedPost {
-    id: number;
-    slug: string;
-    title: string;
-    date: string;
-    imageUrl?: string;
-}
-
 interface RelatedArticlesProps {
-    articles: RelatedPost[];
+    articles: RelatedArticle[];
     title?: string;
     className?: string;
     isLoading?: boolean;
@@ -26,6 +20,10 @@ interface RelatedArticlesProps {
     loadMore: () => void;
 }
 
+/**
+ * RelatedArticles - Sidebar component for displaying related blog posts
+ * Features infinite scroll with "Show More" button
+ */
 export function RelatedArticles({
     articles,
     title = "Newest",
@@ -115,7 +113,7 @@ export function RelatedArticles({
                                     <Image
                                         src={
                                             article.imageUrl ??
-                                            "/images/logo.png"
+                                            getBlogPlaceholderImage()
                                         }
                                         alt={article.title}
                                         fill

@@ -1,3 +1,7 @@
+/**
+ * BlogHero - Hero section for blog pages
+ * Displays title with gradient background and overlay
+ */
 import { cn } from "@/lib/utils";
 
 interface BlogHeroProps {
@@ -10,7 +14,7 @@ export function BlogHero({ title, className }: BlogHeroProps) {
         <div
             className={cn(
                 "relative flex h-[350px] w-full flex-col items-center justify-center gap-[214px] overflow-hidden",
-                "bg-gradient-radial from-[rgba(219,172,102,1)] from-[72%] to-[rgba(21,21,21,0.3)] to-[39%]",
+                "bg-gradient-radial from-[rgba(219,172,102,1)] from-72% to-[rgba(21,21,21,0.3)] to-39%",
                 className
             )}
             style={{

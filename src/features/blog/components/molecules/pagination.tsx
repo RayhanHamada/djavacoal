@@ -1,3 +1,7 @@
+/**
+ * Pagination - Complete pagination control component
+ * Combines PaginationButton and PaginationArrow atoms for blog post navigation
+ */
 "use client";
 
 import { PaginationButton, PaginationArrow } from "../atoms";

@@ -1,19 +1,16 @@
 import { BlogCard } from "./blog-card";
+import type { BlogPost } from "../../lib/types";
 import { cn } from "@/lib/utils";
-
-interface BlogPost {
-    id: number;
-    slug: string;
-    title: string;
-    published_at: Date;
-    cover_image_url: string | null;
-}
 
 interface BlogGridProps {
     posts: BlogPost[];
     className?: string;
 }
 
+/**
+ * BlogGrid - Grid layout for blog posts
+ * Responsive grid that displays blog post cards
+ */
 export function BlogGrid({ posts, className }: BlogGridProps) {
     return (
         <div
