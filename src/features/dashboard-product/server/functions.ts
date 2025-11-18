@@ -316,9 +316,9 @@ export const deletePackagingOption = base
 
         // Delete from R2
         const r2Client = getR2Client({
-            endpoint: env.S3_API,
-            accessKeyId: env.R2_ACCESS_KEY_ID!,
-            secretAccessKey: env.R2_SECRET_ACCESS_KEY!,
+            endpoint: process.env.S3_API,
+            accessKeyId: process.env.R2_ACCESS_KEY_ID!,
+            secretAccessKey: process.env.R2_SECRET_ACCESS_KEY!,
         });
 
         await deleteObject(r2Client, option.photo_key, DEFAULT_BUCKET_NAME);
@@ -360,9 +360,9 @@ export const generateImageUploadUrl = base
 
         // Create R2 client
         const r2Client = getR2Client({
-            endpoint: env.S3_API,
-            accessKeyId: env.R2_ACCESS_KEY_ID!,
-            secretAccessKey: env.R2_SECRET_ACCESS_KEY!,
+            endpoint: process.env.S3_API,
+            accessKeyId: process.env.R2_ACCESS_KEY_ID!,
+            secretAccessKey: process.env.R2_SECRET_ACCESS_KEY!,
         });
 
         // Generate presigned URL
@@ -1046,9 +1046,9 @@ export const generateProductUploadUrl = base
 
         // Create R2 client
         const r2Client = getR2Client({
-            endpoint: env.S3_API,
-            accessKeyId: env.R2_ACCESS_KEY_ID!,
-            secretAccessKey: env.R2_SECRET_ACCESS_KEY!,
+            endpoint: process.env.S3_API,
+            accessKeyId: process.env.R2_ACCESS_KEY_ID!,
+            secretAccessKey: process.env.R2_SECRET_ACCESS_KEY!,
         });
 
         // Generate presigned URL

@@ -208,7 +208,10 @@ export const router = {
                         if (!Array.isArray(v)) return [];
 
                         return v.map((e: string) =>
-                            new URL(e, env.NEXT_PUBLIC_ASSET_URL).toString()
+                            new URL(
+                                e,
+                                process.env.NEXT_PUBLIC_ASSET_URL
+                            ).toString()
                         );
                     }),
 
@@ -227,7 +230,10 @@ export const router = {
                     const [first] = v;
                     console.log(v);
 
-                    return new URL(first, env.NEXT_PUBLIC_ASSET_URL).toString();
+                    return new URL(
+                        first,
+                        process.env.NEXT_PUBLIC_ASSET_URL
+                    ).toString();
                 }),
             ]);
 
@@ -283,7 +289,7 @@ export const router = {
                         const imageKey = item.medias.at(0)!.image_key!;
                         const image_url = new URL(
                             imageKey,
-                            env.NEXT_PUBLIC_ASSET_URL
+                            process.env.NEXT_PUBLIC_ASSET_URL
                         ).toString();
 
                         const name =
@@ -336,7 +342,7 @@ export const router = {
 
                         const image_url = new URL(
                             v[PACKAGING_OPTION_COLUMNS.PHOTO_KEY],
-                            env.NEXT_PUBLIC_ASSET_URL
+                            process.env.NEXT_PUBLIC_ASSET_URL
                         ).toString();
 
                         const type =
@@ -402,7 +408,10 @@ export const router = {
                     if (!v.length) return null;
                     const [first] = v;
 
-                    return new URL(first, env.NEXT_PUBLIC_ASSET_URL).toString();
+                    return new URL(
+                        first,
+                        process.env.NEXT_PUBLIC_ASSET_URL
+                    ).toString();
                 }),
 
                 kv
@@ -429,7 +438,10 @@ export const router = {
                         if (!v.length) return [];
 
                         return v.map((item: string) =>
-                            new URL(item, env.NEXT_PUBLIC_ASSET_URL).toString()
+                            new URL(
+                                item,
+                                process.env.NEXT_PUBLIC_ASSET_URL
+                            ).toString()
                         );
                     })
                     .catch(() => [] as string[]),
@@ -442,7 +454,10 @@ export const router = {
                         if (!v.length) return [];
 
                         return v.map((item: string) =>
-                            new URL(item, env.NEXT_PUBLIC_ASSET_URL).toString()
+                            new URL(
+                                item,
+                                process.env.NEXT_PUBLIC_ASSET_URL
+                            ).toString()
                         );
                     })
                     .catch(() => [] as string[]),
@@ -474,7 +489,7 @@ export const router = {
                         const imageKey = item[TEAM_MEMBER_COLUMNS.PHOTO_KEY];
                         const photo_url = new URL(
                             imageKey,
-                            env.NEXT_PUBLIC_ASSET_URL
+                            process.env.NEXT_PUBLIC_ASSET_URL
                         ).toString();
 
                         return {
@@ -532,7 +547,7 @@ export const router = {
                         const id = v[COMMON_COLUMNS.ID];
                         const image_url = new URL(
                             v[PACKAGING_OPTION_COLUMNS.PHOTO_KEY],
-                            env.NEXT_PUBLIC_ASSET_URL
+                            process.env.NEXT_PUBLIC_ASSET_URL
                         ).toString();
 
                         const enName = v[PACKAGING_OPTION_COLUMNS.EN_NAME];
@@ -660,7 +675,7 @@ export const router = {
                         media[PRODUCT_MEDIA_COLUMNS.IMAGE_KEY] ?? "";
                     const image_url = new URL(
                         imageKey,
-                        env.NEXT_PUBLIC_ASSET_URL
+                        process.env.NEXT_PUBLIC_ASSET_URL
                     ).toString();
 
                     return {
@@ -678,7 +693,7 @@ export const router = {
                 const custom_thumbnail_url = thumbnailKey
                     ? new URL(
                           thumbnailKey,
-                          env.NEXT_PUBLIC_ASSET_URL
+                          process.env.NEXT_PUBLIC_ASSET_URL
                       ).toString()
                     : undefined;
 
@@ -696,7 +711,7 @@ export const router = {
                     spec[PRODUCT_SPECIFICATION_COLUMNS.SPEC_PHOTO_KEY];
                 const image_url = new URL(
                     imageKey,
-                    env.NEXT_PUBLIC_ASSET_URL
+                    process.env.NEXT_PUBLIC_ASSET_URL
                 ).toString();
 
                 return {
@@ -715,7 +730,7 @@ export const router = {
                     variant[PRODUCT_VARIANT_COLUMNS.VARIANT_PHOTO_KEY];
                 const image_url = new URL(
                     imageKey,
-                    env.NEXT_PUBLIC_ASSET_URL
+                    process.env.NEXT_PUBLIC_ASSET_URL
                 ).toString();
 
                 return {
@@ -742,7 +757,7 @@ export const router = {
                     const imageKey = v[PACKAGING_OPTION_COLUMNS.PHOTO_KEY];
                     const image_url = new URL(
                         imageKey,
-                        env.NEXT_PUBLIC_ASSET_URL
+                        process.env.NEXT_PUBLIC_ASSET_URL
                     ).toString();
 
                     return {
@@ -846,7 +861,7 @@ export const router = {
                             const cover_image_url = imageKey
                                 ? new URL(
                                       imageKey,
-                                      env.NEXT_PUBLIC_ASSET_URL
+                                      process.env.NEXT_PUBLIC_ASSET_URL
                                   ).toString()
                                 : null;
 
@@ -905,9 +920,9 @@ export const router = {
             const isArabic = locale === LOCALES.AR;
             const db = getDB(env.DJAVACOAL_DB);
             const r2Client = getR2Client({
-                endpoint: env.S3_API,
-                accessKeyId: env.R2_ACCESS_KEY_ID!,
-                secretAccessKey: env.R2_SECRET_ACCESS_KEY!,
+                endpoint: process.env.S3_API,
+                accessKeyId: process.env.R2_ACCESS_KEY_ID!,
+                secretAccessKey: process.env.R2_SECRET_ACCESS_KEY!,
             });
 
             const now = new Date();
@@ -944,7 +959,10 @@ export const router = {
             const content = await getTextContent(r2Client, contentKey);
             const imageKey = article[NEWS_COLUMNS.IMAGE_KEY];
             const cover_image_url = imageKey
-                ? new URL(imageKey, env.NEXT_PUBLIC_ASSET_URL).toString()
+                ? new URL(
+                      imageKey,
+                      process.env.NEXT_PUBLIC_ASSET_URL
+                  ).toString()
                 : null;
 
             return {
@@ -1018,7 +1036,7 @@ export const router = {
                         cover_image_url: imageKey
                             ? new URL(
                                   imageKey,
-                                  env.NEXT_PUBLIC_ASSET_URL
+                                  process.env.NEXT_PUBLIC_ASSET_URL
                               ).toString()
                             : null,
                         published_at: article[NEWS_COLUMNS.PUBLISHED_AT]!,

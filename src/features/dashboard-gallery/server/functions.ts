@@ -92,7 +92,10 @@ export const listPhotos = base
         // Generate public URLs for each photo using R2 public URL
         const photosWithUrls = photos.map((photo) => ({
             ...photo,
-            url: buildPhotoUrl(photo.key as string, env.NEXT_PUBLIC_ASSET_URL),
+            url: buildPhotoUrl(
+                photo.key as string,
+                process.env.NEXT_PUBLIC_ASSET_URL
+            ),
             created_at: new Date(photo.created_at ?? 0),
             updated_at: new Date(photo.updated_at ?? 0),
         }));
@@ -131,9 +134,9 @@ export const createPresignedUrl = base
 
         // Create S3 client for R2
         const r2Client = getR2Client({
-            endpoint: env.S3_API,
-            accessKeyId: env.R2_ACCESS_KEY_ID!,
-            secretAccessKey: env.R2_SECRET_ACCESS_KEY!,
+            endpoint: process.env.S3_API,
+            accessKeyId: process.env.R2_ACCESS_KEY_ID!,
+            secretAccessKey: process.env.R2_SECRET_ACCESS_KEY!,
         });
 
         // Generate presigned URL for PUT operation

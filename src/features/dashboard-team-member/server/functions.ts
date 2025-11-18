@@ -183,9 +183,9 @@ export const updateTeamMember = base
         if (teamMember.photo_key !== input.photo_key) {
             try {
                 const r2Client = getR2Client({
-                    endpoint: env.S3_API,
-                    accessKeyId: env.R2_ACCESS_KEY_ID!,
-                    secretAccessKey: env.R2_SECRET_ACCESS_KEY!,
+                    endpoint: process.env.S3_API,
+                    accessKeyId: process.env.R2_ACCESS_KEY_ID!,
+                    secretAccessKey: process.env.R2_SECRET_ACCESS_KEY!,
                 });
 
                 await deleteObject(
@@ -247,9 +247,9 @@ export const deleteTeamMember = base
         // Delete photo from R2
         try {
             const r2Client = getR2Client({
-                endpoint: env.S3_API,
-                accessKeyId: env.R2_ACCESS_KEY_ID!,
-                secretAccessKey: env.R2_SECRET_ACCESS_KEY!,
+                endpoint: process.env.S3_API,
+                accessKeyId: process.env.R2_ACCESS_KEY_ID!,
+                secretAccessKey: process.env.R2_SECRET_ACCESS_KEY!,
             });
 
             await deleteObject(
@@ -333,9 +333,9 @@ export const generateTeamMemberUploadUrl = base
         }
 
         const r2Client = getR2Client({
-            endpoint: env.S3_API,
-            accessKeyId: env.R2_ACCESS_KEY_ID!,
-            secretAccessKey: env.R2_SECRET_ACCESS_KEY!,
+            endpoint: process.env.S3_API,
+            accessKeyId: process.env.R2_ACCESS_KEY_ID!,
+            secretAccessKey: process.env.R2_SECRET_ACCESS_KEY!,
         });
 
         // Generate unique key for the photo

@@ -35,8 +35,8 @@ export async function POST(req: Request) {
 
         try {
             await emailService.emails.send({
-                from: `Djavacoal Notification <${env.SENDER_EMAIL}>`,
-                to: env.RECIPIENT_EMAIL,
+                from: `Djavacoal Notification <${process.env.SENDER_EMAIL}>`,
+                to: process.env.RECIPIENT_EMAIL,
                 subject: `[Website Djavacoal] New Message from ${name}`,
                 html: htmlContent,
             });

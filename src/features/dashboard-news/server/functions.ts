@@ -213,9 +213,9 @@ export const getNewsById = base
 
         // Get content from R2
         const r2Client = getR2Client({
-            endpoint: env.S3_API,
-            accessKeyId: env.R2_ACCESS_KEY_ID!,
-            secretAccessKey: env.R2_SECRET_ACCESS_KEY!,
+            endpoint: process.env.S3_API,
+            accessKeyId: process.env.R2_ACCESS_KEY_ID!,
+            secretAccessKey: process.env.R2_SECRET_ACCESS_KEY!,
         });
 
         const [enContent, arContent] = await Promise.all([
@@ -298,9 +298,9 @@ export const createNews = base
 
         // Upload content to R2
         const r2Client = getR2Client({
-            endpoint: env.S3_API,
-            accessKeyId: env.R2_ACCESS_KEY_ID!,
-            secretAccessKey: env.R2_SECRET_ACCESS_KEY!,
+            endpoint: process.env.S3_API,
+            accessKeyId: process.env.R2_ACCESS_KEY_ID!,
+            secretAccessKey: process.env.R2_SECRET_ACCESS_KEY!,
         });
 
         await Promise.all([
@@ -399,9 +399,9 @@ export const updateNews = base
 
         // Update content in R2
         const r2Client = getR2Client({
-            endpoint: env.S3_API,
-            accessKeyId: env.R2_ACCESS_KEY_ID!,
-            secretAccessKey: env.R2_SECRET_ACCESS_KEY!,
+            endpoint: process.env.S3_API,
+            accessKeyId: process.env.R2_ACCESS_KEY_ID!,
+            secretAccessKey: process.env.R2_SECRET_ACCESS_KEY!,
         });
 
         await Promise.all([
@@ -486,9 +486,9 @@ export const deleteNews = base
 
         // Delete from R2
         const r2Client = getR2Client({
-            endpoint: env.S3_API,
-            accessKeyId: env.R2_ACCESS_KEY_ID!,
-            secretAccessKey: env.R2_SECRET_ACCESS_KEY!,
+            endpoint: process.env.S3_API,
+            accessKeyId: process.env.R2_ACCESS_KEY_ID!,
+            secretAccessKey: process.env.R2_SECRET_ACCESS_KEY!,
         });
 
         const deletePromises = [
@@ -633,9 +633,9 @@ export const generateImageUploadUrl = base
         if (!user) throw errors.UNAUTHORIZED();
 
         const r2Client = getR2Client({
-            endpoint: env.S3_API,
-            accessKeyId: env.R2_ACCESS_KEY_ID!,
-            secretAccessKey: env.R2_SECRET_ACCESS_KEY!,
+            endpoint: process.env.S3_API,
+            accessKeyId: process.env.R2_ACCESS_KEY_ID!,
+            secretAccessKey: process.env.R2_SECRET_ACCESS_KEY!,
         });
 
         const key = `${NEWS_IMAGES_PREFIX}/${nanoid()}-${input.fileName}`;

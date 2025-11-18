@@ -7,10 +7,7 @@
     "name": "djavacoal",
     "main": ".open-next/worker.js",
     "compatibility_date": "2025-09-15",
-    "build": {
-        "watch_dir": "./src",
-        "command": "bun cf:build",
-    },
+
     "compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public"],
     "assets": {
         "binding": "ASSETS",
@@ -20,41 +17,72 @@
         "enabled": true,
         "head_sampling_rate": 1,
     },
-    "d1_databases": [
-        {
-            "binding": "DJAVACOAL_DB",
-            "database_id": "3102f897-8e61-460e-8ebc-7d60981ad57e",
-            "migrations_dir": "./src/adapters/d1/migrations",
-            "remote": true,
-        },
-    ],
-    "r2_buckets": [
-        {
-            "binding": "DJAVACOAL_BUCKET",
-            "bucket_name": "djavacoal",
-            "remote": true,
-        },
-    ],
-    "kv_namespaces": [
-        {
-            "binding": "DJAVACOAL_KV",
-            "id": "3c8b8d406b184518a307c1ee397d3bff",
-            "remote": true,
-        },
-    ],
-    "vars": {
-        "BUN_VERSION": "1.3.0",
-    },
     "env": {
         "production": {
             "vars": {
+                "BUN_VERSION": "1.3.0",
                 "NODE_ENV": "production",
             },
+            "build": {
+                "watch_dir": "./src",
+                "command": "bun cf:build:production",
+            },
+            "d1_databases": [
+                {
+                    "binding": "DJAVACOAL_DB",
+                    "database_id": "3f78791f-3e8e-474e-a5f6-baf271e1ba57",
+                    "database_name": "djavacoal",
+                    "migrations_dir": "./src/adapters/d1/migrations",
+                    "remote": true,
+                },
+            ],
+            "r2_buckets": [
+                {
+                    "binding": "DJAVACOAL_BUCKET",
+                    "bucket_name": "djavacoal",
+                    "remote": true,
+                },
+            ],
+            "kv_namespaces": [
+                {
+                    "binding": "DJAVACOAL_KV",
+                    "id": "2e91188738834c9089090310cbb4c2a1",
+                    "remote": true,
+                },
+            ],
         },
         "development": {
+            "build": {
+                "watch_dir": "./src",
+                "command": "bun cf:build:development",
+            },
             "vars": {
+                "BUN_VERSION": "1.3.0",
                 "NODE_ENV": "development",
             },
+            "d1_databases": [
+                {
+                    "binding": "DJAVACOAL_DB",
+                    "database_id": "3102f897-8e61-460e-8ebc-7d60981ad57e",
+                    "database_name": "djavacoal",
+                    "migrations_dir": "./src/adapters/d1/migrations",
+                    "remote": true,
+                },
+            ],
+            "r2_buckets": [
+                {
+                    "binding": "DJAVACOAL_BUCKET",
+                    "bucket_name": "djavacoal",
+                    "remote": true,
+                },
+            ],
+            "kv_namespaces": [
+                {
+                    "binding": "DJAVACOAL_KV",
+                    "id": "3c8b8d406b184518a307c1ee397d3bff",
+                    "remote": true,
+                },
+            ],
         },
     },
 }
