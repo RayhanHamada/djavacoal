@@ -25,7 +25,7 @@ export default function OurProductsPage() {
                     </div>
                 </div>
                 {/* 🔹 Garis bawah */}
-                <div className="absolute bottom-0 left-0 h-[1px] w-full bg-[#474747]" />
+                <div className="absolute bottom-0 left-0 h-px w-full bg-[#474747]" />
             </section>
 
             {/* Main Content */}
