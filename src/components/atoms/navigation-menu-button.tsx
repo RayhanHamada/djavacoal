@@ -82,7 +82,7 @@ export function NavigationMenuButton(props: Props) {
                                     <Link
                                         key={submenu.label}
                                         href={submenu.href ?? "#"}
-                                        className="transition-font block px-4 py-2 text-white duration-300 hover:font-bold"
+                                        className="block px-4 py-2 text-white duration-300 hover:bg-[#3B5952] hover:font-bold"
                                     >
                                         {submenu.label}
                                     </Link>

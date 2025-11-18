@@ -170,8 +170,9 @@
     },
     "Home": {
         "banner": {
-            "title": "Power Your Flame with Djavacoal Indonesia: The Ultimate Solution for Clean Energy",
-            "djavacoal": "Djavacoal Indonesia",
+            "title": "Power Your Flame with <djavacoal>Djavacoal Indonesia: </djavacoal> The Ultimate Solution for Clean Energy",
+            "djavacoal": "Djavacoal Indonesia:",
+            "djavacoalColor": "Djavacoal Indonesia:",
             "buttons": {
                 "aboutUs": "About Us",
                 "discoverProducts": "Discover Our Products"
@@ -181,7 +182,11 @@
         "aboutUs": {
             "title": "CV. DJAVACOAL",
             "highlight": "INDONESIA",
-            "companyProfile": "Company Profile - Djavacoal Indonesia",
+            "companyProfile": {
+                "prefix": "Company Profile -",
+                "highlight": "Djavacoal Indonesia",
+                "highlightColor": "#EFA12D"
+            },
             "paragraphs": {
                 "intro": "Djavacoal Indonesia is a trusted supplier and exporter of premium coconut charcoal briquettes, BBQ charcoal briquettes, sawdust charcoal and natural wood charcoal. We are dedicated to fostering innovation within our company and to operating at the international level within the briquette industry. We are committed to meeting the needs of our partners and contributing to the growth of the Indonesian economy.",
                 "natural": "In addition to producing charcoal briquettes, our company is also a supplier of natural hardwood charcoal. This is sourced from tamarind, halaban, rosewood and a variety of other hardwoods, which are in high demand for export to various countries. Given our extensive experience in the charcoal industry, we are confident that we would be able to collaborate and cooperate with your company in the future.",

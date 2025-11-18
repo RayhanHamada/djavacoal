@@ -28,7 +28,8 @@ export function BlogHero({ title, className }: BlogHeroProps) {
                     {title}
                 </h1>
             </div>
-            <div className="absolute right-0 bottom-0 left-0 h-0.5 bg-[#474747]" />
+            {/* 🔹 Garis bawah */}
+            <div className="absolute bottom-0 left-0 h-[1px] w-full bg-[#474747]" />
         </div>
     );
 }
