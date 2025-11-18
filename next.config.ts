@@ -26,6 +26,7 @@ const nextConfig: NextConfig = {
                 hostname: new URL(process.env.NEXT_PUBLIC_ASSET_URL).hostname,
             },
         ],
+        formats: ["image/webp"],
     },
 };
 

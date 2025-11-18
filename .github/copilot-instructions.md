@@ -4,7 +4,7 @@
 
 Next.js 15 application deployed to Cloudflare Workers using OpenNext adapter. Features admin authentication, i18n support, and a feature-based architecture with type-safe RPC.
 
-**Documentation Convention**: Each feature has an `AGENTS.md` file in its directory (`src/features/<feature-name>/AGENTS.md`) providing comprehensive implementation details, schemas, and usage examples. Always consult these files when working with specific features.
+**Documentation Convention**: Each feature has an `AGENTS.md` file in its directory (`src/features/<feature-name>/AGENTS.md`) providing comprehensive implementation details, schemas, and usage examples. **Always consult these files when working with specific features.**
 
 ## Tech Stack
 
@@ -40,12 +40,14 @@ const db = getDB(env.DJAVACOAL_DB); // D1 database
 
 Features live in `src/features/<feature-name>/` with subfolders:
 
-- `components/` - React components (atoms/molecules/organism pattern)
+- `components/` - React components (atoms/molecules/organisms pattern)
 - `hooks/` - Custom React hooks
 - `lib/` - Business logic, utilities, constants
 - `server/` - Server-side functions, RPC routers, schemas
 
 **Export pattern**: Each subfolder has `index.ts` for barrel exports.
+
+**Documentation**: Each feature has an `AGENTS.md` file with implementation details.
 
 ### RPC System (oRPC)
 
@@ -197,7 +199,7 @@ Global components in `src/components/` follow Atomic Design:
 
 - `atoms/` - Basic UI elements
 - `molecules/` - Composite components
-- `organism/` - Complex sections
+- `organisms/` - Complex sections
 - `layouts/` - Page layouts (AdminLayout, VisitorLayout)
 
 Two provider layers:
@@ -246,7 +248,9 @@ wrangler dev               # Run with Cloudflare bindings locally (alternative t
 
 1. Modify `src/adapters/d1/schema.ts`
 2. Run `bun d1:generate` to create migration file
-3. Run `bun d1:migrate:djavacoal` to apply to remote database
+3. Review generated migration in `src/adapters/d1/migrations/`
+4. Run `bun d1:migrate:djavacoal` to apply to remote database
+5. Test changes with `bun d1:studio`
 
 ## Key Conventions
 
@@ -260,7 +264,7 @@ wrangler dev               # Run with Cloudflare bindings locally (alternative t
 
 - `(admin)/` - Protected admin routes, uses `AdminLayout`
 - `(visitor)/` - Public routes, uses `VisitorLayout`
-- `api/` - API routes (auth, RPC)
+- `api/` - API routes (auth, RPC, public)
 
 ### Styling
 
@@ -307,13 +311,18 @@ SENDER_EMAIL=noreply@yourdomain.com
 CLOUDFLARE_ACCOUNT_ID=your-account-id
 CLOUDFLARE_DATABASE_ID=your-database-id
 CLOUDFLARE_API_TOKEN=your-d1-token
+
+# R2 Storage
+S3_API=https://<account-id>.r2.cloudflarestorage.com
+R2_ACCESS_KEY_ID=your-r2-access-key
+R2_SECRET_ACCESS_KEY=your-r2-secret-key
 ```
 
 **Bindings** (configured in `wrangler.jsonc`, typed in `cloudflare-env.d.ts`):
 
 - `DJAVACOAL_DB` - D1 Database binding
 - `DJAVACOAL_KV` - KV Namespace binding
-- `DJAVACOAL_BUCKET` - R2 Bucket binding (future use)
+- `DJAVACOAL_BUCKET` - R2 Bucket binding
 - `ASSETS` - Static assets binding
 
 **Regenerate types** after changing `wrangler.jsonc`:
@@ -388,27 +397,275 @@ Features with custom ordering (products, variants, specs) use `order_index`:
 8. **R2 Content Storage** - Store large content (HTML, rich text) in R2, not D1 columns
 9. **Status Transitions** - Validate state machine transitions server-side, don't trust client
 10. **Feature Documentation** - Always check `src/features/<feature>/AGENTS.md` for feature-specific patterns
+11. **Barrel Exports** - Always export through `index.ts` files in component/hook/lib folders
+12. **Type Safety** - Define Zod schemas for all RPC inputs/outputs
+13. **Session Validation** - Always validate session in protected RPC functions
+14. **Image Optimization** - Use Next.js Image component with proper sizing
+15. **Error Messages** - User-facing errors should be descriptive and actionable
 
 ## Integration Points
 
-- **Email Service**: `src/adapters/email-service/` provides Resend clients
-    - Use `getResend(env.RESEND_API_KEY)` to send emails
-    - Sender email configured via `env.SENDER_EMAIL`
-- **Email Templates**: React components in `src/templates/emails/`
-    - Built with `@react-email/components`
-    - Preview with `bun email:dev`
-- **R2 Storage**: AWS SDK v3 client for Cloudflare R2 in `src/adapters/r2/`
-    - `getR2Client()` creates S3-compatible client
-    - `generatePresignedUploadUrl()` for client-side uploads
-    - `uploadTextContent()` / `getTextContent()` for HTML content
-    - `deleteObject()` for cleanup
-    - Constants in `src/adapters/r2/constants.ts` (bucket name, prefixes, expiration)
-- **KV Store**: Constants in `src/adapters/kv/constants.ts`
-    - Used for page settings (social links, contact info, galleries, etc.)
-    - Example: `IS_ALREADY_ONBOARDED` flag for first-time setup
-- **Cloudflare Assets**: Configured in `wrangler.jsonc` with ASSETS binding
-    - Static files served from `.open-next/assets` directory
-- **Public API**: RESTful API in `src/features/public-api/` for external consumers
-    - OpenAPI documentation with Redocly
-    - Type-safe client generation
-    - Uses oRPC with custom routes for REST endpoints
+### Email Service
+
+`src/adapters/email-service/` provides Resend clients:
+- Use `getResend(env.RESEND_API_KEY)` to send emails
+- Sender email configured via `env.SENDER_EMAIL`
+- Templates in `src/templates/emails/`
+- Built with `@react-email/components`
+- Preview with `bun email:dev`
+
+### R2 Storage
+
+AWS SDK v3 client for Cloudflare R2 in `src/adapters/r2/`:
+- `getR2Client()` creates S3-compatible client
+- `generatePresignedUploadUrl()` for client-side uploads
+- `uploadTextContent()` / `getTextContent()` for HTML content
+- `deleteObject()` for cleanup
+- Constants in `src/adapters/r2/constants.ts` (bucket name, prefixes, expiration)
+
+### KV Store
+
+Constants in `src/adapters/kv/constants.ts`:
+- Used for page settings (social links, contact info, galleries, etc.)
+- Example: `IS_ALREADY_ONBOARDED` flag for first-time setup
+- No expiration by default (permanent storage)
+- JSON values for complex data structures
+
+### Cloudflare Assets
+
+Configured in `wrangler.jsonc` with ASSETS binding:
+- Static files served from `.open-next/assets` directory
+- Automatic CDN caching
+- Environment-specific URLs via `NEXT_PUBLIC_ASSET_URL`
+
+### Public API
+
+RESTful API in `src/features/public-api/` for external consumers:
+- OpenAPI documentation with Redocly
+- Type-safe client generation
+- Uses oRPC with custom routes for REST endpoints
+- Locale-aware responses via cookie
+- No authentication required
+
+## Best Practices for AI Agents
+
+### When Creating Features
+
+1. **Create feature directory structure**:
+   ```
+   src/features/<feature-name>/
+   ├── components/
+   │   ├── atoms/
+   │   ├── molecules/
+   │   ├── organisms/
+   │   └── index.ts
+   ├── hooks/
+   │   └── index.ts
+   ├── lib/
+   │   ├── constants.ts
+   │   ├── types.ts
+   │   ├── utils.ts
+   │   └── index.ts
+   ├── server/
+   │   ├── functions.ts
+   │   ├── schemas.ts
+   │   ├── router.ts
+   │   └── index.ts
+   ├── AGENTS.md
+   └── index.ts
+   ```
+
+2. **Write AGENTS.md documentation** with:
+   - Overview and purpose
+   - Architecture and directory structure
+   - Database schemas (if applicable)
+   - RPC functions with examples
+   - Integration points
+   - Usage examples
+   - Best practices and common pitfalls
+
+3. **Define schemas first** in `server/schemas.ts` using Zod
+
+4. **Implement server functions** in `server/functions.ts`
+
+5. **Register router** in `src/adapters/rpc/index.ts`
+
+6. **Create components** following atomic design pattern
+
+7. **Add types** in `lib/types.ts` for shared TypeScript interfaces
+
+8. **Document constants** in `lib/constants.ts` with JSDoc comments
+
+### When Modifying Features
+
+1. **Check AGENTS.md** for feature-specific patterns and constraints
+2. **Update schemas** if changing data structures
+3. **Maintain backward compatibility** or version appropriately
+4. **Update documentation** in AGENTS.md if behavior changes
+5. **Test both locales** (EN/AR) if affecting user-facing content
+6. **Verify RPC registration** if adding new functions
+7. **Clean up R2/KV** if removing data references
+
+### When Debugging
+
+1. **Check feature AGENTS.md** for known issues and debugging tips
+2. **Verify Cloudflare context** is properly injected
+3. **Inspect D1 database** with `bun d1:studio`
+4. **Check R2 storage** for missing/orphaned objects
+5. **Review KV values** in Cloudflare dashboard
+6. **Validate schemas** with input/output examples
+7. **Test RPC endpoints** with proper context
+8. **Check error messages** in server logs and browser console
+
+### Code Quality Guidelines
+
+1. **TypeScript**: Enable strict mode, no `any` types
+2. **Naming**: Use descriptive names, follow conventions (PascalCase for components, camelCase for functions)
+3. **Comments**: JSDoc for public APIs, inline for complex logic
+4. **Error Handling**: Use oRPC errors, provide user-friendly messages
+5. **Performance**: Lazy load components, optimize queries, cache appropriately
+6. **Accessibility**: Semantic HTML, ARIA labels, keyboard navigation
+7. **Security**: Validate inputs, sanitize outputs, check sessions
+8. **Testing**: Manual testing required, automated tests encouraged
+
+## Feature Reference
+
+Available features and their purposes:
+
+### Dashboard Features (Admin)
+- `dashboard` - Main admin dashboard and navigation
+- `dashboard-auth` - Authentication and admin user management
+- `dashboard-news` - News/blog article management
+- `dashboard-product` - Product catalog management
+- `dashboard-gallery` - Centralized photo library
+- `dashboard-static-media` - Page-specific media (KV-based)
+- `dashboard-team-member` - Team member profiles
+- `dashboard-page-settings` - Site-wide settings (contact, social, etc.)
+
+### Visitor Features (Public)
+- `home` - Homepage with hero, featured content
+- `blog` - News article listing and detail pages
+- `our-products` - Product catalog for visitors
+- `about-company` - Company information and team
+- `contact-us` - Contact form and information
+- `production-info` - Production process and capabilities
+
+### API Features
+- `public-api` - RESTful API with OpenAPI documentation
+- `sitemap` - XML sitemap generation for SEO
+
+## Troubleshooting
+
+### Common Issues
+
+**Database Connection Errors**
+- Verify `CLOUDFLARE_ACCOUNT_ID` and `CLOUDFLARE_DATABASE_ID` in `.dev.vars`
+- Check D1 binding name matches `DJAVACOAL_DB` in `wrangler.jsonc`
+- Ensure migrations are applied with `bun d1:migrate:djavacoal`
+
+**R2 Upload Failures**
+- Verify R2 credentials in `.dev.vars`
+- Check bucket name in `wrangler.jsonc` and `src/adapters/r2/constants.ts`
+- Ensure presigned URL hasn't expired
+- Verify CORS settings on R2 bucket
+
+**Auth Issues**
+- Check `BETTER_AUTH_SECRET` is set
+- Verify `BETTER_AUTH_URL` matches your deployment URL
+- Ensure session cookies are being set (check browser DevTools)
+- Review Better Auth route handler configuration
+
+**i18n Not Working**
+- Verify `locale` cookie is being set
+- Check `src/i18n/messages/{locale}.json` exists
+- Ensure `useTranslations()` hook is used correctly
+- Review `src/i18n/request.ts` configuration
+
+**RPC Function Not Found**
+- Check function is exported in `server/router.ts`
+- Verify router is registered in `src/adapters/rpc/index.ts`
+- Ensure function is `.callable()` not `.actionable()`
+- Restart dev server after adding new functions
+
+## Performance Optimization
+
+### Database Queries
+- Select only needed columns
+- Use indexes for common filters
+- Implement pagination
+- Avoid N+1 queries with joins
+
+### R2 Storage
+- Use presigned URLs for direct uploads
+- Implement lazy loading for images
+- Optimize image sizes before upload
+- Use CDN caching headers
+
+### Client-Side
+- Code splitting with dynamic imports
+- Memoize expensive computations
+- Debounce search inputs
+- Prefetch data on hover
+
+### Caching Strategy
+- TanStack Query for client-side caching
+- Cloudflare CDN for static assets
+- KV for frequently accessed data
+- Consider stale-while-revalidate patterns
+
+## Security Checklist
+
+- [ ] All admin routes require authentication
+- [ ] Input validation with Zod schemas
+- [ ] SQL injection prevention via Drizzle ORM
+- [ ] XSS prevention via React auto-escaping
+- [ ] CSRF protection via Better Auth
+- [ ] Rate limiting (if exposed to public)
+- [ ] Secure session cookies (httpOnly, secure)
+- [ ] Password hashing via Better Auth
+- [ ] File upload validation (MIME type, size)
+- [ ] Environment variables not exposed to client
+
+## Deployment Checklist
+
+- [ ] Run `bun lint` and fix all issues
+- [ ] Apply all database migrations
+- [ ] Test authentication flows
+- [ ] Verify environment variables in Cloudflare
+- [ ] Check R2 bucket permissions
+- [ ] Test both EN and AR locales
+- [ ] Verify email sending works
+- [ ] Test image uploads and display
+- [ ] Check public API endpoints
+- [ ] Review error handling
+- [ ] Test on mobile devices
+- [ ] Verify SEO metadata
+- [ ] Check Cloudflare bindings
+- [ ] Test with production data
+
+## Additional Resources
+
+- **Next.js Docs**: https://nextjs.org/docs
+- **Cloudflare Workers**: https://developers.cloudflare.com/workers/
+- **Drizzle ORM**: https://orm.drizzle.team/
+- **Better Auth**: https://www.better-auth.com/
+- **oRPC**: https://orpc.unnoq.com/
+- **Mantine**: https://mantine.dev/
+- **TanStack Query**: https://tanstack.com/query/latest
+- **next-intl**: https://next-intl-docs.vercel.app/
+
+## Contributing
+
+When contributing to this project:
+
+1. Read relevant `AGENTS.md` files for features you're working on
+2. Follow established patterns and conventions
+3. Update documentation when adding/changing features
+4. Test thoroughly in both locales
+5. Ensure backward compatibility
+6. Write descriptive commit messages
+7. Keep PRs focused and atomic
+
+## License
+
+Part of the Djavacoal project. See main project LICENSE file.
