@@ -8,7 +8,7 @@ export default function Loading() {
             style={{
                 position: "fixed",
                 inset: 0,
-                backgroundColor: "white",
+                backgroundColor: "gray",
                 zIndex: 9999,
             }}
         >
