@@ -69,8 +69,13 @@ export function MobileNavigationMenu({ isOpen, onClose, menuItems }: Props) {
                     <h2 className="text-xl font-semibold text-white">Menu</h2>
                 </div>
 
+                {/* Language Switch Footer */}
+                <div className="border-secondary/30 border-t px-4 pt-6">
+                    <LanguageSwitch variant="mobile" />
+                </div>
+
                 {/* Navigation Items */}
-                <nav className="flex-1 px-4 py-6">
+                <nav className="flex-1 px-4 pb-6">
                     <ul className="space-y-2">
                         {menuItems.map((item) => (
                             <li key={item.label}>
@@ -151,11 +156,6 @@ export function MobileNavigationMenu({ isOpen, onClose, menuItems }: Props) {
                         ))}
                     </ul>
                 </nav>
-
-                {/* Language Switch Footer */}
-                <div className="border-secondary/30 border-t px-4 py-4">
-                    <LanguageSwitch variant="mobile" />
-                </div>
             </div>
         </>
     );

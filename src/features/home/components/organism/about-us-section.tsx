@@ -25,7 +25,7 @@ export function AboutUsSection() {
                         <>
                             <Image
                                 src="/images/hero-carousel-1.png"
-                                alt={t("companyProfile")}
+                                alt={t("companyProfile.prefix")}
                                 width={1280}
                                 height={720}
                                 className="h-[240px] w-full object-cover md:h-[380px] lg:h-[420px]"
@@ -36,7 +36,10 @@ export function AboutUsSection() {
 
                             {/* Top-left title */}
                             <div className="absolute top-0 left-0 w-full bg-black/40 px-5 py-3 text-[13px] text-white italic md:text-[15px]">
-                                {t("companyProfile")}
+                                {t("companyProfile.prefix")}{" "}
+                                <span className="text-[#EFA12D]">
+                                    {t("companyProfile.highlight")}
+                                </span>
                             </div>
 
                             {/* Center Play Button */}
@@ -61,7 +64,7 @@ export function AboutUsSection() {
                         <iframe
                             className="h-[240px] w-full md:h-[380px] lg:h-[420px]"
                             src={data?.data.who_we_are_video_url ?? ""}
-                            title={t("companyProfile")}
+                            title={t("companyProfile.prefix")}
                             allow="autoplay; encrypted-media"
                             allowFullScreen
                         />
