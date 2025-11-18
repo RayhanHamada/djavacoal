@@ -5,7 +5,6 @@ import { initOpenNextCloudflareForDev } from "@opennextjs/cloudflare";
 import createNextIntlPlugin from "next-intl/plugin";
 
 const nextConfig: NextConfig = {
-    typedRoutes: true,
     images: {
         remotePatterns: [
             {
