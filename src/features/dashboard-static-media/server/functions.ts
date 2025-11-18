@@ -206,42 +206,48 @@ export const saveContactSettings = base
 
         if (input.facebookLink !== undefined) {
             kvOperations.push(
-                env.DJAVACOAL_KV.put("facebook_link", input.facebookLink)
+                env.DJAVACOAL_KV.put(KV_KEYS.FACEBOOK_LINK, input.facebookLink)
             );
         }
         if (input.linkedinLink !== undefined) {
             kvOperations.push(
-                env.DJAVACOAL_KV.put("linkedin_link", input.linkedinLink)
+                env.DJAVACOAL_KV.put(KV_KEYS.LINKEDIN_LINK, input.linkedinLink)
             );
         }
         if (input.instagramLink !== undefined) {
             kvOperations.push(
-                env.DJAVACOAL_KV.put("instagram_link", input.instagramLink)
+                env.DJAVACOAL_KV.put(
+                    KV_KEYS.INSTAGRAM_LINK,
+                    input.instagramLink
+                )
             );
         }
         if (input.tiktokLink !== undefined) {
             kvOperations.push(
-                env.DJAVACOAL_KV.put("tiktok_link", input.tiktokLink)
+                env.DJAVACOAL_KV.put(KV_KEYS.TIKTOK_LINK, input.tiktokLink)
             );
         }
         if (input.emailAddress !== undefined) {
             kvOperations.push(
-                env.DJAVACOAL_KV.put("email_address", input.emailAddress)
+                env.DJAVACOAL_KV.put(KV_KEYS.EMAIL_ADDRESS, input.emailAddress)
             );
         }
         if (input.whatsappNumber !== undefined) {
             kvOperations.push(
-                env.DJAVACOAL_KV.put("whatsapp_number", input.whatsappNumber)
+                env.DJAVACOAL_KV.put(
+                    KV_KEYS.WHATSAPP_NUMBER,
+                    input.whatsappNumber
+                )
             );
         }
         if (input.mapsLink !== undefined) {
             kvOperations.push(
-                env.DJAVACOAL_KV.put("maps_link", input.mapsLink)
+                env.DJAVACOAL_KV.put(KV_KEYS.MAPS_LINK, input.mapsLink)
             );
         }
         if (input.addressLine !== undefined) {
             kvOperations.push(
-                env.DJAVACOAL_KV.put("address_line", input.addressLine)
+                env.DJAVACOAL_KV.put(KV_KEYS.ADDRESS_LINE, input.addressLine)
             );
         }
 
