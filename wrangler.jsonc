@@ -16,31 +16,14 @@
         "binding": "ASSETS",
         "directory": ".open-next/assets",
     },
-    "env": {
-        "production": {
-            "observability": {
-                "enabled": false,
-                "head_sampling_rate": 1,
-            },
-            "vars": {
-                "NODE_ENV": "production",
-            },
-        },
-        "development": {
-            "observability": {
-                "enabled": true,
-                "head_sampling_rate": 1,
-            },
-            "vars": {
-                "NODE_ENV": "development",
-            },
-        },
+    "observability": {
+        "enabled": true,
+        "head_sampling_rate": 1,
     },
     "d1_databases": [
         {
             "binding": "DJAVACOAL_DB",
             "database_id": "3102f897-8e61-460e-8ebc-7d60981ad57e",
-            "database_name": "djavacoal",
             "migrations_dir": "./src/adapters/d1/migrations",
             "remote": true,
         },
@@ -61,5 +44,17 @@
     ],
     "vars": {
         "BUN_VERSION": "1.3.0",
+    },
+    "env": {
+        "production": {
+            "vars": {
+                "NODE_ENV": "production",
+            },
+        },
+        "development": {
+            "vars": {
+                "NODE_ENV": "development",
+            },
+        },
     },
 }

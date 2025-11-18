@@ -4,7 +4,7 @@ import path from "node:path";
 import process from "node:process";
 
 config.config({
-    path: path.resolve(process.cwd(), ".dev.vars"),
+    path: path.resolve(process.cwd(), ".env"),
 });
 
 export default defineConfig({

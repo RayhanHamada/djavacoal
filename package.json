@@ -9,7 +9,7 @@
         "build-analyze": "ANALYZE=true next build",
         "lint": "eslint . --fix --cache",
         "cf:build": "opennextjs-cloudflare build",
-        "cf:deploy": "opennextjs-cloudflare deploy",
+        "cf:deploy": "opennextjs-cloudflare deploy -e production",
         "cf:preview": "opennextjs-cloudflare preview",
         "cf:typegen": "wrangler types --env-interface CloudflareEnv ./cloudflare-env.d.ts",
         "d1:generate": "drizzle-kit generate --config src/adapters/d1/drizzle.config.ts",
