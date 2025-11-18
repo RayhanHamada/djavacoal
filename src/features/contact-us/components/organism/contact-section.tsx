@@ -34,6 +34,8 @@ export default function ContactSection() {
                         </h1>
                     </div>
                 </div>
+                {/* 🔹 Garis bawah */}
+                <div className="absolute bottom-0 left-0 h-[1px] w-full bg-[#474747]" />
             </div>
 
             {/* Content Section */}
