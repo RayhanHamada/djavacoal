@@ -42,4 +42,6 @@ export default withBundleAnalyzer(withNextIntl(nextConfig));
 /**
  * Initialize Cloudflare Workers dev environment
  */
-initOpenNextCloudflareForDev();
+initOpenNextCloudflareForDev({
+    environment: process.env.NEXTJS_ENV,
+});

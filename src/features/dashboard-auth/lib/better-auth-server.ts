@@ -32,9 +32,9 @@ export function getAuth(env: CloudflareEnv) {
         database,
 
         appName: AUTH_APP_NAME,
-        baseURL: env.NEXT_PUBLIC_BASE_URL,
-        basePath: env.BETTER_AUTH_BASE_PATH,
-        secret: env.BETTER_AUTH_SECRET,
+        baseURL: process.env.NEXT_PUBLIC_BASE_URL,
+        basePath: process.env.BETTER_AUTH_BASE_PATH,
+        secret: process.env.BETTER_AUTH_SECRET,
 
         /**
          * Define your models and their corresponding table/column names

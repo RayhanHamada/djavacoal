@@ -100,12 +100,12 @@ export const redirectAuthenticatedUser = base
  */
 export const sendInvitationEmail = base
     .input(InvitationEmailInputSchema)
-    .handler(async function ({ context: { env }, input: { to, link } }) {
-        const emailService = getResend(env.RESEND_API_KEY);
+    .handler(async function ({ input: { to, link } }) {
+        const emailService = getResend(process.env.RESEND_API_KEY);
         await emailService.emails.send({
             to,
             react: <AdminInvitationEmail email={to} link={link} />,
-            from: `${EMAIL_SENDER_NAME} <${env.SENDER_EMAIL}>`,
+            from: `${EMAIL_SENDER_NAME} <${process.env.SENDER_EMAIL}>`,
             subject: EMAIL_SUBJECT.INVITATION,
         });
     })
@@ -116,12 +116,12 @@ export const sendInvitationEmail = base
  */
 export const sendRequestResetPasswordEmail = base
     .input(RequestResetPasswordEmailInputSchema)
-    .handler(async function ({ context: { env }, input: { to, link } }) {
-        const emailService = getResend(env.RESEND_API_KEY);
+    .handler(async function ({ input: { to, link } }) {
+        const emailService = getResend(process.env.RESEND_API_KEY);
         await emailService.emails.send({
             to,
             react: <AdminResetPasswordEmail email={to} link={link} />,
-            from: `${EMAIL_SENDER_NAME} <${env.SENDER_EMAIL}>`,
+            from: `${EMAIL_SENDER_NAME} <${process.env.SENDER_EMAIL}>`,
             subject: EMAIL_SUBJECT.RESET_PASSWORD,
         });
     })

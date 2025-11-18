@@ -36,7 +36,7 @@ import base from "@/lib/orpc/server";
 export const generateUploadUrl = base
     .input(GenerateUploadUrlInputSchema)
     .output(GenerateUploadUrlOutputSchema)
-    .handler(async function ({ context: { env }, input }) {
+    .handler(async function ({ input }) {
         const { mimeType, prefix } = input;
 
         // Generate R2 key
@@ -45,9 +45,9 @@ export const generateUploadUrl = base
 
         // Create R2 client
         const r2Client = getR2Client({
-            endpoint: env.S3_API,
-            accessKeyId: env.R2_ACCESS_KEY_ID!,
-            secretAccessKey: env.R2_SECRET_ACCESS_KEY!,
+            endpoint: process.env.S3_API,
+            accessKeyId: process.env.R2_ACCESS_KEY_ID!,
+            secretAccessKey: process.env.R2_SECRET_ACCESS_KEY!,
         });
 
         // Generate presigned URL
@@ -94,7 +94,7 @@ export const getPhotoList = base
 
         const photos = photoKeys.map((key) => ({
             key,
-            url: buildPhotoUrl(key, env.NEXT_PUBLIC_ASSET_URL),
+            url: buildPhotoUrl(key, process.env.NEXT_PUBLIC_ASSET_URL),
         }));
 
         return {
@@ -176,14 +176,14 @@ export const getReels = base
  */
 export const deletePhoto = base
     .input(DeletePhotoInputSchema)
-    .handler(async function ({ context: { env }, input }) {
+    .handler(async function ({ input }) {
         const { key } = input;
 
         // Create R2 client
         const r2Client = getR2Client({
-            endpoint: env.S3_API,
-            accessKeyId: env.R2_ACCESS_KEY_ID!,
-            secretAccessKey: env.R2_SECRET_ACCESS_KEY!,
+            endpoint: process.env.S3_API,
+            accessKeyId: process.env.R2_ACCESS_KEY_ID!,
+            secretAccessKey: process.env.R2_SECRET_ACCESS_KEY!,
         });
 
         // Delete from R2
