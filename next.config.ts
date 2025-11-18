@@ -5,6 +5,7 @@ import { initOpenNextCloudflareForDev } from "@opennextjs/cloudflare";
 import createNextIntlPlugin from "next-intl/plugin";
 
 const nextConfig: NextConfig = {
+    typedRoutes: true,
     images: {
         remotePatterns: [
             {
@@ -20,10 +21,10 @@ const nextConfig: NextConfig = {
                 hostname: "flagsapi.com",
             },
             {
-                hostname: new URL(process.env.NEXT_PUBLIC_ASSET_URL).hostname,
+                hostname: "img.youtube.com",
             },
             {
-                hostname: "img.youtube.com",
+                hostname: new URL(process.env.NEXT_PUBLIC_ASSET_URL).hostname,
             },
         ],
     },
