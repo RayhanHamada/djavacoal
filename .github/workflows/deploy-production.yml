@@ -10,7 +10,8 @@ jobs:
     deploy:
         name: Deploy Production
         runs-on: ubuntu-latest
-        environment: actionss
+        environment:
+            name: actionss
         timeout-minutes: 15
 
         steps:
