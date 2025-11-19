@@ -12,6 +12,7 @@ export { default as OurProductsSidebar } from "./our-product-sidebar";
 export { ProductHeroSection } from "./product-hero-section";
 export { ProductCategoryDropdown } from "./product-category-dropdown";
 export { ProductDetailTable } from "./product-detail-table";
+export { DjavacoalBrandPage } from "./djavacoal-brand-page";
 
 // Product features components
 export { ShapesList } from "./shapes-list";

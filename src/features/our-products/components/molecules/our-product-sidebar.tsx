@@ -16,12 +16,16 @@ type Props = {
     products: Product[];
     selectedProductId?: number;
     onProductSelect: (productId: number) => void;
+    isBrandSelected?: boolean;
+    onBrandSelect: () => void;
 };
 
 export default function OurProductsSidebar({
     products,
     selectedProductId,
     onProductSelect,
+    isBrandSelected = false,
+    onBrandSelect,
 }: Props) {
     const [open, setOpen] = useState(false);
 
@@ -30,12 +34,17 @@ export default function OurProductsSidebar({
         setOpen(false);
     };
 
+    const handleBrandClick = () => {
+        onBrandSelect();
+        setOpen(false);
+    };
+
     const selectedProduct = products.find((p) => p.id === selectedProductId);
 
     return (
         <>
             {/* MOBILE DROPDOWN */}
-            <div className="bg-primary sticky top-0 z-40 flex items-center gap-3 border-b border-[#2a2a2a] py-3 lg:hidden">
+            <div className="bg-primary flex items-center gap-3 border-b border-[#2a2a2a] px-4 py-3 lg:hidden">
                 <div className="text-xl text-[#EFA12D]">
                     <Image
                         src="/svgs/ic_select.svg"
@@ -51,9 +60,11 @@ export default function OurProductsSidebar({
                         className="flex w-full items-center justify-between rounded-sm border border-[#3a3a3a] px-4 py-2 text-sm text-white"
                     >
                         <span className="truncate">
-                            {selectedProduct
-                                ? selectedProduct.name
-                                : "Select Product"}
+                            {isBrandSelected
+                                ? "Djavacoal's Brand"
+                                : selectedProduct
+                                  ? selectedProduct.name
+                                  : "Select Product"}
                         </span>
                         {open ? (
                             <IoChevronUp className="text-[#EFA12D]" />
@@ -77,14 +88,25 @@ export default function OurProductsSidebar({
                                     {product.name}
                                 </button>
                             ))}
+                            {/* Djavacoal's Brand Menu Item */}
+                            <button
+                                onClick={handleBrandClick}
+                                className={`block w-full px-4 py-2 text-left text-sm ${
+                                    isBrandSelected
+                                        ? "text-[#EFA12D] underline underline-offset-4"
+                                        : "text-white hover:text-[#EFA12D]"
+                                }`}
+                            >
+                                Djavacoal&apos;s Brand
+                            </button>
                         </div>
                     )}
                 </div>
             </div>
 
             {/* DESKTOP */}
-            <nav className="sticky top-[120px] hidden h-fit w-[260px] self-start border-y border-[#2a2a2a] bg-[#222222] lg:block">
-                <div className="scrollbar-none max-h-[calc(100vh-120px)] overflow-y-auto">
+            <nav className="hidden h-fit w-[260px] border-y border-[#2a2a2a] bg-[#222222] lg:block">
+                <div className="scrollbar-none overflow-y-auto">
                     <div className="flex flex-col space-y-[3px]">
                         {products.map((product) => (
                             <div
@@ -111,6 +133,27 @@ export default function OurProductsSidebar({
                                 </button>
                             </div>
                         ))}
+                        {/* Djavacoal's Brand Menu Item */}
+                        <div className="relative after:absolute after:bottom-0 after:left-0 after:h-px after:w-full after:bg-[#2a2a2a]/60 after:content-[''] last:after:hidden">
+                            <button
+                                onClick={handleBrandClick}
+                                className={`my-2 flex w-full items-center justify-between px-5 py-4 text-left text-sm font-medium transition-all duration-200 ${
+                                    isBrandSelected
+                                        ? "bg-[#9D7B19] font-semibold text-white"
+                                        : "hover:bg-secondary bg-[#222222] text-gray-300 hover:font-bold hover:text-white"
+                                }`}
+                            >
+                                <span>Djavacoal&apos;s Brand</span>
+                                <IoMdArrowDropright
+                                    size={12}
+                                    className={
+                                        isBrandSelected
+                                            ? "text-white"
+                                            : "text-gray-400"
+                                    }
+                                />
+                            </button>
+                        </div>
                     </div>
                 </div>
             </nav>

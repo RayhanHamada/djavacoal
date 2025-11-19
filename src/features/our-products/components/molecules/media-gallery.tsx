@@ -54,7 +54,7 @@ export function MediaGallery({ medias }: MediaGalleryProps) {
                     return (
                         <div
                             key={media.id}
-                            className="group relative flex aspect-square cursor-pointer overflow-hidden rounded-lg transition-all hover:ring-2 hover:ring-[#EFA12D] sm:rounded-xl"
+                            className="group relative flex aspect-square cursor-pointer overflow-hidden rounded-lg border border-[#FFFFFF25] bg-[radial-gradient(circle_at_center,#000_0%,#171717_50%,#ffffff30_100%)] shadow-[0_0_30px_#00000040] transition-all hover:ring-2 hover:ring-[#EFA12D] sm:rounded-xl"
                             onClick={() => handleImageClick(media.image_url!)}
                         >
                             <Image
