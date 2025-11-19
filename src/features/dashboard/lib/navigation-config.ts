@@ -79,7 +79,7 @@ export const navigationConfig: NavigationItem[] = [
         children: [
             {
                 icon: IconCode,
-                label: "SEO Metadata",
+                label: "Static Page Metadata",
                 href: "/dashboard/page-settings/seo-metadata",
             },
             {

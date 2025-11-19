@@ -69,9 +69,9 @@ export function PageSettingsPage() {
             <Stack gap="lg">
                 {/* Header */}
                 <Box>
-                    <Title order={2}>Page SEO Metadata Settings</Title>
+                    <Title order={2}>Static Page Metadata Settings</Title>
                     <Text size="sm" c="dimmed">
-                        Manage SEO metadata for static pages
+                        Manage metadata for static pages
                     </Text>
                 </Box>
 

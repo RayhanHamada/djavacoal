@@ -116,7 +116,12 @@ export async function getTextContent(
     });
 
     const response = await client.send(command);
-    return (await response.Body?.transformToString()) ?? "";
+    if (!response.Body) {
+        return "";
+    }
+
+    const bytes = await response.Body.transformToByteArray();
+    return new TextDecoder("utf-8").decode(bytes);
 }
 
 /**
