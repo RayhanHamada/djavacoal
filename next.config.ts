@@ -4,8 +4,12 @@ import nextBundleAnalyzer from "@next/bundle-analyzer";
 import { initOpenNextCloudflareForDev } from "@opennextjs/cloudflare";
 import createNextIntlPlugin from "next-intl/plugin";
 
+const isDevelopment = process.env.NEXTJS_ENV === "development";
+
 const nextConfig: NextConfig = {
     images: {
+        loader: isDevelopment ? "default" : "custom",
+        loaderFile: isDevelopment ? undefined : "./image-loader.ts",
         remotePatterns: [
             {
                 hostname: "i.ytimg.com",
