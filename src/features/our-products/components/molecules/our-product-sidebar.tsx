@@ -16,17 +16,26 @@ type Props = {
     products: Product[];
     selectedProductId?: number;
     onProductSelect: (productId: number) => void;
+    isBrandSelected?: boolean;
+    onBrandSelect: () => void;
 };
 
 export default function OurProductsSidebar({
     products,
     selectedProductId,
     onProductSelect,
+    isBrandSelected = false,
+    onBrandSelect,
 }: Props) {
     const [open, setOpen] = useState(false);
 
     const handleClick = (productId: number) => {
         onProductSelect(productId);
+        setOpen(false);
+    };
+
+    const handleBrandClick = () => {
+        onBrandSelect();
         setOpen(false);
     };
 
@@ -51,9 +60,11 @@ export default function OurProductsSidebar({
                         className="flex w-full items-center justify-between rounded-sm border border-[#3a3a3a] px-4 py-2 text-sm text-white"
                     >
                         <span className="truncate">
-                            {selectedProduct
-                                ? selectedProduct.name
-                                : "Select Product"}
+                            {isBrandSelected
+                                ? "Djavacoal's Brand"
+                                : selectedProduct
+                                  ? selectedProduct.name
+                                  : "Select Product"}
                         </span>
                         {open ? (
                             <IoChevronUp className="text-[#EFA12D]" />
@@ -77,6 +88,17 @@ export default function OurProductsSidebar({
                                     {product.name}
                                 </button>
                             ))}
+                            {/* Djavacoal's Brand Menu Item */}
+                            <button
+                                onClick={handleBrandClick}
+                                className={`block w-full px-4 py-2 text-left text-sm ${
+                                    isBrandSelected
+                                        ? "text-[#EFA12D] underline underline-offset-4"
+                                        : "text-white hover:text-[#EFA12D]"
+                                }`}
+                            >
+                                Djavacoal&apos;s Brand
+                            </button>
                         </div>
                     )}
                 </div>
@@ -111,6 +133,27 @@ export default function OurProductsSidebar({
                                 </button>
                             </div>
                         ))}
+                        {/* Djavacoal's Brand Menu Item */}
+                        <div className="relative after:absolute after:bottom-0 after:left-0 after:h-px after:w-full after:bg-[#2a2a2a]/60 after:content-[''] last:after:hidden">
+                            <button
+                                onClick={handleBrandClick}
+                                className={`my-2 flex w-full items-center justify-between px-5 py-4 text-left text-sm font-medium transition-all duration-200 ${
+                                    isBrandSelected
+                                        ? "bg-[#9D7B19] font-semibold text-white"
+                                        : "hover:bg-secondary bg-[#222222] text-gray-300 hover:font-bold hover:text-white"
+                                }`}
+                            >
+                                <span>Djavacoal&apos;s Brand</span>
+                                <IoMdArrowDropright
+                                    size={12}
+                                    className={
+                                        isBrandSelected
+                                            ? "text-white"
+                                            : "text-gray-400"
+                                    }
+                                />
+                            </button>
+                        </div>
                     </div>
                 </div>
             </nav>
