@@ -228,7 +228,6 @@ export const router = {
                     if (!Array.isArray(v)) return null;
                     if (!v.length) return null;
                     const [first] = v;
-                    console.log(v);
 
                     return new URL(
                         first,
