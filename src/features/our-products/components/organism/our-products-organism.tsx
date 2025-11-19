@@ -66,25 +66,40 @@ export function ProductPage() {
 
     return (
         <PhotoProvider>
-            <div className="flex flex-col gap-10 px-5 py-0 md:gap-10 md:px-10 lg:gap-0 lg:px-0">
-                <section className="mx-auto max-w-7xl py-10 md:py-16 lg:mx-0 lg:mr-10 lg:max-w-none lg:px-0 lg:py-0">
+            <div className="flex flex-col gap-10 py-0 lg:gap-0 lg:px-0">
+                {/* Mobile Dropdown - sticky at top for mobile/tablet only */}
+                <div className="sticky top-24 z-50 lg:hidden">
+                    <OurProductsSidebar
+                        products={products}
+                        selectedProductId={
+                            isBrandSelected ? undefined : selectedProductId
+                        }
+                        onProductSelect={handleProductSelectWrapper}
+                        isBrandSelected={isBrandSelected}
+                        onBrandSelect={handleBrandSelect}
+                    />
+                </div>
+
+                <section className="mx-auto max-w-7xl px-5 py-0 pb-10 md:px-10 md:py-16 lg:mx-0 lg:mr-10 lg:max-w-none lg:px-0 lg:py-0">
                     <div className="grid grid-cols-1 gap-10 lg:grid-cols-[260px_1fr]">
-                        {/* === LEFT SIDEBAR === */}
-                        <div className="bg-[#222222] lg:py-16">
-                            <OurProductsSidebar
-                                products={products}
-                                selectedProductId={
-                                    isBrandSelected
-                                        ? undefined
-                                        : selectedProductId
-                                }
-                                onProductSelect={handleProductSelectWrapper}
-                                isBrandSelected={isBrandSelected}
-                                onBrandSelect={handleBrandSelect}
-                            />
+                        {/* === LEFT SIDEBAR (Desktop Only) === */}
+                        <div className="hidden lg:sticky lg:top-24 lg:block lg:self-start">
+                            <div className="bg-[#222222] pt-16 pb-[100vh]">
+                                <OurProductsSidebar
+                                    products={products}
+                                    selectedProductId={
+                                        isBrandSelected
+                                            ? undefined
+                                            : selectedProductId
+                                    }
+                                    onProductSelect={handleProductSelectWrapper}
+                                    isBrandSelected={isBrandSelected}
+                                    onBrandSelect={handleBrandSelect}
+                                />
+                            </div>
                         </div>
 
-                        <div className="space-y-12 rounded-xl lg:mt-16 lg:bg-[#222222] lg:px-10 lg:py-10">
+                        <div className="my-0 space-y-12 rounded-xl py-0 pb-10 lg:my-16 lg:bg-[#222222] lg:px-10 lg:py-10 lg:pb-10">
                             {isBrandSelected ? (
                                 <DjavacoalBrandPage />
                             ) : isLoadingDetail ? (

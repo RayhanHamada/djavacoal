@@ -44,7 +44,7 @@ export default function OurProductsSidebar({
     return (
         <>
             {/* MOBILE DROPDOWN */}
-            <div className="bg-primary sticky top-0 z-40 flex items-center gap-3 border-b border-[#2a2a2a] py-3 lg:hidden">
+            <div className="bg-primary flex items-center gap-3 border-b border-[#2a2a2a] px-4 py-3 lg:hidden">
                 <div className="text-xl text-[#EFA12D]">
                     <Image
                         src="/svgs/ic_select.svg"
@@ -105,8 +105,8 @@ export default function OurProductsSidebar({
             </div>
 
             {/* DESKTOP */}
-            <nav className="sticky top-[120px] hidden h-fit w-[260px] self-start border-y border-[#2a2a2a] bg-[#222222] lg:block">
-                <div className="scrollbar-none max-h-[calc(100vh-120px)] overflow-y-auto">
+            <nav className="hidden h-fit w-[260px] border-y border-[#2a2a2a] bg-[#222222] lg:block">
+                <div className="scrollbar-none overflow-y-auto">
                     <div className="flex flex-col space-y-[3px]">
                         {products.map((product) => (
                             <div
