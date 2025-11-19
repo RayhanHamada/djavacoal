@@ -1,6 +1,8 @@
 "use client";
 import "react-photo-view/dist/react-photo-view.css";
 
+import { useState } from "react";
+
 import Image from "next/image";
 
 import { PhotoProvider, PhotoView } from "react-photo-view";
@@ -12,6 +14,7 @@ import {
     PackagingList,
     OurProductsSidebar,
     MediaGallery,
+    DjavacoalBrandPage,
 } from "../molecules";
 import { useProducts } from "@/features/our-products/hooks";
 
@@ -25,6 +28,17 @@ export function ProductPage() {
         hasProducts,
         handleProductSelect,
     } = useProducts();
+
+    const [isBrandSelected, setIsBrandSelected] = useState(false);
+
+    const handleBrandSelect = () => {
+        setIsBrandSelected(true);
+    };
+
+    const handleProductSelectWrapper = (productId: number) => {
+        setIsBrandSelected(false);
+        handleProductSelect(productId);
+    };
 
     if (isLoadingProducts) {
         return (
@@ -59,13 +73,21 @@ export function ProductPage() {
                         <div className="bg-[#222222] lg:py-16">
                             <OurProductsSidebar
                                 products={products}
-                                selectedProductId={selectedProductId}
-                                onProductSelect={handleProductSelect}
+                                selectedProductId={
+                                    isBrandSelected
+                                        ? undefined
+                                        : selectedProductId
+                                }
+                                onProductSelect={handleProductSelectWrapper}
+                                isBrandSelected={isBrandSelected}
+                                onBrandSelect={handleBrandSelect}
                             />
                         </div>
 
                         <div className="space-y-12 rounded-xl lg:mt-16 lg:bg-[#222222] lg:px-10 lg:py-10">
-                            {isLoadingDetail ? (
+                            {isBrandSelected ? (
+                                <DjavacoalBrandPage />
+                            ) : isLoadingDetail ? (
                                 <div className="flex min-h-[400px] items-center justify-center">
                                     <div className="text-white">
                                         Loading product details...
