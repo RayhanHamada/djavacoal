@@ -66,7 +66,7 @@ export function MediaGalleryHorizontal({
                         src={media.image_url}
                         alt={`Product media ${media.id}`}
                         fill
-                        className="bg-[radial-gradient(circle_at_center,#000_0%,#171717_50%,#ffffff40_100%)] object-cover"
+                        className="border border-[#FFFFFF25] bg-[radial-gradient(circle_at_center,#000_0%,#171717_50%,#ffffff30_100%)] object-cover shadow-[0_0_30px_#00000040]"
                     />
                     {/* Hover overlay for images */}
                     <div className="absolute inset-0 bg-black/0 transition-all group-hover:bg-black/20" />

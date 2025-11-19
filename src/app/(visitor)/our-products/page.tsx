@@ -29,7 +29,7 @@ export default function OurProductsPage() {
             </section>
 
             {/* Main Content */}
-            <section className="bg-primary relative w-full overflow-hidden text-white">
+            <section className="bg-primary relative w-full text-white">
                 <ProductPage />
             </section>
         </main>
