@@ -46,7 +46,7 @@ jobs:
               run: bun install --frozen-lockfile
 
             - name: Build artifact
-              run: bun run build
+              run: bun run cf:build:production
 
             - name: Deploy for cloudflare
               run: bun run cf:deploy:production
