@@ -28,9 +28,9 @@ export const navigationConfig: NavigationItem[] = [
         description: "Photo Gallery Management",
     },
     {
-        label: "News and Articles",
+        label: "Blogs",
         icon: IconArticle,
-        description: "News Content management",
+        description: "Blog Content management",
         href: "/dashboard/news",
     },
     {
