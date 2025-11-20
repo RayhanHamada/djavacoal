@@ -916,79 +916,65 @@ export const router = {
             input: { params },
             errors,
         }) {
-            try {
-                const isArabic = locale === LOCALES.AR;
-                const db = getDB(env.DJAVACOAL_DB);
-                const r2Client = getR2Client({
-                    endpoint: process.env.S3_API,
-                    accessKeyId: process.env.R2_ACCESS_KEY_ID!,
-                    secretAccessKey: process.env.R2_SECRET_ACCESS_KEY!,
-                });
+            const isArabic = locale === LOCALES.AR;
+            const db = getDB(env.DJAVACOAL_DB);
+            const r2Client = getR2Client({
+                endpoint: process.env.S3_API,
+                accessKeyId: process.env.R2_ACCESS_KEY_ID!,
+                secretAccessKey: process.env.R2_SECRET_ACCESS_KEY!,
+            });
 
-                const now = new Date();
-                const article = await db.query.news.findFirst({
-                    where(fields, operators) {
-                        return operators.and(
-                            operators.eq(
-                                fields[NEWS_COLUMNS.SLUG],
-                                params.slug
-                            ),
+            const now = new Date();
+            const article = await db.query.news.findFirst({
+                where(fields, operators) {
+                    return operators.and(
+                        operators.eq(fields[NEWS_COLUMNS.SLUG], params.slug),
 
-                            operators.isNotNull(
-                                fields[NEWS_COLUMNS.PUBLISHED_AT]
-                            ),
+                        operators.isNotNull(fields[NEWS_COLUMNS.PUBLISHED_AT]),
 
-                            operators.lte(
-                                fields[NEWS_COLUMNS.PUBLISHED_AT],
-                                now
-                            ),
+                        operators.lte(fields[NEWS_COLUMNS.PUBLISHED_AT], now),
 
-                            operators.eq(
-                                fields[NEWS_COLUMNS.STATUS],
-                                NEWS_STATUS.PUBLISHED
-                            )
-                        );
-                    },
-                });
+                        operators.eq(
+                            fields[NEWS_COLUMNS.STATUS],
+                            NEWS_STATUS.PUBLISHED
+                        )
+                    );
+                },
+            });
 
-                if (!article) {
-                    throw errors.NOT_FOUND();
-                }
-
-                const title = isArabic
-                    ? article[NEWS_COLUMNS.AR_TITLE]
-                    : article[NEWS_COLUMNS.EN_TITLE];
-
-                const slug = article[NEWS_COLUMNS.SLUG];
-                const contentKey = isArabic
-                    ? article[NEWS_COLUMNS.AR_CONTENT_KEY]
-                    : article[NEWS_COLUMNS.EN_CONTENT_KEY];
-
-                const content = await getTextContent(r2Client, contentKey);
-                const imageKey = article[NEWS_COLUMNS.IMAGE_KEY];
-                const cover_image_url = imageKey
-                    ? new URL(
-                          imageKey,
-                          process.env.NEXT_PUBLIC_ASSET_URL
-                      ).toString()
-                    : null;
-
-                return {
-                    body: {
-                        data: {
-                            title,
-                            slug,
-                            content,
-                            cover_image_url,
-                            published_at: article[NEWS_COLUMNS.PUBLISHED_AT]!,
-                        },
-                    },
-                };
-            } catch (e) {
-                console.log(e);
-
-                throw errors.INTERNAL_SERVER_ERROR({ cause: e });
+            if (!article) {
+                throw errors.NOT_FOUND();
             }
+
+            const title = isArabic
+                ? article[NEWS_COLUMNS.AR_TITLE]
+                : article[NEWS_COLUMNS.EN_TITLE];
+
+            const slug = article[NEWS_COLUMNS.SLUG];
+            const contentKey = isArabic
+                ? article[NEWS_COLUMNS.AR_CONTENT_KEY]
+                : article[NEWS_COLUMNS.EN_CONTENT_KEY];
+
+            const content = await getTextContent(r2Client, contentKey);
+            const imageKey = article[NEWS_COLUMNS.IMAGE_KEY];
+            const cover_image_url = imageKey
+                ? new URL(
+                      imageKey,
+                      process.env.NEXT_PUBLIC_ASSET_URL
+                  ).toString()
+                : null;
+
+            return {
+                body: {
+                    data: {
+                        title,
+                        slug,
+                        content,
+                        cover_image_url,
+                        published_at: article[NEWS_COLUMNS.PUBLISHED_AT]!,
+                    },
+                },
+            };
         }),
 
     getNewsMetadata: publicBase
