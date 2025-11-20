@@ -779,3 +779,24 @@ export const bulkCreateTags = base
         return { items: created };
     })
     .callable();
+
+/**
+ * Get total count of news articles
+ */
+export const getNewsCount = base
+    .handler(async function ({ context: { env }, errors }) {
+        const db = getDB(env.DJAVACOAL_DB);
+        const auth = getAuth(env);
+
+        const header = await headers();
+        const user = await auth.api.getSession({
+            headers: header,
+        });
+
+        if (!user) throw errors.UNAUTHORIZED();
+
+        const [{ total }] = await db.select({ total: count() }).from(news);
+
+        return { count: total };
+    })
+    .callable();

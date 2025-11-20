@@ -1064,3 +1064,51 @@ export const generateProductUploadUrl = base
         };
     })
     .callable();
+
+/**
+ * Get total count of products
+ */
+export const getProductCount = base
+    .handler(async function ({ context: { env }, errors }) {
+        const db = getDB(env.DJAVACOAL_DB);
+        const auth = getAuth(env);
+        const header = await headers();
+
+        const session = await auth.api.getSession({
+            headers: header,
+        });
+
+        if (!session) {
+            throw errors.UNAUTHORIZED();
+        }
+
+        const [{ total }] = await db.select({ total: count() }).from(products);
+
+        return { count: total };
+    })
+    .callable();
+
+/**
+ * Get total count of packaging options
+ */
+export const getPackagingOptionCount = base
+    .handler(async function ({ context: { env }, errors }) {
+        const db = getDB(env.DJAVACOAL_DB);
+        const auth = getAuth(env);
+        const header = await headers();
+
+        const session = await auth.api.getSession({
+            headers: header,
+        });
+
+        if (!session) {
+            throw errors.UNAUTHORIZED();
+        }
+
+        const [{ total }] = await db
+            .select({ total: count() })
+            .from(packagingOptions);
+
+        return { count: total };
+    })
+    .callable();

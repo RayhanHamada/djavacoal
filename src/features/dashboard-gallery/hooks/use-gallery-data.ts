@@ -46,7 +46,7 @@ export function useGalleryData({
 
     const photos = photosQuery.data?.photos ?? [];
     const total = photosQuery.data?.total ?? 0;
-    const totalPages = Math.ceil(total / limit);
+    const totalPages = total > 0 ? Math.ceil(total / limit) : 0;
 
     const handleRefresh = () => {
         queryClient.invalidateQueries({

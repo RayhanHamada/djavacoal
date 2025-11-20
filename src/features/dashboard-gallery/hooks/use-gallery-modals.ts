@@ -34,7 +34,8 @@ export function useGalleryModals() {
 
     const closeUploadModal = () => {
         setUploadModalOpened(false);
-        setFilesToUpload([]);
+        // Delay clearing files to prevent flicker during close animation
+        setTimeout(() => setFilesToUpload([]), 300);
     };
 
     const openRenameModal = (photo: Photo) => {

@@ -37,10 +37,13 @@ export function DeleteModal({
             onClose();
         },
         onError: (err) => {
+            console.error("Delete error:", err);
             notifications.show({
                 title: "Delete Failed",
                 message:
-                    err instanceof Error ? err.message : "An error occurred",
+                    err instanceof Error
+                        ? err.message
+                        : "An unexpected error occurred",
                 color: "red",
             });
         },

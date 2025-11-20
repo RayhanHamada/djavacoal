@@ -12,6 +12,7 @@ Next.js 15 application deployed to Cloudflare Workers using OpenNext adapter. Fe
 - **Deployment**: Cloudflare Workers via `@opennextjs/cloudflare`
 - **Database**: Cloudflare D1 (SQLite) with Drizzle ORM
 - **Storage**: Cloudflare R2 (S3-compatible) via AWS SDK v3
+- **KV Store**: Cloudflare KV for page settings and configuration
 - **Auth**: Better Auth (NOT NextAuth) with custom D1 adapter
 - **RPC**: oRPC for type-safe client-server communication
 - **Public API**: RESTful API with OpenAPI/Redocly documentation
@@ -19,6 +20,7 @@ Next.js 15 application deployed to Cloudflare Workers using OpenNext adapter. Fe
 - **i18n**: next-intl (cookie-based locale storage)
 - **Email**: Resend with react-email templates
 - **Rich Text**: TipTap for content editing (news articles)
+- **Drag & Drop**: @dnd-kit for reordering functionality
 
 ## Critical Architecture Patterns
 
@@ -57,6 +59,18 @@ Type-safe client-server communication without API route boilerplate. RPC functio
 
 - `injectCFContext` - Automatically injects Cloudflare context into all RPC handlers, making `env` available in the `context` parameter
 - `injectNextCookies` - Injects Next.js cookies (including locale) into context for public API routes
+- `injectSession` - Validates Better Auth session for protected routes (admin operations)
+
+**Error Handling**: Define custom errors in `src/lib/orpc/server.ts`:
+
+```typescript
+const base = os.errors({
+    NOT_FOUND: { message: "Resource not found" },
+    BAD_REQUEST: { message: "Invalid input" },
+    UNAUTHORIZED: { message: "Authentication required" },
+    INTERNAL_SERVER_ERROR: { message: "Server error" },
+});
+```
 
 **Server-side** (`src/features/<feature>/server/`):
 
@@ -271,23 +285,7 @@ wrangler dev               # Run with Cloudflare bindings locally (alternative t
 - Tailwind for layout/spacing
 - Mantine components for UI (configured in `src/lib/mantine-theme.ts`)
 - Custom fonts: Josefin Sans (headings) + Open Sans (body) in `src/configs/fonts.ts`
-
-### Error Handling in oRPC
-
-Define custom errors in `src/lib/orpc/server.ts`:
-
-```typescript
-const base = os.errors({
-    NOT_FOUND: { message: "..." },
-    BAD_REQUEST: {},
-});
-```
-
-Throw in handlers:
-
-```typescript
-throw errors.BAD_REQUEST({ message: "Custom error" });
-```
+- Mantine notifications for user feedback (success/error states)
 
 ## Environment Variables
 
@@ -382,8 +380,36 @@ if (!isAvailable) throw errors.BAD_REQUEST({ message: "Name taken" });
 Features with custom ordering (products, variants, specs) use `order_index`:
 
 - 0-based sequential indexing
-- Use `@dnd-kit` libraries for UI
+- Use `@dnd-kit/core`, `@dnd-kit/sortable` libraries for UI
 - Batch update via RPC with array of `{ id, order_index }` pairs
+- Drag handle: `IconGripVertical` positioned at top-left with `cursor: grab`
+- Visual feedback: 50% opacity on dragged item, DragOverlay for preview
+- Collision detection: `closestCenter` algorithm
+- Sorting strategy: `rectSortingStrategy` for grid layouts
+- Server sync: Mutation triggers on `handleDragEnd`, updates all order indices
+- Toast notifications for success/error states
+
+**Example Implementation Pattern:**
+
+```typescript
+// Component with drag-and-drop
+const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id: item.id });
+
+<Card ref={setNodeRef} style={{ transform, transition, opacity: isDragging ? 0.5 : 1 }}>
+  <ActionIcon {...listeners} {...attributes}>
+    <IconGripVertical />
+  </ActionIcon>
+  {/* Card content */}
+</Card>
+
+// Parent container
+<DndContext onDragEnd={handleDragEnd}>
+  <SortableContext items={itemIds} strategy={rectSortingStrategy}>
+    <Grid>{/* Items */}</Grid>
+  </SortableContext>
+  <DragOverlay>{activeItem}</DragOverlay>
+</DndContext>
+```
 
 ## Common Pitfalls
 

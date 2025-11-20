@@ -1,84 +1,61 @@
 "use client";
 
-import {
-    Stack,
-    Box,
-    Text,
-    Paper,
-    SimpleGrid,
-    ThemeIcon,
-    Divider,
-    Group,
-    rem,
-} from "@mantine/core";
-import { IconArticle, IconBrandProducthunt } from "@tabler/icons-react";
+import type { DashboardStatCard } from "@/features/dashboard/lib/types";
 
-// Dashboard stats data
-const stats = [
-    { label: "Articles", value: "342", icon: IconArticle, tone: "grape" },
-    {
-        label: "Products",
-        value: "4",
-        icon: IconBrandProducthunt,
-        tone: "teal",
-    },
-];
+import { Stack } from "@mantine/core";
+import { useQuery } from "@tanstack/react-query";
 
-// Component: Stats grid
-function StatsSection() {
-    return (
-        <SimpleGrid cols={{ base: 1, xs: 2, md: 4 }} spacing="md" mb="lg">
-            {stats.map((s) => {
-                const Icon = s.icon;
-                return (
-                    <Paper
-                        key={s.label}
-                        p="md"
-                        radius="md"
-                        withBorder
-                        style={{
-                            display: "flex",
-                            flexDirection: "column",
-                            gap: rem(6),
-                        }}
-                    >
-                        <Group gap="xs">
-                            <ThemeIcon
-                                variant="light"
-                                radius="md"
-                                size="lg"
-                                color={s.tone as any}
-                            >
-                                <Icon size={18} stroke={1.7} />
-                            </ThemeIcon>
-                            <Text
-                                size="xs"
-                                c="dimmed"
-                                fw={500}
-                                tt="uppercase"
-                                style={{ letterSpacing: 0.5 }}
-                            >
-                                {s.label}
-                            </Text>
-                        </Group>
-                        <Text fz={28} fw={600} lh={1.1}>
-                            {s.value}
-                        </Text>
-                        <Divider variant="dashed" />
-                    </Paper>
-                );
-            })}
-        </SimpleGrid>
+import { WelcomeHeader } from "@/features/dashboard/components/molecules/welcome-header";
+import { DashboardStats } from "@/features/dashboard/components/organism/dashboard-stats";
+import { DASHBOARD_STATS_CONFIG } from "@/features/dashboard/lib/constants";
+import { client } from "@/features/dashboard-auth/lib/better-auth-client";
+import { rpc } from "@/lib/rpc";
+
+export default function DashboardPage() {
+    const { data: session } = client.useSession();
+
+    // Fetch counts using RPC
+    const { data: newsCount, isLoading: newsLoading } = useQuery(
+        rpc.dashboardNews.getNewsCount.queryOptions()
     );
-}
+    const { data: productCount, isLoading: productLoading } = useQuery(
+        rpc.dashboardProduct.getProductCount.queryOptions()
+    );
+    const { data: packagingCount, isLoading: packagingLoading } = useQuery(
+        rpc.dashboardProduct.getPackagingOptionCount.queryOptions()
+    );
+    const { data: teamCount, isLoading: teamLoading } = useQuery(
+        rpc.dashboardTeamMember.getTeamMemberCount.queryOptions()
+    );
 
-export default function Page() {
+    // Map configuration to stats with counts
+    const stats: DashboardStatCard[] = DASHBOARD_STATS_CONFIG.map(
+        (config, index) => {
+            const countData = [
+                newsCount,
+                productCount,
+                packagingCount,
+                teamCount,
+            ][index];
+            const loading = [
+                newsLoading,
+                productLoading,
+                packagingLoading,
+                teamLoading,
+            ][index];
+
+            return {
+                ...config,
+                count: countData?.count ?? 0,
+                loading,
+            };
+        }
+    );
+
     return (
-        <Stack gap="xl">
-            <StatsSection />
-            <SimpleGrid cols={{ base: 1, lg: 3 }} spacing="lg">
-                <Box style={{ gridColumn: "span 2" }}></Box>
-            </SimpleGrid>
+        <Stack gap="xl" maw={1200} mx="auto">
+            <WelcomeHeader userName={session?.user?.name} />
+            <DashboardStats stats={stats} />
         </Stack>
     );
 }

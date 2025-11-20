@@ -2,11 +2,16 @@
 
 import { useState } from "react";
 
+/** Sort field options */
 export type SortBy = "name" | "updated_at";
+
+/** Sort direction options */
 export type SortOrder = "asc" | "desc";
 
 /**
  * Manages gallery state (search, pagination, sorting, selection)
+ *
+ * @returns Gallery state and handlers
  */
 export function useGalleryState() {
     const [search, setSearch] = useState("");
@@ -17,6 +22,9 @@ export function useGalleryState() {
         new Set()
     );
 
+    /**
+     * Toggle selection state of a single photo
+     */
     const togglePhotoSelection = (photoId: string) => {
         setSelectedPhotoIds((prev) => {
             const newSet = new Set(prev);
@@ -29,11 +37,17 @@ export function useGalleryState() {
         });
     };
 
+    /**
+     * Change page and clear selections
+     */
     const handlePageChange = (newPage: number) => {
         setPage(newPage);
         setSelectedPhotoIds(new Set());
     };
 
+    /**
+     * Clear all photo selections
+     */
     const clearSelection = () => {
         setSelectedPhotoIds(new Set());
     };

@@ -354,3 +354,28 @@ export const generateTeamMemberUploadUrl = base
         };
     })
     .callable();
+
+/**
+ * Get total count of team members
+ */
+export const getTeamMemberCount = base
+    .handler(async function ({ context: { env }, errors }) {
+        const db = getDB(env.DJAVACOAL_DB);
+        const auth = getAuth(env);
+        const header = await headers();
+
+        const session = await auth.api.getSession({
+            headers: header,
+        });
+
+        if (!session) {
+            throw errors.UNAUTHORIZED();
+        }
+
+        const total = await db.$count(teams);
+
+        return {
+            count: total,
+        };
+    })
+    .callable();

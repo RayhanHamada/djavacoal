@@ -9,6 +9,7 @@ import {
     deleteNews,
     generateImageUploadUrl,
     getNewsById,
+    getNewsCount,
     listNews,
     listTags,
     togglePublish,
@@ -18,6 +19,7 @@ import {
 export const router = {
     listNews,
     getNewsById,
+    getNewsCount,
     createNews,
     updateNews,
     deleteNews,

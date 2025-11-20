@@ -8,6 +8,7 @@ export {
     deleteTeamMember,
     generateTeamMemberUploadUrl,
     getTeamMemberById,
+    getTeamMemberCount,
     listTeamMembers,
     reorderTeamMembers,
     updateTeamMember,

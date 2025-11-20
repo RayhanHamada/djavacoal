@@ -15,15 +15,22 @@ import {
 import { BulkDeleteBar } from "../molecules";
 
 interface GalleryControlsProps {
+    // Search props
     search: string;
     onSearchChange: (value: string) => void;
     onSearchSubmit: () => void;
+
+    // Sort props
     sortBy: SortBy;
     sortOrder: SortOrder;
     onSortByName: () => void;
     onSortByDate: () => void;
+
+    // Refresh props
     isRefetching: boolean;
     onRefresh: () => void;
+
+    // Selection props
     selectedCount: number;
     onBulkDelete: () => void;
     onCancelSelection: () => void;

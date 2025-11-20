@@ -1,3 +1,4 @@
+import type { MantineColor } from "@mantine/core";
 import type { Icon } from "@tabler/icons-react";
 
 export type NavigationChild = {
@@ -12,4 +13,13 @@ export type NavigationItem = {
     href?: string;
     description?: string;
     children?: NavigationChild[];
+};
+
+export type DashboardStatCard = {
+    label: string;
+    count: number;
+    icon: Icon;
+    color: MantineColor;
+    href: string;
+    loading?: boolean;
 };

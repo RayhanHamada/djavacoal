@@ -14,7 +14,7 @@ import { galleryPhotos } from "@/adapters/d1/schema";
  * @returns true if name is available, false if taken
  */
 export async function isPhotoNameAvailable(
-    db: any,
+    db: ReturnType<typeof import("@/adapters/d1/db").getDB>,
     name: string,
     excludeId?: string
 ): Promise<boolean> {
@@ -42,7 +42,7 @@ export async function isPhotoNameAvailable(
  * @returns Photo record or null if not found
  */
 export async function findPhotoById(
-    db: any,
+    db: ReturnType<typeof import("@/adapters/d1/db").getDB>,
     id: string
 ): Promise<typeof galleryPhotos.$inferSelect | null> {
     const photos = await db
@@ -62,7 +62,7 @@ export async function findPhotoById(
  * @returns Array of photo records
  */
 export async function findPhotosByIds(
-    db: any,
+    db: ReturnType<typeof import("@/adapters/d1/db").getDB>,
     ids: string[]
 ): Promise<Array<typeof galleryPhotos.$inferSelect>> {
     if (ids.length === 0) {
@@ -93,18 +93,29 @@ export async function findPhotosByIds(
  * @param assetUrl - Base asset URL from environment
  * @returns Full public URL to the photo
  */
-export function buildPhotoUrl(key: string, assetUrl: string): string {
-    // Ensure assetUrl doesn't end with a slash
+export function buildPhotoUrl(key: string, assetUrl?: string): string {
+    if (!assetUrl) {
+        throw new Error("Asset URL is required to build photo URL");
+    }
+    // Ensure assetUrl doesn't end with a slash and key doesn't start with one
     const baseUrl = assetUrl.endsWith("/") ? assetUrl.slice(0, -1) : assetUrl;
-    return `${baseUrl}/${key}`;
+    const cleanKey = key.startsWith("/") ? key.slice(1) : key;
+    return `${baseUrl}/${cleanKey}`;
 }
 
 /**
  * Build the full R2 path for a file
  *
- * @param key - The object key
- * @param bucketName - Optional bucket name prefix
- * @returns Full R2 path
+ * Note: This is primarily used for R2 operations where bucket prefix might be needed.
+ * For public URLs, use buildPhotoUrl instead.
+ *
+ * @param key - The object key (e.g., "gallery-photos/abc123")
+ * @param bucketName - Optional bucket name prefix for internal R2 operations
+ * @returns Full R2 path with optional bucket prefix
+ *
+ * @example
+ * buildR2Path("gallery-photos/abc123") // "gallery-photos/abc123"
+ * buildR2Path("gallery-photos/abc123", "my-bucket") // "my-bucket/gallery-photos/abc123"
  */
 export function buildR2Path(key: string, bucketName?: string): string {
     return bucketName ? `${bucketName}/${key}` : key;

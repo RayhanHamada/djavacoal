@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { Button, Group, Modal, Stack, Text, TextInput } from "@mantine/core";
 import { notifications } from "@mantine/notifications";
@@ -24,15 +24,21 @@ export function RenameModal({
     photo,
     onSuccess,
 }: RenameModalProps) {
-    const [newName, setNewName] = useState(photo?.name || "");
+    const [newName, setNewName] = useState(photo?.name ?? "");
     const [error, setError] = useState<string | undefined>();
+
+    // Reset name when photo changes
+    useEffect(() => {
+        setNewName(photo?.name ?? "");
+        setError(undefined);
+    }, [photo?.name]);
 
     const renameMutation = useMutation({
         mutationFn: async () => {
             if (!photo) throw new Error("No photo selected");
             return client.gallery.renamePhoto({
                 id: photo.id,
-                newName,
+                newName: newName.trim(),
             });
         },
         onSuccess: () => {
@@ -55,10 +61,30 @@ export function RenameModal({
     });
 
     const handleRename = async () => {
-        if (newName.length < 8 || newName.length > 100) {
-            setError("Name must be 8-100 characters");
+        const trimmedName = newName.trim();
+        const PHOTO_NAME_MIN_LENGTH = 8;
+        const PHOTO_NAME_MAX_LENGTH = 100;
+
+        if (
+            trimmedName.length < PHOTO_NAME_MIN_LENGTH ||
+            trimmedName.length > PHOTO_NAME_MAX_LENGTH
+        ) {
+            setError(
+                `Name must be ${PHOTO_NAME_MIN_LENGTH}-${PHOTO_NAME_MAX_LENGTH} characters`
+            );
             return;
         }
+
+        if (trimmedName === photo?.name) {
+            notifications.show({
+                title: "No Changes",
+                message: "The name is the same as before",
+                color: "orange",
+            });
+            onClose();
+            return;
+        }
+
         await renameMutation.mutateAsync();
     };
 
