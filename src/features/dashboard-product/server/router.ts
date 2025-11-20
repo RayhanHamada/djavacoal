@@ -8,7 +8,9 @@ import {
     generateImageUploadUrl,
     generateProductUploadUrl,
     getPackagingOptionById,
+    getPackagingOptionCount,
     getProductById,
+    getProductCount,
     listPackagingOptions,
     listProducts,
     reorderProducts,
@@ -21,6 +23,7 @@ export const router = {
     // Packaging options
     listPackagingOptions,
     getPackagingOptionById,
+    getPackagingOptionCount,
     createPackagingOption,
     updatePackagingOption,
     deletePackagingOption,
@@ -29,6 +32,7 @@ export const router = {
     // Products
     listProducts,
     getProductById,
+    getProductCount,
     createProduct,
     updateProduct,
     deleteProduct,
