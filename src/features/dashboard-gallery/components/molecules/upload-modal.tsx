@@ -158,8 +158,12 @@ export function UploadModal({
                     name,
                     key,
                     size: file.size,
-                    // @ts-expect-error - mimeType is missing in the generated types
-                    mimeType: file.type,
+                    mimeType: file.type as
+                        | "image/jpeg"
+                        | "image/png"
+                        | "image/gif"
+                        | "image/webp"
+                        | "image/svg+xml",
                 });
             }
         },
@@ -185,7 +189,7 @@ export function UploadModal({
                 message:
                     error instanceof Error
                         ? error.message
-                        : "An error occurred",
+                        : "An unexpected error occurred during upload",
                 color: "red",
             });
             setUploadProgress({
@@ -227,12 +231,18 @@ export function UploadModal({
      * Check if name is available (debounced)
      */
     const checkNameAvailability = async (name: string, index: number) => {
-        if (name.length < 8 || name.length > 100) {
+        const PHOTO_NAME_MIN_LENGTH = 8;
+        const PHOTO_NAME_MAX_LENGTH = 100;
+
+        if (
+            name.length < PHOTO_NAME_MIN_LENGTH ||
+            name.length > PHOTO_NAME_MAX_LENGTH
+        ) {
             setFilesToUpload((prev) => {
                 const updated = [...prev];
                 updated[index] = {
                     ...updated[index],
-                    error: "Name must be 8-100 characters",
+                    error: `Name must be ${PHOTO_NAME_MIN_LENGTH}-${PHOTO_NAME_MAX_LENGTH} characters`,
                 };
                 return updated;
             });
@@ -267,9 +277,23 @@ export function UploadModal({
      * Handle file upload
      */
     const handleUpload = async () => {
+        if (filesToUpload.length === 0) {
+            notifications.show({
+                title: "No Files",
+                message: "Please add files to upload",
+                color: "orange",
+            });
+            return;
+        }
+
         // Validate all files
+        const PHOTO_NAME_MIN_LENGTH = 8;
+        const PHOTO_NAME_MAX_LENGTH = 100;
         const hasErrors = filesToUpload.some(
-            (f) => f.error || f.name.length < 8 || f.name.length > 100
+            (f) =>
+                f.error ||
+                f.name.length < PHOTO_NAME_MIN_LENGTH ||
+                f.name.length > PHOTO_NAME_MAX_LENGTH
         );
 
         if (hasErrors) {

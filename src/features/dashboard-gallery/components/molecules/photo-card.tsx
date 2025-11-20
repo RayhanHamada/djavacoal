@@ -144,8 +144,8 @@ export function PhotoCard({
                     <Image
                         src={url}
                         alt={name}
-                        layout="fill"
-                        objectFit="cover"
+                        fill
+                        style={{ objectFit: "cover" }}
                     />
                 </PhotoView>
             </Box>

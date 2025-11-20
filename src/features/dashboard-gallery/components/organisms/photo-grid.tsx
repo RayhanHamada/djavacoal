@@ -15,15 +15,27 @@ import {
 import { PhotoCard } from "../molecules";
 
 interface PhotoGridProps {
+    // Data state
     isLoading: boolean;
     isError: boolean;
-    photos: Record<string, any>[];
+    photos: Array<{
+        id: string;
+        name: string;
+        url: string;
+        [key: string]: unknown;
+    }>;
     search: string;
+
+    // Selection state
     selectedPhotoIds: Set<string>;
+
+    // Drag and drop state
     isDragOver: boolean;
     onDrop: (e: React.DragEvent) => void;
     onDragOver: (e: React.DragEvent) => void;
     onDragLeave: () => void;
+
+    // Photo actions
     onPhotoToggle: (photoId: string) => void;
     onPhotoRename: (photo: Photo) => void;
     onPhotoDelete: (photo: Photo) => void;

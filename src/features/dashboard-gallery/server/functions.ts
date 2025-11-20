@@ -71,8 +71,7 @@ export const listPhotos = base
             .limit(limit)
             .offset((page - 1) * limit)
             .catch((err) => {
-                console.log(err);
-
+                console.error("Error fetching photos:", err);
                 return [];
             });
 
@@ -82,22 +81,23 @@ export const listPhotos = base
             .from(galleryPhotos)
             .where(whereConditions)
             .catch((err) => {
-                console.log(err);
-
+                console.error("Error counting photos:", err);
                 return [];
             });
 
         const total = totalResult[0]?.count ?? 0;
 
         // Generate public URLs for each photo using R2 public URL
+        const assetUrl = process.env.NEXT_PUBLIC_ASSET_URL;
+        if (!assetUrl) {
+            throw new Error("NEXT_PUBLIC_ASSET_URL is not configured");
+        }
+
         const photosWithUrls = photos.map((photo) => ({
             ...photo,
-            url: buildPhotoUrl(
-                photo.key as string,
-                process.env.NEXT_PUBLIC_ASSET_URL
-            ),
-            created_at: new Date(photo.created_at ?? 0),
-            updated_at: new Date(photo.updated_at ?? 0),
+            url: buildPhotoUrl(photo.key, assetUrl),
+            created_at: new Date(photo.created_at),
+            updated_at: new Date(photo.updated_at),
         }));
 
         return {
@@ -132,11 +132,19 @@ export const createPresignedUrl = base
         const photoId = nanoid();
         const key = `${GALLERY_PHOTOS_PREFIX}/${photoId}`;
 
+        // Validate required environment variables
+        const { S3_API, R2_ACCESS_KEY_ID, R2_SECRET_ACCESS_KEY } = process.env;
+        if (!S3_API || !R2_ACCESS_KEY_ID || !R2_SECRET_ACCESS_KEY) {
+            throw errors.INTERNAL_SERVER_ERROR({
+                message: "R2 storage configuration is incomplete",
+            });
+        }
+
         // Create S3 client for R2
         const r2Client = getR2Client({
-            endpoint: process.env.S3_API,
-            accessKeyId: process.env.R2_ACCESS_KEY_ID!,
-            secretAccessKey: process.env.R2_SECRET_ACCESS_KEY!,
+            endpoint: S3_API,
+            accessKeyId: R2_ACCESS_KEY_ID,
+            secretAccessKey: R2_SECRET_ACCESS_KEY,
         });
 
         // Generate presigned URL for PUT operation
@@ -167,10 +175,17 @@ export const confirmUpload = base
         // Check if name is still available (edge case: concurrent upload)
         const available = await isPhotoNameAvailable(db, name);
         if (!available) {
-            // Delete the uploaded file from R2
-            await env.DJAVACOAL_BUCKET.delete(key);
+            // Delete the uploaded file from R2 to prevent orphaned objects
+            try {
+                await env.DJAVACOAL_BUCKET.delete(key);
+            } catch (deleteErr) {
+                console.error(
+                    "Failed to cleanup R2 object after name conflict:",
+                    deleteErr
+                );
+            }
             throw errors.BAD_REQUEST({
-                message: `Photo name "${name}" is already taken`,
+                message: `Photo name "${name}" is already taken. Please try again with a different name.`,
             });
         }
 
@@ -220,7 +235,6 @@ export const renamePhoto = base
             .update(galleryPhotos)
             .set({
                 [GALLERY_PHOTO_COLUMNS.NAME]: newName,
-                [COMMON_COLUMNS.UPDATED_AT]: sql`CURRENT_TIMESTAMP`,
             })
             .where(eq(galleryPhotos[COMMON_COLUMNS.ID], id));
 
@@ -247,14 +261,14 @@ export const deletePhoto = base
             });
         }
 
-        // Delete from R2
+        // Delete from R2 first (safer - orphaned objects better than broken references)
         const r2Path = buildR2Path(
             photo[GALLERY_PHOTO_COLUMNS.KEY] as string,
             DEFAULT_BUCKET_NAME
         );
         await env.DJAVACOAL_BUCKET.delete(r2Path);
 
-        // Delete from database
+        // Then delete from database
         await db
             .delete(galleryPhotos)
             .where(eq(galleryPhotos[COMMON_COLUMNS.ID], id));
@@ -291,8 +305,8 @@ export const bulkDeletePhotos = base
             });
         }
 
-        // Delete from R2 in parallel
-        await Promise.all(
+        // Delete from R2 in parallel with error handling
+        const deleteResults = await Promise.allSettled(
             photos.map((photo) => {
                 const r2Path = buildR2Path(
                     photo[GALLERY_PHOTO_COLUMNS.KEY] as string,
@@ -301,6 +315,16 @@ export const bulkDeletePhotos = base
                 return env.DJAVACOAL_BUCKET.delete(r2Path);
             })
         );
+
+        // Log any R2 deletion failures
+        const failedDeletes = deleteResults.filter(
+            (r) => r.status === "rejected"
+        );
+        if (failedDeletes.length > 0) {
+            console.error(
+                `Failed to delete ${failedDeletes.length} objects from R2`
+            );
+        }
 
         // Delete from database
         await db.delete(galleryPhotos).where(

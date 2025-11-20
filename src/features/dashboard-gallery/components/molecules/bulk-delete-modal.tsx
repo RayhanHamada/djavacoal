@@ -36,10 +36,13 @@ export function BulkDeleteModal({
             onClose();
         },
         onError: (err) => {
+            console.error("Bulk delete error:", err);
             notifications.show({
                 title: "Delete Failed",
                 message:
-                    err instanceof Error ? err.message : "An error occurred",
+                    err instanceof Error
+                        ? err.message
+                        : "An unexpected error occurred",
                 color: "red",
             });
         },

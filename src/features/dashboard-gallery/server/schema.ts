@@ -38,17 +38,16 @@ export const ListPhotosInputSchema = z.object({
  */
 export const ListPhotosOutputSchema = z.object({
     photos: z.array(
-        // z.object({
-        //     id: z.string(),
-        //     name: z.string(),
-        //     key: z.string(),
-        //     size: z.number(),
-        //     mime_type: z.string(),
-        //     url: z.string(), // Public URL for viewing
-        //     created_at: z.date(),
-        //     updated_at: z.date(),
-        // })
-        z.record(z.string(), z.any())
+        z.object({
+            id: z.string(),
+            name: z.string(),
+            key: z.string(),
+            size: z.number(),
+            mime_type: z.string(),
+            url: z.string(),
+            created_at: z.date(),
+            updated_at: z.date(),
+        })
     ),
     total: z.number().int(),
     page: z.number().int(),
