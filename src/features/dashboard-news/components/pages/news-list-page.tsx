@@ -84,7 +84,7 @@ function NewsListContent() {
             <Stack gap="xl">
                 {/* Header */}
                 <Group justify="space-between" align="center">
-                    <Title order={2}>News Management</Title>
+                    <Title order={2}>Blog Management</Title>
                     <Button
                         href="/dashboard/news/create"
                         component={Link}
