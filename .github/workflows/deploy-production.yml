@@ -11,7 +11,7 @@ jobs:
         name: Deploy Production
         runs-on: ubuntu-latest
         environment:
-            name: actionss
+            name: production
         env:
             NODE_ENV: production
             NEXTJS_ENV: production
