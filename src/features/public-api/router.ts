@@ -985,6 +985,12 @@ export const router = {
                     },
                 };
             } catch (e) {
+                console.log(
+                    `R2 key R2 access key id: ${process.env.R2_ACCESS_KEY_ID}`
+                );
+                console.log(
+                    `R2 key secret access key: ${process.env.R2_SECRET_ACCESS_KEY}`
+                );
                 console.error("Error in getNewsDetail:", e);
 
                 throw errors.INTERNAL_SERVER_ERROR();
