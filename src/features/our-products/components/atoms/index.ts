@@ -11,6 +11,7 @@ export { FilterButton } from "./filter-button";
 // Card components
 export { ShapeCard } from "./shape-card";
 export { PackagingCard } from "./packaging-card";
+export { CardBrand } from "./card-brand";
 
 // Modal components
 export { ImageModal } from "./image-modal";
