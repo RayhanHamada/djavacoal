@@ -26,6 +26,7 @@ import {
     ListTagsInputSchema,
     ListTagsOutputSchema,
     NewsArticleWithContentSchema,
+    RemoveNewsImageInputSchema,
     TagSchema,
     UpdateNewsInputSchema,
     UpdateNewsOutputSchema,
@@ -773,5 +774,57 @@ export const getNewsCount = base
         const total = await db.$count(news);
 
         return { count: total };
+    })
+    .callable();
+
+/**
+ * Remove news article image from database and R2 storage
+ */
+export const removeNewsImage = base
+    .input(RemoveNewsImageInputSchema)
+    .handler(async function ({ context: { env }, errors, input }) {
+        const db = getDB(env.DJAVACOAL_DB);
+        const auth = getAuth(env);
+
+        const header = await headers();
+        const user = await auth.api.getSession({
+            headers: header,
+        });
+
+        if (!user) throw errors.UNAUTHORIZED();
+
+        // Get article to retrieve image key
+        const article = await db.query.news.findFirst({
+            where(fields, operators) {
+                return operators.eq(fields[COMMON_COLUMNS.ID], input.id);
+            },
+        });
+
+        if (!article) {
+            throw errors.NOT_FOUND({ message: "News article not found" });
+        }
+
+        const imageKey = article[NEWS_COLUMNS.IMAGE_KEY];
+        if (!imageKey) {
+            throw errors.BAD_REQUEST({ message: "No image to remove" });
+        }
+
+        // Delete image from R2
+        const r2Client = getR2Client({
+            endpoint: process.env.S3_API,
+            accessKeyId: process.env.R2_ACCESS_KEY_ID!,
+            secretAccessKey: process.env.R2_SECRET_ACCESS_KEY!,
+        });
+
+        await deleteObject(r2Client, imageKey);
+
+        // Update database to remove image key
+        await db
+            .update(news)
+            .set({
+                [NEWS_COLUMNS.IMAGE_KEY]: null,
+                [COMMON_COLUMNS.UPDATED_BY]: user.user.id,
+            })
+            .where(eq(news[COMMON_COLUMNS.ID], input.id));
     })
     .callable();

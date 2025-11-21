@@ -45,6 +45,15 @@ export function NewsTableActions({
     // Delete mutation
     const deleteMutation = useMutation(
         rpc.dashboardNews.deleteNews.mutationOptions({
+            onMutate(variables, context) {
+                notifications.show({
+                    title: "Deleting...",
+                    message: "News article is being deleted",
+                    color: "blue",
+                });
+
+                return context;
+            },
             onSuccess: async (_, __, ___, { client }) => {
                 notifications.show({
                     title: "Success",
@@ -52,11 +61,9 @@ export function NewsTableActions({
                     color: "green",
                 });
 
-                await Promise.all([
-                    client.invalidateQueries({
-                        queryKey: rpc.dashboardNews.listNews.key(),
-                    }),
-                ]);
+                client.invalidateQueries({
+                    queryKey: rpc.dashboardNews.listNews.key(),
+                });
             },
             onError: (error) => {
                 notifications.show({
@@ -107,13 +114,14 @@ export function NewsTableActions({
     );
 
     const handleDelete = () => {
+        console.log(`triggered modal`);
+
         modals.openConfirmModal({
             title: "Delete News Article",
             children: (
                 <Text size="sm">
                     Are you sure you want to delete <strong>{title}</strong>?
-                    This action cannot be undone and will also delete the
-                    content from R2 storage.
+                    This action cannot be undone.
                 </Text>
             ),
             labels: {

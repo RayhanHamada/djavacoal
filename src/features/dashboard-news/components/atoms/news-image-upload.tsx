@@ -27,6 +27,10 @@ interface NewsImageUploadProps {
     onImageRemoved: () => void;
     /** Whether the component is disabled */
     disabled?: boolean;
+    /** News article ID (required for edit mode) */
+    newsId?: number;
+    /** Whether the component is in edit mode */
+    isEditMode?: boolean;
 }
 
 export interface NewsImageUploadRef {
@@ -45,7 +49,14 @@ export const NewsImageUpload = forwardRef<
     NewsImageUploadRef,
     NewsImageUploadProps
 >(function NewsImageUpload(
-    { imageKey, onImageUploaded, onImageRemoved, disabled = false },
+    {
+        imageKey,
+        onImageUploaded,
+        onImageRemoved,
+        disabled = false,
+        newsId,
+        isEditMode = false,
+    },
     ref
 ) {
     const [previewUrl, setPreviewUrl] = useState<string | null>(null);
@@ -141,14 +152,43 @@ export const NewsImageUpload = forwardRef<
         setPendingFile(file);
     }, []);
 
-    const handleRemove = useCallback(() => {
-        if (previewUrl) {
-            URL.revokeObjectURL(previewUrl);
-            setPreviewUrl(null);
+    const handleRemove = useCallback(async () => {
+        // If in edit mode and there's an existing image, remove it from DB and R2
+        if (isEditMode && newsId && imageKey && !pendingFile) {
+            try {
+                setIsUploading(true);
+                await client.dashboardNews.removeNewsImage({ id: newsId });
+
+                notifications.show({
+                    title: "Image Removed",
+                    message: "News image has been removed successfully",
+                    color: "green",
+                });
+
+                onImageRemoved();
+            } catch (error) {
+                console.error("Failed to remove image:", error);
+                notifications.show({
+                    title: "Removal Failed",
+                    message:
+                        error instanceof Error
+                            ? error.message
+                            : "Failed to remove image",
+                    color: "red",
+                });
+            } finally {
+                setIsUploading(false);
+            }
+        } else {
+            // Just remove local preview/pending file
+            if (previewUrl) {
+                URL.revokeObjectURL(previewUrl);
+                setPreviewUrl(null);
+            }
+            setPendingFile(null);
+            onImageRemoved();
         }
-        setPendingFile(null);
-        onImageRemoved();
-    }, [previewUrl, onImageRemoved]);
+    }, [isEditMode, newsId, imageKey, pendingFile, previewUrl, onImageRemoved]);
 
     const handleGallerySelect = useCallback(
         (photo: { id: string; name: string; key: string; url: string }) => {
@@ -169,7 +209,7 @@ export const NewsImageUpload = forwardRef<
         previewUrl || (imageKey ? getImageUrl(imageKey) : null);
 
     return (
-        <Box w="100%">
+        <Stack w="100%" gap="md">
             {currentImageUrl ? (
                 // Image preview with hover overlay
                 <Dropzone
@@ -245,30 +285,15 @@ export const NewsImageUpload = forwardRef<
                                 <Stack align="center" gap="xs">
                                     <Loader size="lg" color="white" />
                                     <Text size="md" c="white" fw={500}>
-                                        Uploading...
+                                        {isEditMode &&
+                                        newsId &&
+                                        imageKey &&
+                                        !pendingFile
+                                            ? "Removing..."
+                                            : "Uploading..."}
                                     </Text>
                                 </Stack>
                             </Box>
-                        )}
-
-                        {/* Remove button */}
-                        {!isUploading && !disabled && (
-                            <ActionIcon
-                                pos="absolute"
-                                top={12}
-                                right={12}
-                                color="red"
-                                variant="filled"
-                                onClick={(e) => {
-                                    e.stopPropagation();
-                                    handleRemove();
-                                }}
-                                aria-label="Remove image"
-                                size="lg"
-                                style={{ zIndex: 1 }}
-                            >
-                                <IconTrash size={18} />
-                            </ActionIcon>
                         )}
                     </Box>
                 </Dropzone>
@@ -316,26 +341,42 @@ export const NewsImageUpload = forwardRef<
                 </Dropzone>
             )}
 
+            {/* Action Buttons */}
+            {!isUploading && !disabled && (
+                <Stack gap="xs">
+                    {/* Remove Image Button (shown when image exists) */}
+                    {currentImageUrl && (
+                        <Button
+                            variant="light"
+                            color="red"
+                            leftSection={<IconTrash size={16} />}
+                            onClick={handleRemove}
+                            fullWidth
+                        >
+                            Remove Image
+                        </Button>
+                    )}
+
+                    {/* Choose from Gallery Button (always shown) */}
+                    <Button
+                        variant="light"
+                        leftSection={<IconPhoto size={16} />}
+                        onClick={() => setGalleryModalOpened(true)}
+                        fullWidth
+                    >
+                        {currentImageUrl
+                            ? "Change from Gallery"
+                            : "Choose from Gallery"}
+                    </Button>
+                </Stack>
+            )}
+
             {/* Gallery Picker Modal */}
             <GalleryPickerModal
                 opened={galleryModalOpened}
                 onClose={() => setGalleryModalOpened(false)}
                 onSelect={handleGallerySelect}
             />
-
-            {/* Choose from Gallery Button (shown when no image) */}
-            {!currentImageUrl && !isUploading && (
-                <Button
-                    variant="light"
-                    leftSection={<IconPhoto size={16} />}
-                    onClick={() => setGalleryModalOpened(true)}
-                    disabled={disabled}
-                    fullWidth
-                    mt="md"
-                >
-                    Choose from Gallery
-                </Button>
-            )}
-        </Box>
+        </Stack>
     );
 });

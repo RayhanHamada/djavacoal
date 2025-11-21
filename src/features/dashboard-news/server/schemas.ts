@@ -386,3 +386,12 @@ export const BulkCreateTagsInputSchema = z.object({
 });
 
 export type BulkCreateTagsInput = z.infer<typeof BulkCreateTagsInputSchema>;
+
+/**
+ * Schema for removing news article image
+ */
+export const RemoveNewsImageInputSchema = z.object({
+    id: z.number(),
+});
+
+export type RemoveNewsImageInput = z.infer<typeof RemoveNewsImageInputSchema>;
