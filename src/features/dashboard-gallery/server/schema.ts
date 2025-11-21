@@ -49,9 +49,10 @@ export const ListPhotosOutputSchema = z.object({
             updated_at: z.date(),
         })
     ),
-    total: z.number().int(),
-    page: z.number().int(),
-    pageSize: z.number().int(),
+    total: z.int(),
+    totalPages: z.int(),
+    page: z.int(),
+    pageSize: z.int(),
 });
 
 /**

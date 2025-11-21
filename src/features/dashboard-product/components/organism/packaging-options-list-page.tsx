@@ -9,6 +9,7 @@ import {
     Group,
     Modal,
     Pagination,
+    SimpleGrid,
     Stack,
     Text,
     TextInput,
@@ -21,6 +22,7 @@ import {
     usePackagingOptionsList,
 } from "../../hooks";
 import { PackagingOptionsGrid } from "../molecules";
+import { PackagingOptionCardSkeleton } from "../packaging-option-card-skeleton";
 
 export function PackagingOptionsListPage() {
     const {
@@ -80,9 +82,14 @@ export function PackagingOptionsListPage() {
                 />
 
                 {isLoading ? (
-                    <Text ta="center" c="dimmed">
-                        Loading...
-                    </Text>
+                    <SimpleGrid
+                        cols={{ base: 1, sm: 2, md: 3, lg: 4 }}
+                        spacing="lg"
+                    >
+                        {Array.from({ length: 8 }).map((_, i) => (
+                            <PackagingOptionCardSkeleton key={i} />
+                        ))}
+                    </SimpleGrid>
                 ) : data && data.packagingOptions.length > 0 ? (
                     <>
                         <PackagingOptionsGrid

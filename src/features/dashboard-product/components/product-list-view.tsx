@@ -49,12 +49,12 @@ export function ProductListView() {
     const [activeId, setActiveId] = useState<number | null>(null);
 
     // Fetch products with search using TanStack Query
-    const { data, isLoading } = useQuery(
+    const { data, isFetching } = useQuery(
         rpc.dashboardProduct.listProducts.queryOptions({
             input: {
                 page: 1,
                 limit: 100,
-                name_search: debouncedSearch || undefined,
+                name_search: debouncedSearch,
             },
             initialData: {
                 page: 1,
@@ -70,17 +70,23 @@ export function ProductListView() {
     const reorderMutation = useMutation(
         rpc.dashboardProduct.reorderProducts.mutationOptions({
             onMutate: async (variables, { client }) => {
+                notifications.show({
+                    title: "Reordering Products",
+                    message:
+                        "Please wait while the products are being reordered...",
+                    color: "blue",
+                });
+
                 // Cancel any outgoing refetches
                 await client.cancelQueries({
                     queryKey: rpc.dashboardProduct.listProducts.key(),
                 });
-
                 // Snapshot the previous value
                 const queryKey = rpc.dashboardProduct.listProducts.key({
                     input: {
                         page: 1,
                         limit: 100,
-                        name_search: debouncedSearch || undefined,
+                        name_search: debouncedSearch,
                     },
                 });
 
@@ -216,7 +222,7 @@ export function ProductListView() {
             />
 
             {/* Product grid */}
-            {isLoading ? (
+            {isFetching ? (
                 <Grid>
                     {Array.from({ length: 8 }).map((_, i) => (
                         <Grid.Col
@@ -272,7 +278,7 @@ export function ProductListView() {
             )}
 
             {/* Empty state */}
-            {!isLoading && data?.products.length === 0 && (
+            {!isFetching && data?.products.length === 0 && (
                 <Box ta="center" py="xl">
                     <Title order={4} c="dimmed">
                         {searchQuery
