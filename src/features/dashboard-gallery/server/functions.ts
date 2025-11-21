@@ -95,14 +95,15 @@ export const listPhotos = base
 
         const photosWithUrls = photos.map((photo) => ({
             ...photo,
-            url: buildPhotoUrl(photo.key, assetUrl),
-            created_at: new Date(photo.created_at),
-            updated_at: new Date(photo.updated_at),
+            url: buildPhotoUrl(photo[GALLERY_PHOTO_COLUMNS.KEY], assetUrl),
+            created_at: new Date(photo[COMMON_COLUMNS.CREATED_AT]),
+            updated_at: new Date(photo[COMMON_COLUMNS.UPDATED_AT]),
         }));
 
         return {
             photos: photosWithUrls,
             total,
+            totalPages: Math.ceil(total / limit),
             page,
             pageSize: limit,
         };

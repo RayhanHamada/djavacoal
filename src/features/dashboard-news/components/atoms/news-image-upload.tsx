@@ -4,7 +4,7 @@ import { forwardRef, useCallback, useImperativeHandle, useState } from "react";
 
 import Image from "next/image";
 
-import { ActionIcon, Box, Button, Loader, Stack, Text } from "@mantine/core";
+import { Box, Button, Loader, Stack, Text } from "@mantine/core";
 import { Dropzone, IMAGE_MIME_TYPE } from "@mantine/dropzone";
 import { notifications } from "@mantine/notifications";
 import {

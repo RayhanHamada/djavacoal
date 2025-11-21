@@ -809,15 +809,6 @@ export const removeNewsImage = base
             throw errors.BAD_REQUEST({ message: "No image to remove" });
         }
 
-        // Delete image from R2
-        const r2Client = getR2Client({
-            endpoint: process.env.S3_API,
-            accessKeyId: process.env.R2_ACCESS_KEY_ID!,
-            secretAccessKey: process.env.R2_SECRET_ACCESS_KEY!,
-        });
-
-        await deleteObject(r2Client, imageKey);
-
         // Update database to remove image key
         await db
             .update(news)

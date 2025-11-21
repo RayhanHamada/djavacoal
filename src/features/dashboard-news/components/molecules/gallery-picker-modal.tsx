@@ -51,10 +51,11 @@ export function GalleryPickerModal({
     // Fetch photos
     const photosQuery = useQuery(
         rpc.gallery.listPhotos.queryOptions({
+            enabled: opened,
             input: {
                 search: debouncedSearch,
                 page,
-                limit: 20,
+                limit: 16,
                 sortBy: "updated_at",
                 sortOrder: "desc",
             },
@@ -62,8 +63,7 @@ export function GalleryPickerModal({
     );
 
     const photos = photosQuery.data?.photos ?? [];
-    const total = photosQuery.data?.total ?? 0;
-    const totalPages = Math.ceil(total / 20);
+    const totalPages = photosQuery.data?.totalPages ?? 1;
 
     const handlePhotoClick = (photo: Record<string, any>) => {
         onSelect({
@@ -133,7 +133,7 @@ export function GalleryPickerModal({
                             </Text>
                         </Center>
                     ) : (
-                        <SimpleGrid cols={5} spacing="md">
+                        <SimpleGrid cols={4} spacing="md">
                             {photos.map((photo: Record<string, any>) => (
                                 <Card
                                     key={photo.id}
