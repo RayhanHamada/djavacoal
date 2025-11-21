@@ -131,13 +131,18 @@ export function useProductMutations(product?: ProductDetail) {
                 order_index: product.order_index,
             });
         },
+        onMutate() {
+            notifications.show({
+                title: "Updating Product",
+                message: "Please wait...",
+                color: "blue",
+                loading: true,
+            });
+        },
         onSuccess: async (_, __, ___, { client }) => {
             await Promise.all([
                 client.invalidateQueries({
                     queryKey: rpc.dashboardProduct.getProductById.key(),
-                }),
-                client.invalidateQueries({
-                    queryKey: rpc.dashboardProduct.listProducts.key(),
                 }),
             ]);
 
@@ -146,6 +151,11 @@ export function useProductMutations(product?: ProductDetail) {
                 message: "Product updated successfully",
                 color: "green",
             });
+
+            client.invalidateQueries({
+                queryKey: rpc.dashboardProduct.listProducts.key(),
+            });
+
             router.push("/dashboard/products");
         },
         onError: (error: Error) => {
