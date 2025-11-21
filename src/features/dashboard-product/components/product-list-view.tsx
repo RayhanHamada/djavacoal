@@ -49,7 +49,7 @@ export function ProductListView() {
     const [activeId, setActiveId] = useState<number | null>(null);
 
     // Fetch products with search using TanStack Query
-    const { data, isLoading } = useQuery(
+    const { data, isFetching } = useQuery(
         rpc.dashboardProduct.listProducts.queryOptions({
             input: {
                 page: 1,
@@ -222,7 +222,7 @@ export function ProductListView() {
             />
 
             {/* Product grid */}
-            {isLoading ? (
+            {isFetching ? (
                 <Grid>
                     {Array.from({ length: 8 }).map((_, i) => (
                         <Grid.Col
@@ -278,7 +278,7 @@ export function ProductListView() {
             )}
 
             {/* Empty state */}
-            {!isLoading && data?.products.length === 0 && (
+            {!isFetching && data?.products.length === 0 && (
                 <Box ta="center" py="xl">
                     <Title order={4} c="dimmed">
                         {searchQuery
