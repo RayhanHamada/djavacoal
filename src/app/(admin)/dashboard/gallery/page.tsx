@@ -72,6 +72,7 @@ export default function GalleryPage() {
                     onSortByDate={galleryState.handleSortByDate}
                     isRefetching={photosQuery.isRefetching}
                     onRefresh={handleRefresh}
+                    onManualUpload={modals.openUploadModal}
                     selectedCount={galleryState.selectedPhotoIds.size}
                     onBulkDelete={modals.openBulkDeleteModal}
                     onCancelSelection={galleryState.clearSelection}

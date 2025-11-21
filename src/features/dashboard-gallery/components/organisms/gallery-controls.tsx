@@ -2,7 +2,9 @@
 
 import type { SortBy, SortOrder } from "../../hooks";
 
-import { ActionIcon, Group, TextInput, Tooltip } from "@mantine/core";
+import { useRef } from "react";
+
+import { ActionIcon, Button, Group, TextInput, Tooltip } from "@mantine/core";
 import {
     IconArrowDown,
     IconArrowUp,
@@ -10,6 +12,7 @@ import {
     IconSearch,
     IconSortAscendingLetters,
     IconSortDescendingLetters,
+    IconUpload,
 } from "@tabler/icons-react";
 
 import { BulkDeleteBar } from "../molecules";
@@ -30,6 +33,9 @@ interface GalleryControlsProps {
     isRefetching: boolean;
     onRefresh: () => void;
 
+    // Upload props
+    onManualUpload: (files: File[]) => void;
+
     // Selection props
     selectedCount: number;
     onBulkDelete: () => void;
@@ -49,10 +55,32 @@ export function GalleryControls({
     onSortByDate,
     isRefetching,
     onRefresh,
+    onManualUpload,
     selectedCount,
     onBulkDelete,
     onCancelSelection,
 }: GalleryControlsProps) {
+    const fileInputRef = useRef<HTMLInputElement>(null);
+
+    const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const files = e.target.files;
+        if (files && files.length > 0) {
+            const imageFiles = Array.from(files).filter((file) =>
+                file.type.startsWith("image/")
+            );
+            if (imageFiles.length > 0) {
+                onManualUpload(imageFiles);
+            }
+        }
+        // Reset input value to allow selecting the same files again
+        if (fileInputRef.current) {
+            fileInputRef.current.value = "";
+        }
+    };
+
+    const handleUploadClick = () => {
+        fileInputRef.current?.click();
+    };
     return (
         <Group justify="space-between">
             <TextInput
@@ -77,6 +105,23 @@ export function GalleryControls({
                         onCancel={onCancelSelection}
                     />
                 )}
+
+                {/* Hidden file input */}
+                <input
+                    ref={fileInputRef}
+                    type="file"
+                    multiple
+                    accept="image/*"
+                    onChange={handleFileSelect}
+                    style={{ display: "none" }}
+                />
+
+                {/* Upload button */}
+                <Tooltip label="Upload photos">
+                    <Button variant="filled" onClick={handleUploadClick}>
+                        <IconUpload size={16} /> Upload
+                    </Button>
+                </Tooltip>
 
                 {/* Sort buttons */}
                 <Group gap="xs">
