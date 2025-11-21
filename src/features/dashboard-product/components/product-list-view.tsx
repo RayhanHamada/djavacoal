@@ -54,7 +54,7 @@ export function ProductListView() {
             input: {
                 page: 1,
                 limit: 100,
-                name_search: debouncedSearch || undefined,
+                name_search: debouncedSearch,
             },
             initialData: {
                 page: 1,
@@ -70,17 +70,23 @@ export function ProductListView() {
     const reorderMutation = useMutation(
         rpc.dashboardProduct.reorderProducts.mutationOptions({
             onMutate: async (variables, { client }) => {
+                notifications.show({
+                    title: "Reordering Products",
+                    message:
+                        "Please wait while the products are being reordered...",
+                    color: "blue",
+                });
+
                 // Cancel any outgoing refetches
                 await client.cancelQueries({
                     queryKey: rpc.dashboardProduct.listProducts.key(),
                 });
-
                 // Snapshot the previous value
                 const queryKey = rpc.dashboardProduct.listProducts.key({
                     input: {
                         page: 1,
                         limit: 100,
-                        name_search: debouncedSearch || undefined,
+                        name_search: debouncedSearch,
                     },
                 });
 

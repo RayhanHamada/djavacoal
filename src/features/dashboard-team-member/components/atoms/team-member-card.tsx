@@ -103,6 +103,8 @@ export function TeamMemberCard({
                             style={{ objectFit: "cover" }}
                             alt={teamMember.name}
                             onError={() => setImageError(true)}
+                            priority
+                            sizes="(max-width: 768px) 100vw"
                         />
                     </PhotoView>
 
