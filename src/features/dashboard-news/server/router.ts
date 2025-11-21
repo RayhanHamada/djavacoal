@@ -12,6 +12,7 @@ import {
     getNewsCount,
     listNews,
     listTags,
+    removeNewsImage,
     togglePublish,
     updateNews,
 } from "./functions";
@@ -27,6 +28,7 @@ export const router = {
     togglePublish, // deprecated, kept for backwards compatibility
     checkSlugAvailability,
     generateImageUploadUrl,
+    removeNewsImage,
     listTags,
     createTag,
     bulkCreateTags,

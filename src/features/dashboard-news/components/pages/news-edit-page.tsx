@@ -212,6 +212,7 @@ export function NewsEditPage({ newsId }: NewsEditPageProps) {
                     isSubmitting={updateMutation.isPending}
                     onSubmit={handleSubmit}
                     storageKey={`news-edit-${newsId}`}
+                    newsId={newsId}
                 />
             </Paper>
         </Container>

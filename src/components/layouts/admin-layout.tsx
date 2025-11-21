@@ -9,6 +9,7 @@ import {
     MantineProvider,
     ColorSchemeScript,
 } from "@mantine/core";
+import { ModalsProvider } from "@mantine/modals";
 import { Notifications } from "@mantine/notifications";
 
 import theme from "@/lib/mantine-theme";
@@ -21,8 +22,10 @@ export default function AdminLayout({ children }: Props) {
             <ColorSchemeScript defaultColorScheme="light" />
             <DirectionProvider>
                 <MantineProvider theme={theme} defaultColorScheme="light">
-                    <Notifications />
-                    {children}
+                    <ModalsProvider>
+                        <Notifications />
+                        {children}
+                    </ModalsProvider>
                 </MantineProvider>
             </DirectionProvider>
         </>

@@ -22,7 +22,7 @@ import { parseAsInteger, useQueryState } from "nuqs";
 import { NewsFilters, NewsListTable, useNewsFilters } from "..";
 import { rpc } from "@/lib/rpc";
 
-const ITEMS_PER_PAGE = 20;
+const ITEMS_PER_PAGE = 10;
 
 /**
  * NewsListContent - The main content with data fetching

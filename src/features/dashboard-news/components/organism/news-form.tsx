@@ -38,6 +38,8 @@ interface NewsFormProps {
     onSubmit: (data: NewsFormValues) => void;
     /** Local storage key for persistence */
     storageKey: string;
+    /** News article ID (required for edit mode) */
+    newsId?: number;
 }
 
 /**
@@ -62,6 +64,7 @@ export function NewsForm({
     isEditMode = false,
     isSubmitting = false,
     onSubmit,
+    newsId,
 }: NewsFormProps) {
     // Ref for image upload component
     const imageUploadRef = useRef<NewsImageUploadRef>(null);
@@ -207,6 +210,8 @@ export function NewsForm({
                             form.setFieldValue("imageKey", undefined)
                         }
                         disabled={isSubmitting}
+                        newsId={newsId}
+                        isEditMode={isEditMode}
                     />
                 </Stack>
 

@@ -14,14 +14,20 @@ import {
     IconWorldOff,
 } from "@tabler/icons-react";
 import { useMutation } from "@tanstack/react-query";
+import { match } from "ts-pattern";
 
-import { client, rpc } from "@/lib/rpc";
+import {
+    NEWS_STATUS_FILTER_VALUES,
+    NewsStatusFilterEnumType,
+} from "@/features/dashboard-news/server/constants";
+import { rpc } from "@/lib/rpc";
 
 interface NewsTableActionsProps {
     id: number;
     slug: string;
     title: string;
-    status: "draft" | "published" | "unpublished";
+    status: Exclude<NewsStatusFilterEnumType, "all">;
+    publishedAt?: Date | null;
     onEdit: () => void;
 }
 
@@ -33,95 +39,110 @@ export function NewsTableActions({
     slug,
     title,
     status,
+    publishedAt,
     onEdit,
 }: NewsTableActionsProps) {
     // Delete mutation
-    const deleteMutation = useMutation({
-        mutationFn: (id: number) =>
-            client.dashboardNews.deleteNews({
-                id,
-            }),
-        onSuccess: async (_, __, ___, { client }) => {
-            notifications.show({
-                title: "Success",
-                message: "News article deleted successfully",
-                color: "green",
-            });
+    const deleteMutation = useMutation(
+        rpc.dashboardNews.deleteNews.mutationOptions({
+            onMutate(variables, context) {
+                notifications.show({
+                    title: "Deleting...",
+                    message: "News article is being deleted",
+                    color: "blue",
+                });
 
-            await Promise.all([
+                return context;
+            },
+            onSuccess: async (_, __, ___, { client }) => {
+                notifications.show({
+                    title: "Success",
+                    message: "News article deleted successfully",
+                    color: "green",
+                });
+
                 client.invalidateQueries({
                     queryKey: rpc.dashboardNews.listNews.key(),
-                }),
-            ]);
-        },
-        onError: (error) => {
-            notifications.show({
-                title: "Error",
-                message:
-                    error instanceof Error ? error.message : "Failed to delete",
-                color: "red",
-            });
-        },
-    });
+                });
+            },
+            onError: (error) => {
+                notifications.show({
+                    title: "Error",
+                    message:
+                        error instanceof Error
+                            ? error.message
+                            : "Failed to delete",
+                    color: "red",
+                });
+            },
+        })
+    );
 
     // Change status mutation
-    const changeStatusMutation = useMutation({
-        mutationFn: ({
-            id,
-            status,
-        }: {
-            id: number;
-            status: "draft" | "published" | "unpublished";
-        }) => client.dashboardNews.changeStatus({ id, status }),
-        onSuccess: async (_, variables, __, { client }) => {
-            const statusMessages = {
-                draft: "News article saved as draft",
-                published: "News article published",
-                unpublished: "News article unpublished",
-            };
-            notifications.show({
-                title: "Success",
-                message: statusMessages[variables.status],
-                color: "green",
-            });
+    const changeStatusMutation = useMutation(
+        rpc.dashboardNews.changeStatus.mutationOptions({
+            onSuccess: async (_, variables, __, { client }) => {
+                const statusMessages = {
+                    draft: "News article saved as draft",
+                    published: "News article published",
+                    unpublished: "News article unpublished",
+                } as const;
 
-            await Promise.all([
-                client.invalidateQueries({
-                    queryKey: rpc.dashboardNews.listNews.key(),
-                }),
-            ]);
-        },
-        onError: (error) => {
-            notifications.show({
-                title: "Error",
-                message:
-                    error instanceof Error
-                        ? error.message
-                        : "Failed to update status",
-                color: "red",
-            });
-        },
-    });
+                notifications.show({
+                    title: "Success",
+                    message: statusMessages[variables.status],
+                    color: "green",
+                });
+
+                await Promise.all([
+                    client.invalidateQueries({
+                        queryKey: rpc.dashboardNews.listNews.key(),
+                    }),
+                ]);
+            },
+            onError: (error) => {
+                notifications.show({
+                    title: "Error",
+                    message:
+                        error instanceof Error
+                            ? error.message
+                            : "Failed to update status",
+                    color: "red",
+                });
+            },
+        })
+    );
 
     const handleDelete = () => {
+        console.log(`triggered modal`);
+
         modals.openConfirmModal({
             title: "Delete News Article",
             children: (
                 <Text size="sm">
                     Are you sure you want to delete <strong>{title}</strong>?
-                    This action cannot be undone and will also delete the
-                    content from R2 storage.
+                    This action cannot be undone.
                 </Text>
             ),
-            labels: { confirm: "Delete", cancel: "Cancel" },
-            confirmProps: { color: "red" },
-            onConfirm: () => deleteMutation.mutate(id),
+            labels: {
+                confirm: "Delete",
+                cancel: "Cancel",
+            },
+            confirmProps: {
+                color: "red",
+            },
+            onConfirm: () => deleteMutation.mutate({ id }),
         });
     };
 
     const handleChangeStatus = (newStatus: typeof status) => {
-        changeStatusMutation.mutate({ id, status: newStatus });
+        changeStatusMutation.mutate({
+            id,
+            status: newStatus,
+        });
     };
+
+    const isFuturePublished = publishedAt && publishedAt > new Date();
 
     return (
         <Group gap="xs" wrap="nowrap">
@@ -139,48 +160,84 @@ export function NewsTableActions({
                 </Menu.Target>
 
                 <Menu.Dropdown>
+                    {match({
+                        status,
+                        isFuturePublished,
+                    })
+                        .with(
+                            {
+                                status: NEWS_STATUS_FILTER_VALUES.DRAFT,
+                            },
+                            () => (
+                                <Menu.Item
+                                    leftSection={<IconWorld size={16} />}
+                                    onClick={() =>
+                                        handleChangeStatus(
+                                            NEWS_STATUS_FILTER_VALUES.PUBLISHED
+                                        )
+                                    }
+                                    disabled={changeStatusMutation.isPending}
+                                >
+                                    Publish
+                                </Menu.Item>
+                            )
+                        )
+                        .with(
+                            {
+                                status: NEWS_STATUS_FILTER_VALUES.UNPUBLISHED,
+                            },
+                            ({ isFuturePublished }) => (
+                                <Menu.Item
+                                    leftSection={<IconWorld size={16} />}
+                                    onClick={() =>
+                                        handleChangeStatus(
+                                            NEWS_STATUS_FILTER_VALUES.PUBLISHED
+                                        )
+                                    }
+                                    disabled={changeStatusMutation.isPending}
+                                >
+                                    {isFuturePublished
+                                        ? "Schedule Publication"
+                                        : "Publish"}
+                                </Menu.Item>
+                            )
+                        )
+                        .with(
+                            {
+                                status: NEWS_STATUS_FILTER_VALUES.PUBLISHED,
+                            },
+                            ({ isFuturePublished }) => (
+                                <>
+                                    <Menu.Item
+                                        leftSection={<IconWorldOff size={16} />}
+                                        onClick={() =>
+                                            handleChangeStatus(
+                                                NEWS_STATUS_FILTER_VALUES.UNPUBLISHED
+                                            )
+                                        }
+                                        disabled={
+                                            changeStatusMutation.isPending
+                                        }
+                                    >
+                                        {isFuturePublished
+                                            ? "Cancel Schedule"
+                                            : "Unpublish"}
+                                    </Menu.Item>
+                                    {!isFuturePublished && (
+                                        <Menu.Item
+                                            leftSection={<IconEye size={16} />}
+                                            component={Link}
+                                            href={`${process.env.NEXT_PUBLIC_BASE_URL}blog/${slug}`}
+                                            target="_blank"
+                                        >
+                                            View on Site
+                                        </Menu.Item>
+                                    )}
+                                </>
+                            )
+                        )
+                        .otherwise(() => null)}
                     {/* Status transitions based on current status */}
-                    {status === "draft" && (
-                        <Menu.Item
-                            leftSection={<IconWorld size={16} />}
-                            onClick={() => handleChangeStatus("published")}
-                            disabled={changeStatusMutation.isPending}
-                        >
-                            Publish
-                        </Menu.Item>
-                    )}
-
-                    {status === "published" && (
-                        <>
-                            <Menu.Item
-                                leftSection={<IconWorldOff size={16} />}
-                                onClick={() =>
-                                    handleChangeStatus("unpublished")
-                                }
-                                disabled={changeStatusMutation.isPending}
-                            >
-                                Unpublish
-                            </Menu.Item>
-                            <Menu.Item
-                                leftSection={<IconEye size={16} />}
-                                component={Link}
-                                href={`${process.env.NEXT_PUBLIC_BASE_URL}news/${slug}`}
-                                target="_blank"
-                            >
-                                View on Site
-                            </Menu.Item>
-                        </>
-                    )}
-
-                    {status === "unpublished" && (
-                        <Menu.Item
-                            leftSection={<IconWorld size={16} />}
-                            onClick={() => handleChangeStatus("published")}
-                            disabled={changeStatusMutation.isPending}
-                        >
-                            Re-publish
-                        </Menu.Item>
-                    )}
 
                     <Menu.Divider />
 

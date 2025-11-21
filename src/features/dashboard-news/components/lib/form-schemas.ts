@@ -1,6 +1,15 @@
 import { zod4Resolver } from "mantine-form-zod-resolver";
 import { z } from "zod/v4";
 
+import {
+    FORM_CONTENT_MIN_LENGTH,
+    METADATA_DESCRIPTION_MAX_LENGTH,
+    METADATA_DESCRIPTION_MIN_LENGTH,
+    METADATA_TITLE_MIN_LENGTH,
+    SLUG_MIN_LENGTH,
+    TITLE_MIN_LENGTH,
+} from "../../server/constants";
+
 /**
  * Creation mode enum
  * - fresh: typical article creation with draft/publish flow
@@ -19,17 +28,30 @@ export type NewsStatus = z.infer<typeof NewsStatusEnum>;
  * Schema for news form data
  */
 const NEWS_FORM_SCHEMA = z.object({
-    slug: z.string().min(1, "Slug is required"),
+    slug: z.string().min(SLUG_MIN_LENGTH, "Slug is required"),
     imageKey: z.string().optional(),
-    enTitle: z.string().min(1, "Title is required"),
-    arTitle: z.string().min(1, "Title is required"),
-    enContent: z.string().min(160, "Content must be at least 160 characters"),
+    enTitle: z.string().min(TITLE_MIN_LENGTH, "Title is required"),
+    arTitle: z.string().min(TITLE_MIN_LENGTH, "Title is required"),
+    enContent: z
+        .string()
+        .min(
+            FORM_CONTENT_MIN_LENGTH,
+            "Content must be at least 160 characters"
+        ),
     arContent: z.string(),
-    metadataTitle: z.string().min(1, "Metadata title is required"),
+    metadataTitle: z
+        .string()
+        .min(METADATA_TITLE_MIN_LENGTH, "Metadata title is required"),
     metadataDescription: z
         .string()
-        .min(1, "Metadata description is required")
-        .max(160, "Metadata description must be 160 characters or less"),
+        .min(
+            METADATA_DESCRIPTION_MIN_LENGTH,
+            "Metadata description is required"
+        )
+        .max(
+            METADATA_DESCRIPTION_MAX_LENGTH,
+            "Metadata description must be 160 characters or less"
+        ),
     metadataTags: z.array(z.string()).default([]),
 
     // Creation mode: fresh or migration
