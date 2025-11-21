@@ -851,8 +851,6 @@ export const updateProduct = base
                 );
             }
 
-            console.log(`variant sizes =>> `, input.variants);
-
             // Re-insert variants
             if (input.variants.length) {
                 await db.insert(productVariants).values(
