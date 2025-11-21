@@ -75,7 +75,7 @@ export function NewsTitleCell({ enTitle, arTitle, onClick }: TitleCellProps) {
 }
 
 interface StatusCellProps {
-    status: "draft" | "published" | "unpublished";
+    status: "draft" | "published" | "unpublished" | "scheduled";
 }
 
 /**
@@ -86,6 +86,7 @@ export function NewsStatusCell({ status }: StatusCellProps) {
         draft: { color: "gray", label: "Draft" },
         published: { color: "green", label: "Published" },
         unpublished: { color: "orange", label: "Unpublished" },
+        scheduled: { color: "blue", label: "Scheduled" },
     };
 
     const config = statusConfig[status];

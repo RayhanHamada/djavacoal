@@ -7,6 +7,7 @@ import {
     NewsTitleCell,
 } from "../atoms/news-table-cells";
 import { NewsTableActions } from "../molecules/news-table-actions";
+import { NEWS_STATUS_FILTER_VALUES } from "@/features/dashboard-news/server/constants";
 
 export interface NewsArticle {
     id: number;
@@ -49,7 +50,17 @@ export const createNewsTableColumns = (onEdit: (id: number) => void) => [
     columnHelper.accessor("status", {
         id: "status",
         header: "Status",
-        cell: ({ row }) => <NewsStatusCell status={row.original.status} />,
+        cell: ({ row }) => {
+            const { status, publishedAt } = row.original;
+            const isScheduled =
+                publishedAt &&
+                publishedAt > new Date() &&
+                status === NEWS_STATUS_FILTER_VALUES.PUBLISHED;
+
+            return (
+                <NewsStatusCell status={isScheduled ? "scheduled" : status} />
+            );
+        },
         size: 120,
     }),
     columnHelper.accessor("publishedAt", {
@@ -67,6 +78,7 @@ export const createNewsTableColumns = (onEdit: (id: number) => void) => [
                 slug={row.original.slug}
                 title={row.original.enTitle}
                 status={row.original.status}
+                publishedAt={row.original.publishedAt}
                 onEdit={() => onEdit(row.original.id)}
             />
         ),

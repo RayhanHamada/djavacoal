@@ -2,9 +2,14 @@ import "server-only";
 
 import { headers } from "next/headers";
 
-import { and, count, desc, eq, gte, like, lte, or, sql } from "drizzle-orm";
+import { and, desc, eq, gte, like, lte, or, sql } from "drizzle-orm";
 import { nanoid } from "nanoid";
 
+import {
+    CREATION_MODE,
+    NEWS_STATUS_FILTER_VALUES,
+    STATUS_TRANSITION_ERRORS,
+} from "./constants";
 import {
     BulkCreateTagsInputSchema,
     ChangeStatusInputSchema,
@@ -43,6 +48,7 @@ import {
     uploadTextContent,
 } from "@/adapters/r2";
 import { getAuth } from "@/features/dashboard-auth/lib/better-auth-server";
+import { sluggify } from "@/features/dashboard-news/server/utils";
 import base from "@/lib/orpc/server";
 
 /**
@@ -83,12 +89,15 @@ export const listNews = base
             );
         }
 
-        if (status !== "all") {
+        if (status !== NEWS_STATUS_FILTER_VALUES.ALL) {
             whereConditions.push(eq(news[NEWS_COLUMNS.STATUS], status));
         }
 
         // Apply published date filters only when status is published/unpublished
-        if (status === "published" || status === "unpublished") {
+        if (
+            status === NEWS_STATUS_FILTER_VALUES.PUBLISHED ||
+            status === NEWS_STATUS_FILTER_VALUES.UNPUBLISHED
+        ) {
             if (publishedFrom) {
                 whereConditions.push(
                     gte(news[NEWS_COLUMNS.PUBLISHED_AT], publishedFrom)
@@ -134,10 +143,7 @@ export const listNews = base
             : undefined;
 
         // Get total count
-        const [{ total }] = await db
-            .select({ total: count() })
-            .from(news)
-            .where(whereClause);
+        const total = await db.$count(news, whereClause);
 
         // Get paginated items
         const items = await db
@@ -165,17 +171,7 @@ export const listNews = base
             .offset((page - 1) * limit);
 
         return {
-            items: items.map((item) => ({
-                ...item,
-                status: item.status ?? NEWS_STATUS.DRAFT,
-                publishedAt: item.publishedAt,
-                metadataTags: Array.isArray(item.metadataTags)
-                    ? item.metadataTags
-                    : [],
-
-                createdAt: item.createdAt,
-                updatedAt: item.updatedAt,
-            })),
+            items,
             total,
             page,
             limit,
@@ -250,11 +246,7 @@ export const getNewsById = base
  */
 export const createNews = base
     .input(CreateNewsInputSchema)
-    .handler(async function ({
-        context: { env },
-        errors,
-        input,
-    }): Promise<{ id: number }> {
+    .handler(async function ({ context: { env }, errors, input }) {
         const db = getDB(env.DJAVACOAL_DB);
         const auth = getAuth(env);
         const header = await headers();
@@ -266,14 +258,7 @@ export const createNews = base
         if (!user) throw errors.UNAUTHORIZED();
 
         // Auto-create tags if they don't exist (insert or ignore)
-        if (input.metadataTags.length > 0) {
-            function sluggify(name: string) {
-                return name
-                    .toLowerCase()
-                    .replace(/[^a-z0-9]+/g, "-")
-                    .replace(/^-|-$/g, "");
-            }
-
+        if (input.metadataTags.length) {
             const nameSlugPairs = input.metadataTags.map((name) => ({
                 name,
                 slug: sluggify(name),
@@ -290,7 +275,9 @@ export const createNews = base
         });
 
         if (existing)
-            throw errors.BAD_REQUEST({ message: "Slug already exists" });
+            throw errors.BAD_REQUEST({
+                message: "Slug already exists",
+            });
 
         // Generate R2 keys for content
         const enContentKey = `${NEWS_CONTENT_PREFIX}/${nanoid()}-en.html`;
@@ -318,14 +305,14 @@ export const createNews = base
         let publishedBy: string | null = null;
 
         if (input.status === NEWS_STATUS.PUBLISHED) {
-            if (input.mode === "migration") {
+            publishedBy = userId;
+            if (input.mode === CREATION_MODE.MIGRATION) {
                 // Migration mode: use provided date (can be past)
                 publishedAt = input.publishedAt ?? new Date();
             } else {
                 // Fresh mode: use provided date (can be future for scheduling) or current time
                 publishedAt = input.publishedAt ?? new Date();
             }
-            publishedBy = userId;
         }
 
         const [inserted] = await db
@@ -350,7 +337,9 @@ export const createNews = base
                 id: news[COMMON_COLUMNS.ID],
             });
 
-        return { id: inserted.id };
+        return {
+            id: inserted.id,
+        };
     })
     .callable();
 
@@ -371,14 +360,7 @@ export const updateNews = base
         if (!user) throw errors.UNAUTHORIZED();
 
         // Auto-create tags if they don't exist (insert or ignore)
-        if (input.metadataTags.length > 0) {
-            function sluggify(name: string) {
-                return name
-                    .toLowerCase()
-                    .replace(/[^a-z0-9]+/g, "-")
-                    .replace(/^-|-$/g, "");
-            }
-
+        if (input.metadataTags.length) {
             const nameSlugPairs = input.metadataTags.map((name) => ({
                 name,
                 slug: sluggify(name),
@@ -529,12 +511,14 @@ export const changeStatus = base
         // Get current article to check existing status
         const existing = await db.query.news.findFirst({
             where(fields, operators) {
-                return operators.eq(fields.id, input.id);
+                return operators.eq(fields[COMMON_COLUMNS.ID], input.id);
             },
         });
 
         if (!existing) {
-            throw errors.NOT_FOUND({ message: "News article not found" });
+            throw errors.NOT_FOUND({
+                message: "News article not found",
+            });
         }
 
         // Validate status transitions
@@ -543,13 +527,12 @@ export const changeStatus = base
             input.status === NEWS_STATUS.UNPUBLISHED
         ) {
             throw errors.BAD_REQUEST({
-                message:
-                    "Cannot unpublish a draft article. Article must be published first.",
+                message: STATUS_TRANSITION_ERRORS.DRAFT_TO_UNPUBLISHED,
             });
         }
 
-        let publishedAt: Date | null = existing.published_at;
-        let publishedBy: string | null = existing.published_by;
+        let publishedAt: Date | null = existing[NEWS_COLUMNS.PUBLISHED_AT];
+        let publishedBy: string | null = existing[NEWS_COLUMNS.PUBLISHED_BY];
 
         if (input.status === NEWS_STATUS.PUBLISHED) {
             // Publishing: set published date and user if not already set
@@ -678,7 +661,9 @@ export const listTags = base
             .limit(limit)
             .orderBy(tags[TAG_COLUMNS.NAME]);
 
-        return { items };
+        return {
+            items,
+        };
     })
     .callable();
 
@@ -699,10 +684,7 @@ export const createTag = base
         if (!user) throw errors.UNAUTHORIZED();
 
         // Generate slug from name
-        const slug = name
-            .toLowerCase()
-            .replace(/[^a-z0-9]+/g, "-")
-            .replace(/^-|-$/g, "");
+        const slug = sluggify(name);
 
         // Check if slug already exists
         const existing = await db.query.tags.findFirst({
@@ -750,21 +732,12 @@ export const bulkCreateTags = base
 
         const db = getDB(env.DJAVACOAL_DB);
 
-        // const created = [];
-
-        function sluggify(name: string) {
-            return name
-                .toLowerCase()
-                .replace(/[^a-z0-9]+/g, "-")
-                .replace(/^-|-$/g, "");
-        }
-
         const nameSlugPairs = names.map((name) => ({
             name,
             slug: sluggify(name),
         }));
 
-        const created = await db
+        const items = await db
             .insert(tags)
             .values(nameSlugPairs)
             .onConflictDoNothing()
@@ -776,7 +749,9 @@ export const bulkCreateTags = base
                 updatedAt: tags[COMMON_COLUMNS.UPDATED_AT],
             });
 
-        return { items: created };
+        return {
+            items,
+        };
     })
     .callable();
 
@@ -795,7 +770,7 @@ export const getNewsCount = base
 
         if (!user) throw errors.UNAUTHORIZED();
 
-        const [{ total }] = await db.select({ total: count() }).from(news);
+        const total = await db.$count(news);
 
         return { count: total };
     })
