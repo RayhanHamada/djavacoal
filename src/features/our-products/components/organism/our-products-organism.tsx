@@ -5,6 +5,7 @@ import { useState } from "react";
 
 import Image from "next/image";
 
+import { useLocale } from "next-intl";
 import { PhotoProvider, PhotoView } from "react-photo-view";
 
 import {
@@ -16,9 +17,13 @@ import {
     MediaGallery,
     DjavacoalBrandPage,
 } from "../molecules";
+import { LOCALES } from "@/configs";
 import { useProducts } from "@/features/our-products/hooks";
+import { cn } from "@/lib/utils";
 
 export function ProductPage() {
+    const locale = useLocale();
+
     const {
         products,
         selectedProduct,
@@ -80,7 +85,12 @@ export function ProductPage() {
                     />
                 </div>
 
-                <section className="mx-auto max-w-7xl px-5 py-0 pb-10 md:px-10 md:py-16 lg:mx-0 lg:mr-10 lg:max-w-none lg:px-0 lg:py-0">
+                <section
+                    className={cn(
+                        "mx-auto max-w-7xl px-5 py-0 pb-10 md:px-10 md:py-16 lg:mx-0 lg:max-w-none lg:px-0 lg:py-0",
+                        locale === LOCALES.AR ? "lg:ml-10" : "lg:mr-10"
+                    )}
+                >
                     <div className="grid grid-cols-1 gap-10 lg:grid-cols-[260px_1fr]">
                         {/* === LEFT SIDEBAR (Desktop Only) === */}
                         <div className="hidden lg:sticky lg:top-24 lg:block lg:self-start">
