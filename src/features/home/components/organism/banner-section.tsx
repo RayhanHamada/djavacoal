@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import Image from "next/image";
 import Link from "next/link";
@@ -20,25 +20,27 @@ export function BannerSection() {
     const [currentSlide, setCurrentSlide] = useState(0);
 
     const { data } = useHomeContentAPI();
+    const slide_banners = useMemo(
+        () => data?.data.slide_banners || [],
+        [data?.data.slide_banners]
+    );
 
     // Auto-slide carousel
     useEffect(() => {
-        if (!data?.data.slide_banners.length) return;
+        if (!slide_banners.length) return;
 
         const interval = setInterval(() => {
-            setCurrentSlide(
-                (prev) => (prev + 1) % data?.data.slide_banners.length
-            );
+            setCurrentSlide((prev) => (prev + 1) % slide_banners.length);
         }, CAROUSEL_INTERVAL);
 
         return () => clearInterval(interval);
-    }, [data?.data.slide_banners.length]);
+    }, [slide_banners]);
 
     return (
         <section className="relative h-[800px] w-full overflow-hidden bg-[#161616]">
             {/* Image Carousel */}
             <div className="absolute inset-0">
-                {data?.data.slide_banners.map((slide, index) => (
+                {slide_banners.map((slide, index) => (
                     <div
                         key={slide}
                         className={cn(
@@ -49,9 +51,10 @@ export function BannerSection() {
                         <Image
                             src={slide}
                             alt={slide}
-                            fill
                             className="object-cover"
-                            priority={index === 0}
+                            fetchPriority="high"
+                            fill
+                            priority
                         />
                     </div>
                 ))}
@@ -87,20 +90,23 @@ export function BannerSection() {
 
             {/* Carousel Navigation Dots */}
             <div className="absolute bottom-8 left-1/2 z-20 flex -translate-x-1/2 items-center justify-center gap-5 md:bottom-10">
-                {data?.data.slide_banners.map((slide, index) => (
-                    <button
-                        key={slide}
-                        onClick={() => setCurrentSlide(index)}
-                        className={`h-3.5 w-3.5 rounded-full border transition-all duration-300 ${
-                            index === currentSlide
-                                ? "border-[#EFA12D] bg-[#EFA12D]"
-                                : "border-[#EFA12D] bg-transparent hover:bg-[#EFA12D]/50"
-                        }`}
-                        aria-label={t("carouselAriaLabel", {
-                            index: index + 1,
-                        })}
-                    />
-                ))}
+                {Array.from({ length: slide_banners.length }).map(
+                    (_, index) => (
+                        <button
+                            key={index}
+                            onClick={() => setCurrentSlide(index)}
+                            className={cn(
+                                `h-3.5 w-3.5 rounded-full border border-[#EFA12D] transition-all duration-300`,
+                                index === currentSlide
+                                    ? "bg-[#EFA12D]"
+                                    : "bg-transparent hover:bg-[#EFA12D]/50"
+                            )}
+                            aria-label={t("carouselAriaLabel", {
+                                index: index + 1,
+                            })}
+                        />
+                    )
+                )}
             </div>
         </section>
     );
