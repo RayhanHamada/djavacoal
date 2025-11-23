@@ -22,11 +22,13 @@ export async function generateMetadata(): Promise<Metadata> {
         },
     });
 
+    const title = pageMetadata?.metadata_title || "CV Djavacoal Indonesia";
+    const description =
+        pageMetadata?.metadata_description || "Quality Charcoal from Indonesia";
+
     return {
-        title: pageMetadata?.metadata_title || "CV Djavacoal Indonesia",
-        description:
-            pageMetadata?.metadata_description ||
-            "Quality Charcoal from Indonesia",
+        title,
+        description,
         keywords: pageMetadata?.metadata_keywords || [
             "charcoal",
             "djavacoal",
@@ -34,6 +36,11 @@ export async function generateMetadata(): Promise<Metadata> {
             "quality charcoal",
         ],
         assets: process.env.NEXT_PUBLIC_ASSETS_URL,
+        openGraph: {
+            type: "website",
+            title,
+            description,
+        },
     };
 }
 
