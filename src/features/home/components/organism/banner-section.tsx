@@ -1,67 +1,25 @@
-"use client";
-
-import { useEffect, useMemo, useState } from "react";
-
-import Image from "next/image";
 import Link from "next/link";
 
-import { useTranslations } from "next-intl";
+import { getTranslations } from "next-intl/server";
 
-import { CAROUSEL_INTERVAL } from "../../lib/constants";
-import { useHomeContentAPI } from "@/features/public-api/hooks";
-import { cn } from "@/lib/utils";
+import { BannerCarousel } from "./banner-carousel";
+import { serverPublicAPIClient } from "@/adapters/public-api/server";
 
 /**
  * BannerSection component - Hero carousel with CTA buttons
- * Auto-advances slides every 8 seconds with manual navigation
+ * Server-rendered with client-side carousel functionality
  */
-export function BannerSection() {
-    const t = useTranslations("Home.banner");
-    const [currentSlide, setCurrentSlide] = useState(0);
-
-    const { data } = useHomeContentAPI();
-    const slide_banners = useMemo(
-        () => data?.data.slide_banners || [],
-        [data?.data.slide_banners]
-    );
-
-    // Auto-slide carousel
-    useEffect(() => {
-        if (!slide_banners.length) return;
-
-        const interval = setInterval(() => {
-            setCurrentSlide((prev) => (prev + 1) % slide_banners.length);
-        }, CAROUSEL_INTERVAL);
-
-        return () => clearInterval(interval);
-    }, [slide_banners]);
+export async function BannerSection() {
+    const t = await getTranslations("Home.banner");
+    const { data } = await serverPublicAPIClient.GET("/home-content");
+    const slide_banners = data?.data.slide_banners ?? [];
 
     return (
         <section className="relative h-[800px] w-full overflow-hidden bg-[#161616]">
-            {/* Image Carousel */}
-            <div className="absolute inset-0">
-                {slide_banners.map((slide, index) => (
-                    <div
-                        key={slide}
-                        className={cn(
-                            `absolute inset-0 transition-opacity duration-1500 ease-in-out`,
-                            index === currentSlide ? "opacity-100" : "opacity-0"
-                        )}
-                    >
-                        <Image
-                            src={slide}
-                            alt={slide}
-                            className="object-cover"
-                            fetchPriority="high"
-                            fill
-                            priority
-                        />
-                    </div>
-                ))}
-                <div className="absolute inset-0 bg-linear-to-b from-black/50 via-black/30 to-transparent" />
-            </div>
+            {/* Client-side Carousel */}
+            <BannerCarousel slides={slide_banners} />
 
-            {/* ✅ Content */}
+            {/* Content */}
             <div className="relative z-10 flex h-full flex-col items-center justify-center gap-10 px-5 text-center md:px-20 lg:px-32">
                 <h1 className="max-w-[700px] font-['Josefin_Sans'] text-[25px] leading-[1.4em] font-semibold text-white md:text-[36px] lg:text-[42px] lg:leading-[1.1em]">
                     {t.rich("title", {
@@ -71,7 +29,7 @@ export function BannerSection() {
                     })}
                 </h1>
 
-                {/* ✅ Buttons (tetap satu baris & responsif) */}
+                {/* Buttons */}
                 <div className="flex w-full max-w-[480px] flex-col gap-3 sm:flex-row sm:justify-center sm:gap-5">
                     <Link
                         href="/about-us"
@@ -86,27 +44,6 @@ export function BannerSection() {
                         {t("buttons.discoverProducts")}
                     </Link>
                 </div>
-            </div>
-
-            {/* Carousel Navigation Dots */}
-            <div className="absolute bottom-8 left-1/2 z-20 flex -translate-x-1/2 items-center justify-center gap-5 md:bottom-10">
-                {Array.from({ length: slide_banners.length }).map(
-                    (_, index) => (
-                        <button
-                            key={index}
-                            onClick={() => setCurrentSlide(index)}
-                            className={cn(
-                                `h-3.5 w-3.5 rounded-full border border-[#EFA12D] transition-all duration-300`,
-                                index === currentSlide
-                                    ? "bg-[#EFA12D]"
-                                    : "bg-transparent hover:bg-[#EFA12D]/50"
-                            )}
-                            aria-label={t("carouselAriaLabel", {
-                                index: index + 1,
-                            })}
-                        />
-                    )
-                )}
             </div>
         </section>
     );
