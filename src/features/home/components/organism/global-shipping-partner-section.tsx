@@ -1,5 +1,7 @@
 "use client";
 
+import "./global-shipping-partner-section.css";
+
 import Image from "next/image";
 
 import { useTranslations } from "next-intl";
@@ -67,8 +69,8 @@ export function GlobalShippingPartnerSection() {
     return (
         <section className="relative w-full overflow-hidden bg-[#151515] py-10 lg:py-16">
             {/* Header */}
-            <div className="mb-8 flex items-center gap-3 px-[20px] md:px-[40px] lg:px-60">
-                <div className="h-[2px] w-[60px] bg-[#EFA12D]" />
+            <div className="mb-8 flex items-center gap-3 px-5 md:px-10 lg:px-60">
+                <div className="h-0.5 w-[60px] bg-[#EFA12D]" />
                 <h2 className="font-['Josefin_Sans'] text-[28px] font-bold text-white md:text-[38px] lg:text-[44px]">
                     {t("title")}{" "}
                     <span className="text-[#EFA12D]">{t("highlight")}</span>{" "}
@@ -78,7 +80,7 @@ export function GlobalShippingPartnerSection() {
 
             <div className="relative h-[420px] w-full overflow-hidden">
                 {/* Track 1 */}
-                <div className="logo-track flex gap-10">
+                <div className="logo-track flex space-x-10">
                     {repeated.map((p, i) => (
                         <PartnerCard
                             key={`track1-${i}`}
@@ -89,7 +91,7 @@ export function GlobalShippingPartnerSection() {
                 </div>
 
                 <div
-                    className="logo-track logo-track--alt flex gap-10"
+                    className="logo-track logo-track--alt flex space-x-10"
                     aria-hidden
                 >
                     {repeated.map((p, i) => (
@@ -102,38 +104,7 @@ export function GlobalShippingPartnerSection() {
                 </div>
             </div>
 
-            <style jsx>{`
-                .logo-track {
-                    position: absolute;
-                    top: 0;
-                    left: 0;
-                    display: flex;
-                    white-space: nowrap;
-                    animation: scrollLoop 150s linear infinite;
-                }
-
-                .logo-track--alt {
-                    animation: scrollLoop2 150s linear infinite;
-                }
-
-                @keyframes scrollLoop {
-                    0% {
-                        transform: translateX(0);
-                    }
-                    100% {
-                        transform: translateX(-100%);
-                    }
-                }
-
-                @keyframes scrollLoop2 {
-                    0% {
-                        transform: translateX(100%);
-                    }
-                    100% {
-                        transform: translateX(0);
-                    }
-                }
-            `}</style>
+            <style jsx>{``}</style>
         </section>
     );
 }
