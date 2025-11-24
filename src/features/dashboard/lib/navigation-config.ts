@@ -13,6 +13,7 @@ import {
     IconCode,
     IconPhotoVideo,
     IconHelp,
+    IconSettings,
 } from "@tabler/icons-react";
 
 export const navigationConfig: NavigationItem[] = [
@@ -32,7 +33,18 @@ export const navigationConfig: NavigationItem[] = [
         label: "Blogs",
         icon: IconArticle,
         description: "Blog Content management",
-        href: "/dashboard/news",
+        children: [
+            {
+                icon: IconList,
+                label: "Manage Blogs",
+                href: "/dashboard/blogs",
+            },
+            {
+                icon: IconSettings,
+                label: "Blog Settings",
+                href: "/dashboard/blogs/settings",
+            },
+        ],
     },
     {
         label: "Products",
