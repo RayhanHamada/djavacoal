@@ -527,6 +527,7 @@
         "faq": {
             "subtitle": "FAQ",
             "title": "Frequently Ask Question",
+            "noFaqsAvailable": "No FAQs available at the moment.",
             "items": {
                 "q1": {
                     "question": "Can I visit your factory?",
