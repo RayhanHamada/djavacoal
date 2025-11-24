@@ -54,8 +54,8 @@ export function useNewsListAPI({
     return $api.useQuery("get", "/news", {
         params: {
             query: {
-                page: page.toString(),
-                limit: limit?.toString(),
+                page: page,
+                limit: limit,
                 search,
             },
         },
@@ -73,7 +73,7 @@ export function useRelatedArticlesAPI({
         {
             params: {
                 query: {
-                    limit: limit?.toString(),
+                    limit,
                 },
             },
         },
