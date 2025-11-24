@@ -1,16 +1,15 @@
 "use client";
 
 import { notifications } from "@mantine/notifications";
-import { onError, onSuccess } from "@orpc/client";
-import { useServerAction } from "@orpc/react/hooks";
+import { useMutation } from "@tanstack/react-query";
 
-import * as actions from "@/features/dashboard-auth/server/actions";
+import { rpc } from "@/lib/rpc";
 
 export function usePasswordSetup(onPasswordSet?: () => void) {
-    const { execute: handleSetPassword, isPending: isSetPasswordLoading } =
-        useServerAction(actions.setPasswordActions, {
-            interceptors: [
-                onSuccess(async function () {
+    const { mutateAsync: handleSetPassword, isPending: isSetPasswordLoading } =
+        useMutation(
+            rpc.admins.setPassword.mutationOptions({
+                onSuccess() {
                     notifications.show({
                         title: "Success",
                         message: "Password set successfully!",
@@ -19,16 +18,16 @@ export function usePasswordSetup(onPasswordSet?: () => void) {
 
                     // Call the callback if provided
                     onPasswordSet?.();
-                }),
-                onError(async function ({ message }) {
+                },
+                onError(error) {
                     notifications.show({
                         title: "Error",
-                        message: message || "Failed to set password.",
+                        message: error.message || "Failed to set password.",
                         color: "red",
                     });
-                }),
-            ],
-        });
+                },
+            })
+        );
 
     return {
         handleSetPassword,
