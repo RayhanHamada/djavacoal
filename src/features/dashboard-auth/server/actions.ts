@@ -9,7 +9,6 @@ import {
     redirectJoinedUser,
     setupFirstUser as setupFirstUser,
     redirectAuthenticatedUser,
-    checkNeedsPassword,
     setPassword,
 } from "@/features/dashboard-auth/server/functions";
 
@@ -46,7 +45,5 @@ export const redirectAuthenticatedUserActions =
             }),
         ],
     });
-
-export const checkNeedsPasswordActions = checkNeedsPassword.actionable();
 
 export const setPasswordActions = setPassword.actionable();

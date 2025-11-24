@@ -4,6 +4,8 @@ import {
     removeAdmin,
     updateMyName,
     changeMyPassword,
+    checkNeedsPassword,
+    setPassword,
 } from "@/features/dashboard-auth/server/functions";
 
 export const router = {
@@ -12,4 +14,6 @@ export const router = {
     removeAdmin,
     updateMyName,
     changeMyPassword,
+    checkNeedsPassword,
+    setPassword,
 };

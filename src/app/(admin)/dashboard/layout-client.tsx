@@ -1,23 +1,19 @@
 "use client";
 
-import { PropsWithChildren, useEffect } from "react";
+import { PropsWithChildren } from "react";
 
-import { useServerAction } from "@orpc/react/hooks";
+import { useQuery } from "@tanstack/react-query";
 
 import { DashboardShell } from "@/features/dashboard/components";
 import { SetPasswordModal } from "@/features/dashboard-auth/components";
-import { checkNeedsPasswordActions } from "@/features/dashboard-auth/server/actions";
+import { rpc } from "@/lib/rpc";
 
 type Props = PropsWithChildren;
 
 export function DashboardLayoutClient({ children }: Props) {
-    const { data, isPending, execute } = useServerAction(
-        checkNeedsPasswordActions
+    const { data, isPending } = useQuery(
+        rpc.admins.checkNeedsPassword.queryOptions()
     );
-
-    useEffect(() => {
-        execute();
-    }, [execute]);
 
     const needsPassword = data?.needsPassword ?? false;
     const showModal = needsPassword && !isPending;
