@@ -1027,6 +1027,12 @@ export const router = {
                 throw errors.NOT_FOUND();
             }
 
+            // Fetch blog settings from KV
+            const [changefreq, priority] = await Promise.all([
+                env.DJAVACOAL_KV.get(KV_KEYS.NEWS_SITEMAP_CHANGEFREQ),
+                env.DJAVACOAL_KV.get(KV_KEYS.NEWS_SITEMAP_PRIORITY),
+            ]);
+
             const imageKey = article[NEWS_COLUMNS.IMAGE_KEY];
             return {
                 body: {
@@ -1041,6 +1047,10 @@ export const router = {
                               ).toString()
                             : null,
                         published_at: article[NEWS_COLUMNS.PUBLISHED_AT]!,
+                        sitemap_changefreq: (changefreq as any) || "daily",
+                        sitemap_priority: priority
+                            ? parseFloat(priority)
+                            : 0.65,
                     },
                 },
             };

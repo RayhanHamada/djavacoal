@@ -113,16 +113,19 @@ export function generateStaticPagesSitemap(
  */
 export function generateBlogSitemap(
     articles: BlogArticleData[],
-    baseURL: string
+    baseURL: string,
+    settings?: { changefreq: string; priority: number }
 ): string {
     let sitemap = generateSitemapHeader();
+
+    const config = settings || BLOG_SITEMAP_CONFIG;
 
     for (const article of articles) {
         const entry: SitemapEntry = {
             loc: new URL(`/blog/${article.slug}`, baseURL).toString(),
             lastmod: formatLastMod(article.updatedAt),
-            changefreq: BLOG_SITEMAP_CONFIG.changefreq,
-            priority: BLOG_SITEMAP_CONFIG.priority,
+            changefreq: config.changefreq as SitemapEntry["changefreq"],
+            priority: config.priority,
         };
 
         sitemap += generateSitemapEntry(entry);

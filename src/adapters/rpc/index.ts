@@ -7,6 +7,7 @@ import z from "zod";
 
 import { RPC_API_PREFIX } from "@/adapters/rpc/constants";
 import { router as admins } from "@/features/dashboard-auth/server/router";
+import { router as blogSettings } from "@/features/dashboard-blog-settings/server/router";
 import { router as dashboardFaqs } from "@/features/dashboard-faqs/server";
 import { router as gallery } from "@/features/dashboard-gallery/server/router";
 import { router as dashboardNews } from "@/features/dashboard-news/server";
@@ -20,6 +21,7 @@ const router = {
      * Add your RPC methods here
      */
     admins,
+    blogSettings,
     gallery,
     dashboardNews,
     dashboardProduct,

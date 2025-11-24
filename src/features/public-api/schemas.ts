@@ -1,6 +1,9 @@
 import { z } from "zod/v4";
 
-import { PRODUCT_MEDIA_TYPE } from "@/adapters/d1/constants";
+import {
+    PRODUCT_MEDIA_TYPE,
+    SITEMAP_CHANGEFREQ_ENUM,
+} from "@/adapters/d1/constants";
 
 /**
  * Public API Schemas
@@ -304,6 +307,14 @@ export const NEWS_METADATA_BODY_OUTPUT_SCHEMA = z.object({
             .nullable()
             .describe("URL of the article's cover image"),
         published_at: z.date().describe("Publication date of the article"),
+        sitemap_changefreq: z
+            .enum(SITEMAP_CHANGEFREQ_ENUM)
+            .describe("Sitemap change frequency"),
+        sitemap_priority: z
+            .number()
+            .min(0)
+            .max(1)
+            .describe("Sitemap priority (0.0-1.0)"),
     }),
 });
 
