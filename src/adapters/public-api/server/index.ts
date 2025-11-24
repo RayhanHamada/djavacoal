@@ -4,6 +4,7 @@ import { onError, ORPCError } from "@orpc/client";
 import { OpenAPIHandler } from "@orpc/openapi/fetch";
 import { OpenAPIReferencePlugin } from "@orpc/openapi/plugins";
 import { ValidationError } from "@orpc/server";
+import { CORSPlugin } from "@orpc/server/plugins";
 import { ZodToJsonSchemaConverter } from "@orpc/zod/zod4";
 import { z } from "zod";
 
@@ -65,6 +66,9 @@ const handler = new OpenAPIHandler(router, {
                     version: "1.0.0",
                 },
             },
+        }),
+        new CORSPlugin({
+            origin: new URL(process.env.NEXT_PUBLIC_BASE_URL).origin,
         }),
     ],
 });

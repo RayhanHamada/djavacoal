@@ -33,7 +33,7 @@ export function WhyChooseUsSection() {
                 </div>
             </div>
 
-            <div className="px-3 sm:px-5 md:px-10 lg:px-[80px] 2xl:px-[120px]">
+            <div className="px-3 sm:px-5 md:px-10 lg:px-20 2xl:px-[120px]">
                 <div
                     ref={scrollRef}
                     className="scrollbar-hide flex justify-start gap-[clamp(1rem,1.5vw,1.25rem)] overflow-x-auto scroll-smooth pb-4 md:overflow-x-auto lg:flex-wrap lg:justify-center lg:overflow-x-visible [@media(min-width:1800px)]:flex-nowrap"
