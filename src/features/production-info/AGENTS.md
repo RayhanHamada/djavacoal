@@ -26,7 +26,14 @@ production-info/
    - Video walkthrough (optional)
    - Bilingual descriptions
 
-2. **Production Capacity**
+2. **FAQ Section**
+   - Dynamically fetched from public API
+   - Bilingual questions and answers (EN/AR)
+   - Managed via dashboard-faqs feature
+   - Displayed as collapsible accordion
+   - Automatic localization based on user's language preference
+
+3. **Production Capacity**
    - Monthly/annual capacity statistics
    - Production equipment details
    - Efficiency metrics

@@ -434,6 +434,7 @@ const { attributes, listeners, setNodeRef, transform, transition, isDragging } =
 ### Email Service
 
 `src/adapters/email-service/` provides Resend clients:
+
 - Use `getResend(env.RESEND_API_KEY)` to send emails
 - Sender email configured via `env.SENDER_EMAIL`
 - Templates in `src/templates/emails/`
@@ -443,6 +444,7 @@ const { attributes, listeners, setNodeRef, transform, transition, isDragging } =
 ### R2 Storage
 
 AWS SDK v3 client for Cloudflare R2 in `src/adapters/r2/`:
+
 - `getR2Client()` creates S3-compatible client
 - `generatePresignedUploadUrl()` for client-side uploads
 - `uploadTextContent()` / `getTextContent()` for HTML content
@@ -452,6 +454,7 @@ AWS SDK v3 client for Cloudflare R2 in `src/adapters/r2/`:
 ### KV Store
 
 Constants in `src/adapters/kv/constants.ts`:
+
 - Used for page settings (social links, contact info, galleries, etc.)
 - Example: `IS_ALREADY_ONBOARDED` flag for first-time setup
 - No expiration by default (permanent storage)
@@ -460,6 +463,7 @@ Constants in `src/adapters/kv/constants.ts`:
 ### Cloudflare Assets
 
 Configured in `wrangler.jsonc` with ASSETS binding:
+
 - Static files served from `.open-next/assets` directory
 - Automatic CDN caching
 - Environment-specific URLs via `NEXT_PUBLIC_ASSET_URL`
@@ -467,6 +471,7 @@ Configured in `wrangler.jsonc` with ASSETS binding:
 ### Public API
 
 RESTful API in `src/features/public-api/` for external consumers:
+
 - OpenAPI documentation with Redocly
 - Type-safe client generation
 - Uses oRPC with custom routes for REST endpoints
@@ -478,37 +483,38 @@ RESTful API in `src/features/public-api/` for external consumers:
 ### When Creating Features
 
 1. **Create feature directory structure**:
-   ```
-   src/features/<feature-name>/
-   ├── components/
-   │   ├── atoms/
-   │   ├── molecules/
-   │   ├── organisms/
-   │   └── index.ts
-   ├── hooks/
-   │   └── index.ts
-   ├── lib/
-   │   ├── constants.ts
-   │   ├── types.ts
-   │   ├── utils.ts
-   │   └── index.ts
-   ├── server/
-   │   ├── functions.ts
-   │   ├── schemas.ts
-   │   ├── router.ts
-   │   └── index.ts
-   ├── AGENTS.md
-   └── index.ts
-   ```
+
+    ```
+    src/features/<feature-name>/
+    ├── components/
+    │   ├── atoms/
+    │   ├── molecules/
+    │   ├── organisms/
+    │   └── index.ts
+    ├── hooks/
+    │   └── index.ts
+    ├── lib/
+    │   ├── constants.ts
+    │   ├── types.ts
+    │   ├── utils.ts
+    │   └── index.ts
+    ├── server/
+    │   ├── functions.ts
+    │   ├── schemas.ts
+    │   ├── router.ts
+    │   └── index.ts
+    ├── AGENTS.md
+    └── index.ts
+    ```
 
 2. **Write AGENTS.md documentation** with:
-   - Overview and purpose
-   - Architecture and directory structure
-   - Database schemas (if applicable)
-   - RPC functions with examples
-   - Integration points
-   - Usage examples
-   - Best practices and common pitfalls
+    - Overview and purpose
+    - Architecture and directory structure
+    - Database schemas (if applicable)
+    - RPC functions with examples
+    - Integration points
+    - Usage examples
+    - Best practices and common pitfalls
 
 3. **Define schemas first** in `server/schemas.ts` using Zod
 
@@ -559,6 +565,7 @@ RESTful API in `src/features/public-api/` for external consumers:
 Available features and their purposes:
 
 ### Dashboard Features (Admin)
+
 - `dashboard` - Main admin dashboard and navigation
 - `dashboard-auth` - Authentication and admin user management
 - `dashboard-news` - News/blog article management
@@ -567,8 +574,10 @@ Available features and their purposes:
 - `dashboard-static-media` - Page-specific media (KV-based)
 - `dashboard-team-member` - Team member profiles
 - `dashboard-page-settings` - Site-wide settings (contact, social, etc.)
+- `dashboard-faqs` - FAQ management with bilingual support
 
 ### Visitor Features (Public)
+
 - `home` - Homepage with hero, featured content
 - `blog` - News article listing and detail pages
 - `our-products` - Product catalog for visitors
@@ -577,6 +586,7 @@ Available features and their purposes:
 - `production-info` - Production process and capabilities
 
 ### API Features
+
 - `public-api` - RESTful API with OpenAPI documentation
 - `sitemap` - XML sitemap generation for SEO
 
@@ -585,29 +595,34 @@ Available features and their purposes:
 ### Common Issues
 
 **Database Connection Errors**
+
 - Verify `CLOUDFLARE_ACCOUNT_ID` and `CLOUDFLARE_DATABASE_ID` in `.dev.vars`
 - Check D1 binding name matches `DJAVACOAL_DB` in `wrangler.jsonc`
 - Ensure migrations are applied with `bun d1:migrate:djavacoal`
 
 **R2 Upload Failures**
+
 - Verify R2 credentials in `.dev.vars`
 - Check bucket name in `wrangler.jsonc` and `src/adapters/r2/constants.ts`
 - Ensure presigned URL hasn't expired
 - Verify CORS settings on R2 bucket
 
 **Auth Issues**
+
 - Check `BETTER_AUTH_SECRET` is set
 - Verify `BETTER_AUTH_URL` matches your deployment URL
 - Ensure session cookies are being set (check browser DevTools)
 - Review Better Auth route handler configuration
 
 **i18n Not Working**
+
 - Verify `locale` cookie is being set
 - Check `src/i18n/messages/{locale}.json` exists
 - Ensure `useTranslations()` hook is used correctly
 - Review `src/i18n/request.ts` configuration
 
 **RPC Function Not Found**
+
 - Check function is exported in `server/router.ts`
 - Verify router is registered in `src/adapters/rpc/index.ts`
 - Ensure function is `.callable()` not `.actionable()`
@@ -616,24 +631,28 @@ Available features and their purposes:
 ## Performance Optimization
 
 ### Database Queries
+
 - Select only needed columns
 - Use indexes for common filters
 - Implement pagination
 - Avoid N+1 queries with joins
 
 ### R2 Storage
+
 - Use presigned URLs for direct uploads
 - Implement lazy loading for images
 - Optimize image sizes before upload
 - Use CDN caching headers
 
 ### Client-Side
+
 - Code splitting with dynamic imports
 - Memoize expensive computations
 - Debounce search inputs
 - Prefetch data on hover
 
 ### Caching Strategy
+
 - TanStack Query for client-side caching
 - Cloudflare CDN for static assets
 - KV for frequently accessed data
