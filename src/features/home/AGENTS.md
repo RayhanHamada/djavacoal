@@ -14,11 +14,14 @@ home/
 │   ├── atoms/          # Basic homepage UI elements (buttons, icons, headings)
 │   ├── molecules/      # Composite components (cards, CTAs)
 │   └── organisms/      # Complex sections (hero, product grid, features)
-├── hooks/              # React hooks for homepage data (currently empty)
+├── hooks/              # React hooks for homepage data
 └── lib/                # Homepage-specific utilities and constants
-    ├── constants.ts    # Centralized data (products, features, slides)
-    ├── types.ts        # Shared TypeScript types
-    └── utils.ts        # Utility functions (chunkArray, etc.)
+    ├── constants.ts    # Centralized data (static content, config)
+    ├── types.ts        # Shared TypeScript interfaces
+    └── utils.ts        # Utility functions (data transformation, formatting)
+```
+
+**Best Practice**: Following the pattern established in `about-company` and `blog` features, this feature centralizes all static data, magic numbers, and reusable type definitions in the `lib/` folder to eliminate code duplication and improve maintainability.
 ```
 
 ### Code Organization Principles

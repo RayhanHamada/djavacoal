@@ -635,7 +635,9 @@ bun d1:migrate:djavacoal
 
 ### Public API
 
-FAQs are exposed via the public API for the visitor-facing FAQ section in the Production Info page:
+FAQs are exposed via the public API for the visitor-facing FAQ section.
+
+**Typical Usage**: The Production Info page (`/production-info`) includes an FAQ section that dynamically fetches published FAQs via the public API:
 
 **Endpoint**: `GET /api/public/faqs`
 

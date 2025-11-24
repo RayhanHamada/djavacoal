@@ -1,6 +1,7 @@
 import { getCloudflareContext } from "@opennextjs/cloudflare";
 
 import { getDB } from "@/adapters/d1/db";
+import { KV_KEYS } from "@/adapters/kv/constants";
 import { SITEMAP_CACHE_HEADERS } from "@/features/sitemap/lib/constants";
 import {
     generateBlogSitemap,
@@ -18,8 +19,19 @@ export async function GET(_request: Request) {
         const { env } = await getCloudflareContext({ async: true });
         const db = getDB(env.DJAVACOAL_DB);
 
+        // Fetch blog settings from KV
+        const [changefreq, priority] = await Promise.all([
+            env.DJAVACOAL_KV.get(KV_KEYS.NEWS_SITEMAP_CHANGEFREQ),
+            env.DJAVACOAL_KV.get(KV_KEYS.NEWS_SITEMAP_PRIORITY),
+        ]);
+
+        const blogSettings = {
+            changefreq: (changefreq as any) || "daily",
+            priority: priority ? parseFloat(priority) : 0.65,
+        };
+
         const articles = await getBlogArticles(db);
-        const sitemap = generateBlogSitemap(articles, baseURL);
+        const sitemap = generateBlogSitemap(articles, baseURL, blogSettings);
 
         return new Response(sitemap, {
             headers: SITEMAP_CACHE_HEADERS,

@@ -3,6 +3,7 @@
 import { useState } from "react";
 
 import { motion, AnimatePresence } from "framer-motion";
+import { useTranslations } from "next-intl";
 
 interface FAQ {
     id: number;
@@ -71,13 +72,14 @@ function FAQItem({
 }
 
 export function FAQClientWrapper({ faqs }: FAQClientWrapperProps) {
+    const t = useTranslations("ProductionInfo.faq");
     const [activeIndex, setActiveIndex] = useState<number | null>(null);
 
     if (faqs.length === 0) {
         return (
             <div className="px-4 pb-8 md:px-6">
                 <p className="text-center text-[#CCCCCC]">
-                    No FAQs available at the moment.
+                    {t("noFaqsAvailable")}
                 </p>
             </div>
         );

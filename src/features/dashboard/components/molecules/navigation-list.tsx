@@ -15,7 +15,11 @@ export function NavigationList({ items }: Props) {
         <ScrollArea style={{ flex: 1 }}>
             <Stack gap="xs" p="sm">
                 {items.map((item) => (
-                    <NavigationItemComponent key={item.label} item={item} />
+                    <NavigationItemComponent
+                        key={item.label}
+                        item={item}
+                        defaultOpened
+                    />
                 ))}
             </Stack>
         </ScrollArea>

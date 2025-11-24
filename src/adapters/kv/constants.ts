@@ -62,6 +62,16 @@ export const KV_KEYS = {
      * caches
      */
     HOME_CONTENT_CACHE: "cache:home_content",
+
+    /**
+     * news sitemap priority
+     */
+    NEWS_SITEMAP_PRIORITY: "sitemap:news_sitemap_priority",
+
+    /**
+     * news sitemap changefreq
+     */
+    NEWS_SITEMAP_CHANGEFREQ: "sitemap:news_sitemap_changefreq",
 } as const;
 
 type KVKey = typeof KV_KEYS;

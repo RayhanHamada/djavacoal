@@ -13,6 +13,7 @@ import {
     IconCode,
     IconPhotoVideo,
     IconHelp,
+    IconSettings,
 } from "@tabler/icons-react";
 
 export const navigationConfig: NavigationItem[] = [
@@ -32,7 +33,18 @@ export const navigationConfig: NavigationItem[] = [
         label: "Blogs",
         icon: IconArticle,
         description: "Blog Content management",
-        href: "/dashboard/news",
+        children: [
+            {
+                icon: IconList,
+                label: "Manage Blogs",
+                href: "/dashboard/news",
+            },
+            {
+                icon: IconSettings,
+                label: "Blog Settings",
+                href: "/dashboard/news/settings",
+            },
+        ],
     },
     {
         label: "Products",
@@ -40,9 +52,9 @@ export const navigationConfig: NavigationItem[] = [
         description: "Product management",
         children: [
             {
-                label: "Manage Packaging Options",
-                icon: IconPackage,
-                href: "/dashboard/products/packaging-options",
+                label: "Create Product",
+                icon: IconPlus,
+                href: "/dashboard/products/create",
             },
             {
                 label: "Manage Products",
@@ -50,9 +62,9 @@ export const navigationConfig: NavigationItem[] = [
                 href: "/dashboard/products",
             },
             {
-                label: "Create Product",
-                icon: IconPlus,
-                href: "/dashboard/products/create",
+                label: "Manage Packaging Options",
+                icon: IconPackage,
+                href: "/dashboard/products/packaging-options",
             },
         ],
     },
