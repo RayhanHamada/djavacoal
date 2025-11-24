@@ -27,19 +27,11 @@ interface YouTubeVideoInputProps {
  * Extract YouTube video ID from URL
  */
 function extractVideoId(url: string): string | null {
-    const patterns = [
-        /(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/shorts\/)([a-zA-Z0-9_-]{11})/,
-        /^([a-zA-Z0-9_-]{11})$/, // Direct ID
-    ];
+    const match = url.match(
+        /^https:\/\/www\.youtube\.com\/embed\/([a-zA-Z0-9_-]{11})/
+    );
 
-    for (const pattern of patterns) {
-        const match = url.match(pattern);
-        if (match) {
-            return match[1];
-        }
-    }
-
-    return null;
+    return match?.at(1) ?? null;
 }
 
 /**
@@ -69,7 +61,7 @@ export function YouTubeVideoInput({
         if (!inputValue.trim()) {
             notifications.show({
                 title: "Error",
-                message: "Please enter a YouTube URL",
+                message: "Please enter a YouTube embed URL",
                 color: "red",
             });
             return;
@@ -79,7 +71,8 @@ export function YouTubeVideoInput({
         if (!id) {
             notifications.show({
                 title: "Error",
-                message: "Invalid YouTube URL",
+                message:
+                    "Invalid YouTube embed URL. Please use format: https://www.youtube.com/embed/VIDEO_ID",
                 color: "red",
             });
             return;
@@ -96,10 +89,10 @@ export function YouTubeVideoInput({
         <Stack gap="md">
             <SectionHeader title={title} description={description} />
 
-            <Alert color="blue" variant="light" title="YouTube URL">
+            <Alert color="blue" variant="light" title="YouTube Embed URL">
                 <Text size="sm">
-                    Paste a YouTube video URL (e.g.,
-                    https://www.youtube.com/watch?v= VIDEO_ID)
+                    Paste a YouTube embed URL in the format:
+                    https://www.youtube.com/embed/VIDEO_ID
                 </Text>
             </Alert>
 
@@ -112,8 +105,8 @@ export function YouTubeVideoInput({
             ) : (
                 <Stack gap="md">
                     <TextInput
-                        label="YouTube Video URL"
-                        placeholder="https://www.youtube.com/watch?v=VIDEO_ID"
+                        label="YouTube Embed URL"
+                        placeholder="https://www.youtube.com/embed/VIDEO_ID"
                         value={inputValue}
                         onChange={(e) => setInputValue(e.target.value)}
                         leftSection={<IconVideo size={18} />}
