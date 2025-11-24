@@ -3,7 +3,7 @@ import type { SitemapChangefreq } from "./constants";
 /**
  * Blog settings data structure
  */
-export interface BlogSettings {
+export interface BlogSettingsType {
     sitemap_changefreq: SitemapChangefreq;
     sitemap_priority: number;
 }
