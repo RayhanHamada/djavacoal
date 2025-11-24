@@ -7,8 +7,6 @@ import { SITEMAP_CHANGEFREQ_ENUM } from "@/adapters/d1/constants";
  * Uses D1 constants for consistency across the application
  */
 
-export type SitemapChangefreq = (typeof SITEMAP_CHANGEFREQ_ENUM)[number];
-
 /**
  * Input schema for getting blog settings
  */
