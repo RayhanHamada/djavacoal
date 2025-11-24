@@ -261,8 +261,9 @@
             "whatsappMessage": "مرحبًا، أود جدولة زيارة للمصنع"
         },
         "packagingOptions": {
-            "title": "خيارات",
-            "highlight": "التعبئة",
+            "title": "التعبئة",
+            "highlight": "خيارات",
+            "packagingLabel": "التعبئة",
             "options": {
                 "full": {
                     "name": "التعبئة الكاملة",
