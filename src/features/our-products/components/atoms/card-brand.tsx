@@ -2,6 +2,8 @@
 
 import Image from "next/image";
 
+import { useTranslations } from "next-intl";
+
 // Type definition for the card data
 export interface CardData {
     id: string;
@@ -29,24 +31,26 @@ export default function Card({ data }: { data: CardData }) {
 }
 
 export function CardBrand() {
+    const t = useTranslations("DjavacoalBrand.products");
+
     const mockCards: CardData[] = [
         {
             id: "1",
             imageUrl: "/images/cube-25.png",
-            title: "Cube 25",
-            description: "- (72 pcs/kg)",
+            title: t("cube25.name"),
+            description: t("cube25.specs"),
         },
         {
             id: "2",
             imageUrl: "/images/cube-20x50.png",
-            title: "Cube 20X50",
-            description: "- (64 pcs/kg)",
+            title: t("cube20x50.name"),
+            description: t("cube20x50.specs"),
         },
         {
             id: "3",
             imageUrl: "/images/cube-26.png",
-            title: "Cube 26",
-            description: "- (64 pcs/kg)",
+            title: t("cube26.name"),
+            description: t("cube26.specs"),
         },
     ];
 
