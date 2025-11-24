@@ -126,6 +126,8 @@ export function NewsRichTextEditor({
             ResizableImage.configure({
                 defaultWidth: 200,
                 defaultHeight: 200,
+                maxHeight: 400,
+                maxWidth: 400,
                 async onUpload(file) {
                     // Generate unique name using nanoid
                     const uniqueName = `editor-${nanoid()}`;
