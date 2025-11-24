@@ -21,6 +21,7 @@ import {
     USER_COLUMNS,
     VERIFICATION_COLUMNS,
     TEAM_MEMBER_COLUMNS,
+    FAQ_COLUMNS,
 } from "@/adapters/d1/constants";
 
 const ALLOWED_IMAGE_MIME_TYPES = [
@@ -508,6 +509,37 @@ const TEAM_MEMBER_COLUMN_FIELDS = {
     [TEAM_MEMBER_COLUMNS.ORDER_INDEX]: int().notNull().default(0),
 } as const;
 
+export const FAQ_COLUMN_FIELDS = {
+    ...COMMON_FIELDS,
+
+    [COMMON_COLUMNS.ID]: int().primaryKey(),
+
+    /**
+     * English question
+     */
+    [FAQ_COLUMNS.EN_QUESTION]: text().notNull(),
+
+    /**
+     * Arabic question
+     */
+    [FAQ_COLUMNS.AR_QUESTION]: text().notNull(),
+
+    /**
+     * English answer
+     */
+    [FAQ_COLUMNS.EN_ANSWER]: text().notNull(),
+
+    /**
+     * Arabic answer
+     */
+    [FAQ_COLUMNS.AR_ANSWER]: text().notNull(),
+
+    /**
+     * order index for sorting FAQ items
+     */
+    [FAQ_COLUMNS.ORDER_INDEX]: int().notNull(),
+} as const;
+
 /**
  * table used by better-auth to store users
  */
@@ -605,6 +637,8 @@ export const teams = sqliteTable(
     TABLE_NAMES.TEAM_MEMBERS,
     TEAM_MEMBER_COLUMN_FIELDS
 );
+
+export const faqs = sqliteTable(TABLE_NAMES.FAQS, FAQ_COLUMN_FIELDS);
 
 /**
  * relations between tables
@@ -729,3 +763,5 @@ export const tagRelations = relations(tags, () => ({}));
 export const pageMetadataRelations = relations(pageMetadatas, () => ({}));
 
 export const teamMemberRelations = relations(teams, () => ({}));
+
+export const faqRelations = relations(faqs, () => ({}));

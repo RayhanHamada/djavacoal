@@ -19,6 +19,8 @@ export const TABLE_NAMES = {
 
     PAGE_METADATAS: "page_metadatas",
     TEAM_MEMBERS: "team_members",
+
+    FAQS: "faqs",
 } as const;
 
 export const COMMON_COLUMNS = {
@@ -175,6 +177,14 @@ export const TEAM_MEMBER_COLUMNS = {
     NAME: "name",
     POSITION: "position",
     PHOTO_KEY: "photo_key",
+    ORDER_INDEX: "order_index",
+} as const;
+
+export const FAQ_COLUMNS = {
+    EN_QUESTION: "en_question",
+    AR_QUESTION: "ar_question",
+    EN_ANSWER: "en_answer",
+    AR_ANSWER: "ar_answer",
     ORDER_INDEX: "order_index",
 } as const;
 

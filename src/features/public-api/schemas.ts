@@ -330,3 +330,27 @@ export const CONTACT_US_BODY_OUTPUT_SCHEMA = z.object({
         tiktok_link: z.url().nullable().describe("TikTok page link"),
     }),
 });
+
+// ============================================
+// FAQ Schemas
+// ============================================
+
+export const PUBLIC_FAQS_OUTPUT_SCHEMA = z.object({
+    data: z.object({
+        faqs: z
+            .array(
+                z.object({
+                    id: z.number().describe("FAQ unique identifier"),
+                    question: z
+                        .string()
+                        .describe("Localized FAQ question text"),
+                    answer: z
+                        .string()
+                        .describe("Localized FAQ answer (HTML content)"),
+                    order_index: z.number().describe("Display order index"),
+                })
+            )
+            .describe("Array of FAQs ordered by order_index"),
+        total: z.number().describe("Total number of FAQs"),
+    }),
+});

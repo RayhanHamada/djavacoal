@@ -4,6 +4,7 @@ import z from "zod";
 
 import {
     COMMON_COLUMNS,
+    FAQ_COLUMNS,
     NEWS_COLUMNS,
     NEWS_STATUS,
     PACKAGING_OPTION_COLUMNS,
@@ -35,6 +36,7 @@ import {
     NEWS_METADATA_PARAMS_INPUT_SCHEMA,
     NEWS_METADATA_BODY_OUTPUT_SCHEMA,
     CONTACT_US_BODY_OUTPUT_SCHEMA,
+    PUBLIC_FAQS_OUTPUT_SCHEMA,
 } from "@/features/public-api/schemas";
 import { injectNextCookies } from "@/lib/orpc/middlewares";
 import base from "@/lib/orpc/server";
@@ -1088,6 +1090,68 @@ export const router = {
                         linkedin_link,
                         instagram_link,
                         tiktok_link,
+                    },
+                },
+            };
+        }),
+
+    getPublicFaqs: publicBase
+        .route({
+            method: "GET",
+            path: "/faqs",
+            summary: "Fetch public FAQs",
+            description:
+                "Get list of FAQs with locale-aware content for visitor-facing pages",
+            outputStructure: "detailed",
+        })
+        .output(
+            z.object({
+                body: PUBLIC_FAQS_OUTPUT_SCHEMA,
+            })
+        )
+        .handler(async function ({ context: { env, locale } }) {
+            const isArabic = locale === LOCALES.AR;
+            const db = getDB(env.DJAVACOAL_DB);
+
+            const faqs = await db.query.faqs
+                .findMany({
+                    columns: {
+                        [COMMON_COLUMNS.ID]: true,
+                        [FAQ_COLUMNS.EN_QUESTION]: true,
+                        [FAQ_COLUMNS.AR_QUESTION]: true,
+                        [FAQ_COLUMNS.EN_ANSWER]: true,
+                        [FAQ_COLUMNS.AR_ANSWER]: true,
+                        [FAQ_COLUMNS.ORDER_INDEX]: true,
+                    },
+                    orderBy(fields, operators) {
+                        return [operators.asc(fields[FAQ_COLUMNS.ORDER_INDEX])];
+                    },
+                })
+                .then((items) => {
+                    return items.map((item) => {
+                        const id = item[COMMON_COLUMNS.ID];
+                        const question = isArabic
+                            ? item[FAQ_COLUMNS.AR_QUESTION]
+                            : item[FAQ_COLUMNS.EN_QUESTION];
+                        const answer = isArabic
+                            ? item[FAQ_COLUMNS.AR_ANSWER]
+                            : item[FAQ_COLUMNS.EN_ANSWER];
+                        const order_index = item[FAQ_COLUMNS.ORDER_INDEX];
+
+                        return {
+                            id,
+                            question,
+                            answer,
+                            order_index,
+                        };
+                    });
+                });
+
+            return {
+                body: {
+                    data: {
+                        faqs,
+                        total: faqs.length,
                     },
                 },
             };

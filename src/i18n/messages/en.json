@@ -261,6 +261,7 @@
         "packagingOptions": {
             "title": "Packaging",
             "highlight": "Option",
+            "packagingLabel": "Packaging",
             "options": {
                 "full": {
                     "name": "Full Packaging",

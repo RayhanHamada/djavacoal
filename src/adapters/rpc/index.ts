@@ -7,6 +7,7 @@ import z from "zod";
 
 import { RPC_API_PREFIX } from "@/adapters/rpc/constants";
 import { router as admins } from "@/features/dashboard-auth/server/router";
+import { router as dashboardFaqs } from "@/features/dashboard-faqs/server";
 import { router as gallery } from "@/features/dashboard-gallery/server/router";
 import { router as dashboardNews } from "@/features/dashboard-news/server";
 import { router as pageSettings } from "@/features/dashboard-page-settings/server";
@@ -25,6 +26,7 @@ const router = {
     pageSettings,
     staticMedia,
     dashboardTeamMember,
+    dashboardFaqs,
 };
 
 const handler = new RPCHandler(router, {

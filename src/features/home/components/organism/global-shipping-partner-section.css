@@ -1,0 +1,30 @@
+.logo-track {
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: flex;
+    white-space: nowrap;
+    animation: scrollLoop 150s linear infinite;
+}
+
+.logo-track--alt {
+    animation: scrollLoop2 150s linear infinite;
+}
+
+@keyframes scrollLoop {
+    0% {
+        transform: translateX(0);
+    }
+    100% {
+        transform: translateX(-100%);
+    }
+}
+
+@keyframes scrollLoop2 {
+    0% {
+        transform: translateX(100%);
+    }
+    100% {
+        transform: translateX(0);
+    }
+}

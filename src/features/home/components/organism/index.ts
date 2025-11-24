@@ -1,4 +1,5 @@
 export * from "./banner-section";
+export * from "./banner-carousel";
 export * from "./logo-slides-section";
 export * from "./about-us-section";
 export * from "./why-choose-us-section";

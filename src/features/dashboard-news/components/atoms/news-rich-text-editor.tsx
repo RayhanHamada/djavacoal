@@ -4,7 +4,7 @@ import "@mantine/tiptap/styles.css";
 import "./news-rich-text-editor.css";
 import "tiptap-extension-resizable-image/styles.css";
 
-import { Dispatch, useCallback, useState } from "react";
+import { useCallback, useState } from "react";
 
 import { Box, Group, Text } from "@mantine/core";
 import { notifications } from "@mantine/notifications";
@@ -41,8 +41,8 @@ import { client } from "@/lib/rpc";
 type Props = {
     content?: string;
     rtl?: boolean;
-    onChange: Dispatch<string>;
-    onFirstParagraphChange?: Dispatch<string>;
+    onChange(value: string): void;
+    onFirstParagraphChange?(firstParagraph: string): void;
     placeholder?: string;
     minCharacters?: number;
     maxCharacters?: number;

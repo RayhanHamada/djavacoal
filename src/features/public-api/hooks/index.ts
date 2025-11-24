@@ -28,6 +28,10 @@ export function useContactInfoContentAPI() {
     return $api.useQuery("get", "/getContactUs");
 }
 
+export function usePublicFaqsAPI() {
+    return $api.useQuery("get", "/faqs");
+}
+
 export function useProductDetailAPI(id: number) {
     return $api.useQuery("get", "/products/{id}", {
         params: {
