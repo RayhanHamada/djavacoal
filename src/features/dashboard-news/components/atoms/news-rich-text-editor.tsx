@@ -173,7 +173,7 @@ export function NewsRichTextEditor({
                     });
 
                     // Return public URL
-                    const url = `${process.env.NEXT_PUBLIC_ASSET_URL}/${key}`;
+                    const url = `${process.env.NEXT_PUBLIC_ASSET_URL}${key}`;
 
                     notifications.show({
                         color: "green",
