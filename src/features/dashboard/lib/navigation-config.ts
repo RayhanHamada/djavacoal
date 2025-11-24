@@ -12,6 +12,7 @@ import {
     IconPackage,
     IconCode,
     IconPhotoVideo,
+    IconHelp,
 } from "@tabler/icons-react";
 
 export const navigationConfig: NavigationItem[] = [
@@ -91,6 +92,11 @@ export const navigationConfig: NavigationItem[] = [
                 icon: IconPhotoVideo,
                 label: "Static Media",
                 href: "/dashboard/page-settings/static-media",
+            },
+            {
+                icon: IconHelp,
+                label: "FAQs",
+                href: "/dashboard/faqs",
             },
         ],
     },
