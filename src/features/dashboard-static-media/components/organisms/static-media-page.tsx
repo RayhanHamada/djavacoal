@@ -7,6 +7,7 @@ import "react-photo-view/dist/react-photo-view.css";
 import {
     ContactSettingsForm,
     PhotoGalleryManager,
+    ProductCatalogueUploader,
     ReelsManager,
     SinglePhotoUploader,
     YouTubeVideoInput,
@@ -98,6 +99,14 @@ export function StaticMediaPage() {
                         />
                     </Paper>
                 </PhotoProvider>
+
+                {/* Product Catalogue PDF */}
+                <Paper p="xl" withBorder radius="md" shadow="sm">
+                    <ProductCatalogueUploader
+                        title="Product Catalogue"
+                        description="Upload a PDF file for your product catalogue. This will be available in the public API for all products."
+                    />
+                </Paper>
 
                 {/* Contact Settings */}
                 <Paper p="xl" withBorder radius="md" shadow="sm">
