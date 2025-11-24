@@ -633,22 +633,61 @@ bun d1:generate
 bun d1:migrate:djavacoal
 ```
 
-### Public API (Future Enhancement)
+### Public API
 
-FAQs can be exposed via public API for visitor-facing FAQ page:
+FAQs are exposed via the public API for the visitor-facing FAQ section in the Production Info page:
 
+**Endpoint**: `GET /api/public/faqs`
+
+**Response Schema**:
 ```typescript
-// Add to public API router
-export const publicFaqsRouter = {
-  listPublicFaqs: base
-    .output(PublicFaqsSchema)
-    .handler(async ({ context: { env } }) => {
-      const db = getDB(env.DJAVACOAL_DB);
-      const faqs = await db.select().from(faqs).orderBy(order_index);
-      return { faqs };
-    })
-    .callable()
-};
+{
+  data: {
+    faqs: [
+      {
+        id: number,
+        question: string,  // Localized based on Accept-Language or locale cookie
+        answer: string,    // Localized HTML content
+        order_index: number
+      }
+    ],
+    total: number
+  }
+}
+```
+
+**Features**:
+- Locale-aware: Returns EN or AR content based on user's locale
+- Ordered by `order_index` ascending (same order as dashboard)
+- No authentication required
+- Cached on client-side via TanStack Query
+
+**Usage in Components**:
+```typescript
+import { usePublicFaqsAPI } from "@/features/public-api/hooks";
+
+function FAQSection() {
+  const { data } = usePublicFaqsAPI();
+  const faqs = data?.data.faqs ?? [];
+  
+  return (
+    <div>
+      {faqs.map(faq => (
+        <div key={faq.id}>
+          <h3>{faq.question}</h3>
+          <div dangerouslySetInnerHTML={{ __html: faq.answer }} />
+        </div>
+      ))}
+    </div>
+  );
+}
+```
+
+**Integration**:
+- Router: `src/features/public-api/router.ts` (getPublicFaqs)
+- Hook: `src/features/public-api/hooks/index.ts` (usePublicFaqsAPI)
+- Schema: `src/features/public-api/schemas.ts` (PUBLIC_FAQS_OUTPUT_SCHEMA)
+- Consumer: `src/features/production-info/components/organism/faq-section.tsx` (Server Component)
 ```
 
 ## Future Enhancements
@@ -668,6 +707,8 @@ export const publicFaqsRouter = {
 - Check that `value` prop is passed correctly
 - Ensure `onChange` is updating parent state
 - Verify HTML content is valid
+- **Fixed**: Added `useEffect` to sync editor content when `value` prop changes (important for language switching)
+- **Fixed**: Added unique `key` props ("en-answer", "ar-answer") to force re-render when switching languages
 
 ### Drag-and-Drop Not Working
 - Confirm `@dnd-kit` packages are installed
