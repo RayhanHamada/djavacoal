@@ -80,7 +80,7 @@ export default function PackagingSection() {
             className="scroll-mt-28 rounded-xl bg-[#222222]"
         >
             {/* Header */}
-            <header className="mb-8 px-4 pt-4 md:px-6">
+            <header className="p-5 md:p-10">
                 <div className="mb-2 flex items-center gap-3">
                     <div className="h-px w-8 bg-white" />
                     <p className="text-sm font-medium tracking-wide text-[#60A5FF] italic">
@@ -99,7 +99,7 @@ export default function PackagingSection() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, amount: 0.2 }}
                 transition={{ duration: 0.4 }}
-                className="grid grid-cols-1 gap-6 px-4 pb-8 md:grid-cols-3 md:px-6"
+                className="grid grid-cols-1 gap-6 px-5 pb-8 md:grid-cols-3 md:px-10"
             >
                 {packagingOptions.map((option) => (
                     <PackagingCard

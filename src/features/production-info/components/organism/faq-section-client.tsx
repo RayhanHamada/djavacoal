@@ -91,7 +91,7 @@ export function FAQClientWrapper({ faqs }: FAQClientWrapperProps) {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, amount: 0.2 }}
             transition={{ duration: 0.4 }}
-            className="flex flex-col gap-3 px-4 pb-8 md:px-6 lg:flex-row lg:flex-wrap"
+            className="flex flex-col gap-3 px-5 pb-8 md:px-10 lg:flex-row lg:flex-wrap"
         >
             {faqs.map((faq, index) => (
                 <div key={faq.id} className="min-w-[48%] flex-1">

@@ -13,7 +13,7 @@ export default function MOQSection() {
             className="mt-2 scroll-mt-28 rounded-xl bg-[#222222]"
         >
             {/* Header */}
-            <header className="mb-4 px-4 pt-4 md:px-6">
+            <header className="p-5 md:p-10">
                 <div className="mb-2 flex items-center gap-3">
                     <div className="h-px w-8 bg-white" />
                     <p className="text-sm font-medium tracking-wide text-[#60A5FF] italic">
@@ -32,10 +32,10 @@ export default function MOQSection() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, amount: 0.2 }}
                 transition={{ duration: 0.4 }}
-                className="px-4 pb-6 md:px-6 lg:px-0"
+                className="px-5 pb-5 md:px-10 md:pb-10"
             >
                 {/* === BAGIAN GRID === */}
-                <div className="grid grid-cols-1 items-start lg:grid-cols-2 lg:gap-12 lg:px-6">
+                <div className="grid grid-cols-1 items-start lg:grid-cols-2 lg:gap-12">
                     {/* === KIRI: Deskripsi === */}
                     <div>
                         <h3 className="mb-2 text-base font-semibold md:text-lg">

@@ -29,7 +29,7 @@ export default async function FAQSection() {
             className="scroll-mt-28 rounded-xl bg-[#222222]"
         >
             {/* Header */}
-            <header className="mb-6 px-6 pt-4">
+            <header className="p-5 md:p-10">
                 <div className="mb-2 flex items-center gap-3">
                     <div className="h-px w-8 bg-white" />
                     <p className="text-sm font-medium tracking-wide text-[#60A5FF] italic">

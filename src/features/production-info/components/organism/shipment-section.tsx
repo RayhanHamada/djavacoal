@@ -15,7 +15,7 @@ export default function ShipmentSection() {
             className="scroll-mt-28 rounded-xl bg-[#222222]"
         >
             {/* Header */}
-            <header className="mb-4 px-4 pt-4 md:px-6">
+            <header className="p-5 md:p-10">
                 <div className="mb-2 flex items-center gap-3">
                     <div className="h-px w-8 bg-white" />
                     <p className="text-sm font-medium tracking-wide text-[#60A5FF] italic">
@@ -34,7 +34,7 @@ export default function ShipmentSection() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, amount: 0.2 }}
                 transition={{ duration: 0.4 }}
-                className="flex flex-col items-start gap-6 px-4 pb-6 md:grid md:grid-cols-[minmax(0,309px)_1fr] md:gap-6 md:px-6 lg:grid-cols-[minmax(0,500px)_1fr] lg:gap-8"
+                className="flex flex-col items-start gap-6 px-5 pb-6 md:grid md:grid-cols-[minmax(0,309px)_1fr] md:gap-6 md:px-10 lg:grid-cols-[minmax(0,500px)_1fr] lg:gap-8"
             >
                 {/* LEFT: IMAGE */}
                 <div className="relative h-72 w-full overflow-hidden rounded-lg md:aspect-4/3 md:max-h-[350px] lg:aspect-square lg:h-auto lg:max-h-[500px] lg:max-w-[500px]">

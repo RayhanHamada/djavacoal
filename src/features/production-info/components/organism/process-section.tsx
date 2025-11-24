@@ -121,17 +121,17 @@ export default function ProcessSection() {
     return (
         <section
             id={SECTIONS_ELEMENTS_ID.PRODUCTION_INFO.PRODUCTION_PROCESS}
-            className="scroll-mt-28 rounded-xl bg-[#222222]"
+            className="mt-2 scroll-mt-28 space-y-4 rounded-xl bg-[#222222] p-5 lg:p-10"
         >
             {/* Header */}
-            <header className="mb-2 pt-4">
-                <div className="mb-2 flex items-center gap-3 px-6">
+            <header className="mb-2">
+                <div className="mb-2 flex items-center gap-3">
                     <div className="h-px w-8 bg-white" />
                     <p className="text-sm font-medium tracking-wide text-[#60A5FF] italic">
                         {t("subtitle")}
                     </p>
                 </div>
-                <h2 className="px-6 text-xl leading-snug font-semibold text-white md:text-2xl">
+                <h2 className="text-xl leading-snug font-semibold text-white md:text-2xl">
                     {t("title")}
                 </h2>
                 <div className="mt-4 h-px bg-[#3A3A3A]" />
@@ -151,7 +151,7 @@ export default function ProcessSection() {
                     return (
                         <div
                             key={rowIndex}
-                            className={`grid grid-cols-2 gap-3 px-6 py-6 md:grid-cols-3 ${
+                            className={`grid grid-cols-2 gap-3 py-6 md:grid-cols-3 ${
                                 rowIndex !== rows.length - 1
                                     ? "border-b border-[#3A3A3A]"
                                     : ""
