@@ -9,7 +9,7 @@ import { CardBrand } from "../atoms/card-brand";
 export function DjavacoalBrandPage() {
     const t = useTranslations("DjavacoalBrand");
     return (
-        <div className="space-y-12 rounded-xl py-0 lg:bg-[#222222] lg:px-10 lg:py-10">
+        <div className="space-y-12 rounded-xl py-0 lg:bg-[#222222] lg:px-10">
             <div className="flex flex-col gap-10">
                 <div className="flex flex-col gap-5">
                     <span className="flex items-center gap-3">
