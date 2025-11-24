@@ -6,30 +6,32 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import { useTranslations } from "next-intl";
 
+import { SECTIONS_ELEMENTS_ID } from "@/configs";
+
 const productionItems = [
     {
         id: "process",
         titleKey: "process",
         image: "/images/home-production-info1.png",
-        href: "/production-info#process",
+        href: `/production-info#${SECTIONS_ELEMENTS_ID.PRODUCTION_INFO.PRODUCTION_PROCESS}`,
     },
     {
         id: "payment",
         titleKey: "payment",
         image: "/images/home-production-info2.png",
-        href: "/production-info#payment",
+        href: `/production-info#${SECTIONS_ELEMENTS_ID.PRODUCTION_INFO.MOQ_PAYMENT_TERMS}`,
     },
     {
         id: "shipment",
         titleKey: "shipment",
         image: "/images/home-production-info3.png",
-        href: "/production-info#shipment",
+        href: `/production-info#${SECTIONS_ELEMENTS_ID.PRODUCTION_INFO.SHIPMENT_TERMS}`,
     },
     {
         id: "packaging",
         titleKey: "packaging",
         image: "/images/home-production-info4.png",
-        href: "/production-info#packaging",
+        href: `/production-info#${SECTIONS_ELEMENTS_ID.PRODUCTION_INFO.PACKAGING_INFO}`,
     },
 ];
 
@@ -38,9 +40,9 @@ export function ProductionInfoSection() {
     return (
         <section className="relative w-full bg-[#151515] py-16 md:py-20 lg:py-24">
             {/* 🔹 Section Header */}
-            <div className="mb-10 flex flex-col items-start justify-center px-[20px] md:items-start md:px-[60px] lg:px-[240px]">
+            <div className="mb-10 flex flex-col items-start justify-center px-5 md:items-start md:px-[60px] lg:px-60">
                 <div className="flex items-center gap-3">
-                    <div className="h-[2px] w-[50px] bg-[#EFA12D]" />
+                    <div className="h-0.5 w-[50px] bg-[#EFA12D]" />
                     <h2 className="font-['Josefin_Sans'] text-[26px] font-bold text-white md:text-[34px] lg:text-[40px]">
                         {t("title")}{" "}
                         <span className="text-[#EFA12D]">{t("highlight")}</span>
@@ -59,7 +61,7 @@ export function ProductionInfoSection() {
                     >
                         {/* Gambar */}
                         <Link href={item.href}>
-                            <div className="relative h-[205.5px] w-full md:h-[384px] lg:h-[422.5px]">
+                            <div className="relative h-[205.5px] w-full md:h-96 lg:h-[422.5px]">
                                 <Image
                                     src={item.image}
                                     alt={t(`items.${item.titleKey}` as any)}
