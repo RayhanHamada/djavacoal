@@ -166,6 +166,11 @@ export const PRODUCT_DETAIL_BODY_OUTPUT_SCHEMA = z.object({
             .optional()
             .nullable()
             .describe("URL of the product catalogue PDF"),
+        whatsapp_number: z
+            .string()
+            .optional()
+            .nullable()
+            .describe("WhatsApp contact number"),
         medias: z.array(
             z
                 .object({

@@ -5,7 +5,6 @@ import {
     DEFAULT_BUCKET_NAME,
     deleteObject,
     generatePresignedUploadUrl,
-    getR2Client,
 } from "@/adapters/r2";
 import {
     buildPhotoUrl,
@@ -304,7 +303,7 @@ export const generatePdfUploadUrl = base
     .input(GeneratePdfUploadUrlInputSchema)
     .output(GeneratePdfUploadUrlOutputSchema)
     .handler(async function ({ input }) {
-        const { mimeType, size } = input;
+        const { mimeType } = input;
 
         // Generate R2 key with nanoid
         const r2Prefix = getR2Prefix("product-catalogue");

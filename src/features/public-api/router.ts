@@ -781,6 +781,11 @@ export const router = {
                   ).toString()
                 : null;
 
+            // Get WhatsApp number from KV
+            const whatsapp_number = await env.DJAVACOAL_KV.get(
+                KV_KEYS.WHATSAPP_NUMBER
+            );
+
             return {
                 body: {
                     data: {
@@ -793,6 +798,7 @@ export const router = {
                             ? product[PRODUCT_COLUMNS.AR_DESCRIPTION]
                             : product[PRODUCT_COLUMNS.EN_DESCRIPTION],
                         catalogue_url,
+                        whatsapp_number,
                         moq: product[PRODUCT_COLUMNS.MOQ],
                         production_capacity:
                             product[PRODUCT_COLUMNS.PRODUCTION_CAPACITY],

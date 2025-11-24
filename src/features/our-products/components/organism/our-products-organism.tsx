@@ -61,14 +61,6 @@ export function ProductPage() {
         );
     }
 
-    const handleDownloadCatalogue = () => {
-        console.log("Download catalogue");
-    };
-
-    const handleAskMore = () => {
-        window.open("https://wa.me/6282122859318", "_blank");
-    };
-
     return (
         <PhotoProvider>
             <div className="flex flex-col gap-10 py-0 lg:gap-0 lg:px-0">
@@ -132,10 +124,11 @@ export function ProductPage() {
                                                     selectedProduct.name
                                                 }
                                                 medias={selectedProduct.medias}
-                                                onDownloadCatalogue={
-                                                    handleDownloadCatalogue
+                                                catalogueUrl={
+                                                    selectedProduct.catalogue_url ??
+                                                    undefined
                                                 }
-                                                onAskMore={handleAskMore}
+                                                askMoreUrl={`https://wa.me/${selectedProduct.whatsapp_number}`}
                                             />
 
                                             {/* Divider */}
