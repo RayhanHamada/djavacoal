@@ -13,9 +13,8 @@ import { PRODUCT_MEDIA_TYPE } from "@/adapters/d1/constants";
 
 export const LIST_PRODUCT_NAME_QUERY_INPUT_SCHEMA = z
     .object({
-        limit: z
+        limit: z.coerce
             .number()
-            .min(5)
             .default(5)
             .describe("Maximum number of product names to return"),
     })
@@ -231,14 +230,12 @@ export const NEWS_LIST_QUERY_INPUT_SCHEMA = z
             .string()
             .optional()
             .describe("Search term to filter news articles"),
-        page: z
-            .string()
-            .transform((val) => parseInt(val, 10))
+        page: z.coerce
+            .number()
             .default(1)
             .describe("Page number for pagination"),
-        limit: z
-            .string()
-            .transform((val) => parseInt(val, 10))
+        limit: z.coerce
+            .number()
             .default(10)
             .describe("Number of articles per page"),
     })
