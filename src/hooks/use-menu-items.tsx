@@ -66,7 +66,13 @@ export function useMenuItems() {
             },
             {
                 label: t("ourProducts"),
-                submenus: productSubmenus,
+                submenus: [
+                    ...productSubmenus,
+                    {
+                        label: "Djavacoal Brands",
+                        href: "/our-products#djavacoal-brands",
+                    },
+                ],
             },
             {
                 label: t("productionInfo"),
