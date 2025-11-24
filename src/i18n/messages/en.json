@@ -604,6 +604,39 @@
             }
         }
     },
+    "DjavacoalBrand": {
+        "logoAlt": "Djavacoal Logo",
+        "title": "Djavacoal's",
+        "titleHighlight": "Brand",
+        "descriptionTitle": "Description :",
+        "description": {
+            "intro": "At Djavacoal Indonesia, we proudly introduce",
+            "brandName": "Golden Cube",
+            "intro2": ", our premium brand of coconut shell charcoal briquettes made exclusively for shisha use.",
+            "qualityStart": "is produced from 100% natural and sustainable coconut shells, offering consistent heat, long burning duration, minimal ash, and no unwanted odors or chemicals. Each briquette is carefully manufactured using advanced production methods and strict quality control to ensure superior performance that meets international standards.",
+            "partnership": "For partners who do not yet have their own brand, we provide the opportunity to market and distribute products under our trusted Golden Cube brand, complete with professional packaging and strong market recognition. We also offer OEM and private label services for clients who wish to create their own brand identity.",
+            "conclusion": "With Djavacoal, every cube represents quality, reliability, and excellence, making it the preferred choice for global shisha charcoal distributors."
+        },
+        "products": {
+            "cube25": {
+                "name": "Cube 25",
+                "specs": "- (72 pcs/kg)"
+            },
+            "cube20x50": {
+                "name": "Cube 20X50",
+                "specs": "- (64 pcs/kg)"
+            },
+            "cube26": {
+                "name": "Cube 26",
+                "specs": "- (64 pcs/kg)"
+            }
+        }
+    },
+    "OurProductsSidebar": {
+        "filterIconAlt": "Filter Icon",
+        "selectProduct": "Select Product",
+        "djavacoalBrand": "Djavacoal's Brand"
+    },
     "AboutCompany": {
         "pageTitle": "About Company",
         "header": {

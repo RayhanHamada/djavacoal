@@ -3,6 +3,7 @@ import { useState } from "react";
 
 import Image from "next/image";
 
+import { useTranslations } from "next-intl";
 import { IoMdArrowDropright } from "react-icons/io";
 import { IoChevronDown, IoChevronUp } from "react-icons/io5";
 
@@ -27,6 +28,7 @@ export default function OurProductsSidebar({
     isBrandSelected = false,
     onBrandSelect,
 }: Props) {
+    const t = useTranslations("OurProductsSidebar");
     const [open, setOpen] = useState(false);
 
     const handleClick = (productId: number) => {
@@ -48,7 +50,7 @@ export default function OurProductsSidebar({
                 <div className="text-xl text-[#EFA12D]">
                     <Image
                         src="/svgs/ic_select.svg"
-                        alt="Filter Icon"
+                        alt={t("filterIconAlt")}
                         width={40}
                         height={40}
                     />
@@ -61,10 +63,10 @@ export default function OurProductsSidebar({
                     >
                         <span className="truncate">
                             {isBrandSelected
-                                ? "Djavacoal's Brand"
+                                ? t("djavacoalBrand")
                                 : selectedProduct
                                   ? selectedProduct.name
-                                  : "Select Product"}
+                                  : t("selectProduct")}
                         </span>
                         {open ? (
                             <IoChevronUp className="text-[#EFA12D]" />
@@ -79,7 +81,7 @@ export default function OurProductsSidebar({
                                 <button
                                     key={product.id}
                                     onClick={() => handleClick(product.id)}
-                                    className={`block w-full px-4 py-2 text-left text-sm ${
+                                    className={`block w-full px-4 py-2 text-left text-sm rtl:text-right ${
                                         selectedProductId === product.id
                                             ? "text-[#EFA12D] underline underline-offset-4"
                                             : "text-white hover:text-[#EFA12D]"
@@ -91,13 +93,13 @@ export default function OurProductsSidebar({
                             {/* Djavacoal's Brand Menu Item */}
                             <button
                                 onClick={handleBrandClick}
-                                className={`block w-full px-4 py-2 text-left text-sm ${
+                                className={`block w-full px-4 py-2 text-left text-sm rtl:text-right ${
                                     isBrandSelected
                                         ? "text-[#EFA12D] underline underline-offset-4"
                                         : "text-white hover:text-[#EFA12D]"
                                 }`}
                             >
-                                Djavacoal&apos;s Brand
+                                {t("djavacoalBrand")}
                             </button>
                         </div>
                     )}
@@ -111,11 +113,11 @@ export default function OurProductsSidebar({
                         {products.map((product) => (
                             <div
                                 key={product.id}
-                                className="relative after:absolute after:bottom-0 after:left-0 after:h-px after:w-full after:bg-[#2a2a2a]/60 after:content-[''] last:after:hidden"
+                                className="relative after:absolute after:bottom-0 after:left-0 after:h-px after:w-full after:bg-[#2a2a2a]/60 after:content-[''] last:after:hidden rtl:after:right-0 rtl:after:left-auto"
                             >
                                 <button
                                     onClick={() => handleClick(product.id)}
-                                    className={`my-2 flex w-full items-center justify-between px-5 py-4 text-left text-sm font-medium transition-all duration-200 ${
+                                    className={`my-2 flex w-full items-center justify-between px-5 py-4 text-left text-sm font-medium transition-all duration-200 rtl:text-right ${
                                         selectedProductId === product.id
                                             ? "bg-[#9D7B19] font-semibold text-white"
                                             : "hover:bg-secondary bg-[#222222] text-gray-300 hover:font-bold hover:text-white"
@@ -134,16 +136,16 @@ export default function OurProductsSidebar({
                             </div>
                         ))}
                         {/* Djavacoal's Brand Menu Item */}
-                        <div className="relative after:absolute after:bottom-0 after:left-0 after:h-px after:w-full after:bg-[#2a2a2a]/60 after:content-[''] last:after:hidden">
+                        <div className="relative after:absolute after:bottom-0 after:left-0 after:h-px after:w-full after:bg-[#2a2a2a]/60 after:content-[''] last:after:hidden rtl:after:right-0 rtl:after:left-auto">
                             <button
                                 onClick={handleBrandClick}
-                                className={`my-2 flex w-full items-center justify-between px-5 py-4 text-left text-sm font-medium transition-all duration-200 ${
+                                className={`my-2 flex w-full items-center justify-between px-5 py-4 text-left text-sm font-medium transition-all duration-200 rtl:text-right ${
                                     isBrandSelected
                                         ? "bg-[#9D7B19] font-semibold text-white"
                                         : "hover:bg-secondary bg-[#222222] text-gray-300 hover:font-bold hover:text-white"
                                 }`}
                             >
-                                <span>Djavacoal&apos;s Brand</span>
+                                <span>{t("djavacoalBrand")}</span>
                                 <IoMdArrowDropright
                                     size={12}
                                     className={
