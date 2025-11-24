@@ -36,7 +36,7 @@ export function PackagingOptionsSection() {
                                 key={option.id}
                                 whileHover={{ scale: 1.03 }}
                                 transition={{ duration: 0.4 }}
-                                className="group relative flex h-[371px] w-[371px] flex-col items-center justify-center overflow-hidden rounded-2xl border border-[#FFFFFF30] bg-[radial-gradient(circle_at_center,#000_0%,#171717_50%,#ffffff40_100%)] shadow-[0_0_40px_#00000050] transition-all duration-500 hover:border-[#EFA12D] md:h-[300px] md:w-[300px] lg:h-96 lg:w-[560px] lg:rounded-none"
+                                className="group relative flex aspect-square scale-90 flex-col items-center justify-center overflow-hidden rounded-2xl border border-[#FFFFFF30] bg-[radial-gradient(circle_at_center,#000_0%,#171717_50%,#ffffff40_100%)] shadow-[0_0_40px_#00000050] transition-all duration-500 hover:border-[#EFA12D] sm:scale-95 md:scale-100 lg:rounded-none"
                             >
                                 {/* Gambar */}
                                 <div className="relative flex h-full w-full items-center justify-center">
@@ -54,7 +54,7 @@ export function PackagingOptionsSection() {
 
                                 {/* Teks di atas tengah */}
                                 <h3
-                                    className="absolute top-5 left-1/2 -translate-x-1/2 font-['Josefin_Sans'] text-[18px] font-semibold text-white md:text-[20px] lg:text-[22px]"
+                                    className="absolute top-5 font-['Josefin_Sans'] text-xl font-semibold text-white md:text-xl lg:text-2xl"
                                     dir={locale === LOCALES.AR ? "rtl" : "ltr"}
                                 >
                                     <span className="text-[#EFA12D]">
