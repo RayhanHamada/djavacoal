@@ -72,6 +72,11 @@ export const KV_KEYS = {
      * news sitemap changefreq
      */
     NEWS_SITEMAP_CHANGEFREQ: "sitemap:news_sitemap_changefreq",
+
+    /**
+     * Product catalogue PDF file key stored in R2
+     */
+    PRODUCT_CATALOGUE_FILE_KEY: "product_catalogue_file_key",
 } as const;
 
 type KVKey = typeof KV_KEYS;

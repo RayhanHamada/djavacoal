@@ -37,6 +37,7 @@ export const STATIC_MEDIA_FACTORY_GALLERY_PREFIX =
     "static-media/factory-gallery";
 export const STATIC_MEDIA_PRODUCT_GALLERY_PREFIX =
     "static-media/product-gallery";
+export const PRODUCT_CATALOGUE_PREFIX = "product-catalogue";
 
 /**
  * Presigned URL expiration time in seconds (1 hour)
@@ -58,3 +59,13 @@ export const ALLOWED_IMAGE_MIME_TYPES = [
     "image/webp",
     "image/svg+xml",
 ] as const;
+
+/**
+ * Allowed PDF MIME type
+ */
+export const ALLOWED_PDF_MIME_TYPE = "application/pdf" as const;
+
+/**
+ * Maximum PDF file size (50MB in bytes)
+ */
+export const MAX_PDF_FILE_SIZE = 50 * 1024 * 1024;

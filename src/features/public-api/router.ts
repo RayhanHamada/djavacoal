@@ -770,6 +770,22 @@ export const router = {
                     };
                 });
 
+            // Get product catalogue URL from KV
+            const catalogueFileKey = await env.DJAVACOAL_KV.get(
+                KV_KEYS.PRODUCT_CATALOGUE_FILE_KEY
+            );
+            const catalogue_url = catalogueFileKey
+                ? new URL(
+                      catalogueFileKey,
+                      process.env.NEXT_PUBLIC_ASSET_URL
+                  ).toString()
+                : null;
+
+            // Get WhatsApp number from KV
+            const whatsapp_number = await env.DJAVACOAL_KV.get(
+                KV_KEYS.WHATSAPP_NUMBER
+            );
+
             return {
                 body: {
                     data: {
@@ -781,6 +797,8 @@ export const router = {
                         description: isArabic
                             ? product[PRODUCT_COLUMNS.AR_DESCRIPTION]
                             : product[PRODUCT_COLUMNS.EN_DESCRIPTION],
+                        catalogue_url,
+                        whatsapp_number,
                         moq: product[PRODUCT_COLUMNS.MOQ],
                         production_capacity:
                             product[PRODUCT_COLUMNS.PRODUCTION_CAPACITY],

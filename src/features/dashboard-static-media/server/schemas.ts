@@ -128,3 +128,39 @@ export const GetContactSettingsOutputSchema = z.object({
     mapsLink: z.string().nullable(),
     addressLine: z.string().nullable(),
 });
+
+/**
+ * Schema for generating presigned upload URL for PDF
+ */
+export const GeneratePdfUploadUrlInputSchema = z.object({
+    mimeType: z.literal("application/pdf"),
+    size: z.number().max(50 * 1024 * 1024, "File size must not exceed 50MB"),
+    fileName: z.string().optional(),
+});
+
+export const GeneratePdfUploadUrlOutputSchema = z.object({
+    uploadUrl: z.string(),
+    key: z.string(),
+});
+
+/**
+ * Schema for saving product catalogue file key to KV
+ */
+export const SaveProductCatalogueInputSchema = z.object({
+    fileKey: z.string(),
+});
+
+/**
+ * Schema for getting product catalogue file key from KV
+ */
+export const GetProductCatalogueOutputSchema = z.object({
+    fileKey: z.string().nullable(),
+    fileUrl: z.string().nullable(),
+});
+
+/**
+ * Schema for deleting product catalogue
+ */
+export const DeleteProductCatalogueInputSchema = z.object({
+    fileKey: z.string(),
+});

@@ -16,6 +16,7 @@ const PREFIXES = {
     REELS: "reels",
     FACTORY_GALLERY: "factory-gallery",
     PRODUCT_GALLERY: "product-gallery",
+    PRODUCT_CATALOGUE: "product-catalogue",
 } as const;
 
 export const STATIC_MEDIA_PREFIXES = [
@@ -25,4 +26,5 @@ export const STATIC_MEDIA_PREFIXES = [
     PREFIXES.REELS,
     PREFIXES.FACTORY_GALLERY,
     PREFIXES.PRODUCT_GALLERY,
+    PREFIXES.PRODUCT_CATALOGUE,
 ] as const;

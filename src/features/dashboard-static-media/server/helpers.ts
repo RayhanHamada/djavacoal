@@ -3,6 +3,8 @@ import "server-only";
 import { nanoid } from "nanoid";
 
 import {
+    getR2Client,
+    PRODUCT_CATALOGUE_PREFIX,
     STATIC_MEDIA_CAROUSEL_PREFIX,
     STATIC_MEDIA_FACTORY_GALLERY_PREFIX,
     STATIC_MEDIA_FACTORY_PHOTO_PREFIX,
@@ -22,6 +24,7 @@ export function getR2Prefix(
         | "reels"
         | "factory-gallery"
         | "product-gallery"
+        | "product-catalogue"
 ): string {
     switch (prefix) {
         case "carousel":
@@ -36,6 +39,8 @@ export function getR2Prefix(
             return STATIC_MEDIA_FACTORY_GALLERY_PREFIX;
         case "product-gallery":
             return STATIC_MEDIA_PRODUCT_GALLERY_PREFIX;
+        case "product-catalogue":
+            return PRODUCT_CATALOGUE_PREFIX;
     }
 }
 
@@ -79,4 +84,15 @@ export function extractYouTubeId(url: string): string | null {
  */
 export function isYouTubeShorts(url: string): boolean {
     return url.includes("youtube.com/shorts/") || url.includes("youtu.be/");
+}
+
+/**
+ * Create R2 client with environment credentials
+ */
+export function createR2Client() {
+    return getR2Client({
+        endpoint: process.env.S3_API,
+        accessKeyId: process.env.R2_ACCESS_KEY_ID!,
+        secretAccessKey: process.env.R2_SECRET_ACCESS_KEY!,
+    });
 }

@@ -5,10 +5,10 @@ import {
     DEFAULT_BUCKET_NAME,
     deleteObject,
     generatePresignedUploadUrl,
-    getR2Client,
 } from "@/adapters/r2";
 import {
     buildPhotoUrl,
+    createR2Client,
     extractYouTubeId,
     generateR2Key,
     getR2Prefix,
@@ -27,6 +27,11 @@ import {
     SavePhotoListInputSchema,
     SaveReelsInputSchema,
     SaveYouTubeUrlInputSchema,
+    GeneratePdfUploadUrlInputSchema,
+    GeneratePdfUploadUrlOutputSchema,
+    SaveProductCatalogueInputSchema,
+    GetProductCatalogueOutputSchema,
+    DeleteProductCatalogueInputSchema,
 } from "@/features/dashboard-static-media/server/schemas";
 import base from "@/lib/orpc/server";
 
@@ -44,11 +49,7 @@ export const generateUploadUrl = base
         const key = generateR2Key(r2Prefix);
 
         // Create R2 client
-        const r2Client = getR2Client({
-            endpoint: process.env.S3_API,
-            accessKeyId: process.env.R2_ACCESS_KEY_ID!,
-            secretAccessKey: process.env.R2_SECRET_ACCESS_KEY!,
-        });
+        const r2Client = createR2Client();
 
         // Generate presigned URL
         const uploadUrl = await generatePresignedUploadUrl(r2Client, {
@@ -180,11 +181,7 @@ export const deletePhoto = base
         const { key } = input;
 
         // Create R2 client
-        const r2Client = getR2Client({
-            endpoint: process.env.S3_API,
-            accessKeyId: process.env.R2_ACCESS_KEY_ID!,
-            secretAccessKey: process.env.R2_SECRET_ACCESS_KEY!,
-        });
+        const r2Client = createR2Client();
 
         // Delete from R2
         await deleteObject(r2Client, key, DEFAULT_BUCKET_NAME);
@@ -295,6 +292,110 @@ export const getContactSettings = base
             whatsappNumber: whatsappNumber || null,
             mapsLink: mapsLink || null,
             addressLine: addressLine || null,
+        };
+    })
+    .callable();
+
+/**
+ * Generate presigned URL for uploading a product catalogue PDF
+ */
+export const generatePdfUploadUrl = base
+    .input(GeneratePdfUploadUrlInputSchema)
+    .output(GeneratePdfUploadUrlOutputSchema)
+    .handler(async function ({ input }) {
+        const { mimeType } = input;
+
+        // Generate R2 key with nanoid
+        const r2Prefix = getR2Prefix("product-catalogue");
+        const key = generateR2Key(r2Prefix);
+
+        // Create R2 client
+        const r2Client = createR2Client();
+
+        // Generate presigned URL
+        const uploadUrl = await generatePresignedUploadUrl(r2Client, {
+            key,
+            contentType: mimeType,
+            bucketName: DEFAULT_BUCKET_NAME,
+        });
+
+        return {
+            uploadUrl,
+            key,
+        };
+    })
+    .callable();
+
+/**
+ * Save product catalogue file key to KV
+ */
+export const saveProductCatalogue = base
+    .input(SaveProductCatalogueInputSchema)
+    .handler(async function ({ context: { env }, input }) {
+        const { fileKey } = input;
+
+        // Get old file key if exists
+        const oldFileKey = await env.DJAVACOAL_KV.get(
+            KV_KEYS.PRODUCT_CATALOGUE_FILE_KEY
+        );
+
+        // Save new file key to KV
+        await env.DJAVACOAL_KV.put(KV_KEYS.PRODUCT_CATALOGUE_FILE_KEY, fileKey);
+
+        // Delete old file from R2 if exists
+        if (oldFileKey) {
+            try {
+                const r2Client = createR2Client();
+                await deleteObject(r2Client, oldFileKey, DEFAULT_BUCKET_NAME);
+            } catch (error) {
+                console.error("Failed to delete old catalogue file:", error);
+            }
+        }
+
+        return {
+            success: true,
+        };
+    })
+    .callable();
+
+/**
+ * Get product catalogue file key from KV
+ */
+export const getProductCatalogue = base
+    .output(GetProductCatalogueOutputSchema)
+    .handler(async function ({ context: { env } }) {
+        const fileKey = await env.DJAVACOAL_KV.get(
+            KV_KEYS.PRODUCT_CATALOGUE_FILE_KEY
+        );
+
+        return {
+            fileKey: fileKey || null,
+            fileUrl: fileKey
+                ? buildPhotoUrl(fileKey, process.env.NEXT_PUBLIC_ASSET_URL)
+                : null,
+        };
+    })
+    .callable();
+
+/**
+ * Delete product catalogue from R2 and KV
+ */
+export const deleteProductCatalogue = base
+    .input(DeleteProductCatalogueInputSchema)
+    .handler(async function ({ context: { env }, input }) {
+        const { fileKey } = input;
+
+        // Create R2 client
+        const r2Client = createR2Client();
+
+        // Delete from R2
+        await deleteObject(r2Client, fileKey, DEFAULT_BUCKET_NAME);
+
+        // Remove from KV
+        await env.DJAVACOAL_KV.delete(KV_KEYS.PRODUCT_CATALOGUE_FILE_KEY);
+
+        return {
+            success: true,
         };
     })
     .callable();

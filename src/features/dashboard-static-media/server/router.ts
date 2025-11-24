@@ -9,6 +9,10 @@ import {
     savePhotoList,
     saveReels,
     saveYouTubeUrl,
+    generatePdfUploadUrl,
+    saveProductCatalogue,
+    getProductCatalogue,
+    deleteProductCatalogue,
 } from "./functions";
 
 export const router = {
@@ -22,4 +26,8 @@ export const router = {
     deletePhoto,
     saveContactSettings,
     getContactSettings,
+    generatePdfUploadUrl,
+    saveProductCatalogue,
+    getProductCatalogue,
+    deleteProductCatalogue,
 };

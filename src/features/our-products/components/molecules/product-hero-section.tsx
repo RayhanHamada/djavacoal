@@ -11,15 +11,15 @@ import { LOCALES } from "@/configs";
 type ProductHeroSectionProps = {
     productName: string;
     medias: MediaItem[];
-    onDownloadCatalogue: () => void;
-    onAskMore: () => void;
+    catalogueUrl?: string;
+    askMoreUrl?: string;
 };
 
 export function ProductHeroSection({
     productName,
     medias,
-    onDownloadCatalogue,
-    onAskMore,
+    catalogueUrl,
+    askMoreUrl,
 }: ProductHeroSectionProps) {
     const locale = useLocale();
     const parts = productName.split(" ");
@@ -58,16 +58,16 @@ export function ProductHeroSection({
                     {/* Action Buttons */}
                     <div className="flex w-full max-w-full flex-row flex-wrap gap-3 sm:gap-5">
                         <ActionButton
+                            href={catalogueUrl || "#"}
                             label="Catalogue"
                             icon="/images/icon-download.svg"
                             variant="primary"
-                            onClick={onDownloadCatalogue}
                         />
                         <ActionButton
+                            href={askMoreUrl || "#"}
                             label="Ask More"
                             icon="/images/icon-whatsapp.svg"
                             variant="success"
-                            onClick={onAskMore}
                         />
                     </div>
                 </div>

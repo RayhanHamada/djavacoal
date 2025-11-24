@@ -160,6 +160,17 @@ export const PRODUCT_DETAIL_BODY_OUTPUT_SCHEMA = z.object({
         slug: z.string().describe("Product slug"),
         name: z.string().describe("Product name"),
         description: z.string().describe("Product description"),
+        catalogue_url: z
+            .string()
+            .url()
+            .optional()
+            .nullable()
+            .describe("URL of the product catalogue PDF"),
+        whatsapp_number: z
+            .string()
+            .optional()
+            .nullable()
+            .describe("WhatsApp contact number"),
         medias: z.array(
             z
                 .object({
