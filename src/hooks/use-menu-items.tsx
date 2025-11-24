@@ -2,6 +2,8 @@
 
 import { useMemo } from "react";
 
+import { usePathname } from "next/navigation";
+
 import { useTranslations } from "next-intl";
 
 import { $api } from "@/adapters/public-api/client";
@@ -10,6 +12,7 @@ import { SECTIONS_ELEMENTS_ID } from "@/configs";
 export type MenuItem = {
     label: string;
     href?: string;
+    highlight: boolean;
     submenus?: {
         label: string;
         href: string;
@@ -19,6 +22,8 @@ export type MenuItem = {
 export function useMenuItems() {
     const t = useTranslations("Navigation");
     const { data: namesData } = $api.useQuery("get", "/products-names");
+
+    const pathname = usePathname();
 
     const productSubmenus = useMemo(
         () =>
@@ -34,9 +39,11 @@ export function useMenuItems() {
             {
                 label: t("home"),
                 href: "/",
+                highlight: pathname === "/",
             },
             {
                 label: t("aboutCompany"),
+                highlight: pathname.startsWith("/about-company"),
                 submenus: [
                     {
                         label: t("aboutCompanySubmenus.cvDjavacoal"),
@@ -66,6 +73,7 @@ export function useMenuItems() {
             },
             {
                 label: t("ourProducts"),
+                highlight: pathname.startsWith("/our-products"),
                 submenus: [
                     ...productSubmenus,
                     {
@@ -76,6 +84,7 @@ export function useMenuItems() {
             },
             {
                 label: t("productionInfo"),
+                highlight: pathname.startsWith("/production-info"),
                 submenus: [
                     {
                         label: t("productionInfoSubmenus.process"),
@@ -101,14 +110,16 @@ export function useMenuItems() {
             },
             {
                 label: t("newsArticles"),
+                highlight: pathname.startsWith("/blog"),
                 href: "/blog",
             },
             {
                 label: t("contact"),
+                highlight: pathname.startsWith("/contact-us"),
                 href: "/contact-us",
             },
         ],
-        [t, productSubmenus]
+        [t, pathname, productSubmenus]
     );
 
     return menuItems;

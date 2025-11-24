@@ -18,12 +18,13 @@ type Submenu = {
 type MenuItem = {
     label: string;
     href?: string;
+    highlight: boolean;
     submenus?: Submenu[];
 };
 
 type Props = {
     isOpen: boolean;
-    onClose: () => void;
+    onClose(): void;
     menuItems: MenuItem[];
 };
 
@@ -52,7 +53,6 @@ export function MobileNavigationMenu({ isOpen, onClose, menuItems }: Props) {
                 onClick={onClose}
                 aria-hidden="true"
             />
-
             {/* Slide-in Menu */}
             <div
                 className={cn(
@@ -86,7 +86,7 @@ export function MobileNavigationMenu({ isOpen, onClose, menuItems }: Props) {
                                         onClick={handleLinkClick}
                                         className={cn(
                                             "block rounded-lg px-4 py-3 text-base font-medium transition-colors",
-                                            pathname === item.href
+                                            item.highlight
                                                 ? "bg-secondary text-white"
                                                 : "text-white hover:bg-white/10"
                                         )}
@@ -102,8 +102,8 @@ export function MobileNavigationMenu({ isOpen, onClose, menuItems }: Props) {
                                             }
                                             className={cn(
                                                 "flex w-full items-center justify-between rounded-lg px-4 py-3 text-base font-medium text-white transition-colors",
-                                                expandedMenu === item.label
-                                                    ? "bg-white/10"
+                                                item.highlight
+                                                    ? "bg-secondary text-white"
                                                     : "hover:bg-white/10"
                                             )}
                                         >
@@ -114,7 +114,6 @@ export function MobileNavigationMenu({ isOpen, onClose, menuItems }: Props) {
                                                 <ChevronDown size={20} />
                                             )}
                                         </button>
-
                                         {/* Submenus */}
                                         <div
                                             className={cn(

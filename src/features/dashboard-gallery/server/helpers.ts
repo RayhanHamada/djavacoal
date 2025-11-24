@@ -118,5 +118,7 @@ export function buildPhotoUrl(key: string, assetUrl?: string): string {
  * buildR2Path("gallery-photos/abc123", "my-bucket") // "my-bucket/gallery-photos/abc123"
  */
 export function buildR2Path(key: string, bucketName?: string): string {
-    return bucketName ? `${bucketName}/${key}` : key;
+    return bucketName
+        ? `${bucketName}/${key.startsWith("/") ? key.slice(1) : key}`
+        : key;
 }
