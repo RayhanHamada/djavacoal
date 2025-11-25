@@ -12,7 +12,7 @@ export default function GlobalMarketSection() {
             id="what-we-do"
             className="mt-2 scroll-mt-28 space-y-4 rounded-xl bg-[#222222] p-5 lg:p-10"
         >
-            <header className="mb-2">
+            <header className="mb-[30px]">
                 <SlideInView yOffset={30} duration={0.6}>
                     <div className="mb-2 flex items-center gap-3">
                         <div className="h-px w-8 bg-white" />

@@ -49,7 +49,7 @@ export default function TeamSection() {
             className="relative scroll-mt-24 overflow-hidden rounded-2xl border border-[#2A2A2A] bg-[#222222] p-6 md:p-10"
             aria-label="Djavacoal Team Section"
         >
-            <header className="mb-2 pt-4">
+            <header className="mb-[30px] pt-4">
                 <div className="mb-2 flex items-center gap-3">
                     <div className="h-px w-8 bg-white" />
                     <p className="text-sm font-medium tracking-wide text-[#60A5FF] italic">
