@@ -113,12 +113,12 @@ export function ProductPage() {
                             ) : selectedProduct ? (
                                 <div className="flex flex-col gap-10">
                                     <div className="flex gap-x-10">
-                                        <div className="hidden max-w-[420px] lg:block lg:flex-1">
+                                        <div className="hidden flex-1 lg:block lg:flex-1">
                                             <MediaGallery
                                                 medias={selectedProduct.medias}
                                             />
                                         </div>
-                                        <div className="min-w-[350px] flex-1 lg:max-w-full">
+                                        <div className="min-w-[350px] flex-2 lg:max-w-full">
                                             <ProductHeroSection
                                                 productName={
                                                     selectedProduct.name
@@ -162,7 +162,7 @@ export function ProductPage() {
 
                                                         <div
                                                             className={cn(
-                                                                "grid grid-cols-2 gap-1 sm:gap-4"
+                                                                "grid grid-cols-2 gap-1 max-[1280px]:grid-cols-1 sm:gap-4 md:grid-cols-2"
                                                             )}
                                                         >
                                                             {selectedProduct.specifications.map(

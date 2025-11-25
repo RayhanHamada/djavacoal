@@ -36,8 +36,8 @@ export function PackagingCard({
             </div>
 
             {/* Content */}
-            <div className="flex flex-col gap-[10px]">
-                <div className="flex gap-0">
+            <div className="flex flex-col gap-2.5">
+                <div className="flex gap-0 wrap-break-word">
                     <h4 className="text-secondary text-[20px] leading-[1.36] font-bold">
                         {title}
                         <span className="ml-1 text-[20px] leading-[1.36] font-bold text-white">
