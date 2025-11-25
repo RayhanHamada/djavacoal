@@ -12,6 +12,8 @@ import { cn } from "@/lib/utils";
 
 /**
  * Checks if a submenu href matches the current URL (pathname + search params)
+ * For hash-based URLs: only highlights if user manually navigates (hash is in URL)
+ * For query-param URLs: checks if all params match
  */
 function isSubmenuActive(
     href: string,
@@ -22,16 +24,27 @@ function isSubmenuActive(
         const url = new URL(href, "http://dummy");
         const hrefPathname = url.pathname;
         const hrefSearchParams = url.searchParams;
+        const hrefHash = url.hash;
 
         // Must match pathname
         if (hrefPathname !== pathname) return false;
 
-        // Check if all search params from href match current params
-        for (const [key, value] of hrefSearchParams.entries()) {
-            if (searchParams.get(key) !== value) return false;
+        // If href has a hash but no search params, don't highlight
+        // (hash-based navigation is handled by browser scrolling, not React state)
+        if (hrefHash && hrefSearchParams.size === 0) {
+            return false;
         }
 
-        return true;
+        // For query-param based URLs, check if params match
+        if (hrefSearchParams.size > 0) {
+            for (const [key, value] of hrefSearchParams.entries()) {
+                if (searchParams.get(key) !== value) return false;
+            }
+            return true;
+        }
+
+        // No hash and no search params - only match if current URL also has no params
+        return searchParams.size === 0;
     } catch {
         return false;
     }
