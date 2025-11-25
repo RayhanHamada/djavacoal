@@ -6,6 +6,7 @@ import { useState } from "react";
 import Image from "next/image";
 
 import { Play } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 import { getYouTubeThumbnailUrl } from "../../lib/utils";
 import { ImageModal, YouTubeModal } from "../atoms";
@@ -24,6 +25,7 @@ interface MediaGalleryProps {
  * - Click to open respective modals (ImageModal/YouTubeModal)
  */
 export function MediaGallery({ medias }: MediaGalleryProps) {
+    const t = useTranslations("OurProducts");
     const [imageModalOpen, setImageModalOpen] = useState(false);
     const [youtubeModalOpen, setYoutubeModalOpen] = useState(false);
     const [selectedImageUrl, setSelectedImageUrl] = useState<string>("");
@@ -32,7 +34,7 @@ export function MediaGallery({ medias }: MediaGalleryProps) {
     if (!medias || medias.length === 0) {
         return (
             <div className="flex h-64 items-center justify-center rounded-lg bg-gray-800">
-                <p className="text-gray-400">No media available</p>
+                <p className="text-gray-400">{t("noMediaAvailable")}</p>
             </div>
         );
     }
@@ -59,7 +61,7 @@ export function MediaGallery({ medias }: MediaGalleryProps) {
                         >
                             <Image
                                 src={media.image_url}
-                                alt={`Product media ${media.id}`}
+                                alt={t("altText.productMedia")}
                                 fill
                                 className="object-cover transition-transform group-hover:scale-105"
                             />
@@ -84,7 +86,7 @@ export function MediaGallery({ medias }: MediaGalleryProps) {
                         >
                             <Image
                                 src={thumbnailUrl}
-                                alt={`Video thumbnail ${media.id}`}
+                                alt={t("altText.videoThumbnail")}
                                 fill
                                 className="object-cover"
                             />
@@ -93,7 +95,7 @@ export function MediaGallery({ medias }: MediaGalleryProps) {
                             <div className="absolute top-3 left-1/2 z-10 flex -translate-x-1/2 justify-center sm:top-4 md:top-6">
                                 <Image
                                     src="/images/logo.png"
-                                    alt="Djavacoal Logo"
+                                    alt={t("altText.djavacoalLogo")}
                                     width={150}
                                     height={60}
                                     className="h-auto w-20 object-contain opacity-90 sm:w-24 md:w-32 lg:w-36"

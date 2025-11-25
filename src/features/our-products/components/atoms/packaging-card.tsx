@@ -2,6 +2,8 @@
 
 import Image from "next/image";
 
+import { useTranslations } from "next-intl";
+
 type PackagingCardProps = {
     title: string;
     description: string;
@@ -13,6 +15,7 @@ export function PackagingCard({
     description,
     image,
 }: PackagingCardProps) {
+    const t = useTranslations("OurProducts");
     return (
         <div className="group relative flex max-w-[330px] shrink-0 flex-col gap-5 transition-all duration-300 md:w-full md:min-w-0 lg:gap-5">
             {/* Image */}
@@ -27,7 +30,7 @@ export function PackagingCard({
                 <div className="absolute top-3 left-1/2 z-10 flex -translate-x-1/2 justify-center sm:top-4 md:top-4">
                     <Image
                         src="/images/logo.png"
-                        alt="Djavacoal Logo"
+                        alt={t("altText.djavacoalLogo")}
                         width={150}
                         height={60}
                         className="h-auto w-20 object-contain opacity-90 md:w-24 lg:w-24"
@@ -39,9 +42,9 @@ export function PackagingCard({
             <div className="flex flex-col gap-2.5">
                 <div className="flex gap-0 wrap-break-word">
                     <h4 className="text-secondary text-[20px] leading-[1.36] font-bold">
-                        {title}
-                        <span className="ml-1 text-[20px] leading-[1.36] font-bold text-white">
-                            Packaging
+                        {title}{" "}
+                        <span className="text-[20px] leading-[1.36] font-bold text-white">
+                            {t("packagingCard.packaging")}
                         </span>
                     </h4>
                 </div>

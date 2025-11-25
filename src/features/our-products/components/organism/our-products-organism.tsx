@@ -3,7 +3,7 @@ import "react-photo-view/dist/react-photo-view.css";
 
 import Image from "next/image";
 
-import { useLocale } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { PhotoProvider, PhotoView } from "react-photo-view";
 
 import {
@@ -21,6 +21,7 @@ import { cn } from "@/lib/utils";
 
 export function ProductPage() {
     const locale = useLocale();
+    const t = useTranslations("OurProducts");
 
     const {
         products,
@@ -37,7 +38,7 @@ export function ProductPage() {
     if (isLoadingProducts) {
         return (
             <div className="flex min-h-[400px] items-center justify-center">
-                <div className="text-white">Loading products...</div>
+                <div className="text-white">{t("loading.products")}</div>
             </div>
         );
     }
@@ -45,7 +46,7 @@ export function ProductPage() {
     if (!hasProducts) {
         return (
             <div className="flex min-h-[400px] items-center justify-center">
-                <div className="text-white">No products found.</div>
+                <div className="text-white">{t("noProducts")}</div>
             </div>
         );
     }
@@ -96,7 +97,7 @@ export function ProductPage() {
                             ) : isLoadingDetail ? (
                                 <div className="flex min-h-[400px] items-center justify-center">
                                     <div className="text-white">
-                                        Loading product details...
+                                        {t("loading.details")}
                                     </div>
                                 </div>
                             ) : selectedProduct ? (
@@ -126,7 +127,7 @@ export function ProductPage() {
                                             {/* Description Section */}
                                             <div className="flex flex-col gap-3">
                                                 <h3 className="text-xl font-bold text-white">
-                                                    Description:
+                                                    {t("sections.description")}
                                                 </h3>
                                                 <p
                                                     className="text-justify text-base leading-[23px] wrap-break-word text-[#B3B3B3]"
@@ -145,8 +146,9 @@ export function ProductPage() {
                                                 <>
                                                     <div className="flex flex-col gap-5">
                                                         <h3 className="text-xl font-bold text-white">
-                                                            Specification & Lab.
-                                                            Test:
+                                                            {t(
+                                                                "sections.specification"
+                                                            )}
                                                         </h3>
 
                                                         <div
@@ -168,7 +170,9 @@ export function ProductPage() {
                                                                             src={
                                                                                 spec.image_url
                                                                             }
-                                                                            alt={`Specification ${spec.id}`}
+                                                                            alt={t(
+                                                                                "altText.specification"
+                                                                            )}
                                                                             width={
                                                                                 744
                                                                             }
@@ -221,18 +225,24 @@ export function ProductPage() {
                                             {/* Detail Information Section */}
                                             <div className="flex flex-col gap-5">
                                                 <h3 className="text-xl font-bold text-white">
-                                                    Detail Information:
+                                                    {t("sections.detailInfo")}
                                                 </h3>
                                                 <ProductDetailTable
                                                     rows={[
                                                         {
-                                                            label: "MOQ:",
+                                                            label: t(
+                                                                "detailTable.moq"
+                                                            ),
                                                             value:
                                                                 selectedProduct.moq ||
-                                                                "Contact us",
+                                                                t(
+                                                                    "detailTable.contactUs"
+                                                                ),
                                                         },
                                                         {
-                                                            label: "Packaging:",
+                                                            label: t(
+                                                                "detailTable.packaging"
+                                                            ),
                                                             value:
                                                                 selectedProduct.packaging_options
                                                                     .map(
@@ -242,21 +252,35 @@ export function ProductPage() {
                                                                     .join(
                                                                         " / "
                                                                     ) ||
-                                                                "Contact us",
+                                                                t(
+                                                                    "detailTable.contactUs"
+                                                                ),
                                                         },
                                                         {
-                                                            label: "Payment Terms:",
-                                                            value: "Telegraphic Transfer (T/T)",
+                                                            label: t(
+                                                                "detailTable.paymentTerms"
+                                                            ),
+                                                            value: t(
+                                                                "detailTable.paymentValue"
+                                                            ),
                                                         },
                                                         {
-                                                            label: "Shipment Terms:",
-                                                            value: "Freight on Board (FOB)",
+                                                            label: t(
+                                                                "detailTable.shipmentTerms"
+                                                            ),
+                                                            value: t(
+                                                                "detailTable.shipmentValue"
+                                                            ),
                                                         },
                                                         {
-                                                            label: "Production Capacity:",
+                                                            label: t(
+                                                                "detailTable.productionCapacity"
+                                                            ),
                                                             value:
                                                                 selectedProduct.production_capacity ||
-                                                                "Contact us",
+                                                                t(
+                                                                    "detailTable.contactUs"
+                                                                ),
                                                         },
                                                     ]}
                                                 />
@@ -267,7 +291,7 @@ export function ProductPage() {
                             ) : (
                                 <div className="flex min-h-[400px] items-center justify-center">
                                     <div className="text-white">
-                                        Product not found.
+                                        {t("productNotFound")}
                                     </div>
                                 </div>
                             )}
