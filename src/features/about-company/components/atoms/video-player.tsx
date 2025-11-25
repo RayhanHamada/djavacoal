@@ -23,7 +23,7 @@ export default function VideoPlayer({
 }: VideoPlayerProps) {
     return (
         <div
-            className={`relative aspect-video w-full max-w-[849px] overflow-hidden rounded-xl ${className}`}
+            className={`relative aspect-video w-full max-w-[849px] overflow-hidden rounded-xl border border-[#EFA12D] ${className}`}
         >
             {isPlaying ? (
                 <>
@@ -56,7 +56,7 @@ export default function VideoPlayer({
                         height={200}
                         src={THUMBNAIL_IMAGE}
                         alt="Video Thumbnail"
-                        className="absolute inset-0 h-full w-full border border-[#EFA12D] object-cover"
+                        className="absolute inset-0 h-full w-full object-cover"
                     />
 
                     {/* Overlay Logo + Play Button */}
