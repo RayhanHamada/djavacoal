@@ -3,12 +3,39 @@
 import { useState } from "react";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useSearchParams } from "next/navigation";
 
 import { ChevronDown, ChevronUp } from "lucide-react";
 
 import { LanguageSwitch } from "@/components/molecules/language-switch";
 import { cn } from "@/lib/utils";
+
+/**
+ * Checks if a submenu href matches the current URL (pathname + search params)
+ */
+function isSubmenuActive(
+    href: string,
+    pathname: string,
+    searchParams: URLSearchParams
+): boolean {
+    try {
+        const url = new URL(href, "http://dummy");
+        const hrefPathname = url.pathname;
+        const hrefSearchParams = url.searchParams;
+
+        // Must match pathname
+        if (hrefPathname !== pathname) return false;
+
+        // Check if all search params from href match current params
+        for (const [key, value] of hrefSearchParams.entries()) {
+            if (searchParams.get(key) !== value) return false;
+        }
+
+        return true;
+    } catch {
+        return false;
+    }
+}
 
 type Submenu = {
     label: string;
@@ -30,6 +57,7 @@ type Props = {
 
 export function MobileNavigationMenu({ isOpen, onClose, menuItems }: Props) {
     const pathname = usePathname();
+    const searchParams = useSearchParams();
     const [expandedMenu, setExpandedMenu] = useState<string | null>(null);
 
     const toggleSubmenu = (label: string) => {
@@ -125,27 +153,40 @@ export function MobileNavigationMenu({ isOpen, onClose, menuItems }: Props) {
                                         >
                                             <ul className="border-secondary/30 mt-2 ml-4 space-y-1 border-l-2 pl-4">
                                                 {item.submenus?.map(
-                                                    (submenu) => (
-                                                        <li key={submenu.label}>
-                                                            <Link
-                                                                href={
-                                                                    submenu.href
+                                                    (submenu) => {
+                                                        const isActive =
+                                                            isSubmenuActive(
+                                                                submenu.href,
+                                                                pathname,
+                                                                searchParams
+                                                            );
+                                                        return (
+                                                            <li
+                                                                key={
+                                                                    submenu.label
                                                                 }
-                                                                onClick={
-                                                                    handleLinkClick
-                                                                }
-                                                                className={cn(
-                                                                    "block rounded px-3 py-2 text-sm transition-colors",
-                                                                    pathname ===
-                                                                        submenu.href
-                                                                        ? "text-secondary font-semibold"
-                                                                        : "hover:text-secondary text-white/90"
-                                                                )}
                                                             >
-                                                                {submenu.label}
-                                                            </Link>
-                                                        </li>
-                                                    )
+                                                                <Link
+                                                                    href={
+                                                                        submenu.href
+                                                                    }
+                                                                    onClick={
+                                                                        handleLinkClick
+                                                                    }
+                                                                    className={cn(
+                                                                        "block rounded px-3 py-2 text-sm transition-colors",
+                                                                        isActive
+                                                                            ? "text-secondary font-semibold"
+                                                                            : "hover:text-secondary text-white/90"
+                                                                    )}
+                                                                >
+                                                                    {
+                                                                        submenu.label
+                                                                    }
+                                                                </Link>
+                                                            </li>
+                                                        );
+                                                    }
                                                 )}
                                             </ul>
                                         </div>

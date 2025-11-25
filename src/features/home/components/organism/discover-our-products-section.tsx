@@ -41,7 +41,7 @@ function ProductCard({
                     alt={t("logoAlt")}
                     width={150}
                     height={40}
-                    className="absolute top-5 left-1/2 z-999 -translate-x-1/2 scale-60 opacity-90"
+                    className="absolute top-5 left-1/2 z-99 -translate-x-1/2 scale-60 opacity-90"
                 />
                 <Image
                     src={image_url}

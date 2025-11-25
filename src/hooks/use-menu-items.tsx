@@ -29,7 +29,7 @@ export function useMenuItems() {
         () =>
             namesData?.data?.names.map(({ name, slug }) => ({
                 label: name,
-                href: `/our-products#${slug}`,
+                href: `/our-products?product=${slug}`,
             })) ?? [],
         [namesData]
     );
@@ -78,7 +78,7 @@ export function useMenuItems() {
                     ...productSubmenus,
                     {
                         label: "Djavacoal Brands",
-                        href: "/our-products#djavacoal-brands",
+                        href: "/our-products?product=djavacoal-brands",
                     },
                 ],
             },
