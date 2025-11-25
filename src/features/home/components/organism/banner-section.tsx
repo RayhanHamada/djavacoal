@@ -32,7 +32,7 @@ export async function BannerSection() {
                 {/* Buttons */}
                 <div className="flex w-full max-w-[480px] flex-col gap-3 sm:flex-row sm:justify-center sm:gap-5">
                     <Link
-                        href="/about-us"
+                        href="/about-company"
                         className="flex flex-1 items-center justify-center rounded-[40px] border border-white bg-black/40 px-8 py-4 font-['Josefin_Sans'] text-[15px] font-bold whitespace-nowrap text-white backdrop-blur-sm transition-all duration-300 hover:bg-black/60 sm:text-[16px] md:px-10 md:py-5"
                     >
                         {t("buttons.aboutUs")}
