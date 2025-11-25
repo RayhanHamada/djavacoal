@@ -9,6 +9,7 @@ import { Play } from "lucide-react";
 
 import { getYouTubeThumbnailUrl } from "../../lib/utils";
 import { ImageModal, YouTubeModal } from "../atoms";
+import { cn } from "@/lib/utils";
 
 interface MediaGalleryHorizontalProps {
     medias: MediaItem[];
@@ -51,9 +52,11 @@ export function MediaGalleryHorizontal({
     };
 
     const renderMediaItem = (media: MediaItem, isMainItem: boolean = false) => {
-        const sizeClasses = isMainItem
-            ? "aspect-square w-full"
-            : "aspect-square min-h-40 min-w-40 shrink-0 sm:min-h-[180px] sm:min-w-[180px]";
+        const sizeClasses = cn(
+            isMainItem
+                ? "aspect-square w-full"
+                : "aspect-square min-h-40 min-w-40 shrink-0 sm:min-h-[180px] sm:min-w-[180px]"
+        );
 
         if (media.type === "image" && media.image_url) {
             return (

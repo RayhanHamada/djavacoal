@@ -118,7 +118,7 @@ export function ProductPage() {
                                                 medias={selectedProduct.medias}
                                             />
                                         </div>
-                                        <div className="min-w-[372px] flex-1 lg:max-w-full">
+                                        <div className="min-w-[350px] flex-1 lg:max-w-full">
                                             <ProductHeroSection
                                                 productName={
                                                     selectedProduct.name
@@ -140,7 +140,7 @@ export function ProductPage() {
                                                     Description:
                                                 </h3>
                                                 <p
-                                                    className="text-justify text-base leading-[23px] text-[#B3B3B3]"
+                                                    className="text-justify text-base leading-[23px] wrap-break-word text-[#B3B3B3]"
                                                     dangerouslySetInnerHTML={{
                                                         __html: selectedProduct.description,
                                                     }}
@@ -160,7 +160,11 @@ export function ProductPage() {
                                                             Test:
                                                         </h3>
 
-                                                        <div className="justify-left flex flex-wrap items-center gap-5 md:flex-row md:gap-5 lg:gap-10 [1800px]:flex-nowrap [2330px]:max-w-[600px]">
+                                                        <div
+                                                            className={cn(
+                                                                "grid grid-cols-2 gap-1 sm:gap-4"
+                                                            )}
+                                                        >
                                                             {selectedProduct.specifications.map(
                                                                 (spec) => (
                                                                     <PhotoView
@@ -182,7 +186,7 @@ export function ProductPage() {
                                                                             height={
                                                                                 1054
                                                                             }
-                                                                            className="h-auto w-full max-w-full md:w-auto lg:max-w-[400px]"
+                                                                            className="max-w-full"
                                                                         />
                                                                     </PhotoView>
                                                                 )
@@ -226,7 +230,7 @@ export function ProductPage() {
                                             )}
 
                                             {/* Detail Information Section */}
-                                            <div className="flex min-w-[372px] flex-col gap-5">
+                                            <div className="flex flex-col gap-5">
                                                 <h3 className="text-xl font-bold text-white">
                                                     Detail Information:
                                                 </h3>

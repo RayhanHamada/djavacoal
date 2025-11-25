@@ -70,7 +70,7 @@ export function MobileNavigationMenu({ isOpen, onClose, menuItems }: Props) {
                 </div>
 
                 {/* Language Switch Footer */}
-                <div className="border-secondary/30 border-t px-4 pt-6">
+                <div className="border-secondary/30 border-t px-4 pt-10">
                     <LanguageSwitch variant="mobile" />
                 </div>
 
