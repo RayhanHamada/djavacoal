@@ -53,7 +53,7 @@ function ProductCard({
             </div>
 
             <div className="mt-6 max-w-[415px]">
-                <h3 className="line-clamp-2 h-[3em] font-['Josefin_Sans'] text-[15px] font-bold text-white uppercase md:text-[16px]">
+                <h3 className="line-clamp-2 font-['Josefin_Sans'] text-[15px] font-bold text-white uppercase md:text-[16px]">
                     {name}
                 </h3>
                 <p
