@@ -3,7 +3,7 @@
 import { Suspense } from "react";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useSearchParams } from "next/navigation";
 
 import { ChevronDown } from "lucide-react";
 import { match, P } from "ts-pattern";
@@ -24,8 +24,49 @@ export type MenuItems = {
 
 type Props = MenuItems;
 
+/**
+ * Checks if a submenu href matches the current URL (pathname + search params)
+ * For hash-based URLs: only highlights if user manually navigates (hash is in URL)
+ * For query-param URLs: checks if all params match
+ */
+function isSubmenuActive(
+    href: string,
+    pathname: string,
+    searchParams: URLSearchParams
+): boolean {
+    try {
+        const url = new URL(href, "http://dummy");
+        const hrefPathname = url.pathname;
+        const hrefSearchParams = url.searchParams;
+        const hrefHash = url.hash;
+
+        // Must match pathname
+        if (hrefPathname !== pathname) return false;
+
+        // If href has a hash but no search params, don't highlight
+        // (hash-based navigation is handled by browser scrolling, not React state)
+        if (hrefHash && hrefSearchParams.size === 0) {
+            return false;
+        }
+
+        // For query-param based URLs, check if params match
+        if (hrefSearchParams.size > 0) {
+            for (const [key, value] of hrefSearchParams.entries()) {
+                if (searchParams.get(key) !== value) return false;
+            }
+            return true;
+        }
+
+        // No hash and no search params - only match if current URL also has no params
+        return searchParams.size === 0;
+    } catch {
+        return false;
+    }
+}
+
 export function NavigationMenuButton(props: Props) {
     const pathname = usePathname();
+    const searchParams = useSearchParams();
     const isPathMatchCurrentButton = props.href && props.href === pathname;
 
     const buttonClass = cn(
@@ -78,15 +119,27 @@ export function NavigationMenuButton(props: Props) {
                     >
                         {match(props.submenus)
                             .with(P.array(), (submenus) =>
-                                submenus.map((submenu) => (
-                                    <Link
-                                        key={submenu.label}
-                                        href={submenu.href ?? "#"}
-                                        className="block px-4 py-2 text-white duration-300 hover:bg-[#3B5952] hover:font-bold"
-                                    >
-                                        {submenu.label}
-                                    </Link>
-                                ))
+                                submenus.map((submenu) => {
+                                    const isActive = isSubmenuActive(
+                                        submenu.href ?? "",
+                                        pathname,
+                                        searchParams
+                                    );
+                                    return (
+                                        <Link
+                                            key={submenu.label}
+                                            href={submenu.href ?? "#"}
+                                            className={cn(
+                                                "block px-4 py-2 duration-300 hover:bg-[#3B5952] hover:font-bold",
+                                                isActive
+                                                    ? "text-secondary font-semibold"
+                                                    : "text-white"
+                                            )}
+                                        >
+                                            {submenu.label}
+                                        </Link>
+                                    );
+                                })
                             )
                             .otherwise((submenusPromise) => {
                                 const submenus = submenusPromise().catch(

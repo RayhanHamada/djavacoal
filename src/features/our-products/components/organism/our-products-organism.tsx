@@ -1,8 +1,6 @@
 "use client";
 import "react-photo-view/dist/react-photo-view.css";
 
-import { useState } from "react";
-
 import Image from "next/image";
 
 import { useLocale } from "next-intl";
@@ -31,19 +29,10 @@ export function ProductPage() {
         isLoadingProducts,
         isLoadingDetail,
         hasProducts,
+        isBrandSelected,
         handleProductSelect,
+        handleBrandSelect,
     } = useProducts();
-
-    const [isBrandSelected, setIsBrandSelected] = useState(false);
-
-    const handleBrandSelect = () => {
-        setIsBrandSelected(true);
-    };
-
-    const handleProductSelectWrapper = (productId: number) => {
-        setIsBrandSelected(false);
-        handleProductSelect(productId);
-    };
 
     if (isLoadingProducts) {
         return (
@@ -71,7 +60,7 @@ export function ProductPage() {
                         selectedProductId={
                             isBrandSelected ? undefined : selectedProductId
                         }
-                        onProductSelect={handleProductSelectWrapper}
+                        onProductSelect={handleProductSelect}
                         isBrandSelected={isBrandSelected}
                         onBrandSelect={handleBrandSelect}
                     />
@@ -94,7 +83,7 @@ export function ProductPage() {
                                             ? undefined
                                             : selectedProductId
                                     }
-                                    onProductSelect={handleProductSelectWrapper}
+                                    onProductSelect={handleProductSelect}
                                     isBrandSelected={isBrandSelected}
                                     onBrandSelect={handleBrandSelect}
                                 />
