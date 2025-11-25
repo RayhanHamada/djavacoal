@@ -17,7 +17,7 @@ export default function ReelCard({ videoId, index, onClick }: ReelCardProps) {
     return (
         <button
             onClick={onClick}
-            className="group relative aspect-9/16 w-[300px] shrink-0 snap-start overflow-hidden bg-black transition hover:scale-[1.03]"
+            className="group relative aspect-9/16 w-[320px] shrink-0 snap-start overflow-hidden bg-black transition hover:scale-[1.03]"
             aria-label={`Play reel ${index + 1}`}
         >
             {/* Hover Video Preview */}

@@ -53,7 +53,6 @@ export function BannerCarousel({ slides }: BannerCarouselProps) {
                         />
                     </div>
                 ))}
-                <div className="absolute inset-0 bg-linear-to-b from-black/50 via-black/30 to-transparent" />
             </div>
 
             {/* Carousel Navigation Dots */}

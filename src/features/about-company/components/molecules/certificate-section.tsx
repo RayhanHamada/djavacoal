@@ -48,7 +48,7 @@ export default function CertificateSection() {
             className="mt-10 scroll-mt-28 space-y-6 rounded-xl bg-[#222222] p-5 lg:p-10"
         >
             {/* Heading */}
-            <header className="mb-2">
+            <header className="mb-[30px]">
                 <SlideInView className="mb-2 flex items-center gap-3">
                     <div className="h-px w-8 bg-white" />
                     <p className="text-sm font-medium tracking-wide text-[#60A5FF] italic">

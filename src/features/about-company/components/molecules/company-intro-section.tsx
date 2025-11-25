@@ -21,7 +21,7 @@ export default function CompanyIntroSection() {
             id="cv-djavacoal-indonesia"
             className="mt-2 scroll-mt-28 space-y-4 rounded-xl bg-[#222222] p-5 lg:p-10"
         >
-            <header className="mb-2">
+            <header className="mb-[30px]">
                 <div className="mb-2 flex items-center gap-3">
                     <div className="h-px w-8 bg-white" />
                     <p className="text-sm font-medium tracking-wide text-[#60A5FF] italic">
