@@ -39,7 +39,7 @@ export function ProductHeroSection({
               ? " " + parts.slice(2).join(" ")
               : "";
     return (
-        <div className="flex w-full min-w-[372px] flex-col gap-10">
+        <div className="flex w-full flex-col gap-10">
             {/* Mobile/Tablet: Vertical Layout | Desktop: Horizontal Layout */}
             <div className="flex w-full flex-col gap-10 lg:flex-row lg:gap-10">
                 {/* Right Side: Content (Desktop) / Bottom (Mobile) */}

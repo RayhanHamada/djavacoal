@@ -48,7 +48,7 @@ export function MediaGallery({ medias }: MediaGalleryProps) {
     };
 
     return (
-        <div className="mx-auto flex w-full min-w-[110px] flex-col space-y-4 sm:max-w-sm sm:space-y-5 xl:space-y-6 2xl:space-y-8">
+        <div className="flex w-full min-w-[110px] flex-col space-y-4 sm:max-w-sm sm:space-y-5 xl:space-y-6 2xl:space-y-8">
             {medias.map((media) => {
                 if (media.type === "image" && media.image_url) {
                     return (

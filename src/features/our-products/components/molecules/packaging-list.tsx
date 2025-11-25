@@ -1,6 +1,7 @@
 "use client";
 
 import { PackagingCard } from "../atoms";
+import { cn } from "@/lib/utils";
 
 export type PackagingOption = {
     id: number;
@@ -20,7 +21,12 @@ export function PackagingList({ packagingOptions }: PackagingListProps) {
             <h3 className="text-[20px] leading-[1.36] font-bold text-white lg:text-xl">
                 Packaging Option:
             </h3>
-            <div className="scrollbar-hide flex flex-row gap-5 overflow-x-auto md:flex-row lg:gap-5">
+            <div
+                className={cn(
+                    `scrollbar-hide flex flex-row gap-5 overflow-x-auto md:flex-row lg:gap-5`,
+                    "min-[1300px]:grid-cols-3! sm:grid sm:grid-cols-2"
+                )}
+            >
                 {packagingOptions.map((option) => (
                     <PackagingCard
                         key={option.id}
