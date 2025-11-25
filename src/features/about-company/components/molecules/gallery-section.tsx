@@ -2,7 +2,7 @@
 
 import type { GalleryType } from "../../lib/types";
 
-import { useMemo } from "react";
+import { useMemo, useRef, useState, useEffect, useCallback } from "react";
 
 import Image from "next/image";
 
@@ -29,6 +29,9 @@ function GallerySubsection({
 }: GallerySubsectionProps) {
     const t = useTranslations("AboutCompany.gallery");
     const { data: aboutCompanyData } = useAboutCompanyContentAPI();
+    const scrollContainerRef = useRef<HTMLDivElement>(null);
+    const [canScrollLeft, setCanScrollLeft] = useState(false);
+    const [canScrollRight, setCanScrollRight] = useState(false);
 
     const factoryGallery = useMemo(
         () => aboutCompanyData?.data.factory_galleries ?? [],
@@ -43,14 +46,36 @@ function GallerySubsection({
     const images = galleryType === "factory" ? factoryGallery : productGallery;
     const mainImage = images.at(0);
     const thumbnails = images.slice(1);
-    const containerId = `${galleryType}Thumbs`;
 
-    const scroll = (direction: "left" | "right") => {
-        const el = document.getElementById(containerId);
+    const updateScrollState = useCallback(() => {
+        const el = scrollContainerRef.current;
         if (!el) return;
-        const scrollAmount = direction === "left" ? -240 : 240;
+
+        setCanScrollLeft(el.scrollLeft > 0);
+        setCanScrollRight(el.scrollLeft < el.scrollWidth - el.clientWidth - 1);
+    }, []);
+
+    useEffect(() => {
+        const el = scrollContainerRef.current;
+        if (!el) return;
+
+        updateScrollState();
+        el.addEventListener("scroll", updateScrollState, { passive: true });
+        window.addEventListener("resize", updateScrollState);
+
+        return () => {
+            el.removeEventListener("scroll", updateScrollState);
+            window.removeEventListener("resize", updateScrollState);
+        };
+    }, [updateScrollState, thumbnails.length]);
+
+    const scroll = useCallback((direction: "left" | "right") => {
+        const el = scrollContainerRef.current;
+        if (!el) return;
+
+        const scrollAmount = direction === "left" ? -300 : 300;
         el.scrollBy({ left: scrollAmount, behavior: "smooth" });
-    };
+    }, []);
 
     return (
         <div className="space-y-4">
@@ -80,23 +105,28 @@ function GallerySubsection({
             </ScaleOnHover>
 
             {thumbnails.length > 0 && (
-                <div className="relative">
+                <div className="group/slider relative">
                     <div
-                        id={containerId}
-                        className="scrollbar-hide flex snap-x snap-mandatory gap-3 overflow-x-auto pb-2"
+                        ref={scrollContainerRef}
+                        className="scrollbar-hide flex snap-x snap-mandatory gap-3 overflow-x-auto scroll-smooth pb-2"
+                        style={{
+                            scrollbarWidth: "none",
+                            msOverflowStyle: "none",
+                            WebkitOverflowScrolling: "touch",
+                        }}
                     >
                         {thumbnails.map((image, i) => (
                             <button
-                                key={image + crypto.randomUUID()}
+                                key={`${galleryType}-thumb-${i}-${image}`}
                                 onClick={() => onImageClick(i + 1)}
-                                className="group h-[180px] min-w-[180px] snap-start overflow-hidden transition lg:h-[220px] lg:min-w-[220px]"
+                                className="group h-[180px] min-w-[180px] shrink-0 snap-start overflow-hidden rounded-lg transition-transform duration-300 ease-out will-change-transform lg:h-[220px] lg:min-w-[220px]"
                             >
                                 <Image
                                     src={image}
-                                    alt={image}
+                                    alt={`${galleryType} gallery image ${i + 2}`}
                                     width={220}
                                     height={220}
-                                    className="aspect-square object-cover duration-300 group-hover:scale-[1.05]"
+                                    className="h-full w-full object-cover transition-transform duration-300 ease-out will-change-transform group-hover:scale-[1.05]"
                                 />
                             </button>
                         ))}
@@ -104,16 +134,26 @@ function GallerySubsection({
 
                     <button
                         onClick={() => scroll("left")}
-                        className="absolute top-1/2 left-0 z-10 hidden h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-black/60 text-white transition hover:bg-[#EFA12D] lg:flex"
+                        className={`absolute top-1/2 left-2 z-10 hidden h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-black/60 text-white backdrop-blur-sm transition-all duration-200 hover:bg-[#EFA12D] lg:flex ${
+                            canScrollLeft
+                                ? "opacity-100"
+                                : "pointer-events-none opacity-0"
+                        }`}
                         aria-label={t("scrollLeft")}
+                        disabled={!canScrollLeft}
                     >
                         <ChevronLeft size={24} />
                     </button>
 
                     <button
                         onClick={() => scroll("right")}
-                        className="absolute top-1/2 right-0 z-10 hidden h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-black/60 text-white transition hover:bg-[#EFA12D] lg:flex"
+                        className={`absolute top-1/2 right-2 z-10 hidden h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-black/60 text-white backdrop-blur-sm transition-all duration-200 hover:bg-[#EFA12D] lg:flex ${
+                            canScrollRight
+                                ? "opacity-100"
+                                : "pointer-events-none opacity-0"
+                        }`}
                         aria-label={t("scrollRight")}
+                        disabled={!canScrollRight}
                     >
                         <ChevronRight size={24} />
                     </button>
