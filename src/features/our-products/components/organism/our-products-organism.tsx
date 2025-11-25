@@ -113,12 +113,12 @@ export function ProductPage() {
                             ) : selectedProduct ? (
                                 <div className="flex flex-col gap-10">
                                     <div className="flex gap-x-10">
-                                        <div className="hidden flex-1 lg:block lg:flex-1">
+                                        <div className="hidden max-w-[365px] min-w-[200px] flex-1 lg:block">
                                             <MediaGallery
                                                 medias={selectedProduct.medias}
                                             />
                                         </div>
-                                        <div className="min-w-[350px] flex-2 lg:max-w-full">
+                                        <div className="min-w-[350px] flex-3 lg:max-w-full">
                                             <ProductHeroSection
                                                 productName={
                                                     selectedProduct.name
