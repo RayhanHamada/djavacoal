@@ -637,6 +637,50 @@
         "selectProduct": "Select Product",
         "djavacoalBrand": "Djavacoal's Brand"
     },
+    "OurProducts": {
+        "pageTitle": "Products",
+        "header": {
+            "title": "Products",
+            "bannerAlt": "Products Banner"
+        },
+        "loading": {
+            "products": "Loading products...",
+            "details": "Loading product details..."
+        },
+        "noProducts": "No products found.",
+        "productNotFound": "Product not found.",
+        "sections": {
+            "description": "Description:",
+            "specification": "Specification & Lab. Test:",
+            "shapes": "Shape & Size:",
+            "packaging": "Packaging Option:",
+            "detailInfo": "Detail Information:"
+        },
+        "detailTable": {
+            "moq": "MOQ:",
+            "packaging": "Packaging:",
+            "paymentTerms": "Payment Terms:",
+            "paymentValue": "Telegraphic Transfer (T/T)",
+            "shipmentTerms": "Shipment Terms:",
+            "shipmentValue": "Freight on Board (FOB)",
+            "productionCapacity": "Production Capacity:",
+            "contactUs": "Contact us"
+        },
+        "buttons": {
+            "catalogue": "Catalogue",
+            "askMore": "Ask More"
+        },
+        "altText": {
+            "productMedia": "Product media {id}",
+            "videoThumbnail": "Video thumbnail {id}",
+            "specification": "Specification {id}",
+            "djavacoalLogo": "Djavacoal Logo"
+        },
+        "packagingCard": {
+            "packaging": "Packaging"
+        },
+        "noMediaAvailable": "No media available"
+    },
     "AboutCompany": {
         "pageTitle": "About Company",
         "header": {

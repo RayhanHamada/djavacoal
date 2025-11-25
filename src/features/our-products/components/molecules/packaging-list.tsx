@@ -1,5 +1,7 @@
 "use client";
 
+import { useTranslations } from "next-intl";
+
 import { PackagingCard } from "../atoms";
 import { cn } from "@/lib/utils";
 
@@ -16,10 +18,11 @@ type PackagingListProps = {
 };
 
 export function PackagingList({ packagingOptions }: PackagingListProps) {
+    const t = useTranslations("OurProducts");
     return (
         <div className="flex flex-col gap-5 self-stretch lg:gap-5">
             <h3 className="text-[20px] leading-[1.36] font-bold text-white lg:text-xl">
-                Packaging Option:
+                {t("sections.packaging")}
             </h3>
             <div
                 className={cn(

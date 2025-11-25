@@ -6,6 +6,7 @@ import { useRef, useState } from "react";
 import Image from "next/image";
 
 import { Play } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 import { getYouTubeThumbnailUrl } from "../../lib/utils";
 import { ImageModal, YouTubeModal } from "../atoms";
@@ -27,6 +28,7 @@ interface MediaGalleryHorizontalProps {
 export function MediaGalleryHorizontal({
     medias,
 }: MediaGalleryHorizontalProps) {
+    const t = useTranslations("OurProducts");
     const [imageModalOpen, setImageModalOpen] = useState(false);
     const [youtubeModalOpen, setYoutubeModalOpen] = useState(false);
     const [selectedImageUrl, setSelectedImageUrl] = useState<string>("");
@@ -36,7 +38,7 @@ export function MediaGalleryHorizontal({
     if (!medias || medias.length === 0) {
         return (
             <div className="flex h-64 items-center justify-center rounded-lg bg-gray-800">
-                <p className="text-gray-400">No media available</p>
+                <p className="text-gray-400">{t("noMediaAvailable")}</p>
             </div>
         );
     }
@@ -67,7 +69,7 @@ export function MediaGalleryHorizontal({
                 >
                     <Image
                         src={media.image_url}
-                        alt={`Product media ${media.id}`}
+                        alt={t("altText.productMedia")}
                         fill
                         className="border border-[#FFFFFF25] bg-[radial-gradient(circle_at_center,#000_0%,#171717_50%,#ffffff30_100%)] object-cover shadow-[0_0_30px_#00000040]"
                     />
@@ -90,7 +92,7 @@ export function MediaGalleryHorizontal({
                 >
                     <Image
                         src={thumbnailUrl}
-                        alt={`Video thumbnail ${media.id}`}
+                        alt={t("altText.videoThumbnail")}
                         fill
                         className="bg-[radial-gradient(circle_at_center,#000_0%,#171717_50%,#ffffff40_100%)] object-cover"
                     />
@@ -101,7 +103,7 @@ export function MediaGalleryHorizontal({
                     >
                         <Image
                             src="/images/logo.png"
-                            alt="Djavacoal Logo"
+                            alt={t("altText.djavacoalLogo")}
                             width={150}
                             height={60}
                             className={`h-auto object-contain opacity-90 ${isMainItem ? "w-20 sm:w-24 md:w-32" : "w-16 sm:w-20"}`}

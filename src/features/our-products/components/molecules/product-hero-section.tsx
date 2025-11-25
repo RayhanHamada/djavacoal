@@ -2,7 +2,7 @@
 
 import type { MediaItem } from "../../lib/types";
 
-import { useLocale } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 
 import { ActionButton } from "../atoms";
 import { MediaGalleryHorizontal } from "../molecules";
@@ -22,6 +22,7 @@ export function ProductHeroSection({
     askMoreUrl,
 }: ProductHeroSectionProps) {
     const locale = useLocale();
+    const t = useTranslations("OurProducts");
     const parts = productName.split(" ");
 
     const highlightedName = (
@@ -59,13 +60,13 @@ export function ProductHeroSection({
                     <div className="flex w-full max-w-full flex-row flex-wrap gap-3 sm:gap-5">
                         <ActionButton
                             href={catalogueUrl || "#"}
-                            label="Catalogue"
+                            label={t("buttons.catalogue")}
                             icon="/images/icon-download.svg"
                             variant="primary"
                         />
                         <ActionButton
                             href={askMoreUrl || "#"}
-                            label="Ask More"
+                            label={t("buttons.askMore")}
                             icon="/images/icon-whatsapp.svg"
                             variant="success"
                         />

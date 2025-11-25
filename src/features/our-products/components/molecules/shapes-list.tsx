@@ -1,5 +1,7 @@
 "use client";
 
+import { useTranslations } from "next-intl";
+
 import { ShapeCard } from "../atoms";
 
 export type Shape = {
@@ -14,9 +16,12 @@ type ShapesListProps = {
 };
 
 export function ShapesList({ shapes }: ShapesListProps) {
+    const t = useTranslations("OurProducts");
     return (
         <div className="flex flex-col gap-10">
-            <h3 className="text-xl font-bold text-white">Shape & Size:</h3>
+            <h3 className="text-xl font-bold text-white">
+                {t("sections.shapes")}
+            </h3>
             <div className="grid grid-cols-[420px_1fr] items-start justify-start gap-10 max-[1840px]:grid-cols-1">
                 {shapes.map((shape) => (
                     <ShapeCard

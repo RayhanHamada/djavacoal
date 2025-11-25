@@ -639,6 +639,50 @@
         "selectProduct": "اختر المنتج",
         "djavacoalBrand": "علامة Djavacoal"
     },
+    "OurProducts": {
+        "pageTitle": "المنتجات",
+        "header": {
+            "title": "المنتجات",
+            "bannerAlt": "لافتة المنتجات"
+        },
+        "loading": {
+            "products": "جارٍ تحميل المنتجات...",
+            "details": "جارٍ تحميل تفاصيل المنتج..."
+        },
+        "noProducts": "لم يتم العثور على منتجات.",
+        "productNotFound": "المنتج غير موجود.",
+        "sections": {
+            "description": "الوصف:",
+            "specification": "المواصفات والاختبار المعملي:",
+            "shapes": "الشكل والحجم:",
+            "packaging": "خيار التعبئة:",
+            "detailInfo": "معلومات تفصيلية:"
+        },
+        "detailTable": {
+            "moq": "الحد الأدنى للطلب:",
+            "packaging": "التعبئة:",
+            "paymentTerms": "شروط الدفع:",
+            "paymentValue": "التحويل البرقي (T/T)",
+            "shipmentTerms": "شروط الشحن:",
+            "shipmentValue": "فوب (FOB)",
+            "productionCapacity": "الطاقة الإنتاجية:",
+            "contactUs": "اتصل بنا"
+        },
+        "buttons": {
+            "catalogue": "الكتالوج",
+            "askMore": "اسأل المزيد"
+        },
+        "altText": {
+            "productMedia": "وسائط المنتج {id}",
+            "videoThumbnail": "صورة مصغرة للفيديو {id}",
+            "specification": "المواصفات {id}",
+            "djavacoalLogo": "شعار Djavacoal"
+        },
+        "packagingCard": {
+            "packaging": "التعبئة والتغليف"
+        },
+        "noMediaAvailable": "لا توجد وسائط متاحة"
+    },
     "AboutCompany": {
         "pageTitle": "عن الشركة",
         "header": {
