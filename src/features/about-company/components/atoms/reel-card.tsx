@@ -36,7 +36,7 @@ export default function ReelCard({ videoId, index, onClick }: ReelCardProps) {
             />
 
             {/* Logo Watermark */}
-            <div className="pointer-events-none absolute top-2 left-1/2 -translate-x-1/2 opacity-70">
+            <div className="pointer-events-none absolute top-2 left-1/2 -translate-x-1/2">
                 <Image
                     src={LOGO_IMAGE}
                     alt="Logo"

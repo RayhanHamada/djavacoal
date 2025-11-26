@@ -164,6 +164,33 @@ function GallerySubsection({
 }
 
 export default function GallerySection() {
+    const touchStartX = useRef<number | null>(null);
+    const touchEndX = useRef<number | null>(null);
+
+    const handleTouchStart = (e: React.TouchEvent) => {
+        touchStartX.current = e.changedTouches[0].clientX;
+    };
+
+    const handleTouchMove = (e: React.TouchEvent) => {
+        touchEndX.current = e.changedTouches[0].clientX;
+    };
+
+    const handleTouchEnd = () => {
+        if (!touchStartX.current || !touchEndX.current) return;
+
+        const distance = touchStartX.current - touchEndX.current;
+
+        // threshold minimal agar swipe valid
+        if (distance > 50) {
+            nextItem(currentList.length); // swipe kiri → next
+        }
+        if (distance < -50) {
+            prevItem(currentList.length); // swipe kanan → prev
+        }
+
+        touchStartX.current = null;
+        touchEndX.current = null;
+    };
     const t = useTranslations("AboutCompany.gallery");
     const { data: aboutCompanyData } = useAboutCompanyContentAPI();
     const { viewer, openViewer, closeViewer, nextItem, prevItem } =
@@ -292,6 +319,9 @@ export default function GallerySection() {
                     <div
                         className="relative flex items-center justify-center"
                         onClick={(e) => e.stopPropagation()}
+                        onTouchStart={handleTouchStart}
+                        onTouchMove={handleTouchMove}
+                        onTouchEnd={handleTouchEnd}
                     >
                         {renderModalContent()}
 
