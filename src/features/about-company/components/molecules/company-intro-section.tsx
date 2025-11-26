@@ -14,7 +14,7 @@ import { useAboutCompanyContentAPI } from "@/features/public-api/hooks";
 export default function CompanyIntroSection() {
     const t = useTranslations("AboutCompany.companyIntro");
     const { isPlaying, play } = useVideoPlayer();
-    const { data } = useAboutCompanyContentAPI();
+    const { data: aboutCompanyContentData } = useAboutCompanyContentAPI();
 
     return (
         <section
@@ -37,14 +37,20 @@ export default function CompanyIntroSection() {
 
             <div className="flex w-full">
                 <VideoPlayer
-                    src={data?.data.about_us_video_url ?? ""}
+                    src={aboutCompanyContentData?.data.about_us_video_url ?? ""}
                     title={t("videoTitle")}
                     isPlaying={isPlaying}
                     onPlay={play}
                 />
             </div>
 
-            <SocialMediaLinks />
+            {aboutCompanyContentData && (
+                <SocialMediaLinks
+                    facebookLink={aboutCompanyContentData.data.facebook_link}
+                    instagramLink={aboutCompanyContentData.data.instagram_link}
+                    linkedinLink={aboutCompanyContentData.data.linkedin_link}
+                />
+            )}
 
             <div className="space-y-4 text-justify leading-relaxed text-gray-200">
                 <p>{t("paragraph1")}</p>

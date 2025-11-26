@@ -577,6 +577,8 @@ export interface operations {
                             }[];
                             /** @description URL of the factory photo */
                             visit_our_factory_photo: string | null;
+                            /** @description WhatsApp contact number */
+                            whatsapp_number: string;
                         };
                     };
                 };
@@ -740,6 +742,10 @@ export interface operations {
                             product_galleries: string[];
                             /** @description URL of the 'About Us' video */
                             about_us_video_url: string | null;
+                            facebook_link: string;
+                            linkedin_link: string;
+                            instagram_link: string;
+                            whatsapp_number: string;
                         };
                     };
                 };

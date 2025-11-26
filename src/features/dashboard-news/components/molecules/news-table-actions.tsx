@@ -19,7 +19,7 @@ import { match } from "ts-pattern";
 import {
     NEWS_STATUS_FILTER_VALUES,
     NewsStatusFilterEnumType,
-} from "@/features/dashboard-news/server/constants";
+} from "@/features/dashboard-news/lib/constants";
 import { rpc } from "@/lib/rpc";
 
 interface NewsTableActionsProps {

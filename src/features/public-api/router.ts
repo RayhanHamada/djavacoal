@@ -200,6 +200,7 @@ export const router = {
                 slide_banners,
                 who_we_are_video_url,
                 visit_our_factory_photo,
+                whatsapp_number,
             ] = await Promise.all([
                 /**
                  * get slide banners
@@ -236,6 +237,11 @@ export const router = {
                         process.env.NEXT_PUBLIC_ASSET_URL
                     ).toString();
                 }),
+
+                kv
+                    .get(KV_KEYS.WHATSAPP_NUMBER)
+                    .then((v) => v || "")
+                    .catch(() => ""),
             ]);
 
             const featured_products = await db.query.products
@@ -374,6 +380,7 @@ export const router = {
                         visit_our_factory_photo,
                         featured_products,
                         packaging_options,
+                        whatsapp_number,
                     },
                 },
             };
@@ -402,6 +409,10 @@ export const router = {
                 factory_galleries,
                 product_galleries,
                 about_us_video_url,
+                facebook_link,
+                linkedin_link,
+                instagram_link,
+                whatsapp_number,
             ] = await Promise.all([
                 kv.get(KV_KEYS.VISIT_OUR_FACTORY_PHOTO, "json").then((v) => {
                     if (!v) return null;
@@ -463,7 +474,26 @@ export const router = {
                     })
                     .catch(() => [] as string[]),
 
-                kv.get(KV_KEYS.WHO_WE_ARE_VIDEO),
+                kv
+                    .get(KV_KEYS.WHO_WE_ARE_VIDEO)
+                    .then((v) => v ?? "")
+                    .catch(() => ""),
+                kv
+                    .get(KV_KEYS.FACEBOOK_LINK)
+                    .then((v) => v ?? "")
+                    .catch(() => ""),
+                kv
+                    .get(KV_KEYS.LINKEDIN_LINK)
+                    .then((v) => v ?? "")
+                    .catch(() => ""),
+                kv
+                    .get(KV_KEYS.INSTAGRAM_LINK)
+                    .then((v) => v ?? "")
+                    .catch(() => ""),
+                kv
+                    .get(KV_KEYS.WHATSAPP_NUMBER)
+                    .then((v) => v ?? "")
+                    .catch(() => ""),
             ]);
 
             const team_members = await db.query.teams
@@ -512,6 +542,10 @@ export const router = {
                         factory_galleries,
                         product_galleries,
                         about_us_video_url,
+                        facebook_link,
+                        linkedin_link,
+                        instagram_link,
+                        whatsapp_number,
                     },
                 },
             };
