@@ -125,6 +125,11 @@ export const ABOUT_COMPANY_BODY_OUTPUT_SCHEMA = z.object({
             .url()
             .nullable()
             .describe("URL of the 'About Us' video"),
+
+        facebook_link: z.string(),
+        linkedin_link: z.string(),
+        instagram_link: z.string(),
+        whatsapp_number: z.string(),
     }),
 });
 

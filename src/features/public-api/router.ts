@@ -402,6 +402,10 @@ export const router = {
                 factory_galleries,
                 product_galleries,
                 about_us_video_url,
+                facebook_link,
+                linkedin_link,
+                instagram_link,
+                whatsapp_number,
             ] = await Promise.all([
                 kv.get(KV_KEYS.VISIT_OUR_FACTORY_PHOTO, "json").then((v) => {
                     if (!v) return null;
@@ -463,7 +467,26 @@ export const router = {
                     })
                     .catch(() => [] as string[]),
 
-                kv.get(KV_KEYS.WHO_WE_ARE_VIDEO),
+                kv
+                    .get(KV_KEYS.WHO_WE_ARE_VIDEO)
+                    .then((v) => v ?? "")
+                    .catch(() => ""),
+                kv
+                    .get(KV_KEYS.FACEBOOK_LINK)
+                    .then((v) => v ?? "")
+                    .catch(() => ""),
+                kv
+                    .get(KV_KEYS.LINKEDIN_LINK)
+                    .then((v) => v ?? "")
+                    .catch(() => ""),
+                kv
+                    .get(KV_KEYS.INSTAGRAM_LINK)
+                    .then((v) => v ?? "")
+                    .catch(() => ""),
+                kv
+                    .get(KV_KEYS.WHATSAPP_NUMBER)
+                    .then((v) => v ?? "")
+                    .catch(() => ""),
             ]);
 
             const team_members = await db.query.teams
@@ -512,6 +535,10 @@ export const router = {
                         factory_galleries,
                         product_galleries,
                         about_us_video_url,
+                        facebook_link,
+                        linkedin_link,
+                        instagram_link,
+                        whatsapp_number,
                     },
                 },
             };
