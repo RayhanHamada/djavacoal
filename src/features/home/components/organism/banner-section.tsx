@@ -15,7 +15,7 @@ export async function BannerSection() {
     const slide_banners = data?.data.slide_banners ?? [];
 
     return (
-        <section className="relative h-[90vh] w-full overflow-hidden bg-[#161616] md:h-[800px]">
+        <section className="relative h-[90vh] w-full overflow-hidden bg-[#161616]">
             {/* Client-side Carousel */}
             <BannerCarousel slides={slide_banners} />
 
