@@ -26,7 +26,7 @@ export function PackagingOptionsSection() {
                     </h2>
                 </div>
             </div>
-            <div className="flex flex-col items-center gap-16 px-5 md:grid md:grid-cols-2 md:px-10 lg:flex lg:flex-row lg:justify-center lg:px-[100px]">
+            <div className="flex flex-col items-center gap-0 px-5 md:grid md:grid-cols-2 md:gap-10 md:px-10 lg:flex lg:flex-row lg:justify-center lg:px-[100px]">
                 {homeContent?.data.packaging_options
                     .slice(0, 3)
                     .map((option) => {
