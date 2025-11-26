@@ -12,6 +12,9 @@ import { useAboutCompanyContentAPI } from "@/features/public-api/hooks";
 export default function FactorySection() {
     const t = useTranslations("AboutCompany.factory");
     const { data: aboutCompanyContentData } = useAboutCompanyContentAPI();
+    const whatsappLink = new URL(
+        `https://wa.me/${aboutCompanyContentData?.data.whatsapp_number}?text=${encodeURIComponent(t("whatsappMessage"))}`
+    );
 
     return (
         <section
@@ -63,7 +66,7 @@ export default function FactorySection() {
             </SlideInView>
             <div className="mt-4 flex">
                 <Link
-                    href={`https://wa.me/${aboutCompanyContentData?.data.whatsapp_number}?text=${encodeURIComponent(t("whatsappMessage"))}`}
+                    href={whatsappLink.toString()}
                     target="_blank"
                     className="bg-button-whatsapp flex h-16 w-full items-center justify-center gap-2 rounded-md font-semibold text-white transition hover:bg-[#25d366] md:w-[325px] lg:w-[325px]"
                 >

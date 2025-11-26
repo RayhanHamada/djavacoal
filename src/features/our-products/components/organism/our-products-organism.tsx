@@ -35,6 +35,10 @@ export function ProductPage() {
         handleBrandSelect,
     } = useProducts();
 
+    const whatsappLink = new URL(
+        `https://wa.me/${selectedProduct?.whatsapp_number}`
+    );
+
     if (isLoadingProducts) {
         return (
             <div className="flex min-h-[400px] items-center justify-center">
@@ -118,7 +122,7 @@ export function ProductPage() {
                                                     selectedProduct.catalogue_url ??
                                                     undefined
                                                 }
-                                                askMoreUrl={`https://wa.me/${selectedProduct.whatsapp_number}`}
+                                                askMoreUrl={whatsappLink.toString()}
                                             />
 
                                             {/* Divider */}

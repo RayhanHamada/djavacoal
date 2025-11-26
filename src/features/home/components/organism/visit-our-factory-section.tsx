@@ -10,6 +10,10 @@ import { useHomeContentAPI } from "@/features/public-api/hooks";
 export function VisitOurFactorySection() {
     const t = useTranslations("Home.visitFactory");
     const { data: homeContentData } = useHomeContentAPI();
+    const whatsappLink = new URL(
+        `https://wa.me/${homeContentData?.data.whatsapp_number}?text=${encodeURIComponent(t("whatsappMessage"))}`
+    );
+
     return (
         <section className="relative w-full overflow-hidden bg-[#151515] text-center text-white">
             {/* ==== Title di atas gambar ==== */}
@@ -42,7 +46,7 @@ export function VisitOurFactorySection() {
                 </p>
 
                 <Link
-                    href={`https://wa.me/${homeContentData?.data.whatsapp_number}?text=${encodeURIComponent(t("whatsappMessage"))}`}
+                    href={whatsappLink.toString()}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="bg-button-whatsapp container mx-auto inline-flex h-[54px] w-[271px] items-center justify-center gap-3 rounded-lg px-6 font-['Open_Sans'] text-[14px] font-semibold text-white transition-all hover:bg-[#1EBE5B] md:h-[54px] md:w-[360px] md:text-[15px] lg:h-[54px] lg:w-[500px]"
