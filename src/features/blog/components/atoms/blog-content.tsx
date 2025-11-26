@@ -13,7 +13,7 @@ export function BlogContent({ content, className }: BlogContentProps) {
             className={cn(
                 "prose prose-invert max-w-none py-10",
                 "font-open-sans text-base leading-[1.36em] font-normal text-[#C6C6C6]",
-                "text-wrap [&_p]:text-wrap [&>h1]:mb-4 [&>h2]:mb-4 [&>h3]:mb-4 [&>p]:mb-6",
+                "text-wrap [&_p]:overflow-clip [&_p]:text-wrap [&>h1]:mb-4 [&>h2]:mb-4 [&>h3]:mb-4 [&>p]:mb-6",
                 "[&>h2]:text-2xl [&>h3]:text-xl [&>h4]:text-lg",
                 "[&>h2]:font-semibold [&>h3]:font-semibold [&>h4]:font-semibold",
                 "[&_li]:mb-2 [&_ol]:list-decimal [&_ol]:pl-6 [&_ul]:list-disc [&_ul]:pl-6",
