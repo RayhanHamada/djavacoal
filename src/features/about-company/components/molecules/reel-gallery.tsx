@@ -29,7 +29,7 @@ export default function ReelGallery({ onReelClick }: ReelGalleryProps) {
     };
 
     return (
-        <div className="-mx-10">
+        <div className="-mx-5 lg:-mx-10">
             <div className="relative w-full">
                 <div
                     ref={containerRef}
