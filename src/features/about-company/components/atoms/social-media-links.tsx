@@ -9,6 +9,7 @@ export default function SocialMediaLinks() {
         <div className="flex space-x-3">
             <Link
                 href={SOCIAL_LINKS.facebook}
+                target="_blank"
                 className="border bg-transparent p-2 hover:bg-gray-500"
                 aria-label="Visit our Facebook page"
             >
@@ -16,6 +17,7 @@ export default function SocialMediaLinks() {
             </Link>
             <Link
                 href={SOCIAL_LINKS.instagram}
+                target="_blank"
                 className="border bg-transparent p-2 hover:bg-gray-500"
                 aria-label="Visit our Instagram page"
             >
@@ -23,6 +25,7 @@ export default function SocialMediaLinks() {
             </Link>
             <Link
                 href={SOCIAL_LINKS.linkedin}
+                target="_blank"
                 className="border bg-transparent p-2 hover:bg-gray-500"
                 aria-label="Visit our LinkedIn page"
             >

@@ -37,36 +37,37 @@ contact-us/
 ### Core Functionality
 
 1. **Contact Information Display**
-   - Company email address
-   - Phone number
-   - Physical location address
-   - Bilingual support (EN/AR)
-   - Icon-based visual presentation
+    - Company email address
+    - Phone number
+    - Physical location address
+    - Bilingual support (EN/AR)
+    - Icon-based visual presentation
 
 2. **Contact Form** (UI Only - No Backend Integration Yet)
-   - Full name field
-   - Email field
-   - Phone number field
-   - Message textarea
-   - Submit button
-   - All fields use translation keys
+    - Full name field
+    - Email field
+    - Phone number field
+    - Message textarea
+    - Submit button
+    - All fields use translation keys
 
 3. **Office Location Map**
-   - Embedded Google Maps iframe
-   - Shows company location
-   - Responsive layout
+    - Embedded Google Maps iframe
+    - Shows company location
+    - Responsive layout
 
 4. **Social Media Links**
-   - Facebook
-   - Instagram
-   - LinkedIn
-   - Icon-based buttons with hover effects
+    - Facebook
+    - Instagram
+    - LinkedIn
+    - Icon-based buttons with hover effects
 
 ## Technical Implementation
 
 ### Component Structure
 
 #### ContactSection (Organism)
+
 Main section displaying company logo, contact information, and social links.
 
 ```typescript
@@ -90,7 +91,7 @@ export default function ContactSection() {
             {/* Logo and Contact Info */}
             <div className="mx-auto flex max-w-6xl flex-col">
                 <Image src="/svgs/logoContactUs.svg" alt={t("info.logoAlt")} />
-                
+
                 <ContactInfoItem
                     icon={<FaEnvelope />}
                     label={t("info.email.label")}
@@ -114,6 +115,7 @@ export default function ContactSection() {
 ```
 
 #### ContactFormSection (Organism)
+
 Container for the map and contact form side-by-side layout.
 
 ```typescript
@@ -134,6 +136,7 @@ export function ContactFormSection() {
 ```
 
 #### ContactForm (Molecule)
+
 Form component with all input fields using translations.
 
 ```typescript
@@ -172,6 +175,7 @@ export function ContactForm() {
 ```
 
 #### ContactInfoItem (Molecule)
+
 Reusable component for displaying contact information with icons.
 
 ```typescript
@@ -197,6 +201,7 @@ export function ContactInfoItem({ icon, label, value }: ContactInfoItemProps) {
 ```
 
 #### ContactMap (Molecule)
+
 Embedded Google Maps iframe showing company location.
 
 ```typescript
@@ -212,6 +217,7 @@ export function ContactMap() {
 ```
 
 #### ContactSocial (Molecule)
+
 Social media buttons with icons.
 
 ```typescript
@@ -234,62 +240,62 @@ export const ContactSocial = () => (
 
 ```json
 {
-  "ContactUs": {
-    "page": {
-      "title": "Contact Us",
-      "bannerAlt": "Contact Us Banner"
-    },
-    "info": {
-      "email": {
-        "label": "E-Mail",
-        "value": "admin@djavacoal.com"
-      },
-      "phone": {
-        "label": "Phone",
-        "value": "+62 821-2285-9318"
-      },
-      "location": {
-        "label": "Location",
-        "value": "Jl. Vihara Jin Ku Poh Kp. Jati RT.002 RW.006 Tonjong, Tajurhalang, Bogor Regency, West Java 16320"
-      },
-      "logoAlt": "Djavacoal Logo"
-    },
-    "form": {
-      "title": "Send us a message",
-      "fields": {
-        "fullName": {
-          "label": "Full Name:",
-          "placeholder": "Full Name"
+    "ContactUs": {
+        "page": {
+            "title": "Contact Us",
+            "bannerAlt": "Contact Us Banner"
         },
-        "email": {
-          "label": "E-mail:",
-          "placeholder": "E-mail"
+        "info": {
+            "email": {
+                "label": "E-Mail",
+                "value": "admin@djavacoal.com"
+            },
+            "phone": {
+                "label": "Phone",
+                "value": "+62 821-2285-9318"
+            },
+            "location": {
+                "label": "Location",
+                "value": "Jl. Vihara Jin Ku Poh Kp. Jati RT.002 RW.006 Tonjong, Tajurhalang, Bogor Regency, West Java 16320"
+            },
+            "logoAlt": "Djavacoal Logo"
         },
-        "phone": {
-          "label": "Phone Number:",
-          "placeholder": "Phone Number"
+        "form": {
+            "title": "Send us a message",
+            "fields": {
+                "fullName": {
+                    "label": "Full Name:",
+                    "placeholder": "Full Name"
+                },
+                "email": {
+                    "label": "E-mail:",
+                    "placeholder": "E-mail"
+                },
+                "phone": {
+                    "label": "Phone Number:",
+                    "placeholder": "Phone Number"
+                },
+                "message": {
+                    "label": "Message:",
+                    "placeholder": "Message"
+                }
+            },
+            "submit": "Send",
+            "submitting": "Sending...",
+            "success": "Thank you! We'll get back to you soon.",
+            "error": "Failed to send message. Please try again."
         },
-        "message": {
-          "label": "Message:",
-          "placeholder": "Message"
+        "map": {
+            "title": "Our Location",
+            "loadingError": "Failed to load map"
+        },
+        "social": {
+            "title": "Follow Us",
+            "facebook": "Facebook",
+            "instagram": "Instagram",
+            "linkedin": "LinkedIn"
         }
-      },
-      "submit": "Send",
-      "submitting": "Sending...",
-      "success": "Thank you! We'll get back to you soon.",
-      "error": "Failed to send message. Please try again."
-    },
-    "map": {
-      "title": "Our Location",
-      "loadingError": "Failed to load map"
-    },
-    "social": {
-      "title": "Follow Us",
-      "facebook": "Facebook",
-      "instagram": "Instagram",
-      "linkedin": "LinkedIn"
     }
-  }
 }
 ```
 
@@ -297,62 +303,62 @@ export const ContactSocial = () => (
 
 ```json
 {
-  "ContactUs": {
-    "page": {
-      "title": "اتصل بنا",
-      "bannerAlt": "لافتة اتصل بنا"
-    },
-    "info": {
-      "email": {
-        "label": "البريد الإلكتروني",
-        "value": "admin@djavacoal.com"
-      },
-      "phone": {
-        "label": "الهاتف",
-        "value": "+62 821-2285-9318"
-      },
-      "location": {
-        "label": "الموقع",
-        "value": "Jl. Vihara Jin Ku Poh Kp. Jati RT.002 RW.006 Tonjong, Tajurhalang, Bogor Regency, West Java 16320"
-      },
-      "logoAlt": "شعار ديافاكوال"
-    },
-    "form": {
-      "title": "أرسل لنا رسالة",
-      "fields": {
-        "fullName": {
-          "label": "الاسم الكامل:",
-          "placeholder": "الاسم الكامل"
+    "ContactUs": {
+        "page": {
+            "title": "اتصل بنا",
+            "bannerAlt": "لافتة اتصل بنا"
         },
-        "email": {
-          "label": "البريد الإلكتروني:",
-          "placeholder": "البريد الإلكتروني"
+        "info": {
+            "email": {
+                "label": "البريد الإلكتروني",
+                "value": "admin@djavacoal.com"
+            },
+            "phone": {
+                "label": "الهاتف",
+                "value": "+62 821-2285-9318"
+            },
+            "location": {
+                "label": "الموقع",
+                "value": "Jl. Vihara Jin Ku Poh Kp. Jati RT.002 RW.006 Tonjong, Tajurhalang, Bogor Regency, West Java 16320"
+            },
+            "logoAlt": "شعار ديافاكوال"
         },
-        "phone": {
-          "label": "رقم الهاتف:",
-          "placeholder": "رقم الهاتف"
+        "form": {
+            "title": "أرسل لنا رسالة",
+            "fields": {
+                "fullName": {
+                    "label": "الاسم الكامل:",
+                    "placeholder": "الاسم الكامل"
+                },
+                "email": {
+                    "label": "البريد الإلكتروني:",
+                    "placeholder": "البريد الإلكتروني"
+                },
+                "phone": {
+                    "label": "رقم الهاتف:",
+                    "placeholder": "رقم الهاتف"
+                },
+                "message": {
+                    "label": "الرسالة:",
+                    "placeholder": "الرسالة"
+                }
+            },
+            "submit": "إرسال",
+            "submitting": "جارٍ الإرسال...",
+            "success": "شكراً لك! سنتواصل معك قريباً.",
+            "error": "فشل إرسال الرسالة. يرجى المحاولة مرة أخرى."
         },
-        "message": {
-          "label": "الرسالة:",
-          "placeholder": "الرسالة"
+        "map": {
+            "title": "موقعنا",
+            "loadingError": "فشل تحميل الخريطة"
+        },
+        "social": {
+            "title": "تابعنا",
+            "facebook": "فيسبوك",
+            "instagram": "إنستغرام",
+            "linkedin": "لينكدإن"
         }
-      },
-      "submit": "إرسال",
-      "submitting": "جارٍ الإرسال...",
-      "success": "شكراً لك! سنتواصل معك قريباً.",
-      "error": "فشل إرسال الرسالة. يرجى المحاولة مرة أخرى."
-    },
-    "map": {
-      "title": "موقعنا",
-      "loadingError": "فشل تحميل الخريطة"
-    },
-    "social": {
-      "title": "تابعنا",
-      "facebook": "فيسبوك",
-      "instagram": "إنستغرام",
-      "linkedin": "لينكدإن"
     }
-  }
 }
 ```
 
@@ -367,7 +373,7 @@ import { useTranslations } from "next-intl";
 
 export function YourComponent() {
     const t = useTranslations("ContactUs");
-    
+
     return <h1>{t("page.title")}</h1>;
 }
 ```
@@ -375,6 +381,7 @@ export function YourComponent() {
 ## Page Integration
 
 ### Contact Page Route
+
 Located at `/app/(visitor)/contact-us/page.tsx`:
 
 ```typescript
@@ -392,7 +399,9 @@ export default function ContactUsPage() {
 ```
 
 ### Layout
+
 Uses `VisitorLayout` component from `@/components/layouts` which provides:
+
 - Header with navigation
 - Footer with contact info
 - Locale switcher
@@ -401,23 +410,27 @@ Uses `VisitorLayout` component from `@/components/layouts` which provides:
 ## Dependencies
 
 ### External Packages
+
 - `next-intl` - Internationalization
 - `react-icons/fa` - Font Awesome icons
 - `next/image` - Optimized images
 
 ### Internal Dependencies
+
 - `@/components/layouts/visitor-layout` - Page layout wrapper
 - `@/hooks/use-app-locale` - Current locale detection
 
 ## Styling
 
 ### Design System
+
 - Background: `bg-[#1C1C1C]` (dark theme)
 - Text: White with gray-300 for secondary text
 - Accent: Orange for buttons and highlights
 - Layout: Max-width 6xl container with responsive padding
 
 ### Responsive Breakpoints
+
 - Mobile: Default (< 768px)
 - Tablet: `md:` (≥ 768px)
 - Desktop: `lg:` (≥ 1024px)
@@ -434,6 +447,7 @@ Uses `VisitorLayout` component from `@/components/layouts` which provides:
 ## Best Practices for AI Agents
 
 ### When Adding Features
+
 1. **Always use translations**: Never hardcode user-facing text
 2. **Update both EN and AR**: Add keys to both message files
 3. **Use "use client"**: Components using `useTranslations` must be client components
@@ -441,6 +455,7 @@ Uses `VisitorLayout` component from `@/components/layouts` which provides:
 5. **Export via index.ts**: Add new components to barrel exports
 
 ### When Modifying
+
 1. **Update translations first**: Add/modify translation keys before updating components
 2. **Test both locales**: Verify text displays correctly in English and Arabic
 3. **Maintain responsive design**: Test on mobile, tablet, and desktop
@@ -448,6 +463,7 @@ Uses `VisitorLayout` component from `@/components/layouts` which provides:
 5. **Update AGENTS.md**: Document any architectural changes
 
 ### When Debugging
+
 1. **Check translation keys**: Verify keys exist in both en.json and ar.json
 2. **Console errors**: Look for missing translation key warnings
 3. **Client vs Server**: Ensure "use client" directive is present when needed
@@ -457,7 +473,9 @@ Uses `VisitorLayout` component from `@/components/layouts` which provides:
 ## Current Limitations
 
 ### Form Functionality
+
 ⚠️ **The contact form is currently UI-only**. It does not:
+
 - Validate inputs
 - Submit data to a backend
 - Send emails
@@ -469,43 +487,46 @@ Uses `VisitorLayout` component from `@/components/layouts` which provides:
 You would need to:
 
 1. **Add Zod validation schema** in `server/` folder:
+
 ```typescript
 import { z } from "zod";
 
 export const ContactFormSchema = z.object({
-  name: z.string().min(2, "Name must be at least 2 characters"),
-  email: z.string().email("Invalid email address"),
-  phone: z.string().optional(),
-  message: z.string().min(10, "Message must be at least 10 characters")
+    name: z.string().min(2, "Name must be at least 2 characters"),
+    email: z.string().email("Invalid email address"),
+    phone: z.string().optional(),
+    message: z.string().min(10, "Message must be at least 10 characters"),
 });
 ```
 
 2. **Create RPC function** for form submission:
+
 ```typescript
 import { base } from "@/lib/orpc/server";
 import { getResend } from "@/adapters/email-service";
 
 export const submitContactForm = base
-  .input(ContactFormSchema)
-  .handler(async function ({ context: { env }, input }) {
-    const resend = getResend(env.RESEND_API_KEY);
-    
-    await resend.emails.send({
-      to: env.CONTACT_EMAIL || "admin@djavacoal.com",
-      from: env.SENDER_EMAIL,
-      subject: "New Contact Form Submission",
-      html: `<p>Name: ${input.name}</p>
+    .input(ContactFormSchema)
+    .handler(async function ({ context: { env }, input }) {
+        const resend = getResend(env.RESEND_API_KEY);
+
+        await resend.emails.send({
+            to: env.CONTACT_EMAIL || "admin@djavacoal.com",
+            from: env.SENDER_EMAIL,
+            subject: "New Contact Form Submission",
+            html: `<p>Name: ${input.name}</p>
              <p>Email: ${input.email}</p>
              <p>Phone: ${input.phone || "N/A"}</p>
-             <p>Message: ${input.message}</p>`
-    });
-    
-    return { success: true };
-  })
-  .callable();
+             <p>Message: ${input.message}</p>`,
+        });
+
+        return { success: true };
+    })
+    .callable();
 ```
 
 3. **Update ContactForm component** to handle submission:
+
 ```typescript
 "use client";
 
@@ -516,7 +537,7 @@ import { notifications } from "@mantine/notifications";
 export function ContactForm() {
     const t = useTranslations("ContactUs.form");
     const mutation = rpc.contact.submitContactForm.useMutation();
-    
+
     const form = useForm({
         initialValues: {
             name: "",
@@ -525,7 +546,7 @@ export function ContactForm() {
             message: ""
         }
     });
-    
+
     const handleSubmit = form.onSubmit(async (values) => {
         try {
             await mutation.mutateAsync(values);
@@ -543,12 +564,13 @@ export function ContactForm() {
             });
         }
     });
-    
+
     return <form onSubmit={handleSubmit}>...</form>;
 }
 ```
 
 4. **Register router** in `src/adapters/rpc/index.ts`:
+
 ```typescript
 import { router as contact } from "@/features/contact-us/server/router";
 
@@ -590,14 +612,22 @@ Add metadata to the page route for better search engine optimization:
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Contact Us - Djavacoal Indonesia",
-  description: "Get in touch with Djavacoal Indonesia for premium coconut charcoal briquettes. Visit our office in Bogor, West Java or send us a message.",
-  keywords: ["contact", "Djavacoal", "charcoal supplier", "Indonesia", "Bogor"],
-  openGraph: {
-    title: "Contact Djavacoal Indonesia",
-    description: "Reach out to us for inquiries about premium charcoal products",
-    images: ["/images/og-contact.jpg"]
-  }
+    title: "Contact Us - Djavacoal Indonesia",
+    description:
+        "Get in touch with Djavacoal Indonesia for premium coconut charcoal briquettes. Visit our office in Bogor, West Java or send us a message.",
+    keywords: [
+        "contact",
+        "Djavacoal",
+        "charcoal supplier",
+        "Indonesia",
+        "Bogor",
+    ],
+    openGraph: {
+        title: "Contact Djavacoal Indonesia",
+        description:
+            "Reach out to us for inquiries about premium charcoal products",
+        images: ["/images/og-contact.jpg"],
+    },
 };
 ```
 
