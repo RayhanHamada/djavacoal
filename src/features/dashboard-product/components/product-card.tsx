@@ -4,6 +4,7 @@ import type { ProductListItem } from "../server/schemas";
 
 import { useCallback, useState } from "react";
 
+import Image from "next/image";
 import Link from "next/link";
 
 import { useSortable } from "@dnd-kit/sortable";
@@ -12,8 +13,8 @@ import {
     ActionIcon,
     Badge,
     Card,
+    Flex,
     Group,
-    Image,
     Menu,
     Stack,
     Text,
@@ -38,7 +39,7 @@ interface ProductCardProps {
  * ProductCard component displays a single product with actions
  */
 export function ProductCard({ product }: ProductCardProps) {
-    const [imageError, setImageError] = useState(false);
+    const [, setImageError] = useState(false);
 
     const {
         attributes,
@@ -119,17 +120,6 @@ export function ProductCard({ product }: ProductCardProps) {
         }
     };
 
-    // Determine image source
-    let imageSrc = "/images/placeholder-product.jpg";
-    if (product.first_media_type === "image" && product.first_media_key) {
-        imageSrc = `${process.env.NEXT_PUBLIC_ASSET_URL}${product.first_media_key}`;
-    } else if (
-        product.first_media_type === "youtube" &&
-        product.youtube_video_id
-    ) {
-        imageSrc = `https://img.youtube.com/vi/${product.youtube_video_id}/maxresdefault.jpg`;
-    }
-
     return (
         <Card
             ref={setNodeRef}
@@ -138,22 +128,28 @@ export function ProductCard({ product }: ProductCardProps) {
             padding="lg"
             radius="md"
             withBorder
-            h={450}
+            h={350}
         >
             <Card.Section
                 component={Link}
                 href={`/dashboard/products/${product.id}/edit`}
             >
-                <Image
-                    src={
-                        imageError
-                            ? "/images/placeholder-product.jpg"
-                            : imageSrc
-                    }
-                    height={200}
-                    alt={product.en_name}
-                    onError={() => setImageError(true)}
-                />
+                <Flex
+                    direction="column"
+                    justify="center"
+                    align="center"
+                    w="100%"
+                    h={200}
+                    bg="gray.0"
+                >
+                    <Image
+                        src={product.image_url}
+                        height={400}
+                        width={200}
+                        alt={product.en_name}
+                        onError={() => setImageError(true)}
+                    />
+                </Flex>
             </Card.Section>
 
             <Stack gap="xs" mt="md">
