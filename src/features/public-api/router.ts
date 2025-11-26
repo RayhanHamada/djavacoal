@@ -200,6 +200,7 @@ export const router = {
                 slide_banners,
                 who_we_are_video_url,
                 visit_our_factory_photo,
+                whatsapp_number,
             ] = await Promise.all([
                 /**
                  * get slide banners
@@ -236,6 +237,11 @@ export const router = {
                         process.env.NEXT_PUBLIC_ASSET_URL
                     ).toString();
                 }),
+
+                kv
+                    .get(KV_KEYS.WHATSAPP_NUMBER)
+                    .then((v) => v || "")
+                    .catch(() => ""),
             ]);
 
             const featured_products = await db.query.products
@@ -374,6 +380,7 @@ export const router = {
                         visit_our_factory_photo,
                         featured_products,
                         packaging_options,
+                        whatsapp_number,
                     },
                 },
             };

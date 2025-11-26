@@ -577,6 +577,8 @@ export interface operations {
                             }[];
                             /** @description URL of the factory photo */
                             visit_our_factory_photo: string | null;
+                            /** @description WhatsApp contact number */
+                            whatsapp_number: string;
                         };
                     };
                 };

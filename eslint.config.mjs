@@ -28,6 +28,7 @@ const eslintConfig = [
             ".open-next/**",
             ".eslintcache",
             "src/adapters/d1/migrations/meta/**",
+            "src/adapters/public-api/typegen.ts",
         ],
     },
     js.configs.recommended,

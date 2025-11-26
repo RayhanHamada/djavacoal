@@ -87,6 +87,7 @@ export const HOME_CONTENT_BODY_OUTPUT_SCHEMA = z.object({
             .url()
             .nullable()
             .describe("URL of the factory photo"),
+        whatsapp_number: z.string().describe("WhatsApp contact number"),
     }),
 });
 
