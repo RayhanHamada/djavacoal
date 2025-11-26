@@ -27,7 +27,7 @@ export default function VisitorNavbar(_: Props) {
 
     return (
         <>
-            <nav className="border-b-secondary bg-primary/95 fixed z-100 flex min-h-24 w-full items-center justify-between backdrop-blur-xl">
+            <nav className="border-b-secondary bg-primary/95 fixed z-101 flex min-h-24 w-full items-center justify-between backdrop-blur-xl">
                 <Link
                     href="/"
                     className="px-6 text-lg font-semibold lg:ml-[50px]"

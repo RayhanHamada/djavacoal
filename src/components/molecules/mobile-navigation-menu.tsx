@@ -97,7 +97,7 @@ export function MobileNavigationMenu({ isOpen, onClose, menuItems }: Props) {
             {/* Slide-in Menu */}
             <div
                 className={cn(
-                    "fixed top-0 right-0 z-95 h-full w-80 max-w-[85vw]",
+                    "fixed top-0 right-0 z-100 h-full w-80 max-w-[85vw]",
                     "bg-primary/95 shadow-2xl backdrop-blur-xl",
                     "transform transition-transform duration-300 ease-in-out",
                     "flex flex-col overflow-y-auto",
