@@ -63,7 +63,7 @@ export default function TeamSection() {
                 <div className="mt-4 h-px bg-[#3A3A3A] px-6" />
             </header>
 
-            <div className="relative">
+            <div className="relative max-[1420px]:-mx-10">
                 {/* Mobile & Tablet: scroll horizontally */}
                 <div
                     ref={scrollContainerRef}

@@ -14,9 +14,9 @@ export default function TeamCard({
             <Image
                 src={image}
                 alt={name}
-                width={333}
+                width={350}
                 height={427}
-                className="aspect-[333/426.47] border border-[#696969] object-cover"
+                className="aspect-350/448 border border-[#696969] object-cover"
             />
             <p className="text-sm text-gray-400">{role}</p>
             <p className="font-medium">{name}</p>
