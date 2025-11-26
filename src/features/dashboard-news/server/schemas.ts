@@ -17,7 +17,7 @@ import {
     TITLE_MIN_LENGTH,
     CREATION_MODE,
     NEWS_STATUS_FILTER_VALUES,
-} from "./constants";
+} from "../lib/constants";
 import { NEWS_STATUS } from "@/adapters/d1/constants";
 
 /**
