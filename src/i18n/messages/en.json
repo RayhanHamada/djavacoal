@@ -751,7 +751,8 @@
             "tagline": "Three Factories Across Java, Ready To Serve Global Markets",
             "imageAlt": "Charcoal Production Factory Djavacoal Indonesia",
             "description": "At Djavacoal Indonesia, we take pride in operating three factories across Java that combine years of expertise, strict quality control, and modern production standards to deliver world-class charcoal products. Every step of our process from selecting premium raw materials to shaping, testing, and packaging is carried out with professionalism and dedication to ensure consistency, safety, and performance. With our proven experience in serving global markets, we welcome you to visit our factories and witness firsthand how we transform Indonesia's finest resources into trusted charcoal products for the world.",
-            "scheduleVisit": "Schedule a Visit"
+            "scheduleVisit": "Schedule a Visit",
+            "whatsappMessage": "Hi, I would like to schedule a factory visit"
         },
         "gallery": {
             "subtitle": "Djavacoal's Gallery",

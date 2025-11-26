@@ -11,7 +11,7 @@ import { useAboutCompanyContentAPI } from "@/features/public-api/hooks";
 
 export default function FactorySection() {
     const t = useTranslations("AboutCompany.factory");
-    const { data } = useAboutCompanyContentAPI();
+    const { data: aboutCompanyContentData } = useAboutCompanyContentAPI();
 
     return (
         <section
@@ -42,12 +42,11 @@ export default function FactorySection() {
                     <div className="mt-4 h-px origin-left bg-[#3A3A3A]" />
                 </ScaleXView>
             </header>
-
             <FadeInView duration={0.5}>
                 <div className="relative h-56 w-full overflow-hidden rounded-md sm:h-72 md:h-80 lg:h-[520px] lg:max-w-3/4">
-                    {data?.data.our_factory_photo && (
+                    {aboutCompanyContentData?.data.our_factory_photo && (
                         <Image
-                            src={data?.data.our_factory_photo ?? ""}
+                            src={aboutCompanyContentData.data.our_factory_photo}
                             alt={t("imageAlt")}
                             fill
                             className="rounded-md object-cover"
@@ -57,16 +56,14 @@ export default function FactorySection() {
                     )}
                 </div>
             </FadeInView>
-
             <SlideInView yOffset={30} duration={0.55}>
                 <article className="space-y-4 text-justify text-sm leading-relaxed text-gray-300 md:text-base">
                     <p>{t("description")}</p>
                 </article>
             </SlideInView>
-
             <div className="mt-4 flex">
                 <Link
-                    href="https://wa.me/6282126572600"
+                    href={`https://wa.me/${aboutCompanyContentData?.data.whatsapp_number}?text=${encodeURIComponent(t("whatsappMessage"))}`}
                     target="_blank"
                     className="bg-button-whatsapp flex h-16 w-full items-center justify-center gap-2 rounded-md font-semibold text-white transition hover:bg-[#25d366] md:w-[325px] lg:w-[325px]"
                 >

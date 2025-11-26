@@ -7,7 +7,7 @@ import {
     NewsTitleCell,
 } from "../atoms/news-table-cells";
 import { NewsTableActions } from "../molecules/news-table-actions";
-import { NEWS_STATUS_FILTER_VALUES } from "@/features/dashboard-news/server/constants";
+import { NEWS_STATUS_FILTER_VALUES } from "@/features/dashboard-news/lib/constants";
 
 export interface NewsArticle {
     id: number;

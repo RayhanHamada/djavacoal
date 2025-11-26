@@ -171,7 +171,10 @@ export function ProductPage() {
                                                                                 spec.image_url
                                                                             }
                                                                             alt={t(
-                                                                                "altText.specification"
+                                                                                "altText.specification",
+                                                                                {
+                                                                                    id: spec.id,
+                                                                                }
                                                                             )}
                                                                             width={
                                                                                 744
