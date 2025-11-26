@@ -21,24 +21,28 @@ export function ContactSocial() {
                 <div className="flex space-x-3">
                     <Link
                         href={contactUsData?.data.facebook_link ?? "#"}
+                        target="_blank"
                         className="border bg-transparent p-2 hover:bg-gray-500"
                     >
                         <FaFacebookF size={16} />
                     </Link>
                     <Link
                         href={contactUsData?.data.linkedin_link ?? "#"}
+                        target="_blank"
                         className="border bg-transparent p-2 hover:bg-gray-500"
                     >
                         <FaLinkedinIn size={16} />
                     </Link>
                     <Link
                         href={contactUsData?.data.instagram_link ?? "#"}
+                        target="_blank"
                         className="border bg-transparent p-2 hover:bg-gray-500"
                     >
                         <FaInstagram size={18} />
                     </Link>
                     <Link
                         href={contactUsData?.data.tiktok_link ?? "#"}
+                        target="_blank"
                         className="border bg-transparent p-2 hover:bg-gray-500"
                     >
                         <FaTiktok size={16} />

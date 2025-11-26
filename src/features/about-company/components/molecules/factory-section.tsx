@@ -66,7 +66,7 @@ export default function FactorySection() {
 
             <div className="mt-4 flex">
                 <Link
-                    href="https://wa.me/628xxxxxxx"
+                    href="https://wa.me/6282126572600"
                     target="_blank"
                     className="bg-button-whatsapp flex h-16 w-full items-center justify-center gap-2 rounded-md font-semibold text-white transition hover:bg-[#25d366] md:w-[325px] lg:w-[325px]"
                 >

@@ -100,7 +100,7 @@ export function AboutUsSection() {
                     {/* ✅ CTA */}
                     <div className="flex w-full justify-center lg:justify-start">
                         <Link
-                            href="/about-us"
+                            href="/about-company"
                             className="group relative mt-2 inline-flex items-center gap-2 pb-1 font-['Open_Sans'] text-lg font-semibold text-[#EFA12D] md:text-xl"
                         >
                             <span className="relative">
