@@ -78,6 +78,29 @@ export function NavigationMenuButton(props: Props) {
         return () => window.removeEventListener("nav-menu-open", handler);
     }, [props.label]);
 
+    // 🔄 Close menu when clicking outside
+    useEffect(() => {
+        if (!open) return;
+
+        const handleClickOutside = (event: MouseEvent) => {
+            const target = event.target as HTMLElement;
+            // Check if click is outside the menu container
+            if (!target.closest("[data-menu-container]")) {
+                setOpen(false);
+            }
+        };
+
+        // Use setTimeout to avoid immediate trigger from the click that opened the menu
+        const timeoutId = setTimeout(() => {
+            document.addEventListener("click", handleClickOutside);
+        }, 0);
+
+        return () => {
+            clearTimeout(timeoutId);
+            document.removeEventListener("click", handleClickOutside);
+        };
+    }, [open]);
+
     const buttonClass = cn(
         "text-sm lg:text-base text-center",
         "h-full text-white hover:bg-[#B87C22] hover:text-white transition-colors min-w-10 px-2",
@@ -107,25 +130,28 @@ export function NavigationMenuButton(props: Props) {
         ))
         .with({ submenus: P.nonNullable }, (props) => {
             return (
-                <div className="relative h-full border-b-2">
+                <div className="relative h-full border-b-2" data-menu-container>
                     {/* Parent Button (CLICK TOGGLE) */}
                     <button
-                        onClick={() =>
+                        onClick={() => {
                             setOpen((prev) => {
                                 const next = !prev;
 
                                 // Kalau sedang dibuka, broadcast ke menu lain supaya mereka close
+                                // Use queueMicrotask to defer event dispatch after React commit phase
                                 if (!prev && typeof window !== "undefined") {
-                                    window.dispatchEvent(
-                                        new CustomEvent("nav-menu-open", {
-                                            detail: { label: props.label },
-                                        })
-                                    );
+                                    queueMicrotask(() => {
+                                        window.dispatchEvent(
+                                            new CustomEvent("nav-menu-open", {
+                                                detail: { label: props.label },
+                                            })
+                                        );
+                                    });
                                 }
 
                                 return next;
-                            })
-                        }
+                            });
+                        }}
                         className={cn(
                             buttonClass,
                             "flex w-full flex-row items-center gap-1",
