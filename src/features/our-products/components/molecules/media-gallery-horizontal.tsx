@@ -67,9 +67,21 @@ export function MediaGalleryHorizontal({
                     className={`group relative cursor-pointer overflow-hidden rounded-lg sm:rounded-xl ${sizeClasses}`}
                     onClick={() => handleImageClick(media.image_url!)}
                 >
+                    {/* Djavacoal Logo Watermark */}
+                    <div className="absolute top-3 left-1/2 z-10 flex -translate-x-1/2 justify-center sm:top-4 md:top-6">
+                        <Image
+                            src="/images/logo.png"
+                            alt={t("altText.djavacoalLogo")}
+                            width={150}
+                            height={60}
+                            className="h-auto w-20 object-contain opacity-90 sm:w-24 md:w-32 lg:w-36"
+                        />
+                    </div>
                     <Image
                         src={media.image_url}
-                        alt={t("altText.productMedia")}
+                        alt={t("altText.productMedia", {
+                            id: media.id,
+                        })}
                         fill
                         className="border border-[#FFFFFF25] bg-[radial-gradient(circle_at_center,#000_0%,#171717_50%,#ffffff30_100%)] object-cover shadow-[0_0_30px_#00000040]"
                     />
@@ -92,7 +104,9 @@ export function MediaGalleryHorizontal({
                 >
                     <Image
                         src={thumbnailUrl}
-                        alt={t("altText.videoThumbnail")}
+                        alt={t("altText.videoThumbnail", {
+                            id: media.id,
+                        })}
                         fill
                         className="bg-[radial-gradient(circle_at_center,#000_0%,#171717_50%,#ffffff40_100%)] object-cover"
                     />
