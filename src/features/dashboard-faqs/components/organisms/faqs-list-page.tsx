@@ -1,5 +1,7 @@
 "use client";
 
+import type { FaqListItem } from "../../server/schemas";
+
 import { useState } from "react";
 
 import {
@@ -33,7 +35,6 @@ import { IconPlus } from "@tabler/icons-react";
 import { useMutation, useQuery } from "@tanstack/react-query";
 
 import { FaqCollapsibleItem } from "./faq-collapsible-item";
-import { FaqListItem } from "../../server/schemas";
 import { FaqModal } from "../molecules/faq-modal";
 import { rpc } from "@/lib/rpc";
 

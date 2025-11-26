@@ -1,4 +1,4 @@
-import type { ProductDetail } from "../server/schemas";
+import type { ProductDetail } from "../lib/types";
 
 import { useForm } from "@mantine/form";
 
