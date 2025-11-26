@@ -1,5 +1,7 @@
 "use client";
 
+import type { UpdateFaqInput } from "../../server/schemas";
+
 import { useEffect, useState } from "react";
 
 import {
@@ -18,7 +20,6 @@ import {
     FAQ_ANSWER_MAX_LENGTH,
     FAQ_QUESTION_MAX_LENGTH,
 } from "../../lib";
-import { UpdateFaqInput } from "../../server/schemas";
 import { FaqRichTextEditor } from "../atoms";
 import { rpc } from "@/lib/rpc";
 

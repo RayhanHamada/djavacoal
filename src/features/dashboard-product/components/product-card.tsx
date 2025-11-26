@@ -1,6 +1,6 @@
 "use client";
 
-import type { ProductListItem } from "../server/schemas";
+import type { ProductListItem } from "../lib/types";
 
 import { useCallback, useState } from "react";
 

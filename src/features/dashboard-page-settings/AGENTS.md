@@ -15,7 +15,10 @@ dashboard-page-settings/
 │   ├── molecules/      # Composite components (metadata form)
 │   └── organisms/      # Complex sections (page settings list, editor)
 ├── hooks/              # React hooks for page settings operations
-├── lib/                # Business logic and utilities
+├── lib/                # Business logic, constants, and form schemas
+│   ├── constants.ts    # Validation limits, sitemap configuration
+│   ├── form-schema.ts  # Mantine form validation schemas
+│   └── index.ts        # Barrel exports
 ├── server/             # Server-side logic (RPC functions)
 │   ├── functions.ts    # oRPC callable functions
 │   ├── schemas.ts      # Zod schemas for input/output validation

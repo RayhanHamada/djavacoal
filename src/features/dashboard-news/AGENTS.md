@@ -12,9 +12,15 @@ This feature provides comprehensive news/blog article management for the Djavaco
 dashboard-news/
 ├── components/          # UI components organized by atomic design
 │   ├── atoms/          # Basic news UI elements
+│   ├── lib/            # Component-specific utilities (table columns)
 │   ├── molecules/      # Composite news components (filters, status badges)
-│   └── organisms/      # Complex news sections (article list, editor)
+│   ├── organisms/      # Complex news sections (article list, editor)
+│   └── pages/          # Page-level components
 ├── hooks/              # React hooks for news operations
+├── lib/                # Feature library (constants, form schemas)
+│   ├── constants.ts    # Validation limits, status values, field errors
+│   ├── form-schemas.ts # Mantine form validation schemas
+│   └── index.ts        # Barrel exports
 ├── server/             # Server-side logic (RPC functions)
 │   ├── functions.ts    # oRPC callable functions
 │   ├── schemas.ts      # Zod schemas for input/output validation

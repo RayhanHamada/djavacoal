@@ -1,6 +1,6 @@
 "use client";
 
-import type { ProductDetail } from "../server/schemas";
+import type { ProductDetail } from "../lib/types";
 
 import { useEffect } from "react";
 

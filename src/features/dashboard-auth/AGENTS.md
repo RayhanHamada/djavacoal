@@ -15,9 +15,14 @@ dashboard-auth/
 │   ├── molecules/      # Composite auth components
 │   └── organisms/      # Complex auth sections
 ├── hooks/              # React hooks for auth state and mutations
-├── lib/                # Auth configuration and utilities
+├── lib/                # Auth configuration, constants, and form schemas
+│   ├── better-auth-client.ts  # Better Auth client instance
 │   ├── better-auth-server.ts  # Better Auth server instance
-│   └── constants.ts    # Auth-related constants
+│   ├── constants.ts    # Auth-related constants (app name, expiry, emails)
+│   ├── form-schema.ts  # Mantine form validation schemas
+│   ├── role-utils.ts   # Role-based utility functions
+│   ├── types.ts        # TypeScript type definitions
+│   └── index.ts        # Barrel exports
 └── server/             # Server-side logic (RPC functions)
     ├── functions.tsx   # oRPC callable functions
     ├── schema.ts       # Zod schemas for input/output validation

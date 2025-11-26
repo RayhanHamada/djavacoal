@@ -34,6 +34,7 @@ import {
     PRODUCT_VARIANTS_PREFIX,
 } from "@/adapters/r2";
 import { getAuth } from "@/features/dashboard-auth/lib/better-auth-server";
+import { MEDIA_TYPE_ENUM } from "@/features/dashboard-product/lib";
 import {
     CreatePackagingOptionInputSchema,
     CreatePackagingOptionOutputSchema,
@@ -59,7 +60,6 @@ import {
     UpdatePackagingOptionInputSchema,
     UpdateProductInputSchema,
 } from "@/features/dashboard-product/server/schemas";
-import { MEDIA_TYPE_ENUM } from "@/features/dashboard-product/utils";
 import base from "@/lib/orpc/server";
 
 const PACKAGING_OPTIONS_PREFIX = "packaging-options";

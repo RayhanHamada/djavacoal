@@ -6,7 +6,7 @@ import {
     MAX_PAGE_SIZE,
     PHOTO_NAME_MAX_LENGTH,
     PHOTO_NAME_MIN_LENGTH,
-} from "./constants";
+} from "../lib/constants";
 import {
     ALLOWED_IMAGE_MIME_TYPES,
     MAX_FILE_SIZE,

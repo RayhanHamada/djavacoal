@@ -1,7 +1,6 @@
 import { zod4Resolver } from "mantine-form-zod-resolver";
 import z from "zod/v4";
 
-import { SITEMAP_CHANGEFREQ_ENUM } from "@/adapters/d1/constants";
 import {
     MAX_KEYWORDS,
     METADATA_DESCRIPTION_MAX_LENGTH,
@@ -16,7 +15,8 @@ import {
     SITEMAP_PRIORITY_DEFAULT,
     SITEMAP_PRIORITY_MAX,
     SITEMAP_PRIORITY_MIN,
-} from "@/features/dashboard-page-settings/server/constants";
+} from "./constants";
+import { SITEMAP_CHANGEFREQ_ENUM } from "@/adapters/d1/constants";
 
 /**
  * Schema for creating page metadata

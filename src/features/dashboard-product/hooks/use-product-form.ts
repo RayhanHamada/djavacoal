@@ -1,11 +1,11 @@
-import type { ProductDetail } from "../server/schemas";
+import type { ProductDetail } from "../lib/types";
 
 import { useForm } from "@mantine/form";
 
 import {
     ProductFormValues,
     validateProductFormSchema,
-} from "../utils/form-schemas";
+} from "../lib/form-schemas";
 
 export function useProductForm(product?: ProductDetail) {
     return useForm<ProductFormValues>({

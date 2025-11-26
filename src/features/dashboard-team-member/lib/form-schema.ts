@@ -6,7 +6,7 @@ import {
     TEAM_MEMBER_NAME_MIN_LENGTH,
     TEAM_MEMBER_POSITION_MAX_LENGTH,
     TEAM_MEMBER_POSITION_MIN_LENGTH,
-} from "../server/constants";
+} from "./constants";
 
 /**
  * Base schema for team member form fields (shared between create and edit)

@@ -22,15 +22,16 @@ dashboard-team-member/
 │   ├── use-team-members-list.tsx
 │   ├── use-team-member-mutations.tsx
 │   └── use-file-upload.tsx
-├── lib/                 # Business logic and utilities
-│   └── form-schema.ts  # Mantine form validation schemas
+├── lib/                 # Business logic, constants, and form schemas
+│   ├── constants.ts    # Validation limits, UI configuration, R2 prefix
+│   ├── form-schema.ts  # Mantine form validation schemas
+│   └── index.ts        # Barrel exports
 ├── server/              # Server-side logic (RPC functions)
 │   ├── functions.ts    # oRPC callable functions
 │   ├── schemas.ts      # Zod schemas for input/output validation
-│   ├── constants.ts    # Feature-specific constants
 │   ├── router.ts       # RPC router exports
 │   └── index.ts        # Server module exports
-└── README.md           # This file
+└── AGENTS.md           # This file
 ```
 
 ## Features

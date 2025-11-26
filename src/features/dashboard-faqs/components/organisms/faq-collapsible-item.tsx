@@ -1,5 +1,7 @@
 "use client";
 
+import type { FaqListItem } from "../../server/schemas";
+
 import { useState } from "react";
 
 import { useSortable } from "@dnd-kit/sortable";
@@ -19,8 +21,6 @@ import {
     IconChevronDown,
     IconChevronUp,
 } from "@tabler/icons-react";
-
-import { FaqListItem } from "../../server/schemas";
 
 interface FaqCollapsibleItemProps {
     faq: FaqListItem;

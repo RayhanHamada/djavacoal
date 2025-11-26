@@ -1,6 +1,6 @@
 "use client";
 
-import type { ListProductsOutput } from "../server/schemas";
+import type { ListProductsOutput } from "../lib/types";
 
 import { useState } from "react";
 

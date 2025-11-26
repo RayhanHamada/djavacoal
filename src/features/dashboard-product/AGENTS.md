@@ -17,12 +17,16 @@ dashboard-product/
 │   ├── molecules/      # Composite components (media uploader, variant form)
 │   └── organisms/      # Complex sections (product list, product editor)
 ├── hooks/              # React hooks for product operations
+├── lib/                # Feature library (constants, schemas, utilities)
+│   ├── constants.ts    # Validation limits, MIME types, field errors
+│   ├── form-schemas.ts # Mantine form validation schemas
+│   ├── utils.ts        # Utility functions (extractYoutubeID)
+│   └── index.ts        # Barrel exports
 ├── server/             # Server-side logic (RPC functions)
 │   ├── functions.ts    # oRPC callable functions
 │   ├── schemas.ts      # Zod schemas for input/output validation
 │   ├── router.ts       # RPC router exports
 │   └── index.ts        # Server module exports
-├── utils/              # Client-side utility functions
 └── index.ts            # Feature barrel export
 ```
 
