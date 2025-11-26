@@ -67,7 +67,7 @@ export default function TeamSection() {
                 {/* Mobile & Tablet: scroll horizontally */}
                 <div
                     ref={scrollContainerRef}
-                    className="scrollbar-hide flex snap-x snap-mandatory space-x-0 overflow-x-auto pb-6 lg:hidden"
+                    className="scrollbar-hide hidden snap-x snap-mandatory space-x-0 overflow-x-auto pb-6 max-[1420px]:flex"
                 >
                     {teamMembers.map((member, i) => (
                         <FadeInView key={i} delay={i * 0.05}>
@@ -81,7 +81,7 @@ export default function TeamSection() {
                 </div>
 
                 {/* Desktop: grid layout */}
-                <div className="hidden lg:flex lg:flex-wrap lg:gap-x-0 lg:gap-y-4">
+                <div className="hidden min-[1420px]:flex lg:flex-wrap lg:gap-x-0 lg:gap-y-4">
                     {teamMembers.map((member, i) => (
                         <FadeInView key={i} delay={i * 0.05} className="w-fit">
                             <ScaleOnHover scale={1.02}>

@@ -362,11 +362,7 @@ export const ProductListItemSchema = z.object({
     id: z.number(),
     en_name: z.string(),
     ar_name: z.string(),
-    first_media_key: z.string().nullable(),
-    first_media_type: z
-        .enum([MEDIA_TYPE_ENUM.IMAGE, MEDIA_TYPE_ENUM.YOUTUBE])
-        .nullable(),
-    youtube_video_id: z.string().nullable(),
+    image_url: z.string(),
     is_hidden: z.boolean(),
     order_index: z.number(),
     created_at: z.date(),

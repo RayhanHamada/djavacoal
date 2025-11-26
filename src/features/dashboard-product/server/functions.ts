@@ -59,6 +59,7 @@ import {
     UpdatePackagingOptionInputSchema,
     UpdateProductInputSchema,
 } from "@/features/dashboard-product/server/schemas";
+import { MEDIA_TYPE_ENUM } from "@/features/dashboard-product/utils";
 import base from "@/lib/orpc/server";
 
 const PACKAGING_OPTIONS_PREFIX = "packaging-options";
@@ -409,65 +410,39 @@ export const listProducts = base
             ? like(products[PRODUCT_COLUMNS.EN_NAME], `%${name_search}%`)
             : undefined;
 
-        // Fetch products with first media
-        const productsList = await db
-            .select({
-                id: products[COMMON_COLUMNS.ID],
-                en_name: products[PRODUCT_COLUMNS.EN_NAME],
-                ar_name: products[PRODUCT_COLUMNS.AR_NAME],
-                is_hidden: products[PRODUCT_COLUMNS.IS_HIDDEN],
-                order_index: products[PRODUCT_COLUMNS.ORDER_INDEX],
-                created_at: products[COMMON_COLUMNS.CREATED_AT],
-                updated_at: products[COMMON_COLUMNS.UPDATED_AT],
-            })
-            .from(products)
-            .where(whereConditions)
-            .orderBy(products[PRODUCT_COLUMNS.ORDER_INDEX])
-            .limit(limit)
-            .offset((page - 1) * limit);
-
-        // Get first media for each product
-        const productsWithMedia = await Promise.all(
-            productsList.map(async (product) => {
-                const firstMedia = await db
-                    .select()
-                    .from(productMedias)
-                    .where(
-                        eq(
-                            productMedias[PRODUCT_MEDIA_COLUMNS.PRODUCT_ID],
-                            product.id
-                        )
-                    )
-                    .orderBy(productMedias[PRODUCT_MEDIA_COLUMNS.ORDER_INDEX])
-                    .limit(1);
-
-                const media = firstMedia.at(0);
-
-                return {
-                    ...product,
-                    first_media_key:
-                        media?.media_type === PRODUCT_MEDIA_TYPE.IMAGE
-                            ? (media?.image_key ?? null)
-                            : null,
-                    first_media_type: media?.media_type ?? null,
-                    youtube_video_id:
-                        media?.media_type === PRODUCT_MEDIA_TYPE.YOUTUBE
-                            ? (media?.video_id ?? null)
-                            : null,
-                };
-            })
-        );
+        const productList = await db.query.products.findMany({
+            where: whereConditions,
+            orderBy: products[PRODUCT_COLUMNS.ORDER_INDEX],
+            limit,
+            offset: (page - 1) * limit,
+            with: {
+                medias: {
+                    where: eq(
+                        productMedias[PRODUCT_MEDIA_COLUMNS.MEDIA_TYPE],
+                        MEDIA_TYPE_ENUM.IMAGE
+                    ),
+                    limit: 1,
+                },
+            },
+        });
 
         // Get total count
-        const totalResult = await db
-            .select({ count: count() })
-            .from(products)
-            .where(whereConditions);
-
-        const total = totalResult.at(0)?.count ?? 0;
+        const total = await db.$count(products, whereConditions);
 
         return {
-            products: productsWithMedia,
+            products: productList.map((p) => ({
+                id: p.id,
+                en_name: p.en_name,
+                ar_name: p.ar_name,
+                image_url: new URL(
+                    p.medias[0]?.image_key ?? "",
+                    process.env.NEXT_PUBLIC_ASSET_URL
+                ).toString(),
+                is_hidden: p.is_hidden,
+                order_index: p.order_index,
+                created_at: p.created_at,
+                updated_at: p.updated_at,
+            })),
             total,
             page,
             limit,
@@ -577,9 +552,7 @@ export const getProductById = base
             updated_at: product[COMMON_COLUMNS.UPDATED_AT],
             medias: mediasResult.map((m) => ({
                 id: m[COMMON_COLUMNS.ID],
-                media_type: m[PRODUCT_MEDIA_COLUMNS.MEDIA_TYPE] as
-                    | "image"
-                    | "youtube",
+                media_type: m[PRODUCT_MEDIA_COLUMNS.MEDIA_TYPE],
                 image_key:
                     m[PRODUCT_MEDIA_COLUMNS.MEDIA_TYPE] ===
                     PRODUCT_MEDIA_TYPE.IMAGE
