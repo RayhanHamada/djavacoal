@@ -4,4 +4,5 @@
  */
 
 export * from "./components/molecules";
+export * from "./lib";
 export * from "./server";

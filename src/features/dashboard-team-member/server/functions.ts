@@ -5,7 +5,6 @@ import { headers } from "next/headers";
 import { eq, sql } from "drizzle-orm";
 import { nanoid } from "nanoid";
 
-import { TEAM_MEMBERS_PREFIX } from "./constants";
 import {
     CreateTeamMemberInputSchema,
     CreateTeamMemberOutputSchema,
@@ -18,6 +17,7 @@ import {
     ReorderTeamMembersInputSchema,
     UpdateTeamMemberInputSchema,
 } from "./schemas";
+import { TEAM_MEMBERS_PREFIX } from "../lib/constants";
 import { COMMON_COLUMNS, TEAM_MEMBER_COLUMNS } from "@/adapters/d1/constants";
 import { getDB } from "@/adapters/d1/db";
 import { teams } from "@/adapters/d1/schema";

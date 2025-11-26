@@ -494,15 +494,17 @@ RESTful API in `src/features/public-api/` for external consumers:
     ├── hooks/
     │   └── index.ts
     ├── lib/
-    │   ├── constants.ts
-    │   ├── types.ts
-    │   ├── utils.ts
-    │   └── index.ts
+    │   ├── constants.ts       # Validation limits, configuration values
+    │   ├── schemas.ts         # Form schemas (Zod with user-friendly errors)
+    │   ├── types.ts           # TypeScript interfaces
+    │   ├── utils.ts           # Helper functions
+    │   └── index.ts           # Barrel exports
     ├── server/
-    │   ├── functions.ts
-    │   ├── schemas.ts
-    │   ├── router.ts
-    │   └── index.ts
+    │   ├── constants.ts       # Server-side constants (if different from lib)
+    │   ├── schemas.ts         # Server schemas (minimal validation)
+    │   ├── functions.ts       # RPC handlers
+    │   ├── router.ts          # Router export
+    │   └── index.ts           # Barrel exports
     ├── AGENTS.md
     └── index.ts
     ```
@@ -566,15 +568,18 @@ Available features and their purposes:
 
 ### Dashboard Features (Admin)
 
-- `dashboard` - Main admin dashboard and navigation
-- `dashboard-auth` - Authentication and admin user management
-- `dashboard-news` - News/blog article management
-- `dashboard-product` - Product catalog management
-- `dashboard-gallery` - Centralized photo library
-- `dashboard-static-media` - Page-specific media (KV-based)
-- `dashboard-team-member` - Team member profiles
-- `dashboard-page-settings` - Site-wide settings (contact, social, etc.)
-- `dashboard-faqs` - FAQ management with bilingual support
+| Feature                   | Router Name           | Description                              |
+| ------------------------- | --------------------- | ---------------------------------------- |
+| `dashboard`               | -                     | Main admin dashboard and navigation      |
+| `dashboard-auth`          | `admins`              | Authentication and admin user management |
+| `dashboard-news`          | `dashboardNews`       | News/blog article management             |
+| `dashboard-product`       | `dashboardProduct`    | Product catalog and packaging management |
+| `dashboard-gallery`       | `gallery`             | Centralized photo library                |
+| `dashboard-static-media`  | `staticMedia`         | Page-specific media (KV-based)           |
+| `dashboard-team-member`   | `dashboardTeamMember` | Team member profiles                     |
+| `dashboard-page-settings` | `pageSettings`        | SEO metadata for static pages            |
+| `dashboard-blog-settings` | `blogSettings`        | Blog sitemap configuration               |
+| `dashboard-faqs`          | `dashboardFaqs`       | FAQ management with bilingual support    |
 
 ### Visitor Features (Public)
 
@@ -587,8 +592,8 @@ Available features and their purposes:
 
 ### API Features
 
-- `public-api` - RESTful API with OpenAPI documentation
-- `sitemap` - XML sitemap generation for SEO
+- `public-api` - RESTful public API with OpenAPI documentation
+- `sitemap` - XML sitemap generation for SEO (index + static + blog)
 
 ## Troubleshooting
 

@@ -10,7 +10,7 @@ import {
     NEWS_STATUS_FILTER_VALUES,
     SLUG_MIN_LENGTH,
     TITLE_MIN_LENGTH,
-} from "../../lib/constants";
+} from "./constants";
 import { NEWS_STATUS } from "@/adapters/d1/constants";
 
 /**

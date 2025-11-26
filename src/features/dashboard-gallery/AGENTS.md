@@ -15,6 +15,9 @@ dashboard-gallery/
 │   ├── molecules/      # Composite gallery components
 │   └── organisms/      # Complex gallery sections (photo grid, upload modal)
 ├── hooks/              # React hooks for gallery operations
+├── lib/                # Feature library (constants, types)
+│   ├── constants.ts    # Validation limits, pagination, UI configuration
+│   └── index.ts        # Barrel exports
 ├── server/             # Server-side logic (RPC functions)
 │   ├── functions.ts    # oRPC callable functions
 │   ├── schemas.ts      # Zod schemas for input/output validation
@@ -156,6 +159,29 @@ isPhotoNameAvailable(db, name: string, excludeId?: string): Promise<boolean>
 ```
 
 ## Constants
+
+Feature constants are located in `lib/constants.ts`:
+
+```typescript
+// Validation limits
+PHOTO_NAME_MIN_LENGTH = 8
+PHOTO_NAME_MAX_LENGTH = 100
+
+// Pagination
+DEFAULT_PAGE_SIZE = 20
+MAX_PAGE_SIZE = 100
+
+// Bulk operations
+MAX_BULK_DELETE = 100
+
+// UI configuration
+PHOTO_CARD_HEIGHT = 192
+GRID_COLUMNS = { base: 1, sm: 2, md: 3, lg: 4 }
+
+// Debounce delays (milliseconds)
+SEARCH_DEBOUNCE_DELAY = 500
+NAME_CHECK_DEBOUNCE_DELAY = 1000
+```
 
 R2 storage configuration:
 

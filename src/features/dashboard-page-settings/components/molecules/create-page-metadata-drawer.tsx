@@ -17,9 +17,6 @@ import { useMutation } from "@tanstack/react-query";
 import { SITEMAP_CHANGEFREQ_VALUES } from "@/adapters/d1/constants";
 import {
     CreatePageMetadataFormValues,
-    validateCreatePageMetadataForm,
-} from "@/features/dashboard-page-settings/lib/form-schema";
-import {
     MAX_KEYWORDS,
     METADATA_DESCRIPTION_MAX_LENGTH,
     METADATA_DESCRIPTION_MIN_LENGTH,
@@ -28,7 +25,8 @@ import {
     SITEMAP_CHANGEFREQ_DEFAULT,
     SITEMAP_PRIORITY_DEFAULT,
     SITEMAP_PRIORITY_OPTIONS,
-} from "@/features/dashboard-page-settings/server/constants";
+    validateCreatePageMetadataForm,
+} from "@/features/dashboard-page-settings/lib";
 import { rpc } from "@/lib/rpc";
 
 interface CreatePageMetadataDrawerProps {

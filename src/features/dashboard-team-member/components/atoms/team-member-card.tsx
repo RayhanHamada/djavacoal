@@ -26,7 +26,7 @@ import { PhotoView } from "react-photo-view";
 import {
     CARD_NAME_TRUNCATE_LENGTH,
     CARD_POSITION_TRUNCATE_LENGTH,
-} from "../../server/constants";
+} from "../../lib/constants";
 
 interface TeamMemberCardProps {
     teamMember: TeamMemberListItem;

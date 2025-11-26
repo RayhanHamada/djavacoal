@@ -42,7 +42,7 @@ import {
 import { PhotoView } from "react-photo-view";
 import { match, P } from "ts-pattern";
 
-import { extractYoutubeID } from "@/features/dashboard-product/utils";
+import { extractYoutubeID } from "@/features/dashboard-product/lib";
 
 export type MediaItem =
     | {

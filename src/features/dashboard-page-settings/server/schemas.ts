@@ -16,7 +16,7 @@ import {
     SITEMAP_PRIORITY_DEFAULT,
     SITEMAP_PRIORITY_MAX,
     SITEMAP_PRIORITY_MIN,
-} from "./constants";
+} from "../lib/constants";
 import { SITEMAP_CHANGEFREQ_ENUM } from "@/adapters/d1/constants";
 
 /**

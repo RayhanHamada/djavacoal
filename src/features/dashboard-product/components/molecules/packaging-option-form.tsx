@@ -1,6 +1,6 @@
 "use client";
 
-import type { PackagingOptionFormValues } from "../../utils/form-schemas";
+import type { PackagingOptionFormValues } from "../../lib/form-schemas";
 
 import {
     Box,

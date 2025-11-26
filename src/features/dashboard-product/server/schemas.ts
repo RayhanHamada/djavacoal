@@ -2,22 +2,20 @@ import z from "zod/v4";
 
 import {
     DEFAULT_PAGE_SIZE,
+    IMAGE_MIME_REGEX,
     MAX_PAGE_SIZE,
+    MEDIA_TYPE_ENUM,
     PACKAGING_DESCRIPTION_MAX_LENGTH,
     PACKAGING_DESCRIPTION_MIN_LENGTH,
     PACKAGING_NAME_MAX_LENGTH,
     PACKAGING_NAME_MIN_LENGTH,
-} from "./constants";
-import { MAX_FILE_SIZE } from "@/adapters/r2/constants";
-import {
-    IMAGE_MIME_REGEX,
-    MEDIA_TYPE_ENUM,
     PRODUCT_DESCRIPTION_MAX_LENGTH,
     PRODUCT_FIELD_ERRORS,
     PRODUCT_NAME_MIN_LENGTH,
     PRODUCT_UPLOAD_TYPES,
     SEARCH_MAX_LENGTH,
-} from "@/features/dashboard-product/utils";
+} from "../lib/constants";
+import { MAX_FILE_SIZE } from "@/adapters/r2/constants";
 
 /**
  * Input schema for listing packaging options with pagination and search

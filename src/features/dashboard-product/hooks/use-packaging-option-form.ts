@@ -5,7 +5,7 @@ import { useForm } from "@mantine/form";
 import {
     validatePackagingOptionFormSchema,
     type PackagingOptionFormValues,
-} from "../utils/form-schemas";
+} from "../lib/form-schemas";
 
 type UsePackagingOptionFormProps = {
     initialData?: PackagingOptionFormValues;

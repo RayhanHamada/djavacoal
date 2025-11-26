@@ -5,7 +5,7 @@ import {
     TEAM_MEMBER_NAME_MIN_LENGTH,
     TEAM_MEMBER_POSITION_MAX_LENGTH,
     TEAM_MEMBER_POSITION_MIN_LENGTH,
-} from "./constants";
+} from "../lib/constants";
 import { MAX_FILE_SIZE } from "@/adapters/r2/constants";
 
 /**
