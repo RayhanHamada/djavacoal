@@ -56,7 +56,7 @@ export function MediaGalleryHorizontal({
     const renderMediaItem = (media: MediaItem, isMainItem: boolean = false) => {
         const sizeClasses = cn(
             isMainItem
-                ? "aspect-square w-full"
+                ? "aspect-video w-[93vw]"
                 : "aspect-square min-h-40 min-w-40 shrink-0 sm:min-h-[180px] sm:min-w-[180px]"
         );
 
@@ -108,7 +108,7 @@ export function MediaGalleryHorizontal({
                             id: media.id,
                         })}
                         fill
-                        className="bg-[radial-gradient(circle_at_center,#000_0%,#171717_50%,#ffffff40_100%)] object-cover"
+                        className="w-[80vw] bg-[radial-gradient(circle_at_center,#000_0%,#171717_50%,#ffffff40_100%)] object-cover"
                     />
 
                     {/* Djavacoal Logo Watermark */}
@@ -145,8 +145,8 @@ export function MediaGalleryHorizontal({
     const thumbnailMedias = medias.slice(1);
 
     return (
-        <div className="flex w-full justify-center">
-            <div className="flex w-full max-w-2xl flex-col items-center px-0">
+        <div className="flex w-full justify-stretch">
+            <div className="flex w-screen flex-col items-start overflow-scroll px-0">
                 {/* Main Large Media */}
                 <div className="mb-4 w-full max-w-md md:max-w-lg">
                     {renderMediaItem(mainMedia, true)}

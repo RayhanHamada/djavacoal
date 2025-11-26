@@ -53,7 +53,7 @@ export function ProductPage() {
 
     return (
         <PhotoProvider>
-            <div className="flex flex-col gap-10 py-0 lg:gap-0 lg:px-0">
+            <div className="flex flex-col gap-10 gap-y-0 py-0 lg:gap-0 lg:px-0">
                 {/* Mobile Dropdown - sticky at top for mobile/tablet only */}
                 <div className="sticky top-24 z-50 lg:hidden">
                     <OurProductsSidebar
