@@ -96,10 +96,10 @@ export const COMPANY_LEGAL_DATA = {
 
 // Social Media Links
 export const SOCIAL_LINKS = {
-    facebook: "#",
-    instagram: "#",
-    linkedin: "#",
-    whatsapp: "https://wa.me/628xxxxxxx",
+    facebook: "https://www.facebook.com/djavacoal/",
+    instagram: "https://www.instagram.com/djavacharcoal",
+    linkedin: "https://www.linkedin.com/company/djavacoal-indonesia/",
+    whatsapp: "https://wa.me/6282126572600",
 };
 
 // YouTube Video IDs
