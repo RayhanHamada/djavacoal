@@ -1,6 +1,19 @@
 import { zod4Resolver } from "mantine-form-zod-resolver";
 import { z } from "zod/v4";
 
+import {
+    MEDIA_TYPE_ENUM,
+    MIN_MEDIA_ITEMS,
+    MIN_SPECIFICATIONS,
+    MIN_VARIANT_SIZES,
+    MIN_VARIANTS,
+    PRODUCT_DESCRIPTION_MAX_LENGTH,
+    PRODUCT_FIELD_ERRORS,
+    PRODUCT_IMAGE_MIME_ERROR,
+    PRODUCT_IMAGE_MIME_TYPES,
+    PRODUCT_NAME_MIN_LENGTH,
+} from "./constants";
+
 /**
  * Schema for packaging option form validation
  */
@@ -23,26 +36,20 @@ const mediaItemSchema = z
     .and(
         z.discriminatedUnion("media_type", [
             z.object({
-                media_type: z.literal("image"),
+                media_type: z.literal(MEDIA_TYPE_ENUM.IMAGE),
                 image_key: z.string(),
                 image_file: z
                     .file()
-                    .mime(
-                        ["image/png", "image/jpeg", "image/jpg"],
-                        "Supported image formats for image item are PNG and JPEG"
-                    )
+                    .mime(PRODUCT_IMAGE_MIME_TYPES, PRODUCT_IMAGE_MIME_ERROR)
                     .optional(),
             }),
             z.object({
-                media_type: z.literal("youtube"),
+                media_type: z.literal(MEDIA_TYPE_ENUM.YOUTUBE),
                 youtube_video_id: z.string(),
                 video_custom_thumbnail_key: z.string().optional(),
                 video_custom_thumbnail_file: z
                     .file()
-                    .mime(
-                        ["image/png", "image/jpeg", "image/jpg"],
-                        "Supported image formats for video custom thumbnail are PNG and JPEG"
-                    )
+                    .mime(PRODUCT_IMAGE_MIME_TYPES, PRODUCT_IMAGE_MIME_ERROR)
                     .optional(),
             }),
         ])
@@ -66,13 +73,12 @@ const variantItemSchema = z.object({
     en_variant_name: z.string(),
     ar_variant_name: z.string(),
     variant_photo_key: z.string(),
-    variant_sizes: z.array(z.string()).min(1, "At least one size is required"),
+    variant_sizes: z
+        .array(z.string())
+        .min(MIN_VARIANT_SIZES, "At least one size is required"),
     variant_photo_file: z
         .file()
-        .mime(
-            ["image/png", "image/jpeg", "image/jpg"],
-            "Supported image formats for variant items are PNG and JPEG"
-        )
+        .mime(PRODUCT_IMAGE_MIME_TYPES, PRODUCT_IMAGE_MIME_ERROR)
         .optional(),
     order_index: z.number(),
 });
@@ -82,35 +88,57 @@ const variantItemSchema = z.object({
  * Includes all fields with proper validation
  */
 export const productFormSchema = z.object({
-    en_name: z.string().min(1, "English name is required"),
-    ar_name: z.string().min(1, "Arabic name is required"),
+    en_name: z
+        .string()
+        .min(PRODUCT_NAME_MIN_LENGTH, PRODUCT_FIELD_ERRORS.EN_NAME_REQUIRED),
+    ar_name: z
+        .string()
+        .min(PRODUCT_NAME_MIN_LENGTH, PRODUCT_FIELD_ERRORS.AR_NAME_REQUIRED),
     en_description: z
         .string()
-        .min(1, "English description is required")
-        .max(1000, "English description must be 1000 characters or less"),
+        .min(
+            PRODUCT_NAME_MIN_LENGTH,
+            PRODUCT_FIELD_ERRORS.EN_DESCRIPTION_REQUIRED
+        )
+        .max(
+            PRODUCT_DESCRIPTION_MAX_LENGTH,
+            PRODUCT_FIELD_ERRORS.EN_DESCRIPTION_MAX
+        ),
     ar_description: z
         .string()
-        .min(1, "Arabic description is required")
-        .max(1000, "Arabic description must be 1000 characters or less"),
+        .min(
+            PRODUCT_NAME_MIN_LENGTH,
+            PRODUCT_FIELD_ERRORS.AR_DESCRIPTION_REQUIRED
+        )
+        .max(
+            PRODUCT_DESCRIPTION_MAX_LENGTH,
+            PRODUCT_FIELD_ERRORS.AR_DESCRIPTION_MAX
+        ),
     medias: z
         .array(mediaItemSchema)
-        .min(1, "At least one media item is required")
+        .min(MIN_MEDIA_ITEMS, "At least one media item is required")
         .refine(
-            (medias) => medias.at(0)?.media_type === "image",
-            "The first media item must be an image"
-        )
-        .refine(
-            (medias) => medias.some((media) => media.media_type === "image"),
+            (medias) =>
+                medias.some(
+                    (media) => media.media_type === MEDIA_TYPE_ENUM.IMAGE
+                ),
             "At least one image media is required"
         ),
     specifications: z
         .array(specificationItemSchema)
-        .min(1, "At least one specification is required"),
+        .min(MIN_SPECIFICATIONS, "At least one specification is required"),
     variants: z
         .array(variantItemSchema)
-        .min(1, "At least one variant is required"),
-    moq: z.string().min(1, "MOQ is required"),
-    production_capacity: z.string().min(1, "Production capacity is required"),
+        .min(MIN_VARIANTS, "At least one variant is required"),
+    moq: z
+        .string()
+        .min(PRODUCT_NAME_MIN_LENGTH, PRODUCT_FIELD_ERRORS.MOQ_REQUIRED),
+    production_capacity: z
+        .string()
+        .min(
+            PRODUCT_NAME_MIN_LENGTH,
+            PRODUCT_FIELD_ERRORS.PRODUCTION_CAPACITY_REQUIRED
+        ),
     packaging_option_ids: z.array(z.string()),
     is_hidden: z.boolean(),
 });
