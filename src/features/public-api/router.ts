@@ -20,6 +20,7 @@ import { news } from "@/adapters/d1/schema";
 import { KV_KEYS } from "@/adapters/kv/constants";
 import { getR2Client, getTextContent } from "@/adapters/r2";
 import { COOKIE_NAME, LOCALES } from "@/configs";
+import { MEDIA_TYPE_ENUM } from "@/features/dashboard-product";
 import {
     FOOTER_CONTENT_BODY_OUTPUT_SCHEMA,
     HOME_CONTENT_BODY_OUTPUT_SCHEMA,
@@ -265,12 +266,12 @@ export const router = {
                             where(fields, operators) {
                                 return operators.eq(
                                     fields[PRODUCT_MEDIA_COLUMNS.MEDIA_TYPE],
-                                    "image"
+                                    MEDIA_TYPE_ENUM.IMAGE
                                 );
                             },
                             orderBy(fields, operators) {
                                 return [
-                                    operators.asc(
+                                    operators.desc(
                                         fields[
                                             PRODUCT_MEDIA_COLUMNS.ORDER_INDEX
                                         ]
