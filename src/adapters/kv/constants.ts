@@ -59,6 +59,11 @@ export const KV_KEYS = {
     EMAIL_ADDRESS: "footer:email_address",
 
     /**
+     * recipient email for contact form submissions
+     */
+    RECIPIENT_EMAIL: "contact:recipient_email",
+
+    /**
      * caches
      */
     HOME_CONTENT_CACHE: "cache:home_content",

@@ -102,15 +102,17 @@ export const DeletePhotoInputSchema = z.object({
  */
 export const SaveContactSettingsInputSchema = z.object({
     // Social media links
-    facebookLink: z.string().url().optional().or(z.literal("")),
-    linkedinLink: z.string().url().optional().or(z.literal("")),
-    instagramLink: z.string().url().optional().or(z.literal("")),
-    tiktokLink: z.string().url().optional().or(z.literal("")),
+    facebookLink: z.url().optional(),
+    linkedinLink: z.url().optional(),
+    instagramLink: z.url().optional(),
+    tiktokLink: z.url().optional(),
     // Contact information
-    emailAddress: z.string().email().optional().or(z.literal("")),
-    whatsappNumber: z.string().optional().or(z.literal("")),
-    mapsLink: z.string().url().optional().or(z.literal("")),
-    addressLine: z.string().max(500).optional().or(z.literal("")),
+    emailAddress: z.email().optional(),
+    whatsappNumber: z.string().optional(),
+    mapsLink: z.url().optional(),
+    addressLine: z.string().max(500).optional(),
+    // Contact form recipient
+    recipientEmail: z.email().optional(),
 });
 
 /**
@@ -127,6 +129,8 @@ export const GetContactSettingsOutputSchema = z.object({
     whatsappNumber: z.string().nullable(),
     mapsLink: z.string().nullable(),
     addressLine: z.string().nullable(),
+    // Contact form recipient
+    recipientEmail: z.string().nullable(),
 });
 
 /**

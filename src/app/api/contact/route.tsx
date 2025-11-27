@@ -3,6 +3,7 @@ import { render } from "@react-email/components";
 import console from "console";
 
 import { getResend } from "@/adapters/email-service";
+import { KV_KEYS } from "@/adapters/kv/constants";
 import { ContactFormNotificationEmail } from "@/templates/emails";
 
 export async function POST(req: Request) {
@@ -21,6 +22,21 @@ export async function POST(req: Request) {
          */
         const { env } = await getCloudflareContext({ async: true });
 
+        // Get recipient email from KV
+        const recipientEmail = await env.DJAVACOAL_KV.get(
+            KV_KEYS.RECIPIENT_EMAIL
+        );
+
+        if (!recipientEmail) {
+            return Response.json(
+                {
+                    success: false,
+                    error: "Recipient email not configured. Please configure it in dashboard settings.",
+                },
+                { status: 500 }
+            );
+        }
+
         // ✅ Template email modern khas Djavacoal
         const htmlContent = await render(
             <ContactFormNotificationEmail
@@ -36,7 +52,7 @@ export async function POST(req: Request) {
         try {
             await emailService.emails.send({
                 from: `Djavacoal Notification <${process.env.SENDER_EMAIL}>`,
-                to: process.env.RECIPIENT_EMAIL,
+                to: recipientEmail,
                 subject: `[Website Djavacoal] New Message from ${name}`,
                 html: htmlContent,
             });
