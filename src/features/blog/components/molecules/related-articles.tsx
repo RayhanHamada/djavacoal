@@ -110,7 +110,7 @@ export function RelatedArticles({
                                 key={article.id}
                                 className={cn("flex flex-col gap-y-1")}
                             >
-                                <div className="relative aspect-square w-full gap-y-4 overflow-hidden">
+                                <div className="relative aspect-square w-full gap-y-4 overflow-hidden lg:aspect-video">
                                     <Image
                                         src={
                                             article.imageUrl ??
