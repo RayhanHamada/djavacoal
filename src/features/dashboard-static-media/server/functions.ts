@@ -247,6 +247,14 @@ export const saveContactSettings = base
                 env.DJAVACOAL_KV.put(KV_KEYS.ADDRESS_LINE, input.addressLine)
             );
         }
+        if (input.recipientEmail !== undefined) {
+            kvOperations.push(
+                env.DJAVACOAL_KV.put(
+                    KV_KEYS.RECIPIENT_EMAIL,
+                    input.recipientEmail
+                )
+            );
+        }
 
         await Promise.all(kvOperations);
 
@@ -272,6 +280,7 @@ export const getContactSettings = base
             whatsappNumber,
             mapsLink,
             addressLine,
+            recipientEmail,
         ] = await Promise.all([
             env.DJAVACOAL_KV.get(KV_KEYS.FACEBOOK_LINK),
             env.DJAVACOAL_KV.get(KV_KEYS.LINKEDIN_LINK),
@@ -281,6 +290,7 @@ export const getContactSettings = base
             env.DJAVACOAL_KV.get(KV_KEYS.WHATSAPP_NUMBER),
             env.DJAVACOAL_KV.get(KV_KEYS.MAPS_LINK),
             env.DJAVACOAL_KV.get(KV_KEYS.ADDRESS_LINE),
+            env.DJAVACOAL_KV.get(KV_KEYS.RECIPIENT_EMAIL),
         ]);
 
         return {
@@ -292,6 +302,7 @@ export const getContactSettings = base
             whatsappNumber: whatsappNumber || null,
             mapsLink: mapsLink || null,
             addressLine: addressLine || null,
+            recipientEmail: recipientEmail || null,
         };
     })
     .callable();

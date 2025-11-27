@@ -16,6 +16,7 @@ export interface ContactSettings {
     whatsappNumber: string | null;
     mapsLink: string | null;
     addressLine: string | null;
+    recipientEmail: string | null;
 }
 
 /**
@@ -65,6 +66,7 @@ export function useContactSettings() {
             whatsappNumber: settings.whatsappNumber || "",
             mapsLink: settings.mapsLink || "",
             addressLine: settings.addressLine || "",
+            recipientEmail: settings.recipientEmail || "",
         });
     };
 
@@ -79,6 +81,7 @@ export function useContactSettings() {
                 whatsappNumber: null,
                 mapsLink: null,
                 addressLine: null,
+                recipientEmail: null,
             },
         [data]
     );

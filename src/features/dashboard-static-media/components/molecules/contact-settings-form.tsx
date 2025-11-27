@@ -18,6 +18,7 @@ import {
     IconBrandTiktok,
     IconBrandWhatsapp,
     IconDeviceFloppy,
+    IconInbox,
     IconMail,
     IconMapPin,
 } from "@tabler/icons-react";
@@ -52,6 +53,7 @@ export function ContactSettingsForm({
         whatsappNumber: "",
         mapsLink: "",
         addressLine: "",
+        recipientEmail: "",
     });
 
     const [errors, setErrors] = useState<Record<string, string>>({});
@@ -67,6 +69,7 @@ export function ContactSettingsForm({
                 whatsappNumber: settings.whatsappNumber || "",
                 mapsLink: settings.mapsLink || "",
                 addressLine: settings.addressLine || "",
+                recipientEmail: settings.recipientEmail || "",
             });
         }
     }, [settings]);
@@ -110,6 +113,14 @@ export function ContactSettingsForm({
         // Validate email
         if (formData.emailAddress && !validateEmail(formData.emailAddress)) {
             newErrors.emailAddress = "Invalid email address";
+        }
+
+        // Validate recipient email
+        if (
+            formData.recipientEmail &&
+            !validateEmail(formData.recipientEmail)
+        ) {
+            newErrors.recipientEmail = "Invalid email address";
         }
 
         // Validate address line character limit
@@ -277,6 +288,29 @@ export function ContactSettingsForm({
                     maxLength={500}
                     rows={3}
                     description={`${formData.addressLine?.length || 0}/500 characters`}
+                />
+            </Stack>
+
+            {/* Contact Form Settings Group */}
+            <Stack gap="md" mt="lg">
+                <Text size="sm" fw={600} c="dimmed">
+                    Contact Form Settings
+                </Text>
+
+                <TextInput
+                    label="Recipient Email"
+                    placeholder="recipient@example.com"
+                    description="Email address that will receive contact form submissions"
+                    value={formData.recipientEmail || ""}
+                    onChange={(e) =>
+                        setFormData({
+                            ...formData,
+                            recipientEmail: e.target.value,
+                        })
+                    }
+                    leftSection={<IconInbox size={18} />}
+                    disabled={isSaving}
+                    error={errors.recipientEmail}
                 />
             </Stack>
 
