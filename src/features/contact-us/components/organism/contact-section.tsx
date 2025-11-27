@@ -57,17 +57,32 @@ export default function ContactSection() {
                         icon={<FaEnvelope />}
                         label={t("info.email.label")}
                         value={contactUsData?.data.contact_email}
+                        href={
+                            contactUsData?.data.contact_email
+                                ? `mailto:${contactUsData.data.contact_email}`
+                                : undefined
+                        }
                     />
                     <ContactInfoItem
                         icon={<FaPhoneAlt />}
                         label={t("info.phone.label")}
                         value={contactUsData?.data.contact_phone_number}
                         disableRtl
+                        href={
+                            contactUsData?.data.contact_phone_number
+                                ? `https://wa.me/${contactUsData.data.contact_phone_number.replace(/[\s+\-()]/g, "")}`
+                                : undefined
+                        }
                     />
                     <ContactInfoItem
                         icon={<FaMapMarkerAlt />}
                         label={t("info.location.label")}
                         value={contactUsData?.data.contact_address_line}
+                        href={
+                            contactUsData?.data.contact_address_line
+                                ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(contactUsData.data.contact_address_line)}`
+                                : undefined
+                        }
                     />
                     <ContactSocial />
                 </div>

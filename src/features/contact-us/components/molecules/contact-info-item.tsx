@@ -7,6 +7,7 @@ interface ContactInfoItemProps {
     label: string;
     value: React.ReactNode;
     disableRtl?: boolean;
+    href?: string;
 }
 
 export function ContactInfoItem({
@@ -14,8 +15,23 @@ export function ContactInfoItem({
     label,
     value,
     disableRtl = false,
+    href,
 }: ContactInfoItemProps) {
     const locale = useLocale();
+
+    const valueContent = href ? (
+        <a
+            href={href}
+            target={href.startsWith("http") ? "_blank" : undefined}
+            rel={href.startsWith("http") ? "noopener noreferrer" : undefined}
+            className="hover:text-secondary text-sm leading-snug text-gray-300 transition-colors hover:underline"
+        >
+            {value}
+        </a>
+    ) : (
+        <p className="text-sm leading-snug text-gray-300">{value}</p>
+    );
+
     return (
         <div>
             <div className="flex-col-2 mb-2 flex items-start gap-3">
@@ -35,7 +51,7 @@ export function ContactInfoItem({
                     disableRtl && locale === LOCALES.AR ? "text-right" : ""
                 }
             >
-                <p className="text-sm leading-snug text-gray-300">{value}</p>
+                {valueContent}
             </div>
         </div>
     );
