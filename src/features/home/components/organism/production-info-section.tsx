@@ -38,7 +38,7 @@ const productionItems = [
 export function ProductionInfoSection() {
     const t = useTranslations("Home.productionInfo");
     return (
-        <section className="relative w-full bg-[#151515] py-16 md:py-20 lg:py-24">
+        <section className="bg-primary border-t-secondary border-b-secondary relative w-full border py-16 md:py-20 lg:py-24">
             {/* 🔹 Section Header */}
             <div className="mb-10 flex flex-col items-start justify-center px-5 md:items-start md:px-[60px] lg:px-60">
                 <div className="flex items-center gap-3">

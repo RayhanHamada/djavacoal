@@ -55,7 +55,7 @@ export default function MajorityExportDestinationSection() {
     const [zoom, setZoom] = useState(false);
 
     return (
-        <section className="relative w-full overflow-hidden bg-[#1C1C1C] py-12 md:px-10 lg:px-20">
+        <section className="relative w-full overflow-hidden bg-[#1D1D1D] py-12 md:px-10 lg:px-20">
             {/* 🔹 Garis atas */}
             <div className="absolute top-0 left-0 h-px w-full bg-[#9C9C9C]" />
 

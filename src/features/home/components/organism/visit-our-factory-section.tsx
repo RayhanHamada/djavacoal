@@ -15,9 +15,9 @@ export function VisitOurFactorySection() {
     );
 
     return (
-        <section className="relative w-full overflow-hidden bg-[#151515] text-center text-white">
+        <section className="relative w-full overflow-hidden bg-[#1D1D1D] text-center text-white">
             {/* ==== Title di atas gambar ==== */}
-            <div className="bg-[#151515] pt-12 pb-6 md:pt-16 md:pb-8">
+            <div className="bg-[#1D1D1D] pt-12 pb-6 md:pt-16 md:pb-8">
                 <h2 className="font-['Josefin_Sans'] text-[28px] font-bold tracking-wide uppercase md:text-[36px] lg:text-[44px]">
                     {t("title")}{" "}
                     <span className="text-[#EFA12D]">{t("highlight")}</span>
