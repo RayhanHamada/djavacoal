@@ -29,7 +29,7 @@ export function ProductCard({
     return (
         <article
             className={cn(
-                "bg-gradient-radial group relative overflow-hidden rounded-[20px] border border-[#4F4F4F] from-[#151515] to-white/5 p-6 backdrop-blur-md transition-all duration-300 hover:border-[#EFA12D] md:p-8",
+                "bg-gradient-radial group from-primary relative overflow-hidden rounded-[20px] border border-[#4F4F4F] to-white/5 p-6 backdrop-blur-md transition-all duration-300 hover:border-[#EFA12D] md:p-8",
                 className
             )}
         >

@@ -1,0 +1,85 @@
+"use client";
+
+import { useEffect, useState } from "react";
+
+import { useTranslations } from "next-intl";
+
+import { MOCK_NEWS_ITEMS, NEWS_CAROUSEL_INTERVAL } from "../../lib/constants";
+import { SectionHeading } from "../atoms";
+import { NewsCarousel } from "../molecules";
+
+/** Visible items per breakpoint */
+const VISIBLE_ITEMS = {
+    mobile: 1,
+    tablet: 2,
+    desktop: 3,
+} as const;
+
+/**
+ * NewsListSection - Responsive news carousel with auto-advance
+ *
+ * Breakpoints:
+ * - Mobile (<md): 1 visible
+ * - Tablet (md-xl): 2 visible
+ * - Desktop (xl+): 3 visible
+ */
+export function NewsListSection() {
+    const t = useTranslations("Home.newsArticles");
+    const [currentSlide, setCurrentSlide] = useState(0);
+
+    // TODO: Replace with API call
+    const newsItems = MOCK_NEWS_ITEMS;
+
+    const totalSlides = newsItems.length;
+
+    useEffect(() => {
+        if (!totalSlides) return;
+
+        const timer = setInterval(() => {
+            setCurrentSlide((prev) => (prev + 1) % totalSlides);
+        }, NEWS_CAROUSEL_INTERVAL);
+
+        return () => clearInterval(timer);
+    }, [totalSlides]);
+
+    if (!totalSlides) return null;
+
+    return (
+        <section className="relative w-full overflow-hidden border-t border-[#D0D0D0] bg-[#0D0D0D] py-12 md:py-16">
+            <SectionHeading
+                title={t("title")}
+                highlight={t("highlight")}
+                variant="center"
+            />
+
+            <div className="relative mx-auto mt-8 max-w-7xl px-4 md:mt-12 md:px-6 lg:px-8">
+                {/* Desktop */}
+                <NewsCarousel
+                    items={newsItems}
+                    currentSlide={currentSlide}
+                    onSlideChange={setCurrentSlide}
+                    itemsPerSlide={VISIBLE_ITEMS.desktop}
+                    className="hidden xl:block"
+                />
+
+                {/* Tablet */}
+                <NewsCarousel
+                    items={newsItems}
+                    currentSlide={currentSlide}
+                    onSlideChange={setCurrentSlide}
+                    itemsPerSlide={VISIBLE_ITEMS.tablet}
+                    className="hidden md:block xl:hidden"
+                />
+
+                {/* Mobile */}
+                <NewsCarousel
+                    items={newsItems}
+                    currentSlide={currentSlide}
+                    onSlideChange={setCurrentSlide}
+                    itemsPerSlide={VISIBLE_ITEMS.mobile}
+                    className="md:hidden"
+                />
+            </div>
+        </section>
+    );
+}

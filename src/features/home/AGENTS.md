@@ -11,9 +11,26 @@ This feature provides the homepage experience for visitors of the Djavacoal webs
 ```
 home/
 ├── components/          # UI components for homepage
-│   ├── atoms/          # Basic homepage UI elements (buttons, icons, headings)
-│   ├── molecules/      # Composite components (cards, CTAs)
-│   └── organisms/      # Complex sections (hero, product grid, features)
+│   ├── atoms/          # Basic homepage UI elements
+│   │   ├── banner-button.tsx
+│   │   ├── carousel-dots.tsx    # Reusable carousel navigation dots
+│   │   ├── country-tag.tsx
+│   │   ├── feature-icon.tsx
+│   │   ├── progress-bar.tsx
+│   │   ├── section-heading.tsx
+│   │   ├── stat-card.tsx
+│   │   └── index.ts
+│   ├── molecules/      # Composite components
+│   │   ├── certificate-card.tsx
+│   │   ├── cta-button.tsx
+│   │   ├── feature-card.tsx
+│   │   ├── news-card.tsx
+│   │   ├── news-carousel.tsx    # Sliding carousel for news items
+│   │   ├── product-card.tsx
+│   │   └── index.ts
+│   └── organisms/      # Complex sections
+│       ├── news-list-section.tsx  # Responsive news section with auto-advance
+│       └── ...
 ├── hooks/              # React hooks for homepage data
 └── lib/                # Homepage-specific utilities and constants
     ├── constants.ts    # Centralized data (static content, config)
@@ -27,9 +44,9 @@ home/
 ### Code Organization Principles
 
 **Atomic Design Pattern:**
-- **Atoms**: Smallest reusable components (BannerButton, SectionHeading, StatCard, etc.)
-- **Molecules**: Combinations of atoms (ProductCard, FeatureCard, CertificateCard, etc.)
-- **Organisms**: Full page sections (BannerSection, DiscoverOurProductSection, etc.)
+- **Atoms**: Smallest reusable components (BannerButton, CarouselDots, SectionHeading, StatCard, etc.)
+- **Molecules**: Combinations of atoms (ProductCard, FeatureCard, NewsCard, NewsCarousel, etc.)
+- **Organisms**: Full page sections (BannerSection, DiscoverOurProductSection, NewsListSection, etc.)
 
 **Clean Code Practices:**
 - Extract hardcoded data into constants for maintainability
@@ -60,10 +77,15 @@ home/
    - Managed via dashboard-product
 
 4. **Recent News**
-   - Latest news articles
-   - Thumbnail images
-   - Publication dates
-   - Links to full articles
+   - Latest news articles in responsive carousel
+   - Auto-advancing slides with navigation dots
+   - Slides one item at a time
+   - Responsive layout:
+     - Mobile: 1 visible card
+     - Tablet (md-xl): 2 visible cards
+     - Desktop (xl+): 3 visible cards
+   - Thumbnail images with title overlay
+   - Publication dates and read more links
    - Managed via dashboard-news
 
 5. **Production Capabilities**
@@ -148,6 +170,72 @@ function HeroSection() {
 
 ## Components
 
+### Atoms
+
+#### CarouselDots
+Reusable navigation dots for carousel components:
+
+```typescript
+interface CarouselDotsProps {
+    totalSlides: number;
+    currentSlide: number;
+    onSlideChange: (index: number) => void;
+    className?: string;
+}
+```
+
+- Displays clickable dots indicating current position
+- Active dot highlighted with brand color (#EFA12D)
+- Hover states for inactive dots
+- Accessible with aria-labels
+
+### Molecules
+
+#### NewsCard
+Individual news article preview card:
+- Image with title overlay and gradient
+- Date display below image
+- Title repeated below for clarity
+- Arrow CTA link to full article
+- Centered within container (max-w-500px)
+
+#### NewsCarousel
+Sliding carousel for news items:
+
+```typescript
+interface NewsCarouselProps {
+    items: NewsItem[];
+    currentSlide: number;
+    onSlideChange: (index: number) => void;
+    itemsPerSlide: number;  // Number of visible items
+    className?: string;
+}
+```
+
+- Slides one item at a time (not whole groups)
+- Shows multiple items simultaneously based on `itemsPerSlide`
+- Smooth CSS transform transitions
+- Uses CarouselDots for navigation
+- Calculates total navigable positions: `items.length - itemsPerSlide + 1`
+
+### Organisms
+
+#### NewsListSection
+Responsive news section with auto-advancing carousel:
+
+```typescript
+const VISIBLE_ITEMS = {
+    mobile: 1,    // <md
+    tablet: 2,    // md to xl
+    desktop: 3,   // xl+
+} as const;
+```
+
+- Three NewsCarousel instances with visibility classes
+- Auto-advance via useEffect interval (NEWS_CAROUSEL_INTERVAL)
+- Shared currentSlide state across breakpoints
+- Each breakpoint normalizes slide position with modulo
+
 ### HeroSection
 - Full-width carousel or single hero image
 - Overlaid text and CTA buttons
@@ -172,6 +260,7 @@ function HeroSection() {
 - Titles and dates
 - Read more links
 - Bilingual content
+- See NewsListSection for implementation details
 
 ### ProductionCapabilities
 - Split layout (video/image + text)
@@ -262,9 +351,41 @@ export function HomeView() {
 All atom components follow these patterns:
 - Accept `className` prop for custom styling
 - Use `cn()` utility for conditional classes
-- Include JSDoc comments
+- Include JSDoc comments with prop descriptions
 - Export as named exports (not default)
 - Properly typed with TypeScript interfaces
+
+Example - CarouselDots:
+```typescript
+/**
+ * CarouselDots - Navigation dots for carousel slides
+ * Displays clickable dots indicating current position
+ */
+export function CarouselDots({
+    totalSlides,
+    currentSlide,
+    onSlideChange,
+    className,
+}: CarouselDotsProps) {
+    return (
+        <div className={cn("flex items-center justify-center gap-3", className)}>
+            {Array.from({ length: totalSlides }).map((_, index) => (
+                <button
+                    key={index}
+                    onClick={() => onSlideChange(index)}
+                    className={cn(
+                        "h-3 w-3 rounded-full transition-all duration-300",
+                        index === currentSlide
+                            ? "bg-[#EFA12D]"
+                            : "bg-[#4F4F4F] hover:bg-[#6F6F6F]"
+                    )}
+                    aria-label={`Go to slide ${index + 1}`}
+                />
+            ))}
+        </div>
+    );
+}
+```
 
 ### Molecules
 Molecule components should:
@@ -273,6 +394,52 @@ Molecule components should:
 - Include hover/interaction states
 - Use semantic HTML elements
 - Follow accessibility best practices
+
+Example - NewsCarousel:
+```typescript
+/**
+ * NewsCarousel - Sliding carousel for news items
+ * Slides one item at a time while showing multiple items in view
+ */
+export function NewsCarousel({
+    items,
+    currentSlide,
+    onSlideChange,
+    itemsPerSlide,
+    className,
+}: NewsCarouselProps) {
+    const totalSlides = Math.max(1, items.length - itemsPerSlide + 1);
+    const activeSlide = currentSlide % totalSlides;
+    const itemWidth = 100 / itemsPerSlide;
+
+    return (
+        <div className={className}>
+            <div className="relative overflow-hidden">
+                <div
+                    className="flex transition-transform duration-500 ease-in-out"
+                    style={{ transform: `translateX(-${activeSlide * itemWidth}%)` }}
+                >
+                    {items.map((item) => (
+                        <div
+                            key={item.id}
+                            className="shrink-0 px-3"
+                            style={{ width: `${itemWidth}%` }}
+                        >
+                            <NewsCard {...item} />
+                        </div>
+                    ))}
+                </div>
+            </div>
+            <CarouselDots
+                totalSlides={totalSlides}
+                currentSlide={activeSlide}
+                onSlideChange={onSlideChange}
+                className="mt-8"
+            />
+        </div>
+    );
+}
+```
 
 ### Organisms
 Organism components should:
