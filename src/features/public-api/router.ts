@@ -38,6 +38,7 @@ import {
     NEWS_METADATA_BODY_OUTPUT_SCHEMA,
     CONTACT_US_BODY_OUTPUT_SCHEMA,
     PUBLIC_FAQS_OUTPUT_SCHEMA,
+    PINNED_NEWS_OUTPUT_SCHEMA,
 } from "@/features/public-api/schemas";
 import { injectNextCookies } from "@/lib/orpc/middlewares";
 import base from "@/lib/orpc/server";
@@ -942,6 +943,93 @@ export const router = {
                             limit,
                             total_pages,
                         },
+                    },
+                },
+            };
+        }),
+
+    /**
+     * Get pinned news for home page
+     * Returns news articles that are pinned to home, published, and not scheduled
+     */
+    getPinnedNews: publicBase
+        .route({
+            method: "GET",
+            path: "/news/pinned",
+            summary: "Fetch pinned news for home page",
+            description:
+                "Get news articles pinned to home page, ordered by published date descending",
+            inputStructure: "detailed",
+            outputStructure: "detailed",
+        })
+        .output(
+            z.object({
+                body: PINNED_NEWS_OUTPUT_SCHEMA,
+            })
+        )
+        .handler(async function ({ context: { env, locale } }) {
+            const isArabic = locale === LOCALES.AR;
+            const db = getDB(env.DJAVACOAL_DB);
+            const now = new Date();
+
+            const pinnedNews = await db.query.news
+                .findMany({
+                    columns: {
+                        id: true,
+                        slug: true,
+                        ar_title: true,
+                        en_title: true,
+                        published_at: true,
+                        image_key: true,
+                    },
+                    where(fields, operators) {
+                        return operators.and(
+                            operators.eq(
+                                fields[NEWS_COLUMNS.IS_PINNED_TO_HOME],
+                                true
+                            ),
+                            operators.eq(
+                                fields[NEWS_COLUMNS.STATUS],
+                                NEWS_STATUS.PUBLISHED
+                            ),
+                            operators.isNotNull(
+                                fields[NEWS_COLUMNS.PUBLISHED_AT]
+                            ),
+                            operators.lte(
+                                fields[NEWS_COLUMNS.PUBLISHED_AT],
+                                now
+                            )
+                        );
+                    },
+                    orderBy(fields, operators) {
+                        return [
+                            operators.desc(fields[NEWS_COLUMNS.PUBLISHED_AT]),
+                        ];
+                    },
+                    limit: 7,
+                })
+                .then((items) =>
+                    items.map((item) => ({
+                        id: item[COMMON_COLUMNS.ID],
+                        slug: item[NEWS_COLUMNS.SLUG],
+                        title: isArabic
+                            ? item[NEWS_COLUMNS.AR_TITLE]
+                            : item[NEWS_COLUMNS.EN_TITLE],
+                        published_at: item[NEWS_COLUMNS.PUBLISHED_AT]!,
+                        cover_image_url: item[NEWS_COLUMNS.IMAGE_KEY]
+                            ? new URL(
+                                  item[NEWS_COLUMNS.IMAGE_KEY]!,
+                                  process.env.NEXT_PUBLIC_ASSET_URL
+                              ).toString()
+                            : null,
+                    }))
+                );
+
+            return {
+                body: {
+                    data: {
+                        news: pinnedNews,
+                        total: pinnedNews.length,
                     },
                 },
             };

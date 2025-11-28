@@ -1,4 +1,4 @@
-import type { Feature, HeroSlide, NewsItem, Product } from "./types";
+import type { Feature, HeroSlide, Product } from "./types";
 
 /**
  * Hero carousel slides for banner section
@@ -79,45 +79,6 @@ export const CAROUSEL_INTERVAL = 8000;
  * News carousel auto-slide interval in milliseconds
  */
 export const NEWS_CAROUSEL_INTERVAL = 6000;
-
-/**
- * Mock news items for the news list section
- * TODO: Replace with actual API data when integrating
- */
-export const MOCK_NEWS_ITEMS: NewsItem[] = [
-    {
-        id: 1,
-        slug: "trusted-supplier-for-charcoal",
-        title: "TRUSTED SUPPLIER",
-        titleHighlight: "FOR CHARCOAL",
-        publishedAt: "2025-11-27",
-        coverImage: "/images/packaging-full.png",
-    },
-    {
-        id: 2,
-        slug: "improves-shisha-smoking-experience",
-        title: "IMPROVES THE",
-        titleHighlight: "SHISHA SMOKING EXPERIENCE",
-        publishedAt: "2025-11-27",
-        coverImage: "/images/packaging-full.png",
-    },
-    {
-        id: 3,
-        slug: "sustainable-charcoal-production",
-        title: "SUSTAINABLE",
-        titleHighlight: "CHARCOAL PRODUCTION",
-        publishedAt: "2025-11-25",
-        coverImage: "/images/packaging-full.png",
-    },
-    {
-        id: 4,
-        slug: "premium-quality-coconut-charcoal",
-        title: "PREMIUM QUALITY",
-        titleHighlight: "COCONUT CHARCOAL",
-        publishedAt: "2025-11-24",
-        coverImage: "/images/packaging-full.png",
-    },
-];
 
 /**
  * Brand colors

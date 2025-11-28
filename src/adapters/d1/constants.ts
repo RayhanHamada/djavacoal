@@ -94,6 +94,9 @@ export const NEWS_COLUMNS = {
     STATUS: "status",
     PUBLISHED_AT: "published_at",
     PUBLISHED_BY: "published_by",
+
+    /** Whether news is pinned to home page carousel */
+    IS_PINNED_TO_HOME: "is_pinned_to_home",
 } as const;
 
 export const TAG_COLUMNS = {

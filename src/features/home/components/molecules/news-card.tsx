@@ -9,6 +9,9 @@ import { ArrowRight } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 
+/** Default placeholder image when no cover image is available */
+const DEFAULT_COVER_IMAGE = "/images/blog/placeholder.png";
+
 interface NewsCardProps extends NewsItem {
     className?: string;
 }
@@ -31,6 +34,9 @@ export function NewsCard({
         year: "numeric",
     });
 
+    const imageUrl = coverImage ?? DEFAULT_COVER_IMAGE;
+    const fullTitle = titleHighlight ? `${title} ${titleHighlight}` : title;
+
     return (
         <article
             className={cn(
@@ -44,8 +50,8 @@ export function NewsCard({
                 className="relative aspect-square overflow-hidden"
             >
                 <Image
-                    src={coverImage}
-                    alt={`${title} ${titleHighlight}`}
+                    src={imageUrl}
+                    alt={fullTitle}
                     fill
                     className="object-cover transition-transform duration-500 group-hover:scale-105"
                 />
@@ -55,8 +61,15 @@ export function NewsCard({
                 {/* Title on Image */}
                 <div className="absolute inset-x-0 bottom-0 flex h-[2em] flex-col justify-end p-4 md:p-6">
                     <h3 className="font-['Josefin_Sans'] text-[18px] leading-tight font-bold text-white uppercase drop-shadow-lg md:text-[22px] lg:text-[26px]">
-                        {title}{" "}
-                        <span className="text-[#EFA12D]">{titleHighlight}</span>
+                        {title}
+                        {titleHighlight && (
+                            <>
+                                {" "}
+                                <span className="text-[#EFA12D]">
+                                    {titleHighlight}
+                                </span>
+                            </>
+                        )}
                     </h3>
                 </div>
             </Link>
@@ -68,13 +81,20 @@ export function NewsCard({
                 </span>
                 <div className="flex items-end justify-between">
                     <h4 className="font-['Josefin_Sans'] text-[16px] leading-tight font-bold text-white uppercase md:text-[18px]">
-                        {title}{" "}
-                        <span className="text-[#EFA12D]">{titleHighlight}</span>
+                        {title}
+                        {titleHighlight && (
+                            <>
+                                {" "}
+                                <span className="text-[#EFA12D]">
+                                    {titleHighlight}
+                                </span>
+                            </>
+                        )}
                     </h4>
                     <Link
                         href={`/blog/${slug}`}
                         className="shrink-0 text-[#EFA12D] transition-transform duration-300 group-hover:translate-x-1"
-                        aria-label={`Read more about ${title} ${titleHighlight}`}
+                        aria-label={`Read more about ${fullTitle}`}
                     >
                         <ArrowRight className="h-5 w-5 md:h-6 md:w-6" />
                     </Link>

@@ -23,12 +23,16 @@ import {
     NewsArticleWithContentSchema,
     RemoveNewsImageInputSchema,
     TagSchema,
+    TogglePinToHomeInputSchema,
+    TogglePinToHomeOutputSchema,
     UpdateNewsInputSchema,
     UpdateNewsOutputSchema,
 } from "./schemas";
 import {
     CREATION_MODE,
+    MAX_PINNED_NEWS,
     NEWS_STATUS_FILTER_VALUES,
+    PIN_TO_HOME_ERRORS,
     STATUS_TRANSITION_ERRORS,
 } from "../lib/constants";
 import {
@@ -75,6 +79,7 @@ export const listNews = base
             titleSearch,
             tags: filterTags,
             status,
+            pinnedOnly,
             publishedFrom,
             publishedTo,
             createdFrom,
@@ -84,59 +89,66 @@ export const listNews = base
         // Build where conditions
         const whereConditions = [];
 
-        if (titleSearch) {
+        // If pinnedOnly is true, only show pinned news (ignores other filters)
+        if (pinnedOnly) {
             whereConditions.push(
-                like(news[NEWS_COLUMNS.EN_TITLE], `%${titleSearch}%`)
+                eq(news[NEWS_COLUMNS.IS_PINNED_TO_HOME], true)
             );
-        }
-
-        if (status !== NEWS_STATUS_FILTER_VALUES.ALL) {
-            whereConditions.push(eq(news[NEWS_COLUMNS.STATUS], status));
-        }
-
-        // Apply published date filters only when status is published/unpublished
-        if (
-            status === NEWS_STATUS_FILTER_VALUES.PUBLISHED ||
-            status === NEWS_STATUS_FILTER_VALUES.UNPUBLISHED
-        ) {
-            if (publishedFrom) {
-                whereConditions.push(
-                    gte(news[NEWS_COLUMNS.PUBLISHED_AT], publishedFrom)
-                );
-            }
-
-            if (publishedTo) {
-                whereConditions.push(
-                    lte(news[NEWS_COLUMNS.PUBLISHED_AT], publishedTo)
-                );
-            }
         } else {
-            // For "all" and "draft", apply created date filters if provided
-            if (createdFrom) {
+            if (titleSearch) {
                 whereConditions.push(
-                    gte(news[COMMON_COLUMNS.CREATED_AT], createdFrom)
+                    like(news[NEWS_COLUMNS.EN_TITLE], `%${titleSearch}%`)
                 );
             }
 
-            if (createdTo) {
-                whereConditions.push(
-                    lte(news[COMMON_COLUMNS.CREATED_AT], createdTo)
-                );
+            if (status !== NEWS_STATUS_FILTER_VALUES.ALL) {
+                whereConditions.push(eq(news[NEWS_COLUMNS.STATUS], status));
             }
-        }
 
-        // Add tag filter using SQL
-        if (filterTags.length) {
-            // Use SQLite JSON functions to check if any tag exists in the JSON array
-            // json_each() expands the JSON array, and we check if the value matches any filter tag
-            const conditions = filterTags.map(
-                (tag) =>
-                    sql`EXISTS (
-                    SELECT 1 FROM json_each(${news[NEWS_COLUMNS.METADATA_TAG_LIST]})
-                    WHERE json_each.value = ${tag}
-                )`
-            );
-            whereConditions.push(or(...conditions));
+            // Apply published date filters only when status is published/unpublished
+            if (
+                status === NEWS_STATUS_FILTER_VALUES.PUBLISHED ||
+                status === NEWS_STATUS_FILTER_VALUES.UNPUBLISHED
+            ) {
+                if (publishedFrom) {
+                    whereConditions.push(
+                        gte(news[NEWS_COLUMNS.PUBLISHED_AT], publishedFrom)
+                    );
+                }
+
+                if (publishedTo) {
+                    whereConditions.push(
+                        lte(news[NEWS_COLUMNS.PUBLISHED_AT], publishedTo)
+                    );
+                }
+            } else {
+                // For "all" and "draft", apply created date filters if provided
+                if (createdFrom) {
+                    whereConditions.push(
+                        gte(news[COMMON_COLUMNS.CREATED_AT], createdFrom)
+                    );
+                }
+
+                if (createdTo) {
+                    whereConditions.push(
+                        lte(news[COMMON_COLUMNS.CREATED_AT], createdTo)
+                    );
+                }
+            }
+
+            // Add tag filter using SQL
+            if (filterTags.length) {
+                // Use SQLite JSON functions to check if any tag exists in the JSON array
+                // json_each() expands the JSON array, and we check if the value matches any filter tag
+                const conditions = filterTags.map(
+                    (tag) =>
+                        sql`EXISTS (
+                        SELECT 1 FROM json_each(${news[NEWS_COLUMNS.METADATA_TAG_LIST]})
+                        WHERE json_each.value = ${tag}
+                    )`
+                );
+                whereConditions.push(or(...conditions));
+            }
         }
 
         const whereClause = whereConditions.length
@@ -160,6 +172,7 @@ export const listNews = base
                 status: news[NEWS_COLUMNS.STATUS],
                 publishedAt: news[NEWS_COLUMNS.PUBLISHED_AT],
                 publishedBy: news[NEWS_COLUMNS.PUBLISHED_BY],
+                isPinnedToHome: news[NEWS_COLUMNS.IS_PINNED_TO_HOME],
                 createdAt: news[COMMON_COLUMNS.CREATED_AT],
                 createdBy: news[COMMON_COLUMNS.CREATED_BY],
                 updatedAt: news[COMMON_COLUMNS.UPDATED_AT],
@@ -234,6 +247,7 @@ export const getNewsById = base
             status: article.status ?? NEWS_STATUS.DRAFT,
             publishedAt: article.published_at,
             publishedBy: article.published_by,
+            isPinnedToHome: article.is_pinned_to_home ?? false,
             createdAt: article.created_at,
             createdBy: article.created_by,
             updatedAt: article.updated_at,
@@ -534,6 +548,7 @@ export const changeStatus = base
 
         let publishedAt: Date | null = existing[NEWS_COLUMNS.PUBLISHED_AT];
         let publishedBy: string | null = existing[NEWS_COLUMNS.PUBLISHED_BY];
+        let isPinnedToHome: boolean = existing[NEWS_COLUMNS.IS_PINNED_TO_HOME];
 
         if (input.status === NEWS_STATUS.PUBLISHED) {
             // Publishing: set published date and user if not already set
@@ -542,11 +557,14 @@ export const changeStatus = base
                 publishedBy = userId;
             }
         } else if (input.status === NEWS_STATUS.DRAFT) {
-            // Back to draft: clear published info
+            // Back to draft: clear published info and unpin from home
             publishedAt = null;
             publishedBy = null;
+            isPinnedToHome = false;
+        } else if (input.status === NEWS_STATUS.UNPUBLISHED) {
+            // Unpublishing: reset pinned status (only published news can be pinned)
+            isPinnedToHome = false;
         }
-        // For unpublished: keep existing published date/user
 
         await db
             .update(news)
@@ -554,6 +572,7 @@ export const changeStatus = base
                 [NEWS_COLUMNS.STATUS]: input.status,
                 [NEWS_COLUMNS.PUBLISHED_AT]: publishedAt,
                 [NEWS_COLUMNS.PUBLISHED_BY]: publishedBy,
+                [NEWS_COLUMNS.IS_PINNED_TO_HOME]: isPinnedToHome,
                 [COMMON_COLUMNS.UPDATED_BY]: userId,
                 [COMMON_COLUMNS.UPDATED_AT]: new Date(),
             })
@@ -817,5 +836,89 @@ export const removeNewsImage = base
                 [COMMON_COLUMNS.UPDATED_BY]: user.user.id,
             })
             .where(eq(news[COMMON_COLUMNS.ID], input.id));
+    })
+    .callable();
+
+/**
+ * Toggle pin to home status for a news article
+ * Only published (non-scheduled) news can be pinned
+ * Maximum 7 news can be pinned at once
+ */
+export const togglePinToHome = base
+    .input(TogglePinToHomeInputSchema)
+    .output(TogglePinToHomeOutputSchema)
+    .handler(async function ({ context: { env }, errors, input }) {
+        const db = getDB(env.DJAVACOAL_DB);
+        const auth = getAuth(env);
+
+        const header = await headers();
+        const user = await auth.api.getSession({
+            headers: header,
+        });
+
+        if (!user) throw errors.UNAUTHORIZED();
+
+        // Get the article
+        const article = await db.query.news.findFirst({
+            where(fields, operators) {
+                return operators.eq(fields[COMMON_COLUMNS.ID], input.id);
+            },
+        });
+
+        if (!article) {
+            throw errors.NOT_FOUND({ message: "News article not found" });
+        }
+
+        // Determine new pin state (toggle)
+        const currentlyPinned = article[NEWS_COLUMNS.IS_PINNED_TO_HOME];
+        const newPinnedState = !currentlyPinned;
+
+        // If trying to pin, validate conditions
+        if (newPinnedState) {
+            // Check if article is published
+            if (article.status !== NEWS_STATUS.PUBLISHED) {
+                throw errors.BAD_REQUEST({
+                    message: PIN_TO_HOME_ERRORS.NOT_PUBLISHED,
+                });
+            }
+
+            // Check if article is scheduled (published_at in the future)
+            const publishedAt = article[NEWS_COLUMNS.PUBLISHED_AT];
+            if (publishedAt && publishedAt > new Date()) {
+                throw errors.BAD_REQUEST({
+                    message: PIN_TO_HOME_ERRORS.SCHEDULED_CANNOT_PIN,
+                });
+            }
+
+            // Check max pinned count (exclude current article)
+            const pinnedCount = await db.$count(
+                news,
+                and(
+                    eq(news[NEWS_COLUMNS.IS_PINNED_TO_HOME], true),
+                    sql`${news[COMMON_COLUMNS.ID]} != ${input.id}`
+                )
+            );
+
+            if (pinnedCount >= MAX_PINNED_NEWS) {
+                throw errors.BAD_REQUEST({
+                    message: PIN_TO_HOME_ERRORS.MAX_PINNED_REACHED,
+                });
+            }
+        }
+
+        // Update the pin status
+        await db
+            .update(news)
+            .set({
+                [NEWS_COLUMNS.IS_PINNED_TO_HOME]: newPinnedState,
+                [COMMON_COLUMNS.UPDATED_BY]: user.user.id,
+                [COMMON_COLUMNS.UPDATED_AT]: new Date(),
+            })
+            .where(eq(news[COMMON_COLUMNS.ID], input.id));
+
+        return {
+            id: input.id,
+            isPinnedToHome: newPinnedState,
+        };
     })
     .callable();

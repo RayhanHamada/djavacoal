@@ -1,10 +1,12 @@
 "use client";
 
+import type { NewsItem } from "../../lib/types";
+
 import { useEffect, useState } from "react";
 
 import { useTranslations } from "next-intl";
 
-import { MOCK_NEWS_ITEMS, NEWS_CAROUSEL_INTERVAL } from "../../lib/constants";
+import { NEWS_CAROUSEL_INTERVAL } from "../../lib/constants";
 import { SectionHeading } from "../atoms";
 import { NewsCarousel } from "../molecules";
 
@@ -15,6 +17,11 @@ const VISIBLE_ITEMS = {
     desktop: 3,
 } as const;
 
+interface NewsListSectionProps {
+    /** News items to display */
+    newsItems: NewsItem[];
+}
+
 /**
  * NewsListSection - Responsive news carousel with auto-advance
  *
@@ -23,12 +30,9 @@ const VISIBLE_ITEMS = {
  * - Tablet (md-xl): 2 visible
  * - Desktop (xl+): 3 visible
  */
-export function NewsListSection() {
+export function NewsListSection({ newsItems }: NewsListSectionProps) {
     const t = useTranslations("Home.newsArticles");
     const [currentSlide, setCurrentSlide] = useState(0);
-
-    // TODO: Replace with API call
-    const newsItems = MOCK_NEWS_ITEMS;
 
     const totalSlides = newsItems.length;
 

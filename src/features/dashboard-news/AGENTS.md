@@ -65,12 +65,21 @@ dashboard-news/
    - Filter by status
    - Filter by published date range
    - Filter by created date range
+   - Filter by pinned to home (toggle)
    - Pagination
 
 6. **Scheduling**
    - Set future publish dates
    - Migration mode for importing old articles with past dates
    - Fresh mode for new articles
+
+7. **Pin to Home**
+   - Pin/unpin articles to display on homepage carousel
+   - Maximum 7 articles can be pinned at once
+   - Only published (non-scheduled) articles can be pinned
+   - Auto-unpin when article is unpublished or moved to draft
+   - Pinned badge displayed in table
+   - Filter to show only pinned articles
 
 ## Technical Implementation
 
@@ -109,6 +118,9 @@ rpc.dashboardNews.deleteNews.useMutation()
 // Change article status
 rpc.dashboardNews.changeStatus.useMutation()
 
+// Toggle pin to home
+rpc.dashboardNews.togglePinToHome.useMutation()
+
 // Check if slug is available
 rpc.dashboardNews.checkSlugAvailability.useQuery({
   slug: "new-product-launch",
@@ -140,6 +152,7 @@ rpc.dashboardNews.bulkCreateTags.useMutation()
   ar_title: string;              // Arabic title
   ar_content_key: string;        // R2 key for Arabic HTML
   status: "draft" | "published" | "unpublished";
+  is_pinned_to_home: boolean;    // Whether pinned to homepage carousel
   published_at: Date | null;     // When article was published
   published_by: string | null;   // Admin user ID who published
   created_at: Date;              // Auto-generated
@@ -230,10 +243,56 @@ NEWS_COLUMNS = {
   AR_TITLE: "ar_title",
   AR_CONTENT_KEY: "ar_content_key",
   STATUS: "status",
+  IS_PINNED_TO_HOME: "is_pinned_to_home",
   PUBLISHED_AT: "published_at",
   PUBLISHED_BY: "published_by"
 }
 ```
+
+Located in `lib/constants.ts`:
+
+```typescript
+// Maximum number of articles that can be pinned to home
+MAX_PINNED_NEWS = 7
+
+// Pin to home error messages
+PIN_TO_HOME_ERRORS = {
+  NOT_PUBLISHED: "Only published articles can be pinned to home",
+  SCHEDULED: "Scheduled articles cannot be pinned to home",
+  MAX_REACHED: "Maximum number of pinned articles reached (7)"
+}
+```
+
+### Pin to Home Feature
+
+#### Business Rules
+
+1. **Eligibility**: Only articles with status `published` AND `published_at <= now` can be pinned
+2. **Limit**: Maximum 7 articles can be pinned at any time
+3. **Auto-unpin**: When an article is unpublished or moved to draft, it is automatically unpinned
+
+#### RPC Function
+
+```typescript
+// Toggle pin status
+rpc.dashboardNews.togglePinToHome.useMutation({
+  onSuccess: (data) => {
+    // data.isPinnedToHome: boolean - new pin state
+  },
+  onError: (error) => {
+    // Handle errors:
+    // - NOT_PUBLISHED: Article not published
+    // - SCHEDULED: Article is scheduled for future
+    // - MAX_REACHED: 7 articles already pinned
+  }
+});
+```
+
+#### UI Components
+
+- **NewsPinnedBadge** (atom): Orange badge shown in status column for pinned articles
+- **NewsTableActions**: "Pin to Home" / "Unpin from Home" menu item (published non-scheduled only)
+- **NewsFilters**: "Show Pinned to Home Only" toggle that resets other filters
 
 ## Integration Points
 

@@ -379,3 +379,31 @@ export const PUBLIC_FAQS_OUTPUT_SCHEMA = z.object({
         total: z.number().describe("Total number of FAQs"),
     }),
 });
+
+// ============================================
+// Pinned News Schemas
+// ============================================
+
+export const PINNED_NEWS_OUTPUT_SCHEMA = z.object({
+    data: z.object({
+        news: z
+            .array(
+                z.object({
+                    id: z.number().describe("Article ID"),
+                    slug: z.string().describe("Article slug for URL"),
+                    title: z.string().describe("Localized article title"),
+                    published_at: z
+                        .date()
+                        .describe("Publication date of the article"),
+                    cover_image_url: z
+                        .url()
+                        .nullable()
+                        .describe("URL of the article's cover image"),
+                })
+            )
+            .describe(
+                "Array of pinned news articles ordered by published_at desc"
+            ),
+        total: z.number().describe("Total number of pinned news articles"),
+    }),
+});

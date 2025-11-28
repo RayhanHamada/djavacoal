@@ -47,6 +47,7 @@ function NewsListContent() {
                 createdTo: filters.createdTo,
                 publishedFrom: filters.publishedFrom,
                 publishedTo: filters.publishedTo,
+                pinnedOnly: filters.pinnedOnly,
             },
         })
     );

@@ -9,6 +9,8 @@ import {
     IconDots,
     IconEye,
     IconPencil,
+    IconPin,
+    IconPinnedOff,
     IconTrash,
     IconWorld,
     IconWorldOff,
@@ -28,6 +30,7 @@ interface NewsTableActionsProps {
     title: string;
     status: Exclude<NewsStatusFilterEnumType, "all">;
     publishedAt?: Date | null;
+    isPinnedToHome: boolean;
     onEdit: () => void;
 }
 
@@ -40,6 +43,7 @@ export function NewsTableActions({
     title,
     status,
     publishedAt,
+    isPinnedToHome,
     onEdit,
 }: NewsTableActionsProps) {
     // Delete mutation
@@ -107,6 +111,38 @@ export function NewsTableActions({
                         error instanceof Error
                             ? error.message
                             : "Failed to update status",
+                    color: "red",
+                });
+            },
+        })
+    );
+
+    // Toggle pin to home mutation
+    const togglePinMutation = useMutation(
+        rpc.dashboardNews.togglePinToHome.mutationOptions({
+            onSuccess: async (data, _, __, { client }) => {
+                notifications.show({
+                    title: "Success",
+                    message: data.isPinnedToHome
+                        ? "News article pinned to home page"
+                        : "News article unpinned from home page",
+                    color: "green",
+                });
+
+                client.invalidateQueries({
+                    queryKey: rpc.dashboardNews.listNews.key(),
+                });
+            },
+            onError: (error) => {
+                // Map error messages to user-friendly notifications
+                const errorMessage =
+                    error instanceof Error
+                        ? error.message
+                        : "Failed to toggle pin";
+
+                notifications.show({
+                    title: "Error",
+                    message: errorMessage,
                     color: "red",
                 });
             },
@@ -224,14 +260,41 @@ export function NewsTableActions({
                                             : "Unpublish"}
                                     </Menu.Item>
                                     {!isFuturePublished && (
-                                        <Menu.Item
-                                            leftSection={<IconEye size={16} />}
-                                            component={Link}
-                                            href={`${process.env.NEXT_PUBLIC_BASE_URL}blog/${slug}`}
-                                            target="_blank"
-                                        >
-                                            View on Site
-                                        </Menu.Item>
+                                        <>
+                                            <Menu.Item
+                                                leftSection={
+                                                    <IconEye size={16} />
+                                                }
+                                                component={Link}
+                                                href={`${process.env.NEXT_PUBLIC_BASE_URL}blog/${slug}`}
+                                                target="_blank"
+                                            >
+                                                View on Site
+                                            </Menu.Item>
+                                            <Menu.Item
+                                                leftSection={
+                                                    isPinnedToHome ? (
+                                                        <IconPinnedOff
+                                                            size={16}
+                                                        />
+                                                    ) : (
+                                                        <IconPin size={16} />
+                                                    )
+                                                }
+                                                onClick={() =>
+                                                    togglePinMutation.mutate({
+                                                        id,
+                                                    })
+                                                }
+                                                disabled={
+                                                    togglePinMutation.isPending
+                                                }
+                                            >
+                                                {isPinnedToHome
+                                                    ? "Unpin from Home"
+                                                    : "Pin to Home"}
+                                            </Menu.Item>
+                                        </>
                                     )}
                                 </>
                             )
