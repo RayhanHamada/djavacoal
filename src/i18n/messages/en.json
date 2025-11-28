@@ -314,6 +314,12 @@
             "zoomHint": "Click to zoom",
             "description": "We proudly export our premium charcoal products to over 20 countries worldwide, including Saudi Arabia, Lebanon, Iraq, Turkey, Japan, Korea, Germany, USA, Brazil, Australia, and many more. Our commitment to quality and customer satisfaction has made us a trusted partner in the global charcoal market."
         },
+        "newsArticles": {
+            "title": "ARTICLE &",
+            "highlight": "NEWS",
+            "readMore": "Read More",
+            "viewAll": "View All Articles"
+        },
         "certificates": {
             "logoAlt": "certificate logo",
             "certifications": {

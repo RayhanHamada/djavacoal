@@ -7,6 +7,7 @@ import {
     MajorityExportDestinationSection,
     GlobalShippingPartnerSection,
     LogoSlideSection,
+    NewsListSection,
     PackagingOptionsSection,
     ProductionInfoSection,
     VisitOurFactorySection,
@@ -25,6 +26,7 @@ export default async function Home() {
                 <PackagingOptionsSection />
                 <ProductionInfoSection />
                 <VisitOurFactorySection />
+                <NewsListSection />
                 <MajorityExportDestinationSection />
                 <GlobalShippingPartnerSection />
             </div>
