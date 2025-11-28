@@ -82,7 +82,7 @@ export function DiscoverOurProductSection() {
     );
 
     return (
-        <section className="relative w-full overflow-hidden bg-[#0D0D0D] px-5 py-16 md:px-10 md:py-12 lg:px-[100px] lg:py-16">
+        <section className="relative w-full overflow-hidden bg-[#161616] px-5 py-16 md:px-10 md:py-12 lg:px-[100px] lg:py-16">
             <div className="absolute top-0 left-0 h-px w-full bg-[#EFA12D]" />
 
             <div className="md:border-b md:border-[#9C9C9C] md:pb-8 md:text-center lg:border-none">
