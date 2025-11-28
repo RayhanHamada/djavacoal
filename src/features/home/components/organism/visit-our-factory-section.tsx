@@ -36,7 +36,7 @@ export function VisitOurFactorySection() {
                     />
                 )}
                 {/* Overlay optional, biar kontras sedikit */}
-                <div className="absolute inset-0 bg-gradient-to-t from-[#00000040] to-transparent" />
+                <div className="absolute inset-0 bg-linear-to-t from-[#00000040] to-transparent" />
             </div>
 
             {/* ==== Description & Button di bawah gambar ==== */}

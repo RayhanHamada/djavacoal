@@ -34,7 +34,7 @@ export function NewsCard({
     return (
         <article
             className={cn(
-                "group relative mx-auto flex w-full max-w-[500px] flex-col justify-center overflow-hidden",
+                "group relative mx-auto flex w-full max-w-11/12 flex-col justify-center overflow-hidden md:max-w-[500px]",
                 className
             )}
         >
