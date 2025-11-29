@@ -13,8 +13,11 @@ import {
     VisitOurFactorySection,
     WhyChooseUsSection,
 } from "@/features/home/components";
+import { getPinnedNewsForHome } from "@/features/home/server";
 
 export default async function Home() {
+    const pinnedNews = await getPinnedNewsForHome();
+
     return (
         <Fragment>
             <div>
@@ -26,7 +29,7 @@ export default async function Home() {
                 <PackagingOptionsSection />
                 <ProductionInfoSection />
                 <VisitOurFactorySection />
-                <NewsListSection />
+                <NewsListSection newsItems={pinnedNews} />
                 <MajorityExportDestinationSection />
                 <GlobalShippingPartnerSection />
             </div>

@@ -185,6 +185,8 @@ export const ListNewsInputSchema = z.object({
     titleSearch: z.string().optional(),
     tags: z.array(z.string()).default([]),
     status: NewsStatusFilterEnum.default(NEWS_STATUS_FILTER_VALUES.ALL),
+    // Filter to show only pinned news (resets other filters when true)
+    pinnedOnly: z.boolean().default(false),
     // Published date filters (apply when status is published or unpublished)
     // Nullable to handle cleared filters from the UI (null is coerced to undefined)
     publishedFrom: z
@@ -231,6 +233,9 @@ export const NewsArticleSchema = z.object({
     status: NewsStatusEnum,
     publishedAt: z.date().nullable(),
     publishedBy: z.string().nullable(),
+
+    /** Whether news is pinned to home page */
+    isPinnedToHome: z.boolean(),
 
     createdAt: z.date(),
     createdBy: z.string(),
@@ -395,3 +400,20 @@ export const RemoveNewsImageInputSchema = z.object({
 });
 
 export type RemoveNewsImageInput = z.infer<typeof RemoveNewsImageInputSchema>;
+
+/**
+ * Schema for toggling pin to home status
+ * Only requires ID - the function will toggle the current state
+ */
+export const TogglePinToHomeInputSchema = z.object({
+    id: z.number(),
+});
+
+export type TogglePinToHomeInput = z.infer<typeof TogglePinToHomeInputSchema>;
+
+export const TogglePinToHomeOutputSchema = z.object({
+    id: z.number(),
+    isPinnedToHome: z.boolean(),
+});
+
+export type TogglePinToHomeOutput = z.infer<typeof TogglePinToHomeOutputSchema>;

@@ -10,6 +10,7 @@ import {
     Group,
     Select,
     Stack,
+    Switch,
     TextInput,
 } from "@mantine/core";
 import { DatePickerInput } from "@mantine/dates";
@@ -19,11 +20,13 @@ import {
     IconCalendar,
     IconFilter,
     IconGlobe,
+    IconPin,
     IconX,
 } from "@tabler/icons-react";
 import dayjs from "dayjs";
 import {
     parseAsArrayOf,
+    parseAsBoolean,
     parseAsIsoDate,
     parseAsString,
     parseAsStringEnum,
@@ -56,6 +59,8 @@ export function useNewsFilters() {
             // Created date filters (only meaningful for all/draft)
             createdFrom: parseAsIsoDate,
             createdTo: parseAsIsoDate,
+            // Pinned only filter
+            pinnedOnly: parseAsBoolean.withDefault(false),
         },
         {
             history: "push",
@@ -101,8 +106,42 @@ export function NewsFilters({
         });
     };
 
+    /**
+     * Handle pinned only toggle
+     * When enabled, reset all other filters to show only pinned news
+     */
+    const handlePinnedOnlyToggle = (checked: boolean) => {
+        if (checked) {
+            // Reset all filters and enable pinnedOnly
+            setFilters({
+                title: null,
+                tags: null,
+                status: "all",
+                publishedFrom: null,
+                publishedTo: null,
+                createdFrom: null,
+                createdTo: null,
+                pinnedOnly: true,
+            });
+        } else {
+            setFilters({ pinnedOnly: false });
+        }
+    };
+
     const filterContent = (
         <Stack gap="md">
+            {/* Pinned Only Toggle */}
+            <Switch
+                label="Show Pinned to Home Only"
+                description="Shows only news articles pinned to the home page"
+                checked={filters.pinnedOnly}
+                onChange={(e) =>
+                    handlePinnedOnlyToggle(e.currentTarget.checked)
+                }
+                thumbIcon={<IconPin size={12} />}
+                color="orange"
+            />
+
             {/* Title Search */}
             <TextInput
                 leftSection={<IconAlphabetLatin size={16} />}
@@ -112,6 +151,7 @@ export function NewsFilters({
                 onChange={(e) =>
                     setFilters({ title: e.currentTarget.value || null })
                 }
+                disabled={filters.pinnedOnly}
             />
 
             <Flex direction="row" gap="md">
@@ -130,6 +170,7 @@ export function NewsFilters({
                         { value: "published", label: "Published" },
                         { value: "unpublished", label: "Unpublished" },
                     ]}
+                    disabled={filters.pinnedOnly}
                 />
 
                 {/* Tags */}
@@ -141,6 +182,7 @@ export function NewsFilters({
                             setFilters({ tags: tags.length > 0 ? tags : null })
                         }
                         placeholder="Select tags to filter"
+                        disabled={filters.pinnedOnly}
                     />
                 </Box>
             </Flex>
@@ -162,6 +204,7 @@ export function NewsFilters({
                             });
                         }}
                         clearable
+                        disabled={filters.pinnedOnly}
                     />
                     <DatePickerInput
                         leftSection={<IconCalendar size={18} stroke={1.5} />}
@@ -181,6 +224,7 @@ export function NewsFilters({
                             });
                         }}
                         clearable
+                        disabled={filters.pinnedOnly}
                     />
                 </Flex>
             ) : (
@@ -198,6 +242,7 @@ export function NewsFilters({
                             });
                         }}
                         clearable
+                        disabled={filters.pinnedOnly}
                     />
                     <DatePickerInput
                         leftSection={<IconCalendar size={18} stroke={1.5} />}
@@ -217,6 +262,7 @@ export function NewsFilters({
                             });
                         }}
                         clearable
+                        disabled={filters.pinnedOnly}
                     />
                 </Flex>
             )}

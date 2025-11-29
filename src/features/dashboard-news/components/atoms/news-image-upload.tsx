@@ -36,6 +36,8 @@ interface NewsImageUploadProps {
 export interface NewsImageUploadRef {
     /** Upload the currently held file. Returns the R2 key or null if no pending file */
     uploadImageFile: () => Promise<string | null>;
+    /** Get the current display URL (blob URL for pending file, or R2 URL for uploaded image) */
+    getCurrentImageUrl: () => string | null;
 }
 
 const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
@@ -70,7 +72,7 @@ export const NewsImageUpload = forwardRef<
         return `${process.env.NEXT_PUBLIC_ASSET_URL}${key}`;
     }
 
-    // Expose upload function to parent via ref
+    // Expose upload function and preview URL getter to parent via ref
     useImperativeHandle(ref, () => ({
         uploadImageFile: async () => {
             if (!pendingFile) {
@@ -127,6 +129,17 @@ export const NewsImageUpload = forwardRef<
             } finally {
                 setIsUploading(false);
             }
+        },
+        getCurrentImageUrl: () => {
+            // Return blob URL if we have a pending local file
+            if (previewUrl) {
+                return previewUrl;
+            }
+            // Return R2 URL if we have an uploaded image
+            if (imageKey) {
+                return getImageUrl(imageKey);
+            }
+            return null;
         },
     }));
 

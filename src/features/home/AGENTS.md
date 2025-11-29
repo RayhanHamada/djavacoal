@@ -16,6 +16,8 @@ home/
 │   │   ├── carousel-dots.tsx    # Reusable carousel navigation dots
 │   │   ├── country-tag.tsx
 │   │   ├── feature-icon.tsx
+│   │   ├── news-card-content.tsx # News card content with date, title, arrow
+│   │   ├── news-card-image.tsx   # News card image with hover effects
 │   │   ├── progress-bar.tsx
 │   │   ├── section-heading.tsx
 │   │   ├── stat-card.tsx
@@ -24,14 +26,17 @@ home/
 │   │   ├── certificate-card.tsx
 │   │   ├── cta-button.tsx
 │   │   ├── feature-card.tsx
-│   │   ├── news-card.tsx
-│   │   ├── news-carousel.tsx    # Sliding carousel for news items
+│   │   ├── news-card.tsx        # Composes NewsCardImage + NewsCardContent
+│   │   ├── news-carousel.tsx    # Uses useCarouselDrag hook
 │   │   ├── product-card.tsx
 │   │   └── index.ts
 │   └── organisms/      # Complex sections
-│       ├── news-list-section.tsx  # Responsive news section with auto-advance
+│       ├── news-list-section.tsx  # Uses useAutoAdvance hook
 │       └── ...
-├── hooks/              # React hooks for homepage data
+├── hooks/              # Custom React hooks
+│   ├── use-auto-advance.ts     # Auto-advancing carousel slides
+│   ├── use-carousel-drag.ts    # Drag/swipe/keyboard carousel navigation
+│   └── index.ts
 └── lib/                # Homepage-specific utilities and constants
     ├── constants.ts    # Centralized data (static content, config)
     ├── types.ts        # Shared TypeScript interfaces
@@ -54,6 +59,63 @@ home/
 - Proper JSDoc comments for component documentation
 - Consistent naming conventions (PascalCase for components)
 - Export patterns through index.ts barrel files
+- Extract reusable logic into custom hooks
+- Compose larger components from smaller atoms
+
+### Custom Hooks
+
+#### useCarouselDrag
+Encapsulates all carousel drag/swipe/keyboard navigation logic:
+
+```typescript
+import { useCarouselDrag } from "../../hooks";
+
+const {
+    containerRef,
+    trackRef,
+    isDragging,
+    translatePercent,
+    handleTouchStart,
+    handleTouchMove,
+    handleTouchEnd,
+    handleMouseDown,
+    handleMouseMove,
+    handleMouseUp,
+    handleMouseLeave,
+    handleKeyDown,
+} = useCarouselDrag({
+    totalSlides,
+    activeSlide,
+    itemsPerSlide,
+    onSlideChange,
+});
+```
+
+**Features:**
+- Touch events (mobile swipe)
+- Mouse drag (desktop)
+- Keyboard navigation (arrow keys)
+- Smooth transform-based animations
+- Configurable swipe threshold (50px)
+
+#### useAutoAdvance
+Handles auto-advancing carousel slides:
+
+```typescript
+import { useAutoAdvance } from "../../hooks";
+
+const { currentSlide, setCurrentSlide } = useAutoAdvance({
+    totalSlides: newsItems.length,
+    interval: NEWS_CAROUSEL_INTERVAL,
+    enabled: true, // optional, defaults to true
+});
+```
+
+**Features:**
+- Configurable interval
+- Can be enabled/disabled
+- Automatic cleanup on unmount
+- Loops back to first slide
 
 ## Features
 
@@ -189,18 +251,58 @@ interface CarouselDotsProps {
 - Hover states for inactive dots
 - Accessible with aria-labels
 
+#### NewsCardImage
+Standalone image component for news cards:
+
+```typescript
+interface NewsCardImageProps {
+    slug: string;
+    coverImage: string | null;
+    alt: string;
+}
+```
+
+- Links to full article on click
+- Hover scale effect (1.05x)
+- Placeholder fallback for missing images
+- Aspect ratio 4:3
+- Rounded corners with overflow hidden
+
+#### NewsCardContent
+Content section for news cards with date, title, and arrow:
+
+```typescript
+interface NewsCardContentProps {
+    slug: string;
+    title: string;
+    publishedAt: string;
+}
+```
+
+- **NewsCardDate**: Formatted publication date
+- **NewsCardTitle**: Auto-split title with half highlighted in brand color
+- **NewsCardArrow**: Animated arrow link with hover translation
+- Uses `splitTitleForHighlight()` utility to intelligently split titles
+
 ### Molecules
 
 #### NewsCard
-Individual news article preview card:
-- Image with title overlay and gradient
-- Date display below image
-- Title repeated below for clarity
+Individual news article preview card (composed from atoms):
+
+```typescript
+interface NewsCardProps extends NewsItem {
+    className?: string;
+}
+```
+
+- Composes `NewsCardImage` + `NewsCardContent` atoms
+- Clean image without overlay (title below image only)
+- Half of title highlighted in brand color
 - Arrow CTA link to full article
 - Centered within container (max-w-500px)
 
 #### NewsCarousel
-Sliding carousel for news items:
+Sliding carousel for news items (uses `useCarouselDrag` hook):
 
 ```typescript
 interface NewsCarouselProps {
@@ -214,14 +316,17 @@ interface NewsCarouselProps {
 
 - Slides one item at a time (not whole groups)
 - Shows multiple items simultaneously based on `itemsPerSlide`
+- Touch/mouse drag with real-time feedback
+- Keyboard navigation (left/right arrows)
 - Smooth CSS transform transitions
 - Uses CarouselDots for navigation
 - Calculates total navigable positions: `items.length - itemsPerSlide + 1`
+- Drag logic extracted to `useCarouselDrag` hook for reusability
 
 ### Organisms
 
 #### NewsListSection
-Responsive news section with auto-advancing carousel:
+Responsive news section with auto-advancing carousel (uses `useAutoAdvance` hook):
 
 ```typescript
 const VISIBLE_ITEMS = {
@@ -232,9 +337,10 @@ const VISIBLE_ITEMS = {
 ```
 
 - Three NewsCarousel instances with visibility classes
-- Auto-advance via useEffect interval (NEWS_CAROUSEL_INTERVAL)
+- Auto-advance via `useAutoAdvance` hook (NEWS_CAROUSEL_INTERVAL)
 - Shared currentSlide state across breakpoints
 - Each breakpoint normalizes slide position with modulo
+- Auto-advance logic extracted to hook for reusability
 
 ### HeroSection
 - Full-width carousel or single hero image
@@ -395,11 +501,11 @@ Molecule components should:
 - Use semantic HTML elements
 - Follow accessibility best practices
 
-Example - NewsCarousel:
+Example - NewsCarousel (using custom hook):
 ```typescript
 /**
- * NewsCarousel - Sliding carousel for news items
- * Slides one item at a time while showing multiple items in view
+ * NewsCarousel - Swipeable carousel with smooth drag feedback
+ * Follows finger/mouse in real-time, snaps on release
  */
 export function NewsCarousel({
     items,
@@ -410,32 +516,49 @@ export function NewsCarousel({
 }: NewsCarouselProps) {
     const totalSlides = Math.max(1, items.length - itemsPerSlide + 1);
     const activeSlide = currentSlide % totalSlides;
-    const itemWidth = 100 / itemsPerSlide;
+
+    // Extract drag logic to custom hook
+    const {
+        containerRef,
+        trackRef,
+        isDragging,
+        translatePercent,
+        handleTouchStart,
+        handleTouchMove,
+        handleTouchEnd,
+        handleMouseDown,
+        handleMouseMove,
+        handleMouseUp,
+        handleMouseLeave,
+        handleKeyDown,
+    } = useCarouselDrag({
+        totalSlides,
+        activeSlide,
+        itemsPerSlide,
+        onSlideChange,
+    });
 
     return (
         <div className={className}>
-            <div className="relative overflow-hidden">
+            <div
+                ref={containerRef}
+                className={`relative overflow-hidden ${isDragging ? "cursor-grabbing" : "cursor-grab"}`}
+                onTouchStart={handleTouchStart}
+                // ... other event handlers
+            >
                 <div
-                    className="flex transition-transform duration-500 ease-in-out"
-                    style={{ transform: `translateX(-${activeSlide * itemWidth}%)` }}
+                    ref={trackRef}
+                    className={`flex select-none ${isDragging ? "" : "transition-transform duration-300 ease-out"}`}
+                    style={{ transform: `translateX(-${translatePercent}%)` }}
                 >
                     {items.map((item) => (
-                        <div
-                            key={item.id}
-                            className="shrink-0 px-3"
-                            style={{ width: `${itemWidth}%` }}
-                        >
+                        <div key={item.id} style={{ width: `${100 / itemsPerSlide}%` }}>
                             <NewsCard {...item} />
                         </div>
                     ))}
                 </div>
             </div>
-            <CarouselDots
-                totalSlides={totalSlides}
-                currentSlide={activeSlide}
-                onSlideChange={onSlideChange}
-                className="mt-8"
-            />
+            <CarouselDots ... />
         </div>
     );
 }

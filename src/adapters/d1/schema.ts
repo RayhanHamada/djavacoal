@@ -270,6 +270,17 @@ const NEWS_COLUMN_FIELDS = {
     }),
     // keep published_by typed to users.id
     [NEWS_COLUMNS.PUBLISHED_BY]: text().references(() => users.id),
+
+    /**
+     * Whether this news article is pinned to the home page carousel
+     * Only published (non-scheduled) articles can be pinned
+     * Maximum 7 articles can be pinned at once
+     */
+    [NEWS_COLUMNS.IS_PINNED_TO_HOME]: int({
+        mode: "boolean",
+    })
+        .notNull()
+        .default(false),
 } as const;
 
 const TAG_COLUMN_FIELDS = {

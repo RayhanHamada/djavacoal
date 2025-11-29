@@ -17,6 +17,7 @@ import { DateTimePicker } from "@mantine/dates";
 import { useForm } from "@mantine/form";
 import { useLocalStorage } from "@mantine/hooks";
 import { notifications } from "@mantine/notifications";
+import { IconEye } from "@tabler/icons-react";
 import { useDebounce, useDebounceFn } from "ahooks";
 import dayjs from "dayjs";
 
@@ -25,6 +26,7 @@ import {
     validateNewsForm,
     type NewsFormValues,
 } from "../../lib/form-schemas";
+import { saveNewsPreviewData } from "../../lib/preview";
 import { NewsImageUpload, type NewsImageUploadRef } from "../atoms";
 import { NewsTagsSelect } from "../atoms/news-tags-select";
 import { BilingualContentEditor } from "../molecules/bilingual-content-editor";
@@ -190,6 +192,33 @@ export function NewsForm({
     const handlePublish = form.onSubmit(async (values) => {
         await handleSubmit(values, "published");
     });
+
+    /**
+     * Handle preview button click
+     * Saves current form data to local storage and opens preview in new tab
+     */
+    const handlePreview = useCallback(() => {
+        const values = form.getValues();
+
+        // Get the current image URL (blob or R2)
+        const coverImageUrl =
+            imageUploadRef.current?.getCurrentImageUrl() ?? null;
+
+        // Save preview data to local storage
+        saveNewsPreviewData({
+            enTitle: values.enTitle,
+            arTitle: values.arTitle,
+            enContent: values.enContent,
+            arContent: values.arContent,
+            coverImageUrl,
+            publishedAt:
+                values.publishedAt?.toISOString() ?? new Date().toISOString(),
+            createdAt: Date.now(),
+        });
+
+        // Open preview in new tab
+        window.open("/preview/news", "_blank");
+    }, [form]);
 
     return (
         <form onSubmit={handlePublish}>
@@ -490,6 +519,18 @@ export function NewsForm({
                         </Button>
                     </Grid.Col>
                 </Grid>
+
+                {/* Preview Button */}
+                <Button
+                    fullWidth
+                    variant="outline"
+                    onClick={handlePreview}
+                    disabled={isSubmitting}
+                    size="md"
+                    leftSection={<IconEye size={18} />}
+                >
+                    Preview Article
+                </Button>
             </Stack>
         </form>
     );

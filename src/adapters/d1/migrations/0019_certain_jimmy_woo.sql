@@ -1,0 +1,1 @@
+ALTER TABLE `news` ADD `is_pinned_to_home` integer DEFAULT false NOT NULL;

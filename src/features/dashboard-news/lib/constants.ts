@@ -11,6 +11,11 @@ export const DEFAULT_PAGE_SIZE = 20;
 export const MAX_PAGE_SIZE = 100;
 
 /**
+ * Pinned news limits
+ */
+export const MAX_PINNED_NEWS = 7;
+
+/**
  * Slug validation
  */
 export const SLUG_MIN_LENGTH = 1;
@@ -54,6 +59,17 @@ export const STATUS_TRANSITION_ERRORS = {
     UNPUBLISHED_ON_CREATE: "Cannot create article with unpublished status",
     PUBLISHED_REQUIRES_DATE:
         "Publication date is required when status is published",
+} as const;
+
+/**
+ * Pin to home errors
+ */
+export const PIN_TO_HOME_ERRORS = {
+    MAX_PINNED_REACHED:
+        "Maximum of 7 news articles can be pinned to home. Please unpin one before pinning another.",
+    NOT_PUBLISHED: "Only published (non-scheduled) news can be pinned to home.",
+    SCHEDULED_CANNOT_PIN:
+        "Scheduled news cannot be pinned. Please wait until it is published.",
 } as const;
 
 export const CREATION_MODE = {

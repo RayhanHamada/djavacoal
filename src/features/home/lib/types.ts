@@ -35,12 +35,12 @@ export type SectionVariant = "left" | "center";
 
 /**
  * News item interface for the news list section
+ * Title is automatically split in half for display (first half white, second half highlighted)
  */
 export interface NewsItem {
     id: number;
     slug: string;
     title: string;
-    titleHighlight: string;
     publishedAt: string;
-    coverImage: string;
+    coverImage: string | null;
 }

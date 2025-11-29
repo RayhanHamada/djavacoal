@@ -1,11 +1,13 @@
+import { Group } from "@mantine/core";
 import { createColumnHelper } from "@tanstack/react-table";
 
 import {
     NewsDateCell,
     NewsImageCell,
+    NewsPinnedBadge,
     NewsStatusCell,
     NewsTitleCell,
-} from "../atoms/news-table-cells";
+} from "../atoms";
 import { NewsTableActions } from "../molecules/news-table-actions";
 import { NEWS_STATUS_FILTER_VALUES } from "@/features/dashboard-news/lib/constants";
 
@@ -20,6 +22,7 @@ export interface NewsArticle {
     publishedAt: Date | null;
     createdAt: Date | null;
     updatedAt: Date | null;
+    isPinnedToHome: boolean;
 }
 
 const columnHelper = createColumnHelper<NewsArticle>();
@@ -51,17 +54,22 @@ export const createNewsTableColumns = (onEdit: (id: number) => void) => [
         id: "status",
         header: "Status",
         cell: ({ row }) => {
-            const { status, publishedAt } = row.original;
+            const { status, publishedAt, isPinnedToHome } = row.original;
             const isScheduled =
                 publishedAt &&
                 publishedAt > new Date() &&
                 status === NEWS_STATUS_FILTER_VALUES.PUBLISHED;
 
             return (
-                <NewsStatusCell status={isScheduled ? "scheduled" : status} />
+                <Group gap="xs" wrap="nowrap">
+                    <NewsStatusCell
+                        status={isScheduled ? "scheduled" : status}
+                    />
+                    <NewsPinnedBadge isPinned={isPinnedToHome} />
+                </Group>
             );
         },
-        size: 120,
+        size: 160,
     }),
     columnHelper.accessor("publishedAt", {
         id: "publishedAt",
@@ -79,6 +87,7 @@ export const createNewsTableColumns = (onEdit: (id: number) => void) => [
                 title={row.original.enTitle}
                 status={row.original.status}
                 publishedAt={row.original.publishedAt}
+                isPinnedToHome={row.original.isPinnedToHome}
                 onEdit={() => onEdit(row.original.id)}
             />
         ),

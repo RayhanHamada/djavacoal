@@ -13,6 +13,7 @@ import {
     listNews,
     listTags,
     removeNewsImage,
+    togglePinToHome,
     togglePublish,
     updateNews,
 } from "./functions";
@@ -26,6 +27,7 @@ export const router = {
     deleteNews,
     changeStatus,
     togglePublish, // deprecated, kept for backwards compatibility
+    togglePinToHome,
     checkSlugAvailability,
     generateImageUploadUrl,
     removeNewsImage,
