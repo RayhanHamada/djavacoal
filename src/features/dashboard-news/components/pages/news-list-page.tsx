@@ -35,7 +35,7 @@ function NewsListContent() {
     );
 
     // Fetch news list
-    const { data, isLoading, error } = useQuery(
+    const { data, isFetching, error } = useQuery(
         rpc.dashboardNews.listNews.queryOptions({
             input: {
                 page,
@@ -105,14 +105,14 @@ function NewsListContent() {
 
                 {/* Table */}
                 <Paper withBorder>
-                    {isLoading ? (
+                    {isFetching ? (
                         <Box p="xl" style={{ textAlign: "center" }}>
                             <Loader size="lg" />
                         </Box>
                     ) : (
                         <NewsListTable
                             items={data?.items || []}
-                            isLoading={isLoading}
+                            isLoading={isFetching}
                         />
                     )}
                 </Paper>
