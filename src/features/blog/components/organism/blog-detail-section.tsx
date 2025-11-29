@@ -1,4 +1,4 @@
-import "./blog-content.css";
+import "../atoms/blog-content.css";
 
 import React from "react";
 
