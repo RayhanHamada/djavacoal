@@ -1,3 +1,5 @@
+import "./blog-content.css";
+
 import React from "react";
 
 import { BlogContent } from "../atoms";

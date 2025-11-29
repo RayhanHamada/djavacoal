@@ -1,5 +1,4 @@
 import { forwardRef } from "react";
-import "./blog-content.css";
 
 import { cn } from "@/lib/utils";
 
