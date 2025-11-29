@@ -2,10 +2,9 @@
 
 import type { NewsItem } from "../../lib/types";
 
-import { useEffect, useState } from "react";
-
 import { useTranslations } from "next-intl";
 
+import { useAutoAdvance } from "../../hooks";
 import { NEWS_CAROUSEL_INTERVAL } from "../../lib/constants";
 import { SectionHeading } from "../atoms";
 import { NewsCarousel } from "../molecules";
@@ -32,19 +31,13 @@ interface NewsListSectionProps {
  */
 export function NewsListSection({ newsItems }: NewsListSectionProps) {
     const t = useTranslations("Home.newsArticles");
-    const [currentSlide, setCurrentSlide] = useState(0);
 
     const totalSlides = newsItems.length;
 
-    useEffect(() => {
-        if (!totalSlides) return;
-
-        const timer = setInterval(() => {
-            setCurrentSlide((prev) => (prev + 1) % totalSlides);
-        }, NEWS_CAROUSEL_INTERVAL);
-
-        return () => clearInterval(timer);
-    }, [totalSlides]);
+    const { currentSlide, setCurrentSlide } = useAutoAdvance({
+        totalSlides,
+        interval: NEWS_CAROUSEL_INTERVAL,
+    });
 
     if (!totalSlides) return null;
 
