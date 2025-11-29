@@ -12,18 +12,33 @@ import { cn } from "@/lib/utils";
 /** Default placeholder image when no cover image is available */
 const DEFAULT_COVER_IMAGE = "/images/blog/placeholder.png";
 
+/**
+ * Split title into two halves for highlighting
+ * First half in white, second half in accent color
+ */
+function splitTitleForHighlight(title: string): {
+    firstHalf: string;
+    secondHalf: string;
+} {
+    const words = title.split(" ");
+    const midpoint = Math.ceil(words.length / 2);
+    return {
+        firstHalf: words.slice(0, midpoint).join(" "),
+        secondHalf: words.slice(midpoint).join(" "),
+    };
+}
+
 interface NewsCardProps extends NewsItem {
     className?: string;
 }
 
 /**
  * NewsCard component for displaying individual news article preview
- * Features title overlay on image with date and arrow CTA
+ * Features clean image with title below showing half highlighted
  */
 export function NewsCard({
     slug,
     title,
-    titleHighlight,
     publishedAt,
     coverImage,
     className,
@@ -35,7 +50,7 @@ export function NewsCard({
     });
 
     const imageUrl = coverImage ?? DEFAULT_COVER_IMAGE;
-    const fullTitle = titleHighlight ? `${title} ${titleHighlight}` : title;
+    const { firstHalf, secondHalf } = splitTitleForHighlight(title);
 
     return (
         <article
@@ -44,49 +59,32 @@ export function NewsCard({
                 className
             )}
         >
-            {/* Image with Title Overlay */}
+            {/* Image without overlay */}
             <Link
                 href={`/blog/${slug}`}
                 className="relative aspect-square overflow-hidden"
             >
                 <Image
                     src={imageUrl}
-                    alt={fullTitle}
+                    alt={title}
                     fill
                     className="object-cover transition-transform duration-500 group-hover:scale-105"
                 />
-                {/* Dark Gradient Overlay */}
-                <div className="absolute inset-0 bg-linear-to-t from-black/70 via-black/30 to-transparent" />
-
-                {/* Title on Image */}
-                <div className="absolute inset-x-0 bottom-0 flex h-[2em] flex-col justify-end p-4 md:p-6">
-                    <h3 className="font-['Josefin_Sans'] text-[18px] leading-tight font-bold text-white uppercase drop-shadow-lg md:text-[22px] lg:text-[26px]">
-                        {title}
-                        {titleHighlight && (
-                            <>
-                                {" "}
-                                <span className="text-[#EFA12D]">
-                                    {titleHighlight}
-                                </span>
-                            </>
-                        )}
-                    </h3>
-                </div>
             </Link>
 
-            {/* Date, Title, and Arrow */}
+            {/* Date, Title (half highlighted), and Arrow */}
             <div className="flex flex-col gap-2 bg-[#0D0D0D] pt-4 pb-2">
                 <span className="font-['Open_Sans'] text-[14px] text-[#9C9C9C] md:text-[15px]">
                     {formattedDate}
                 </span>
-                <div className="flex items-end justify-between">
+                <div className="flex justify-between">
                     <h4 className="font-['Josefin_Sans'] text-[16px] leading-tight font-bold text-white uppercase md:text-[18px]">
-                        {title}
-                        {titleHighlight && (
+                        {firstHalf}
+                        {secondHalf && (
                             <>
                                 {" "}
                                 <span className="text-[#EFA12D]">
-                                    {titleHighlight}
+                                    {secondHalf}
                                 </span>
                             </>
                         )}
@@ -94,7 +92,7 @@ export function NewsCard({
                     <Link
                         href={`/blog/${slug}`}
                         className="shrink-0 text-[#EFA12D] transition-transform duration-300 group-hover:translate-x-1"
-                        aria-label={`Read more about ${fullTitle}`}
+                        aria-label={`Read more about ${title}`}
                     >
                         <ArrowRight className="h-5 w-5 md:h-6 md:w-6" />
                     </Link>
