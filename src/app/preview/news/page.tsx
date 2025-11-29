@@ -1,14 +1,5 @@
 import { NewsPreviewPage } from "@/features/dashboard-news/components/pages";
 
-export const metadata = {
-    title: "News Preview - Djavacoal",
-    description: "Preview your news article before publishing",
-    robots: {
-        index: false,
-        follow: false,
-    },
-};
-
 /**
  * News Preview Route
  *
