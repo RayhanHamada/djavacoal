@@ -12,14 +12,36 @@ This feature provides comprehensive news/blog article management for the Djavaco
 dashboard-news/
 ├── components/          # UI components organized by atomic design
 │   ├── atoms/          # Basic news UI elements
+│   │   ├── news-image-upload.tsx
+│   │   ├── news-pinned-badge.tsx
+│   │   ├── news-rich-text-editor.tsx
+│   │   ├── news-tags-select.tsx
+│   │   ├── news-table-cells.tsx
+│   │   ├── preview-blog-content.tsx    # Preview content renderer
+│   │   └── preview-language-switcher.tsx # Floating locale toggle
 │   ├── lib/            # Component-specific utilities (table columns)
 │   ├── molecules/      # Composite news components (filters, status badges)
+│   │   ├── bilingual-content-editor.tsx
+│   │   ├── bilingual-text-input.tsx
+│   │   ├── gallery-picker-modal.tsx
+│   │   ├── news-filters.tsx
+│   │   ├── news-table-actions.tsx
+│   │   ├── preview-detail-header.tsx    # Preview header with image
+│   │   └── preview-related-articles-placeholder.tsx # Sidebar placeholder
 │   ├── organisms/      # Complex news sections (article list, editor)
+│   │   ├── news-form.tsx
+│   │   ├── news-list-table.tsx
+│   │   └── preview-detail-section.tsx   # Main preview layout
 │   └── pages/          # Page-level components
+│       ├── news-create-page.tsx
+│       ├── news-edit-page.tsx
+│       ├── news-list-page.tsx
+│       └── news-preview-page.tsx        # Preview page component
 ├── hooks/              # React hooks for news operations
 ├── lib/                # Feature library (constants, form schemas)
 │   ├── constants.ts    # Validation limits, status values, field errors
 │   ├── form-schemas.ts # Mantine form validation schemas
+│   ├── preview.ts      # Preview data types and local storage utils
 │   └── index.ts        # Barrel exports
 ├── server/             # Server-side logic (RPC functions)
 │   ├── functions.ts    # oRPC callable functions
@@ -81,7 +103,59 @@ dashboard-news/
    - Pinned badge displayed in table
    - Filter to show only pinned articles
 
+8. **Article Preview**
+   - Preview article before publishing
+   - Opens in new browser tab at `/preview/news`
+   - Uses local storage for data transfer (not tied to server)
+   - Supports language switching (EN/AR) via floating button
+   - Shows cover image using blob URL for unpublished images
+   - Mirrors visitor blog detail page layout exactly
+   - Preview data expires after 1 hour
+   - Related articles shown as placeholders
+
 ## Technical Implementation
+
+### Preview Feature Architecture
+
+The preview feature uses local storage to transfer form data to a standalone preview page:
+
+```typescript
+// Preview data structure
+interface NewsPreviewData {
+    enTitle: string;
+    arTitle: string;
+    enContent: string;        // HTML from TipTap editor
+    arContent: string;
+    coverImageUrl: string | null; // blob: URL or R2 URL
+    publishedAt: string;
+    createdAt: number;        // For expiration check
+}
+
+// Save and open preview
+import { saveNewsPreviewData } from "../../lib/preview";
+
+const handlePreview = () => {
+    saveNewsPreviewData({
+        enTitle: form.getValues().enTitle,
+        arTitle: form.getValues().arTitle,
+        enContent: form.getValues().enContent,
+        arContent: form.getValues().arContent,
+        coverImageUrl: imageUploadRef.current?.getCurrentImageUrl() ?? null,
+        publishedAt: values.publishedAt?.toISOString() ?? new Date().toISOString(),
+        createdAt: Date.now(),
+    });
+    window.open("/preview/news", "_blank");
+};
+```
+
+**Preview Route**: `/preview/news` (outside admin group for Tailwind styling)
+
+**Key Components:**
+- `PreviewLanguageSwitcher` - Floating button for EN/AR toggle
+- `PreviewDetailSection` - Main layout mirroring `BlogDetailSection`
+- `PreviewDetailHeader` - Header without social share buttons
+- `PreviewBlogContent` - HTML content renderer
+- `PreviewRelatedArticlesPlaceholder` - Sidebar placeholder
 
 ### Server-Side (RPC Functions)
 
