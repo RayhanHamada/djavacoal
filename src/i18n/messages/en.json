@@ -655,6 +655,7 @@
         },
         "noProducts": "No products found.",
         "productNotFound": "Product not found.",
+        "selectProductPrompt": "Please select a product from the sidebar to view details.",
         "sections": {
             "description": "Description:",
             "specification": "Specification & Lab. Test:",

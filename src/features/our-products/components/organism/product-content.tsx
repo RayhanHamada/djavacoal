@@ -15,7 +15,7 @@ import {
     PackagingList,
 } from "../molecules";
 import { MediaGallery } from "../molecules/media-gallery";
-import { useProductsContext } from "@/features/our-products/hooks/use-products-context";
+import { useProductDetailAPI } from "@/features/public-api/hooks";
 import { cn } from "@/lib/utils";
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -35,28 +35,25 @@ interface PackagingOption {
 // Main Component
 // ─────────────────────────────────────────────────────────────────────────────
 
+interface ProductContentProps {
+    productId: number;
+}
+
 /**
  * Product content organism - displays product details.
- * Uses ProductsContext for data and renders loading/empty/detail states.
+ * Fetches product data based on the provided productId.
  */
-export function ProductContent() {
+export function ProductContent({ productId }: ProductContentProps) {
     const t = useTranslations("OurProducts");
-    const { selectedProduct, isLoadingProducts, isLoadingDetail, hasProducts } =
-        useProductsContext();
+    const { data, isLoading, error } = useProductDetailAPI(productId);
 
-    if (isLoadingProducts) {
-        return <LoadingState message={t("loading.products")} />;
-    }
+    const selectedProduct = data?.data;
 
-    if (!hasProducts) {
-        return <EmptyState message={t("noProducts")} />;
-    }
-
-    if (isLoadingDetail) {
+    if (isLoading) {
         return <LoadingState message={t("loading.details")} />;
     }
 
-    if (!selectedProduct) {
+    if (error || !selectedProduct) {
         return <EmptyState message={t("productNotFound")} />;
     }
 

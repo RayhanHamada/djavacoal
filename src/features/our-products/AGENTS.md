@@ -58,7 +58,8 @@ our-products/
 ### Route Structure
 
 ```
-/our-products                    → Dynamic product listing (uses API)
+/our-products                    → Product selection prompt (no product selected)
+/our-products/[productId]        → Product detail page (e.g., /our-products/123)
 /our-products/djavacoal-brand    → Static brand page (no API calls)
 ```
 
@@ -77,12 +78,13 @@ The feature uses a **layout-level sidebar** pattern:
 
 3. **Context Provider** (`hooks/use-products-context.tsx`)
    - Manages product list fetching
-   - Manages selected product state
-   - Syncs selection with URL query params
+   - Extracts current product ID from URL path
+   - Provides helper for generating product URLs
    - Detects brand page route via `usePathname()`
 
 4. **Pages**
-   - `/our-products/page.tsx` - Renders `ProductContent`
+   - `/our-products/page.tsx` - Renders `ProductSelectionPrompt`
+   - `/our-products/[productId]/page.tsx` - Renders `ProductContent` with productId prop
    - `/our-products/djavacoal-brand/page.tsx` - Renders `DjavacoalBrandPage`
 
 ## Features
@@ -147,25 +149,23 @@ const { data, isLoading } = rpc.publicProducts.getAll.useQuery({});
 const products = data?.data ?? [];
 ```
 
-### URL State Sync
+### URL-Based Product Selection
 
 ```typescript
-// Selected product syncs with URL query param
-// /our-products?product=123
+// Product ID is extracted from URL path
+// /our-products/123 -> productId = 123
 
-const searchParams = useSearchParams();
-const selectedProductId = searchParams.get("product");
+const pathname = usePathname();
+const currentProductId = extractProductIdFromPath(pathname);
 
-// On selection change
-const setSelectedProduct = useCallback((productId: string | null) => {
-  const params = new URLSearchParams(searchParams);
-  if (productId) {
-    params.set("product", productId);
-  } else {
-    params.delete("product");
-  }
-  router.push(`/our-products?${params.toString()}`);
-}, [searchParams, router]);
+// Helper to generate product URLs
+const getProductUrl = (productId: number) => `/our-products/${productId}`;
+
+// ProductContent receives productId as prop from route
+export function ProductContent({ productId }: { productId: number }) {
+  const { data, isLoading, error } = useProductDetailAPI(productId);
+  // ...
+}
 ```
 
 ### SEO Optimization
