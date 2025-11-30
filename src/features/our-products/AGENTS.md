@@ -4,69 +4,168 @@
 
 This feature provides the public-facing product catalog page where visitors can view all Djavacoal products. It displays products with images, descriptions, specifications, variants, and packaging options. Products are filtered to show only visible items (not hidden) and ordered according to admin-defined order.
 
+The feature uses a **layout-level sidebar** architecture with React Context for state sharing, and includes a **static Djavacoal Brand page** that doesn't require API calls.
+
 ## Architecture
 
 ### Directory Structure
 
 ```
 our-products/
-├── components/          # UI components for products page
-│   ├── atoms/          # Basic product elements
-│   ├── molecules/      # Composite components (product cards, filters)
-│   └── organisms/      # Complex sections (product grid, product detail)
-└── hooks/              # React hooks for product data
+├── components/
+│   ├── atoms/              # Basic UI building blocks
+│   │   ├── content-state.tsx      # LoadingState, EmptyState
+│   │   ├── divider.tsx            # Section divider
+│   │   ├── dropdown-item.tsx      # DropdownItemButton, DropdownItemLink
+│   │   ├── dropdown-trigger.tsx   # DropdownTrigger for mobile
+│   │   ├── section-heading.tsx    # Typography for section titles
+│   │   ├── sidebar-nav-item.tsx   # SidebarNavButton, SidebarNavLink
+│   │   ├── action-button.tsx
+│   │   ├── card-brand.tsx
+│   │   ├── filter-button.tsx
+│   │   ├── image-modal.tsx
+│   │   ├── packaging-card.tsx
+│   │   ├── product-button.tsx
+│   │   ├── shape-card.tsx
+│   │   ├── video-*.tsx            # Video-related atoms
+│   │   ├── youtube-modal.tsx
+│   │   └── index.ts
+│   ├── molecules/          # Composite components
+│   │   ├── our-products-layout-sidebar.tsx  # Sidebar using context
+│   │   ├── djavacoal-brand-page.tsx         # Static brand content
+│   │   ├── media-gallery.tsx
+│   │   ├── media-gallery-horizontal.tsx
+│   │   ├── product-hero-section.tsx
+│   │   ├── product-detail-table.tsx
+│   │   ├── shapes-list.tsx
+│   │   ├── packaging-list.tsx
+│   │   └── index.ts
+│   ├── organisms/          # Complex page sections
+│   │   ├── our-products-layout-client.tsx   # Layout with context provider
+│   │   ├── product-content.tsx              # Product detail display
+│   │   └── index.ts
+│   └── index.ts
+├── hooks/
+│   ├── use-products-context.tsx   # React Context for product state
+│   └── index.ts
+├── lib/
+│   ├── types.ts            # MediaItem, ProductImage, etc.
+│   ├── utils.ts            # getYouTubeThumbnailUrl, etc.
+│   └── index.ts
+└── AGENTS.md
 ```
+
+### Route Structure
+
+```
+/our-products                    → Dynamic product listing (uses API)
+/our-products/djavacoal-brand    → Static brand page (no API calls)
+```
+
+### Layout Architecture
+
+The feature uses a **layout-level sidebar** pattern:
+
+1. **Layout** (`src/app/(visitor)/our-products/layout.tsx`)
+   - Server component rendering hero section
+   - Wraps children with `OurProductsLayoutClient`
+
+2. **Layout Client** (`components/organism/our-products-layout-client.tsx`)
+   - Client component providing `ProductsProvider` context
+   - Renders sidebar in both mobile and desktop positions
+   - Children render in content area
+
+3. **Context Provider** (`hooks/use-products-context.tsx`)
+   - Manages product list fetching
+   - Manages selected product state
+   - Syncs selection with URL query params
+   - Detects brand page route via `usePathname()`
+
+4. **Pages**
+   - `/our-products/page.tsx` - Renders `ProductContent`
+   - `/our-products/djavacoal-brand/page.tsx` - Renders `DjavacoalBrandPage`
 
 ## Features
 
 ### Core Functionality
 
 1. **Product Listing**
-   - Display all visible products
-   - Grid or list view
-   - Product images (first media)
-   - Product names and brief descriptions
-   - Bilingual content (English/Arabic)
+   - Display all visible products in sidebar navigation
+   - Desktop: vertical navigation list
+   - Mobile: dropdown menu with current selection
+   - Product names with bilingual support (EN/AR)
 
 2. **Product Detail**
-   - Full product information
+   - Full product information display
    - Image/video gallery with lightbox
-   - Detailed specifications
+   - Detailed specifications table
    - Product variants with sizes
    - Packaging options
    - MOQ and production capacity
    - Inquiry/quote button
 
-3. **Product Filtering** (Future)
-   - Filter by category
-   - Search by name
-   - Sort options
+3. **Djavacoal Brand Page**
+   - Static content (no API calls)
+   - Brand information and values
+   - Dedicated route: `/our-products/djavacoal-brand`
 
 4. **Product Media**
    - Multiple images
    - YouTube video embeds
    - Custom video thumbnails
-   - Media carousel
+   - Media gallery with modal view
 
 ## Technical Implementation
+
+### Data Flow
+
+```
+Layout (Server)
+    ↓
+OurProductsLayoutClient
+    ↓
+ProductsProvider (Context)
+    ├── products: PublicProduct[]
+    ├── selectedProduct: PublicProduct | null
+    ├── setSelectedProduct: (id) => void
+    ├── isLoading: boolean
+    └── isBrandPage: boolean
+    ↓
+├── OurProductsLayoutSidebar (reads context)
+└── Page Content
+    ├── ProductContent (dynamic, reads context)
+    └── DjavacoalBrandPage (static, no context needed)
+```
 
 ### Data Fetching
 
 ```typescript
-// List all visible products
-const { data } = rpc.dashboardProduct.listProducts.useQuery({
-  page: 1,
-  limit: 100, // Get all visible products
-  name_search: ""
-});
+// In ProductsProvider context
+const { data, isLoading } = rpc.publicProducts.getAll.useQuery({});
 
-// Filter visible products client-side (or add is_hidden filter to RPC)
-const visibleProducts = data?.products.filter(p => !p.is_hidden);
+// Products are automatically filtered by visibility server-side
+const products = data?.data ?? [];
+```
 
-// Get single product detail
-const { data: product } = rpc.dashboardProduct.getProductById.useQuery({
-  id: productId
-});
+### URL State Sync
+
+```typescript
+// Selected product syncs with URL query param
+// /our-products?product=123
+
+const searchParams = useSearchParams();
+const selectedProductId = searchParams.get("product");
+
+// On selection change
+const setSelectedProduct = useCallback((productId: string | null) => {
+  const params = new URLSearchParams(searchParams);
+  if (productId) {
+    params.set("product", productId);
+  } else {
+    params.delete("product");
+  }
+  router.push(`/our-products?${params.toString()}`);
+}, [searchParams, router]);
 ```
 
 ### SEO Optimization
@@ -78,19 +177,6 @@ export const metadata: Metadata = {
   description: "Explore our range of high-quality Indonesian coal products",
   keywords: ["coal products", "Indonesian coal", "coal types"],
 };
-
-// Individual product page
-export async function generateMetadata({ params }): Promise<Metadata> {
-  const product = await getProductById(params.id);
-  
-  return {
-    title: `${product.en_name} - Djavacoal`,
-    description: product.en_description,
-    openGraph: {
-      images: [product.firstMediaUrl],
-    },
-  };
-}
 ```
 
 ### Bilingual Support
@@ -101,13 +187,12 @@ import { useAppLocale } from "@/hooks/use-app-locale";
 
 function ProductCard({ product }) {
   const locale = useAppLocale();
-  const t = useTranslations("products");
+  const t = useTranslations("our_products");
   
   return (
     <Card>
       <h3>{locale === "en" ? product.en_name : product.ar_name}</h3>
       <p>{locale === "en" ? product.en_description : product.ar_description}</p>
-      <Button>{t("viewDetails")}</Button>
     </Card>
   );
 }
@@ -115,137 +200,259 @@ function ProductCard({ product }) {
 
 ## Components
 
-### ProductGrid
-- Responsive grid (2-4 columns)
-- Product cards
-- Loading skeletons
-- Empty state
-- Pagination (if needed)
+### Atoms
 
-### ProductCard
-- Product image
-- Product name
-- Brief description
-- "View Details" button
-- Hover effects
+#### `sidebar-nav-item.tsx`
+Navigation buttons/links for desktop sidebar:
+- **`SidebarNavButton`** - Button for product selection with active state
+- **`SidebarNavLink`** - Next.js Link for static routes (Djavacoal Brand)
 
-### ProductDetail
-- Full-width hero with media gallery
-- Product information section
-- Specifications display
-- Variants with sizes
-- Packaging options display
-- MOQ and production capacity
-- Contact/inquiry CTA
+#### `dropdown-item.tsx`
+Mobile dropdown menu items:
+- **`DropdownItemButton`** - Button for mobile product selection
+- **`DropdownItemLink`** - Link for static routes in mobile dropdown
 
-### MediaGallery (`components/molecules/media-gallery.tsx`)
+#### `dropdown-trigger.tsx`
+Mobile dropdown trigger showing current selection.
+
+#### `content-state.tsx`
+- **`LoadingState`** - Skeleton with spinner during data fetch
+- **`EmptyState`** - Prompt to select a product
+
+#### `divider.tsx`
+Horizontal divider for section separation in product content.
+
+#### `section-heading.tsx`
+Typography component for section titles (specs, variants, etc.).
+
+### Molecules
+
+#### `our-products-layout-sidebar.tsx`
+Sidebar consuming context with sub-components:
+- **`MobileDropdown`** - Collapsed dropdown (visible on mobile)
+- **`DropdownMenu`** - Shared menu content (products + brand link)
+- **`DesktopNav`** - Vertical navigation (visible on desktop)
+
+#### `djavacoal-brand-page.tsx`
+Static brand content page (no API dependency).
+
+#### `media-gallery.tsx`
 - Handles both image and YouTube video media
 - Responsive stacked layout
 - Click to open modal for full view
-- Image media: displays image, opens ImageModal on click
-- YouTube media: displays thumbnail with play button, opens YouTubeModal on click
 - Custom thumbnail support for YouTube videos
 - Djavacoal logo watermark on video thumbnails
-- Hover effects and transitions
 
-### ImageModal (`components/atoms/image-modal.tsx`)
+#### `product-detail-table.tsx`
+Detailed specifications display table.
+
+#### `shapes-list.tsx`
+Product shapes/forms display.
+
+#### `packaging-list.tsx`
+Packaging options display with cards.
+
+### Organisms
+
+#### `our-products-layout-client.tsx`
+Layout wrapper providing context:
+```tsx
+export function OurProductsLayoutClient({ children }: Props) {
+  return (
+    <ProductsProvider>
+      <div className="flex flex-col md:flex-row">
+        {/* Mobile sidebar at top */}
+        <div className="md:hidden">
+          <OurProductsLayoutSidebar />
+        </div>
+
+        {/* Desktop sidebar on left */}
+        <aside className="hidden md:block md:w-52 lg:w-64">
+          <OurProductsLayoutSidebar />
+        </aside>
+
+        {/* Content area */}
+        <main className="flex-1">{children}</main>
+      </div>
+    </ProductsProvider>
+  );
+}
+```
+
+#### `product-content.tsx`
+Product detail display using atoms:
+```tsx
+export function ProductContent() {
+  const { selectedProduct, isLoading } = useProductsContext();
+
+  if (isLoading) return <LoadingState />;
+  if (!selectedProduct) return <EmptyState />;
+
+  return (
+    <>
+      <MediaGallery medias={selectedProduct.medias} />
+      <Divider />
+      <SectionHeading>{t("detailed_specs")}</SectionHeading>
+      <ProductDetailTable product={selectedProduct} />
+      {/* ... more sections */}
+    </>
+  );
+}
+```
+
+### Modal Components
+
+#### `image-modal.tsx`
 - Full-screen image viewer
-- Responsive sizing (max 90vh height)
 - Click outside or X button to close
-- Backdrop blur effect
+- Responsive sizing (max 90vh height)
 
-### YouTubeModal (`components/atoms/youtube-modal.tsx`)
+#### `youtube-modal.tsx`
 - Full-screen YouTube video player
-- Converts YouTube URLs to embed format
 - Autoplay enabled
 - Responsive iframe with 16:9 aspect ratio
-- Click outside or X button to close
-- Backdrop blur effect
 
-### SpecificationsDisplay
-- Grid of specification images
-- Lightbox viewer
-- Captions (optional)
+## Hooks
 
-### VariantsDisplay
-- Variant cards with images
-- Size chips/badges
-- Variant names
+### `use-products-context.tsx`
 
-### PackagingOptionsDisplay
-- Packaging option cards
-- Images and descriptions
-- Bilingual content
+React Context for product state management:
+
+```tsx
+// Constants
+export const DJAVACOAL_BRANDS_PATH = "/our-products/djavacoal-brand";
+
+// Context shape
+interface ProductsContextType {
+  products: PublicProduct[];
+  selectedProduct: PublicProduct | null;
+  setSelectedProduct: (productId: string | null) => void;
+  isLoading: boolean;
+  isBrandPage: boolean;
+}
+
+// Provider
+export function ProductsProvider({ children }: Props) {
+  const pathname = usePathname();
+  const isBrandPage = pathname === DJAVACOAL_BRANDS_PATH;
+  
+  // Fetch products via RPC
+  const { data, isLoading } = rpc.publicProducts.getAll.useQuery({});
+  
+  // Selection from URL or default to first
+  const selectedProductId = searchParams.get("product");
+  const selectedProduct = useMemo(() => {
+    if (isBrandPage) return null;
+    if (selectedProductId) return products.find(p => p.id === selectedProductId);
+    return products[0] ?? null;
+  }, [selectedProductId, products, isBrandPage]);
+
+  return (
+    <ProductsContext.Provider value={{
+      products,
+      selectedProduct,
+      setSelectedProduct,
+      isLoading,
+      isBrandPage,
+    }}>
+      {children}
+    </ProductsContext.Provider>
+  );
+}
+
+// Hook
+export function useProductsContext() {
+  const context = useContext(ProductsContext);
+  if (!context) {
+    throw new Error("useProductsContext must be used within ProductsProvider");
+  }
+  return context;
+}
+```
 
 ## Integration Points
 
-### Product Routes
-- `/app/(visitor)/our-products/page.tsx` - Product listing
-- `/app/(visitor)/our-products/[id]/page.tsx` - Product detail
+### Routes
+- `/app/(visitor)/our-products/layout.tsx` - Layout with hero + client wrapper
+- `/app/(visitor)/our-products/page.tsx` - Main products page
+- `/app/(visitor)/our-products/djavacoal-brand/page.tsx` - Static brand page
 
 ### Data Sources
-- Products: `dashboard-product` RPC
+- Products: `publicProducts.getAll` RPC (public API)
 - Images: R2 public URLs
 - Videos: YouTube embeds
 
 ### Navigation
 - Header: Link to products page
 - Footer: Quick link to products
-- Homepage: Featured products link here
+- Homepage: Featured products link
 - Uses `VisitorLayout` component
 
 ## Dependencies
 
 ### External Packages
-- `@mantine/core` - UI components
+- `@mantine/core` - UI components (Menu, Button, etc.)
 - `framer-motion` - Animations
 - `react-photo-view` - Image lightbox
 - `next-intl` - Internationalization
 - `embla-carousel-react` - Media carousel
 
 ### Internal Dependencies
-- `@/features/dashboard-product` - Product data
+- `@/features/public-api` - Public product data via RPC
 - `@/components/layouts/visitor-layout` - Layout wrapper
 - `@/hooks/use-app-locale` - Current locale
+- `@/lib/rpc` - RPC client for data fetching
 
 ## Usage Examples
 
-### Product Listing Page
+### Layout Structure
 
-```typescript
-export default function OurProductsPage() {
-  const { data, isLoading } = rpc.dashboardProduct.listProducts.useQuery({
-    page: 1,
-    limit: 100
-  });
-  
-  const visibleProducts = data?.products.filter(p => !p.is_hidden);
-  
+```tsx
+// src/app/(visitor)/our-products/layout.tsx
+export default function OurProductsLayout({ children }: Props) {
   return (
-    <Container>
-      <h1>Our Products</h1>
-      <ProductGrid products={visibleProducts} loading={isLoading} />
-    </Container>
+    <>
+      {/* Server-rendered hero */}
+      <ProductHeroSection />
+      
+      {/* Client wrapper with context */}
+      <OurProductsLayoutClient>{children}</OurProductsLayoutClient>
+    </>
   );
 }
 ```
 
-### Product Detail Page
+### Products Page
 
-```typescript
-export default function ProductDetailPage({ params }: { params: { id: string } }) {
-  const { data: product, isLoading } = rpc.dashboardProduct.getProductById.useQuery({
-    id: Number(params.id)
-  });
+```tsx
+// src/app/(visitor)/our-products/page.tsx
+export default function OurProductsPage() {
+  return <ProductContent />;
+}
+```
+
+### Static Brand Page
+
+```tsx
+// src/app/(visitor)/our-products/djavacoal-brand/page.tsx
+export default function DjavacoalBrandRoute() {
+  return <DjavacoalBrandPage />;
+}
+```
+
+### Using Context in Components
+
+```tsx
+function MyComponent() {
+  const {
+    products,           // All visible products
+    selectedProduct,    // Currently selected product or null
+    setSelectedProduct, // Function to change selection (updates URL)
+    isLoading,          // Data loading state
+    isBrandPage,        // Whether on /our-products/djavacoal-brand
+  } = useProductsContext();
   
-  if (isLoading) return <Skeleton />;
-  if (!product) return <NotFound />;
-  
-  return (
-    <Container>
-      <ProductDetail product={product} />
-    </Container>
-  );
+  // Use context values...
 }
 ```
 
@@ -337,10 +544,14 @@ function getVideoId(youtubeUrl: string): string {
 ## Best Practices for AI Agents
 
 ### When Adding Features
-1. Respect `is_hidden` flag (don't show hidden products)
-2. Maintain `order_index` for display order
-3. Support both image and video media
-4. Handle missing media gracefully
+1. Use the context provider for product state
+2. Add new atoms for reusable UI elements
+3. Keep molecules focused on a single responsibility
+4. Use the existing constants (e.g., `DJAVACOAL_BRANDS_PATH`)
+5. Respect `is_hidden` flag (don't show hidden products)
+6. Maintain `order_index` for display order
+7. Support both image and video media
+8. Handle missing media gracefully
 5. Maintain bilingual content
 
 ### When Modifying
@@ -349,13 +560,16 @@ function getVideoId(youtubeUrl: string): string {
 3. Test with different locale settings
 4. Ensure responsive design
 5. Optimize image loading
+6. Ensure context is used within `ProductsProvider`
 
 ### When Debugging
-1. Check `is_hidden` filter
-2. Verify media URLs are correct
-3. Test with empty product list
-4. Check bilingual content display
-5. Review media carousel functionality
+1. Check context is available (wrap with `ProductsProvider`)
+2. Verify URL params sync (`?product=123`)
+3. Check `isBrandPage` detection for route-specific behavior
+4. Verify media URLs are correct
+5. Test with empty product list
+6. Check bilingual content display
+7. Test mobile dropdown vs desktop nav
 
 ## Accessibility
 

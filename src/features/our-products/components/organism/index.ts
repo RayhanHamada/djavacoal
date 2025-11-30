@@ -3,4 +3,5 @@
  * Following Atomic Design principles
  */
 
-export * from "./our-products-organism";
+export * from "./our-products-layout-client";
+export * from "./product-content";
