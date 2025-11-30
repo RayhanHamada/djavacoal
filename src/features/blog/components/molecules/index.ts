@@ -9,8 +9,11 @@ export { BlogGrid } from "./blog-grid";
 export { BlogHero } from "./blog-hero";
 export { BlogDetailHeader } from "./blog-detail-header";
 
-// Navigation components
+// Client-side pagination (state-based)
 export { Pagination } from "./pagination";
+
+// Server-side pagination (URL-based, SSR)
+export { PaginationLinks } from "./pagination-links";
 
 // Related content components
 export { RelatedArticles } from "./related-articles";

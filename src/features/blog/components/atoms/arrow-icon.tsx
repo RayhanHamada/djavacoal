@@ -14,7 +14,7 @@ export function ArrowIcon({ className, direction = "right" }: ArrowIconProps) {
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
             className={cn(
-                "flex-shrink-0",
+                "shrink-0",
                 direction === "left" && "rotate-180",
                 className
             )}

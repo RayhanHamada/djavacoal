@@ -1,4 +1,4 @@
-import { and, isNotNull, lte } from "drizzle-orm";
+import { and, eq, isNotNull, lte } from "drizzle-orm";
 import { Locale } from "next-intl";
 import z from "zod";
 
@@ -877,6 +877,7 @@ export const router = {
             const db = getDB(env.DJAVACOAL_DB);
 
             const allNewsConditions = and(
+                eq(news[NEWS_COLUMNS.STATUS], NEWS_STATUS.PUBLISHED),
                 isNotNull(news[NEWS_COLUMNS.PUBLISHED_AT]),
                 lte(news[NEWS_COLUMNS.PUBLISHED_AT], new Date())
             );
