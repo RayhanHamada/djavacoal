@@ -56,7 +56,7 @@ export function NewsListSection({ newsItems }: NewsListSectionProps) {
                     currentSlide={currentSlide}
                     onSlideChange={setCurrentSlide}
                     itemsPerSlide={VISIBLE_ITEMS.desktop}
-                    className="hidden xl:block"
+                    className="hidden min-[1100px]:block"
                 />
 
                 {/* Tablet */}
@@ -65,7 +65,7 @@ export function NewsListSection({ newsItems }: NewsListSectionProps) {
                     currentSlide={currentSlide}
                     onSlideChange={setCurrentSlide}
                     itemsPerSlide={VISIBLE_ITEMS.tablet}
-                    className="hidden md:block xl:hidden"
+                    className="hidden min-[1100px]:hidden! md:block"
                 />
 
                 {/* Mobile */}
