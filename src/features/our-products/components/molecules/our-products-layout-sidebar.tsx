@@ -45,6 +45,7 @@ export function OurProductsLayoutSidebar() {
     const selectedProduct = products.find((p) => p.id === currentProductId);
 
     const toggleDropdown = () => setIsDropdownOpen((prev) => !prev);
+    const closeDropdown = () => setIsDropdownOpen(false);
 
     if (isLoadingProducts) {
         return null;
@@ -65,6 +66,7 @@ export function OurProductsLayoutSidebar() {
                 filterIconAlt={t("filterIconAlt")}
                 brandLabel={t("djavacoalBrand")}
                 onToggle={toggleDropdown}
+                onClose={closeDropdown}
                 getProductUrl={getProductUrl}
             />
 
@@ -92,6 +94,7 @@ interface MobileDropdownProps {
     filterIconAlt: string;
     brandLabel: string;
     onToggle: () => void;
+    onClose: () => void;
     getProductUrl: (productId: number) => string;
 }
 
@@ -104,6 +107,7 @@ function MobileDropdown({
     filterIconAlt,
     brandLabel,
     onToggle,
+    onClose,
     getProductUrl,
 }: MobileDropdownProps) {
     return (
@@ -131,6 +135,7 @@ function MobileDropdown({
                         isBrandPage={isBrandPage}
                         brandLabel={brandLabel}
                         getProductUrl={getProductUrl}
+                        onItemClick={onClose}
                     />
                 )}
             </div>
@@ -148,6 +153,7 @@ interface DropdownMenuProps {
     isBrandPage: boolean;
     brandLabel: string;
     getProductUrl: (productId: number) => string;
+    onItemClick: () => void;
 }
 
 function DropdownMenu({
@@ -156,6 +162,7 @@ function DropdownMenu({
     isBrandPage,
     brandLabel,
     getProductUrl,
+    onItemClick,
 }: DropdownMenuProps) {
     return (
         <div className="absolute left-0 mt-1 w-full overflow-hidden rounded-sm border border-[#3a3a3a] bg-[#292D32]">
@@ -165,12 +172,14 @@ function DropdownMenu({
                     href={getProductUrl(product.id)}
                     label={product.name}
                     isActive={currentProductId === product.id && !isBrandPage}
+                    onClick={onItemClick}
                 />
             ))}
             <DropdownItemLink
                 href={DJAVACOAL_BRANDS_PATH}
                 label={brandLabel}
                 isActive={isBrandPage}
+                onClick={onItemClick}
             />
         </div>
     );
