@@ -1,50 +1,40 @@
 /**
- * Pagination - Client-side pagination control component
- * Combines PaginationButton and PaginationArrow atoms for blog post navigation
+ * PaginationLinks - Server-side pagination component using Next.js Links
+ * Enables SSR-friendly pagination without client-side state
  */
-"use client";
-
-import { generatePageNumbers } from "../../lib/utils";
-import { PaginationArrow, PaginationButton } from "../atoms";
+import {
+    DEFAULT_BLOG_BASE_URL,
+    generatePageNumbers,
+    getPaginationUrl,
+} from "../../lib/utils";
+import { PaginationLinkArrow, PaginationLinkButton } from "../atoms";
 import { cn } from "@/lib/utils";
 
-interface PaginationProps {
+interface PaginationLinksProps {
     /** Current active page number */
     currentPage: number;
     /** Total number of pages */
     totalPages: number;
-    /** Callback function when page changes */
-    onPageChange: (page: number) => void;
+    /** Base URL for pagination links */
+    baseUrl?: string;
     /** Additional CSS classes */
     className?: string;
 }
 
 /**
- * Pagination - Complete client-side pagination control component
- * Combines PaginationButton and PaginationArrow atoms for state-based navigation
+ * PaginationLinks - Complete SSR pagination control component
+ * Combines PaginationLinkButton and PaginationLinkArrow atoms for URL-based navigation
  */
-export function Pagination({
+export function PaginationLinks({
     currentPage,
     totalPages,
-    onPageChange,
+    baseUrl = DEFAULT_BLOG_BASE_URL,
     className,
-}: PaginationProps) {
+}: PaginationLinksProps) {
     const pages = generatePageNumbers(totalPages);
 
     const isFirstPage = currentPage === 1;
     const isLastPage = currentPage === totalPages;
-
-    const handlePrev = () => {
-        if (!isFirstPage) {
-            onPageChange(currentPage - 1);
-        }
-    };
-
-    const handleNext = () => {
-        if (!isLastPage) {
-            onPageChange(currentPage + 1);
-        }
-    };
 
     return (
         <nav
@@ -54,24 +44,24 @@ export function Pagination({
             )}
             aria-label="Blog pagination"
         >
-            <PaginationArrow
+            <PaginationLinkArrow
                 direction="prev"
-                onClick={handlePrev}
+                href={getPaginationUrl(baseUrl, currentPage - 1)}
                 disabled={isFirstPage}
             />
             <div className="flex items-center gap-5">
                 {pages.map((page) => (
-                    <PaginationButton
+                    <PaginationLinkButton
                         key={page}
                         page={page}
                         isActive={currentPage === page}
-                        onClick={() => onPageChange(page)}
+                        href={getPaginationUrl(baseUrl, page)}
                     />
                 ))}
             </div>
-            <PaginationArrow
+            <PaginationLinkArrow
                 direction="next"
-                onClick={handleNext}
+                href={getPaginationUrl(baseUrl, currentPage + 1)}
                 disabled={isLastPage}
             />
         </nav>

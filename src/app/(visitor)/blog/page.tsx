@@ -1,35 +1,45 @@
-"use client";
+import { headers } from "next/headers";
 
-import { parseAsInteger, useQueryState } from "nuqs";
+import { serverPublicAPIClient } from "@/adapters/public-api/server";
+import { BlogListSectionSSR } from "@/features/blog/components";
 
-import { BlogListSection } from "@/features/blog/components";
-import { useNewsListAPI } from "@/features/public-api/hooks";
+/** Number of posts to display per page */
+const POSTS_PER_PAGE = 9;
 
-export default function BlogPage() {
-    const [currentPage, setCurrentPage] = useQueryState(
-        "page",
-        parseAsInteger.withDefault(1)
+type Props = {
+    searchParams: Promise<{
+        page?: string;
+    }>;
+};
+
+/**
+ * Parse page number from search params
+ * @param pageParam - Raw page parameter from URL
+ * @returns Validated page number (minimum 1)
+ */
+function parsePageNumber(pageParam?: string) {
+    const parsed = parseInt(pageParam || "1", 10);
+    return Math.max(1, isNaN(parsed) ? 1 : parsed);
+}
+
+export default async function BlogPage({ searchParams }: Props) {
+    const { page: pageParam } = await searchParams;
+    const currentPage = parsePageNumber(pageParam);
+
+    const { data: newsResponseData, error } = await serverPublicAPIClient.GET(
+        "/news",
+        {
+            params: {
+                query: {
+                    page: currentPage,
+                    limit: POSTS_PER_PAGE,
+                },
+            },
+            headers: await headers(),
+        }
     );
-    const postsPerPage = 9;
 
-    const {
-        data: newsResponse,
-        isLoading,
-        error,
-    } = useNewsListAPI({
-        page: currentPage,
-        limit: postsPerPage,
-    });
-
-    if (isLoading) {
-        return (
-            <div className="flex min-h-screen items-center justify-center bg-[#161616]">
-                <div className="text-white">Loading news articles...</div>
-            </div>
-        );
-    }
-
-    if (error) {
+    if (error || !newsResponseData?.data) {
         return (
             <div className="flex min-h-screen items-center justify-center bg-[#161616]">
                 <div className="text-red-500">
@@ -39,22 +49,21 @@ export default function BlogPage() {
         );
     }
 
-    const newsData = newsResponse?.data.news;
-    const rawPosts = newsData?.data || [];
-    const totalPages = newsData?.total_pages || 1;
+    const { news: newsData } = newsResponseData.data;
+    const rawPosts = newsData.data || [];
+    const totalPages = newsData.total_pages || 1;
 
-    // Convert date strings to Date objects
+    // Transform API response to BlogPost type with Date objects
     const posts = rawPosts.map((post) => ({
         ...post,
         published_at: new Date(post.published_at),
     }));
 
     return (
-        <BlogListSection
+        <BlogListSectionSSR
             posts={posts}
             currentPage={currentPage}
             totalPages={totalPages}
-            onPageChange={setCurrentPage}
         />
     );
 }

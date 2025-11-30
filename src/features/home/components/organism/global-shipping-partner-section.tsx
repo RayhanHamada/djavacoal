@@ -67,7 +67,7 @@ export function GlobalShippingPartnerSection() {
     );
 
     return (
-        <section className="relative w-full overflow-hidden bg-[#151515] py-10 lg:py-16">
+        <section className="bg-primary relative w-full overflow-hidden py-10 lg:py-16">
             {/* Header */}
             <div className="mb-8 flex items-center gap-3 px-5 md:px-10 lg:px-60">
                 <div className="h-0.5 w-[60px] bg-[#EFA12D]" />

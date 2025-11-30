@@ -33,3 +33,8 @@ export interface BlogDetail extends BlogPost {
     meta_title?: string;
     meta_description?: string;
 }
+
+/**
+ * Pagination direction type for arrow buttons
+ */
+export type PaginationDirection = "prev" | "next";
