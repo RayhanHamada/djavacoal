@@ -4,22 +4,6 @@ import Link from "next/link";
 
 import { ArrowRight } from "lucide-react";
 
-/**
- * Split title into two halves for highlighting
- * First half in white, second half in accent color
- */
-function splitTitleForHighlight(title: string): {
-    firstHalf: string;
-    secondHalf: string;
-} {
-    const words = title.split(" ");
-    const midpoint = Math.ceil(words.length / 2);
-    return {
-        firstHalf: words.slice(0, midpoint).join(" "),
-        secondHalf: words.slice(midpoint).join(" "),
-    };
-}
-
 interface NewsCardContentProps {
     /** Article slug for link */
     slug: string;
@@ -43,13 +27,11 @@ export function NewsCardContent({
         year: "numeric",
     });
 
-    const { firstHalf, secondHalf } = splitTitleForHighlight(title);
-
     return (
         <div className="flex flex-col gap-2 bg-[#0D0D0D] pt-4 pb-2">
             <NewsCardDate date={formattedDate} />
             <div className="flex justify-between">
-                <NewsCardTitle firstHalf={firstHalf} secondHalf={secondHalf} />
+                <NewsCardTitle title={title} />
                 <NewsCardArrow slug={slug} title={title} />
             </div>
         </div>
@@ -73,25 +55,17 @@ function NewsCardDate({ date }: NewsCardDateProps) {
 }
 
 interface NewsCardTitleProps {
-    /** First half of title (white) */
-    firstHalf: string;
-    /** Second half of title (highlighted) */
-    secondHalf: string;
+    /** Article title */
+    title: string;
 }
 
 /**
- * NewsCardTitle - Title with half highlighted in accent color
+ * NewsCardTitle - Title display for news card
  */
-function NewsCardTitle({ firstHalf, secondHalf }: NewsCardTitleProps) {
+function NewsCardTitle({ title }: NewsCardTitleProps) {
     return (
         <h4 className="font-['Josefin_Sans'] text-[16px] leading-tight font-bold text-white uppercase md:text-[18px]">
-            {firstHalf}
-            {secondHalf && (
-                <>
-                    {" "}
-                    <span className="text-[#EFA12D]">{secondHalf}</span>
-                </>
-            )}
+            {title}
         </h4>
     );
 }
