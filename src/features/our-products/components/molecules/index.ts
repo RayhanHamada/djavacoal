@@ -8,7 +8,7 @@ export { MediaGallery } from "./media-gallery";
 export { MediaGalleryHorizontal } from "./media-gallery-horizontal";
 
 // Product display components
-export { default as OurProductsSidebar } from "./our-product-sidebar";
+export { OurProductsLayoutSidebar } from "./our-products-layout-sidebar";
 export { ProductHeroSection } from "./product-hero-section";
 export { ProductCategoryDropdown } from "./product-category-dropdown";
 export { ProductDetailTable } from "./product-detail-table";
