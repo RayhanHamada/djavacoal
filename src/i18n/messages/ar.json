@@ -657,6 +657,7 @@
         },
         "noProducts": "لم يتم العثور على منتجات.",
         "productNotFound": "المنتج غير موجود.",
+        "selectProductPrompt": "يرجى اختيار منتج من الشريط الجانبي لعرض التفاصيل.",
         "sections": {
             "description": "الوصف:",
             "specification": "المواصفات والاختبار المعملي:",

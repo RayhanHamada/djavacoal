@@ -43,6 +43,7 @@ interface DropdownItemLinkProps {
     href: string;
     label: string;
     isActive: boolean;
+    onClick?: () => void;
 }
 
 /**
@@ -53,10 +54,12 @@ export function DropdownItemLink({
     href,
     label,
     isActive,
+    onClick,
 }: DropdownItemLinkProps) {
     return (
         <Link
             href={href}
+            onClick={onClick}
             className={cn(
                 dropdownItemBaseStyles,
                 isActive ? dropdownItemActiveStyles : dropdownItemInactiveStyles

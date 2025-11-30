@@ -6,13 +6,7 @@ import Image from "next/image";
 
 import { useTranslations } from "next-intl";
 
-import {
-    DropdownItemButton,
-    DropdownItemLink,
-    DropdownTrigger,
-    SidebarNavButton,
-    SidebarNavLink,
-} from "../atoms";
+import { DropdownItemLink, DropdownTrigger, SidebarNavLink } from "../atoms";
 import {
     useProductsContext,
     DJAVACOAL_BRANDS_PATH,
@@ -42,20 +36,16 @@ export function OurProductsLayoutSidebar() {
 
     const {
         products,
-        selectedProductId,
-        handleProductSelect,
+        currentProductId,
         isBrandPage,
         isLoadingProducts,
+        getProductUrl,
     } = useProductsContext();
 
-    const selectedProduct = products.find((p) => p.id === selectedProductId);
-
-    const handleProductClick = (productId: number) => {
-        handleProductSelect(productId);
-        setIsDropdownOpen(false);
-    };
+    const selectedProduct = products.find((p) => p.id === currentProductId);
 
     const toggleDropdown = () => setIsDropdownOpen((prev) => !prev);
+    const closeDropdown = () => setIsDropdownOpen(false);
 
     if (isLoadingProducts) {
         return null;
@@ -69,22 +59,23 @@ export function OurProductsLayoutSidebar() {
         <>
             <MobileDropdown
                 products={products}
-                selectedProductId={selectedProductId}
+                currentProductId={currentProductId}
                 isBrandPage={isBrandPage}
                 isOpen={isDropdownOpen}
                 displayText={displayText}
                 filterIconAlt={t("filterIconAlt")}
                 brandLabel={t("djavacoalBrand")}
                 onToggle={toggleDropdown}
-                onProductSelect={handleProductClick}
+                onClose={closeDropdown}
+                getProductUrl={getProductUrl}
             />
 
             <DesktopNav
                 products={products}
-                selectedProductId={selectedProductId}
+                currentProductId={currentProductId}
                 isBrandPage={isBrandPage}
                 brandLabel={t("djavacoalBrand")}
-                onProductSelect={handleProductClick}
+                getProductUrl={getProductUrl}
             />
         </>
     );
@@ -96,26 +87,28 @@ export function OurProductsLayoutSidebar() {
 
 interface MobileDropdownProps {
     products: Product[];
-    selectedProductId: number | undefined;
+    currentProductId: number | undefined;
     isBrandPage: boolean;
     isOpen: boolean;
     displayText: string;
     filterIconAlt: string;
     brandLabel: string;
     onToggle: () => void;
-    onProductSelect: (id: number) => void;
+    onClose: () => void;
+    getProductUrl: (productId: number) => string;
 }
 
 function MobileDropdown({
     products,
-    selectedProductId,
+    currentProductId,
     isBrandPage,
     isOpen,
     displayText,
     filterIconAlt,
     brandLabel,
     onToggle,
-    onProductSelect,
+    onClose,
+    getProductUrl,
 }: MobileDropdownProps) {
     return (
         <div className="bg-primary flex items-center gap-3 border-b border-[#2a2a2a] px-4 py-3 lg:hidden">
@@ -138,10 +131,11 @@ function MobileDropdown({
                 {isOpen && (
                     <DropdownMenu
                         products={products}
-                        selectedProductId={selectedProductId}
+                        currentProductId={currentProductId}
                         isBrandPage={isBrandPage}
                         brandLabel={brandLabel}
-                        onProductSelect={onProductSelect}
+                        getProductUrl={getProductUrl}
+                        onItemClick={onClose}
                     />
                 )}
             </div>
@@ -155,33 +149,37 @@ function MobileDropdown({
 
 interface DropdownMenuProps {
     products: Product[];
-    selectedProductId: number | undefined;
+    currentProductId: number | undefined;
     isBrandPage: boolean;
     brandLabel: string;
-    onProductSelect: (id: number) => void;
+    getProductUrl: (productId: number) => string;
+    onItemClick: () => void;
 }
 
 function DropdownMenu({
     products,
-    selectedProductId,
+    currentProductId,
     isBrandPage,
     brandLabel,
-    onProductSelect,
+    getProductUrl,
+    onItemClick,
 }: DropdownMenuProps) {
     return (
         <div className="absolute left-0 mt-1 w-full overflow-hidden rounded-sm border border-[#3a3a3a] bg-[#292D32]">
             {products.map((product) => (
-                <DropdownItemButton
+                <DropdownItemLink
                     key={product.id}
+                    href={getProductUrl(product.id)}
                     label={product.name}
-                    isActive={selectedProductId === product.id && !isBrandPage}
-                    onClick={() => onProductSelect(product.id)}
+                    isActive={currentProductId === product.id && !isBrandPage}
+                    onClick={onItemClick}
                 />
             ))}
             <DropdownItemLink
                 href={DJAVACOAL_BRANDS_PATH}
                 label={brandLabel}
                 isActive={isBrandPage}
+                onClick={onItemClick}
             />
         </div>
     );
@@ -193,31 +191,31 @@ function DropdownMenu({
 
 interface DesktopNavProps {
     products: Product[];
-    selectedProductId: number | undefined;
+    currentProductId: number | undefined;
     isBrandPage: boolean;
     brandLabel: string;
-    onProductSelect: (id: number) => void;
+    getProductUrl: (productId: number) => string;
 }
 
 function DesktopNav({
     products,
-    selectedProductId,
+    currentProductId,
     isBrandPage,
     brandLabel,
-    onProductSelect,
+    getProductUrl,
 }: DesktopNavProps) {
     return (
         <nav className="hidden h-fit w-[260px] border-y border-[#2a2a2a] bg-[#222222] lg:block">
             <div className="scrollbar-none overflow-y-auto">
                 <div className="flex flex-col space-y-[3px]">
                     {products.map((product) => (
-                        <SidebarNavButton
+                        <SidebarNavLink
                             key={product.id}
+                            href={getProductUrl(product.id)}
                             label={product.name}
                             isActive={
-                                selectedProductId === product.id && !isBrandPage
+                                currentProductId === product.id && !isBrandPage
                             }
-                            onClick={() => onProductSelect(product.id)}
                         />
                     ))}
                     <SidebarNavLink

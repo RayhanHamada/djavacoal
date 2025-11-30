@@ -27,9 +27,9 @@ export function useMenuItems() {
 
     const productSubmenus = useMemo(
         () =>
-            namesData?.data?.names.map(({ name, slug }) => ({
+            namesData?.data?.names.map(({ id, name }) => ({
                 label: name,
-                href: `/our-products?product=${slug}`,
+                href: `/our-products/${id}`,
             })) ?? [],
         [namesData]
     );
@@ -78,7 +78,7 @@ export function useMenuItems() {
                     ...productSubmenus,
                     {
                         label: "Djavacoal Brands",
-                        href: "/our-products?product=djavacoal-brands",
+                        href: "/our-products/djavacoal-brand",
                     },
                 ],
             },
