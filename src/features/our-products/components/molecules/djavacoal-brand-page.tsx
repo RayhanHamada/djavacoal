@@ -20,7 +20,7 @@ export function DjavacoalBrandPage() {
                             height={46}
                             className="h-[46px] w-auto object-contain"
                         />
-                        <h1 className="text-[46px] font-bold text-white">
+                        <h1 className="text-2xl font-bold text-white md:text-[46px]">
                             <span className="text-secondary">{t("title")}</span>{" "}
                             {t("titleHighlight")}
                         </h1>
