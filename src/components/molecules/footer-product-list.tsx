@@ -12,12 +12,18 @@ export function FooterProductList() {
             {productNames?.data.names.map((item) => (
                 <Link
                     key={item.id}
-                    href="#"
+                    href={`/our-products/${item.id}`}
                     className="decoration-secondary hover:underline"
                 >
                     <li>{item.name}</li>
                 </Link>
             ))}
+            <Link
+                href="/our-products/djavacoal-brand"
+                className="decoration-secondary hover:underline"
+            >
+                Djavacoal Brand
+            </Link>
         </ul>
     );
 }
