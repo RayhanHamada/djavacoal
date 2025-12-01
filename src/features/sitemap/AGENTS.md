@@ -30,8 +30,11 @@ app/
 ├── static/
 │   └── sitemap.xml/       # Static pages sitemap (from page_metadatas table)
 │       └── route.ts
-└── blog/
-    └── sitemap.xml/       # Blog articles sitemap (from news table)
+├── blog/
+│   └── sitemap.xml/       # Blog articles sitemap (from news table)
+│       └── route.ts
+└── (visitor)/our-products/
+    └── sitemap.xml/       # Products sitemap (from products table)
         └── route.ts
 ```
 
@@ -40,7 +43,7 @@ app/
 ### Sitemap Index (`/sitemap-index.xml`)
 
 - Lists all available sitemaps
-- References `/static/sitemap.xml` and `/blog/sitemap.xml`
+- References `/sitemap.xml`, `/blog/sitemap.xml`, and `/our-products/sitemap.xml`
 - Follows XML sitemap index protocol
 - Cached for 1 hour
 
@@ -65,11 +68,21 @@ app/
   - `priority`: `0.65` (configurable)
 - Sorted by update date
 
+### Products Sitemap (`/our-products/sitemap.xml`)
+
+- Only includes **non-hidden** products (filters by `is_hidden = false`)
+- Configuration:
+  - `loc`: `/our-products/{id}` format
+  - `lastmod`: Product's last update date (ISO 8601 format)
+  - `changefreq`: `weekly` (default)
+  - `priority`: `0.8` (default)
+- Sorted by order index
+
 ## Technical Implementation
 
 ### Database Integration
 
-The feature integrates with two D1 tables:
+The feature integrates with three D1 tables:
 
 #### `page_metadatas` Table
 
@@ -88,6 +101,17 @@ The feature integrates with two D1 tables:
 {
   slug: string;              // Article slug for URL
   status: "published";       // Only published articles included
+  updatedAt: Date;           // Last modification timestamp
+}
+```
+
+#### `products` Table
+
+```typescript
+{
+  id: number;                // Product ID for URL
+  is_hidden: boolean;        // Only non-hidden products included
+  order_index: number;       // Display order
   updatedAt: Date;           // Last modification timestamp
 }
 ```
@@ -114,6 +138,15 @@ const articles = await getBlogArticles(db);
 // Returns: BlogArticleData[]
 ```
 
+#### `getProducts(db)`
+
+Fetches all non-hidden products:
+
+```typescript
+const products = await getProducts(db);
+// Returns: ProductData[]
+```
+
 #### `generateStaticPagesSitemap(pages, baseURL)`
 
 Generates complete XML sitemap for static pages:
@@ -129,6 +162,15 @@ Generates complete XML sitemap for blog articles:
 
 ```typescript
 const sitemap = generateBlogSitemap(articles, baseURL);
+// Returns: string (XML)
+```
+
+#### `generateProductsSitemap(products, baseURL)`
+
+Generates complete XML sitemap for products:
+
+```typescript
+const sitemap = generateProductsSitemap(products, baseURL);
 // Returns: string (XML)
 ```
 
@@ -203,6 +245,17 @@ Blog-specific sitemap configuration:
 }
 ```
 
+#### `PRODUCTS_SITEMAP_CONFIG`
+
+Products-specific sitemap configuration:
+
+```typescript
+{
+  priority: 0.8,
+  changefreq: "weekly"
+}
+```
+
 ### Types
 
 Located in `lib/types.ts`:
@@ -240,6 +293,17 @@ Data structure from `news` table:
 ```typescript
 type BlogArticleData = {
   slug: string;
+  updatedAt: Date | null;
+};
+```
+
+#### `ProductData`
+
+Data structure from `products` table:
+
+```typescript
+type ProductData = {
+  id: number;
   updatedAt: Date | null;
 };
 ```

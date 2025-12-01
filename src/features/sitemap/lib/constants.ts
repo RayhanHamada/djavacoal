@@ -14,3 +14,11 @@ export const BLOG_SITEMAP_CONFIG = {
     priority: 0.65,
     changefreq: "daily",
 } as const;
+
+/**
+ * Products sitemap configuration
+ */
+export const PRODUCTS_SITEMAP_CONFIG = {
+    priority: 0.8,
+    changefreq: "weekly",
+} as const;
