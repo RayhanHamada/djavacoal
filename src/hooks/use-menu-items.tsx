@@ -47,7 +47,7 @@ export function useMenuItems() {
                 submenus: [
                     {
                         label: t("aboutCompanySubmenus.cvDjavacoal"),
-                        href: `/about-company#${SECTIONS_ELEMENTS_ID.ABOUT_COMPANY.PT_DJAVACOAL_INDONESIA}`,
+                        href: `/about-company#${SECTIONS_ELEMENTS_ID.ABOUT_COMPANY.CV_DJAVACOAL_INDONESIA}`,
                     },
                     {
                         label: t("aboutCompanySubmenus.team"),

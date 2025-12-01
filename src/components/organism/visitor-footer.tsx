@@ -16,6 +16,7 @@ import { HiMail } from "react-icons/hi";
 
 import { serverPublicAPIClient } from "@/adapters/public-api/server";
 import { FooterProductList } from "@/components/molecules/footer-product-list";
+import { SECTIONS_ELEMENTS_ID } from "@/configs";
 
 export default async function VisitorFooter() {
     const t = await getTranslations("Footer");
@@ -74,19 +75,29 @@ export default async function VisitorFooter() {
                             {t("sections.company")}
                         </h3>
                         <ul className="decoration-secondary mt-3 w-full space-y-2 text-xs md:text-base [&_a]:hover:underline">
-                            <Link href="/about-company#">
+                            <Link
+                                href={`/about-company#${SECTIONS_ELEMENTS_ID.ABOUT_COMPANY.CV_DJAVACOAL_INDONESIA}`}
+                            >
                                 <li>{t("company.cvDjavacoal")}</li>
                             </Link>
-                            <Link href="/about-company#">
+                            <Link
+                                href={`/about-company#${SECTIONS_ELEMENTS_ID.ABOUT_COMPANY.DJAVACOALS_TEAM}`}
+                            >
                                 <li>{t("company.team")}</li>
                             </Link>
-                            <Link href="/about-company#">
+                            <Link
+                                href={`/about-company#${SECTIONS_ELEMENTS_ID.ABOUT_COMPANY.LEGAL_CERTIFICATE}`}
+                            >
                                 <li>{t("company.legal")}</li>
                             </Link>
-                            <Link href="/about-company#">
+                            <Link
+                                href={`/about-company#${SECTIONS_ELEMENTS_ID.ABOUT_COMPANY.FACTORY}`}
+                            >
                                 <li>{t("company.factory")}</li>
                             </Link>
-                            <Link href="/about-company#">
+                            <Link
+                                href={`/about-company#${SECTIONS_ELEMENTS_ID.ABOUT_COMPANY.OUR_GALLERY}`}
+                            >
                                 <li>{t("company.gallery")}</li>
                             </Link>
                         </ul>
@@ -108,22 +119,32 @@ export default async function VisitorFooter() {
                             {t("sections.quickLink")}
                         </h3>
                         <ul className="decoration-secondary mt-3 space-y-2 text-xs md:text-base [&_a]:hover:underline">
-                            <Link href="/production-info#">
+                            <Link
+                                href={`/production-info#${SECTIONS_ELEMENTS_ID.PRODUCTION_INFO.PRODUCTION_PROCESS}`}
+                            >
                                 <li>{t("quickLinks.productionProcess")}</li>
                             </Link>
-                            <Link href="/production-info#">
+                            <Link
+                                href={`/production-info#${SECTIONS_ELEMENTS_ID.PRODUCTION_INFO.SHIPMENT_TERMS}`}
+                            >
                                 <li>{t("quickLinks.shipmentTerms")}</li>
                             </Link>
-                            <Link href="/production-info#">
+                            <Link
+                                href={`/production-info#${SECTIONS_ELEMENTS_ID.PRODUCTION_INFO.MOQ_PAYMENT_TERMS}`}
+                            >
                                 <li>{t("quickLinks.moqPayment")}</li>
                             </Link>
-                            <Link href="/production-info#">
+                            <Link
+                                href={`/production-info#${SECTIONS_ELEMENTS_ID.PRODUCTION_INFO.PACKAGING_INFO}`}
+                            >
                                 <li>{t("quickLinks.packagingInfo")}</li>
                             </Link>
-                            <Link href="#/production-info#">
+                            <Link
+                                href={`/production-info#${SECTIONS_ELEMENTS_ID.PRODUCTION_INFO.FAQS}`}
+                            >
                                 <li>{t("quickLinks.faq")}</li>
                             </Link>
-                            <Link href="/production-info#">
+                            <Link href="/blog">
                                 <li>{t("quickLinks.news")}</li>
                             </Link>
                         </ul>
