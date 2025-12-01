@@ -19,7 +19,7 @@ export const TIME_STRING_FORMAT = {
 
 export const SECTIONS_ELEMENTS_ID = {
     ABOUT_COMPANY: {
-        PT_DJAVACOAL_INDONESIA: "cv-djavacoal-indonesia",
+        CV_DJAVACOAL_INDONESIA: "cv-djavacoal-indonesia",
         DJAVACOALS_TEAM: "djavacoals-team",
         WHAT_WE_DO: "what-we-do",
         LEGAL_CERTIFICATE: "legal-certificate",
