@@ -13,6 +13,10 @@ export async function GET(_request: Request) {
 
     const staticSitemap = new URL("/sitemap.xml", baseURL).toString();
     const blogSitemap = new URL("/blog/sitemap.xml", baseURL).toString();
+    const productsSitemap = new URL(
+        "/our-products/sitemap.xml",
+        baseURL
+    ).toString();
 
     const sitemapIndex = `${generateSitemapIndexHeader()}
     <sitemap>
@@ -20,6 +24,9 @@ export async function GET(_request: Request) {
     </sitemap>
     <sitemap>
         <loc>${blogSitemap}</loc>
+    </sitemap>
+    <sitemap>
+        <loc>${productsSitemap}</loc>
     </sitemap>${generateSitemapIndexFooter()}`;
 
     return new Response(sitemapIndex, {

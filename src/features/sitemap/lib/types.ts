@@ -28,3 +28,8 @@ export type BlogArticleData = {
     slug: string;
     updatedAt: Date | null;
 };
+
+export type ProductData = {
+    id: number;
+    updatedAt: Date | null;
+};

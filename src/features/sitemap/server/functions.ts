@@ -1,5 +1,6 @@
 import type {
     BlogArticleData,
+    ProductData,
     SitemapEntry,
     StaticPageData,
 } from "@/features/sitemap/lib/types";
@@ -11,10 +12,14 @@ import {
     NEWS_COLUMNS,
     NEWS_STATUS,
     PAGE_METADATA_COLUMNS,
+    PRODUCT_COLUMNS,
 } from "@/adapters/d1/constants";
 import { getDB } from "@/adapters/d1/db";
-import { news, pageMetadatas } from "@/adapters/d1/schema";
-import { BLOG_SITEMAP_CONFIG } from "@/features/sitemap/lib/constants";
+import { news, pageMetadatas, products } from "@/adapters/d1/schema";
+import {
+    BLOG_SITEMAP_CONFIG,
+    PRODUCTS_SITEMAP_CONFIG,
+} from "@/features/sitemap/lib/constants";
 import {
     escapeXml,
     formatLastMod,
@@ -53,6 +58,22 @@ export async function getBlogArticles(
         .from(news)
         .where(eq(news[NEWS_COLUMNS.STATUS], NEWS_STATUS.PUBLISHED))
         .orderBy(news[COMMON_COLUMNS.UPDATED_AT]);
+}
+
+/**
+ * Fetches all non-hidden products from the database
+ */
+export async function getProducts(
+    db: ReturnType<typeof getDB>
+): Promise<ProductData[]> {
+    return await db
+        .select({
+            id: products[COMMON_COLUMNS.ID],
+            updatedAt: products[COMMON_COLUMNS.UPDATED_AT],
+        })
+        .from(products)
+        .where(eq(products[PRODUCT_COLUMNS.IS_HIDDEN], false))
+        .orderBy(products[PRODUCT_COLUMNS.ORDER_INDEX]);
 }
 
 /**
@@ -124,6 +145,33 @@ export function generateBlogSitemap(
         const entry: SitemapEntry = {
             loc: new URL(`/blog/${article.slug}`, baseURL).toString(),
             lastmod: formatLastMod(article.updatedAt),
+            changefreq: config.changefreq as SitemapEntry["changefreq"],
+            priority: config.priority,
+        };
+
+        sitemap += generateSitemapEntry(entry);
+    }
+
+    sitemap += generateSitemapFooter();
+    return sitemap;
+}
+
+/**
+ * Generates complete sitemap XML for products
+ */
+export function generateProductsSitemap(
+    productsData: ProductData[],
+    baseURL: string,
+    settings?: { changefreq: string; priority: number }
+): string {
+    let sitemap = generateSitemapHeader();
+
+    const config = settings || PRODUCTS_SITEMAP_CONFIG;
+
+    for (const product of productsData) {
+        const entry: SitemapEntry = {
+            loc: new URL(`/our-products/${product.id}`, baseURL).toString(),
+            lastmod: formatLastMod(product.updatedAt),
             changefreq: config.changefreq as SitemapEntry["changefreq"],
             priority: config.priority,
         };
