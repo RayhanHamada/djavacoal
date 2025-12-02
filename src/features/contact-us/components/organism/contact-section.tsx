@@ -20,7 +20,7 @@ export default function ContactSection() {
                 {/* Background Image */}
                 <div className="relative h-48 w-full md:h-72">
                     <Image
-                        src="/images/bg-banner-header.png"
+                        src="/images/bg-banner-ContactUs.png"
                         alt={t("page.bannerAlt")}
                         fill
                         className="object-cover object-center"

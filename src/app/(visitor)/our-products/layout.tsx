@@ -16,8 +16,8 @@ export default function OurProductsLayout({
                 {/* Background Image */}
                 <div className="relative h-48 w-full md:h-72">
                     <Image
-                        src="/images/bg-banner-header.png"
-                        alt="Production Info Banner"
+                        src="/images/bg-banner-OurProduct.png"
+                        alt="Our Products Banner"
                         fill
                         className="object-cover object-center"
                         priority

@@ -10,7 +10,7 @@ export default function HeaderSection() {
             {/* Background Image */}
             <div className="relative h-48 w-full md:h-72">
                 <Image
-                    src="/images/bg-banner-header.png"
+                    src="/images/bg-banner-ProductionProcess.png"
                     alt={t("bannerAlt")}
                     fill
                     className="object-cover object-center"
