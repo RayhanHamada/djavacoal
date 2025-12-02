@@ -45,6 +45,11 @@ export const PRODUCT_CATALOGUE_PREFIX = "product-catalogue";
 export const PAGE_METADATA_OG_PREFIX = "page-metadata/og-images";
 
 /**
+ * Default OG images folder prefix in R2 (site-wide defaults)
+ */
+export const DEFAULT_OG_IMAGES_PREFIX = "default-og-images";
+
+/**
  * Presigned URL expiration time in seconds (1 hour)
  */
 export const PRESIGNED_URL_EXPIRATION = 3600;

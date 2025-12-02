@@ -82,6 +82,30 @@ export const KV_KEYS = {
      * Product catalogue PDF file key stored in R2
      */
     PRODUCT_CATALOGUE_FILE_KEY: "product_catalogue_file_key",
+
+    // ============================================
+    // Default OG Images (stored in R2, keys in KV)
+    // ============================================
+
+    /**
+     * Default OG image for Facebook (1200×630)
+     */
+    OG_DEFAULT_FACEBOOK: "og_default:facebook",
+
+    /**
+     * Default OG image for LinkedIn (1200×1200)
+     */
+    OG_DEFAULT_LINKEDIN: "og_default:linkedin",
+
+    /**
+     * Default OG image for Instagram (1080×1080)
+     */
+    OG_DEFAULT_INSTAGRAM: "og_default:instagram",
+
+    /**
+     * Default OG image for Twitter/X (800×418)
+     */
+    OG_DEFAULT_TWITTER: "og_default:twitter",
 } as const;
 
 type KVKey = typeof KV_KEYS;
