@@ -28,7 +28,7 @@ export function NewsCardContent({
     });
 
     return (
-        <div className="flex flex-col gap-2 bg-[#0D0D0D] pt-4 pb-2">
+        <div className="bg-primary flex flex-col gap-2 pt-4 pb-2">
             <NewsCardDate date={formattedDate} />
             <div className="flex justify-between">
                 <NewsCardTitle title={title} />
