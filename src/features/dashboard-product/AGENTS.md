@@ -147,6 +147,8 @@ rpc.dashboardProduct.generateImageUploadUrl.useMutation()
   production_capacity: string;    // Production capacity
   is_hidden: boolean;             // Visibility flag (default: false)
   order_index: number;            // Display order (0-based)
+  metadata_description?: string;  // SEO description (max 160 chars, optional)
+  metadata_keywords?: string[];   // SEO keywords (max 20 items, each max 30 chars, optional)
   created_at: Date;               // Auto-generated
   created_by: string;             // Admin user ID
   updated_at: Date;               // Auto-updated
@@ -240,8 +242,21 @@ PRODUCT_COLUMNS = {
   MOQ: "moq",
   PRODUCTION_CAPACITY: "production_capacity",
   IS_HIDDEN: "is_hidden",
-  ORDER_INDEX: "order_index"
+  ORDER_INDEX: "order_index",
+  METADATA_DESCRIPTION: "metadata_description",
+  METADATA_KEYWORDS: "metadata_keywords"
 }
+```
+
+### SEO Metadata Validation Constants
+
+Located in `lib/constants.ts`:
+
+```typescript
+// SEO metadata limits
+METADATA_DESCRIPTION_MAX_LENGTH = 160    // Maximum characters for meta description
+METADATA_KEYWORDS_MAX_COUNT = 20         // Maximum number of keywords
+METADATA_KEYWORD_MAX_LENGTH = 30         // Maximum characters per keyword
 ```
 
 ## Integration Points
@@ -309,6 +324,8 @@ await createMutation.mutateAsync({
   moq: "1000 tons",
   production_capacity: "10,000 tons/month",
   is_hidden: false,
+  metadata_description: "Premium Indonesian coal for industrial use", // Optional, max 160 chars
+  metadata_keywords: ["coal", "indonesian coal", "premium"], // Optional, max 20 items, each max 30 chars
   medias: [
     {
       media_type: "image",

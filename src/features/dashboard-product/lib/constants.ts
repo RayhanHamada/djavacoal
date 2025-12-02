@@ -45,6 +45,19 @@ export const PRODUCT_DESCRIPTION_MAX_LENGTH = 1000;
 export const SEARCH_MAX_LENGTH = 100;
 
 // ============================================
+// Product SEO Metadata Validation
+// ============================================
+
+/** Maximum character length for SEO metadata description */
+export const METADATA_DESCRIPTION_MAX_LENGTH = 160;
+
+/** Maximum number of SEO metadata keywords */
+export const METADATA_KEYWORDS_MAX_COUNT = 20;
+
+/** Maximum character length for each SEO metadata keyword */
+export const METADATA_KEYWORD_MAX_LENGTH = 30;
+
+// ============================================
 // Minimum Count Validation
 // ============================================
 
@@ -117,4 +130,7 @@ export const PRODUCT_FIELD_ERRORS = {
     PRODUCTION_CAPACITY_REQUIRED: "Production capacity is required",
     EN_VARIANT_NAME_REQUIRED: "English variant name is required",
     AR_VARIANT_NAME_REQUIRED: "Arabic variant name is required",
+    METADATA_DESCRIPTION_MAX: `Metadata description must be ${METADATA_DESCRIPTION_MAX_LENGTH} characters or less`,
+    METADATA_KEYWORDS_MAX_COUNT: `Maximum ${METADATA_KEYWORDS_MAX_COUNT} keywords allowed`,
+    METADATA_KEYWORD_MAX_LENGTH: `Each keyword must be ${METADATA_KEYWORD_MAX_LENGTH} characters or less`,
 } as const;

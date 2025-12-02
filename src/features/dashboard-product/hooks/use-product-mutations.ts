@@ -22,6 +22,8 @@ export function useProductMutations(product?: ProductDetail) {
                 ar_name: uploadedValues.ar_name,
                 en_description: uploadedValues.en_description,
                 ar_description: uploadedValues.ar_description,
+                metadata_description: uploadedValues.metadata_description,
+                metadata_keywords: uploadedValues.metadata_keywords,
                 medias: uploadedValues.medias.map((m, index) => {
                     if (m.media_type === "image") {
                         return {
@@ -94,6 +96,8 @@ export function useProductMutations(product?: ProductDetail) {
                 ar_name: uploadedValues.ar_name,
                 en_description: uploadedValues.en_description,
                 ar_description: uploadedValues.ar_description,
+                metadata_description: uploadedValues.metadata_description,
+                metadata_keywords: uploadedValues.metadata_keywords,
                 medias: uploadedValues.medias.map((m, index) => {
                     if (m.media_type === "image") {
                         return {

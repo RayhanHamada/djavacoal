@@ -550,6 +550,10 @@ export const getProductById = base
             order_index: product[PRODUCT_COLUMNS.ORDER_INDEX],
             created_at: product[COMMON_COLUMNS.CREATED_AT],
             updated_at: product[COMMON_COLUMNS.UPDATED_AT],
+            metadata_description:
+                product[PRODUCT_COLUMNS.METADATA_DESCRIPTION] ?? undefined,
+            metadata_keywords:
+                product[PRODUCT_COLUMNS.METADATA_KEYWORDS] ?? undefined,
             medias: mediasResult.map((m) => ({
                 id: m[COMMON_COLUMNS.ID],
                 media_type: m[PRODUCT_MEDIA_COLUMNS.MEDIA_TYPE],
@@ -632,6 +636,8 @@ export const createProduct = base
                 order_index: nextOrder,
                 created_by: userId,
                 updated_by: userId,
+                metadata_description: input.metadata_description ?? null,
+                metadata_keywords: input.metadata_keywords ?? [],
             })
             .returning({ id: products[COMMON_COLUMNS.ID] });
 
@@ -751,6 +757,8 @@ export const updateProduct = base
                     is_hidden: input.is_hidden,
                     order_index: input.order_index,
                     updated_by: userId,
+                    metadata_description: input.metadata_description ?? null,
+                    metadata_keywords: input.metadata_keywords ?? [],
                 })
                 .where(eq(products[COMMON_COLUMNS.ID], input.id));
 

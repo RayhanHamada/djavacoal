@@ -35,6 +35,8 @@ export function useProductForm(product?: ProductDetail) {
             packaging_option_ids:
                 product?.packaging_option_ids.map(String) ?? [],
             is_hidden: product?.is_hidden ?? false,
+            metadata_description: product?.metadata_description ?? "",
+            metadata_keywords: product?.metadata_keywords ?? [],
         },
         validate: validateProductFormSchema,
     });

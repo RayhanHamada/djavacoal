@@ -21,6 +21,7 @@ import {
 } from "../hooks";
 import { BilingualDescriptionEditor } from "./molecules/bilingual-description-editor";
 import { MediaListInput } from "./molecules/media-list-input";
+import { SeoMetadataSection } from "./molecules/seo-metadata-section";
 import { SpecificationListInput } from "./molecules/specification-list-input";
 import { VariantListInput } from "./molecules/variant-list-input";
 
@@ -162,6 +163,25 @@ export function ProductForm({ product }: ProductFormProps) {
                     {...form.getInputProps("packaging_option_ids")}
                     disabled={isSubmitting || isLoadingPackaging}
                 />
+
+                {/* SEO Metadata Section */}
+                <Fieldset legend="SEO Metadata (Optional)">
+                    <SeoMetadataSection
+                        description={form.values.metadata_description ?? ""}
+                        keywords={form.values.metadata_keywords ?? []}
+                        onDescriptionChange={(value) =>
+                            form.setFieldValue("metadata_description", value)
+                        }
+                        onKeywordsChange={(value) =>
+                            form.setFieldValue("metadata_keywords", value)
+                        }
+                        disabled={isSubmitting}
+                        descriptionError={
+                            form.errors.metadata_description as string
+                        }
+                        keywordsError={form.errors.metadata_keywords as string}
+                    />
+                </Fieldset>
 
                 {/* Visibility Toggle */}
                 <Switch

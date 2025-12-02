@@ -121,6 +121,10 @@ export const PRODUCT_COLUMNS = {
     PRODUCTION_CAPACITY: "production_capacity",
     IS_HIDDEN: "is_hidden",
     ORDER_INDEX: "order_index",
+    /** SEO metadata description (max 160 chars, optional) */
+    METADATA_DESCRIPTION: "metadata_description",
+    /** SEO metadata keywords (JSON array, max 20 items, each max 30 chars, optional) */
+    METADATA_KEYWORDS: "metadata_keywords",
 } as const;
 
 export const PRODUCT_MEDIA_COLUMNS = {
