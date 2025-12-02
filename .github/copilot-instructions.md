@@ -195,7 +195,7 @@ await client.resetPassword({ newPassword, token });
 
 - **Schema**: `src/adapters/d1/schema.ts` defines all tables with snake_case columns
 - **Constants**: `src/adapters/d1/constants.ts` maps table/column names for consistency
-- **Migrations**: Generated via `bun d1:generate`, applied with `bun d1:migrate:djavacoal`
+- **Migrations**: Generated via `bun d1:generate`, applied with `bun d1:migrate:development` or `bun d1:migrate:production`
 - **DB Access**: Always use `getDB(env.DJAVACOAL_DB)` from `src/adapters/d1/db.ts`
 
 ### Internationalization (i18n)
@@ -236,9 +236,10 @@ bun lint                   # Run ESLint with auto-fix and caching
 ### Database Management
 
 ```bash
-bun d1:generate            # Generate migration from schema changes
-bun d1:migrate:djavacoal   # Apply D1 migrations to remote database
-bun d1:studio              # Open Drizzle Studio for DB inspection
+bun d1:generate              # Generate migration from schema changes
+bun d1:migrate:development   # Apply D1 migrations to development database
+bun d1:migrate:production    # Apply D1 migrations to production database
+bun d1:studio                # Open Drizzle Studio for DB inspection
 ```
 
 ### Email Development
@@ -263,7 +264,7 @@ wrangler dev               # Run with Cloudflare bindings locally (alternative t
 1. Modify `src/adapters/d1/schema.ts`
 2. Run `bun d1:generate` to create migration file
 3. Review generated migration in `src/adapters/d1/migrations/`
-4. Run `bun d1:migrate:djavacoal` to apply to remote database
+4. Run `bun d1:migrate:development` or `bun d1:migrate:production` to apply to remote database
 5. Test changes with `bun d1:studio`
 
 ## Key Conventions
@@ -603,7 +604,7 @@ Available features and their purposes:
 
 - Verify `CLOUDFLARE_ACCOUNT_ID` and `CLOUDFLARE_DATABASE_ID` in `.dev.vars`
 - Check D1 binding name matches `DJAVACOAL_DB` in `wrangler.jsonc`
-- Ensure migrations are applied with `bun d1:migrate:djavacoal`
+- Ensure migrations are applied with `bun d1:migrate:development` or `bun d1:migrate:production`
 
 **R2 Upload Failures**
 

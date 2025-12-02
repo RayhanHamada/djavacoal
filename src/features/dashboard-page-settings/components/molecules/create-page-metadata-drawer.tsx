@@ -15,6 +15,7 @@ import { notifications } from "@mantine/notifications";
 import { useMutation } from "@tanstack/react-query";
 
 import { SITEMAP_CHANGEFREQ_VALUES } from "@/adapters/d1/constants";
+import { OgImagePicker } from "@/features/dashboard-page-settings/components/atoms";
 import {
     CreatePageMetadataFormValues,
     MAX_KEYWORDS,
@@ -52,6 +53,7 @@ export function CreatePageMetadataDrawer({
             metadata_keywords: [],
             sitemap_priority: SITEMAP_PRIORITY_DEFAULT,
             sitemap_changefreq: SITEMAP_CHANGEFREQ_DEFAULT,
+            og_image_key: null,
         },
         validate: validateCreatePageMetadataForm,
     });
@@ -202,6 +204,14 @@ export function CreatePageMetadataDrawer({
                         ]}
                         key={form.key("sitemap_changefreq")}
                         {...form.getInputProps("sitemap_changefreq")}
+                        disabled={createMutation.isPending}
+                    />
+
+                    <OgImagePicker
+                        value={form.getValues().og_image_key}
+                        onChange={(key) =>
+                            form.setFieldValue("og_image_key", key)
+                        }
                         disabled={createMutation.isPending}
                     />
 

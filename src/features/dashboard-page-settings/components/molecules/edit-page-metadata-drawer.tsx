@@ -17,6 +17,7 @@ import { notifications } from "@mantine/notifications";
 import { useMutation, useQuery } from "@tanstack/react-query";
 
 import { SITEMAP_CHANGEFREQ_VALUES } from "@/adapters/d1/constants";
+import { OgImagePicker } from "@/features/dashboard-page-settings/components/atoms";
 import {
     EditPageMetadataFormValues,
     MAX_KEYWORDS,
@@ -57,6 +58,7 @@ export function EditPageMetadataDrawer({
             metadata_keywords: [],
             sitemap_priority: SITEMAP_PRIORITY_DEFAULT,
             sitemap_changefreq: SITEMAP_CHANGEFREQ_DEFAULT,
+            og_image_key: null,
         },
         validate: validateEditPageMetadataForm,
     });
@@ -83,6 +85,7 @@ export function EditPageMetadataDrawer({
                 metadata_keywords: pageMetadataQuery.data.metadata_keywords,
                 sitemap_priority: pageMetadataQuery.data.sitemap_priority,
                 sitemap_changefreq: pageMetadataQuery.data.sitemap_changefreq,
+                og_image_key: pageMetadataQuery.data.og_image_key,
             });
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -236,6 +239,14 @@ export function EditPageMetadataDrawer({
                         ]}
                         key={form.key("sitemap_changefreq")}
                         {...form.getInputProps("sitemap_changefreq")}
+                        disabled={isLoading}
+                    />
+
+                    <OgImagePicker
+                        value={form.getValues().og_image_key}
+                        onChange={(key) =>
+                            form.setFieldValue("og_image_key", key)
+                        }
                         disabled={isLoading}
                     />
 

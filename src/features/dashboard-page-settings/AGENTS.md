@@ -2,7 +2,7 @@
 
 ## Overview
 
-This feature provides SEO metadata management for static pages in the Djavacoal application. Admins can define and manage page-level SEO settings including meta titles, descriptions, keywords, and sitemap configuration (priority, change frequency) for all application pages.
+This feature provides SEO metadata management for static pages in the Djavacoal application. Admins can define and manage page-level SEO settings including meta titles, descriptions, keywords, OpenGraph images, and sitemap configuration (priority, change frequency) for all application pages.
 
 ## Architecture
 
@@ -11,8 +11,14 @@ This feature provides SEO metadata management for static pages in the Djavacoal 
 ```
 dashboard-page-settings/
 ├── components/          # UI components organized by atomic design
-│   ├── atoms/          # Basic page settings UI elements
-│   ├── molecules/      # Composite components (metadata form)
+│   ├── atoms/          # Basic UI elements
+│   │   ├── og-image-picker.tsx    # OpenGraph image selection component
+│   │   └── page-metadata-table-cells.tsx
+│   ├── molecules/      # Composite components (drawers, modals)
+│   │   ├── create-page-metadata-drawer.tsx
+│   │   ├── edit-page-metadata-drawer.tsx
+│   │   ├── delete-page-metadata-modal.tsx
+│   │   └── page-metadata-table-actions.tsx
 │   └── organisms/      # Complex sections (page settings list, editor)
 ├── hooks/              # React hooks for page settings operations
 ├── lib/                # Business logic, constants, and form schemas
@@ -46,13 +52,20 @@ dashboard-page-settings/
    - Meta Keywords: Array of keywords
    - Sitemap Priority: 0.0 - 1.0 (importance)
    - Sitemap Change Frequency: always, hourly, daily, weekly, monthly, yearly, never
+   - OpenGraph Image: Optional image for social media sharing (stored in R2)
 
-3. **Path Validation**
+3. **OpenGraph Image Upload**
+   - Select images from centralized gallery
+   - Preview with 1200×630 aspect ratio (recommended OG image size)
+   - Remove existing OG image
+   - Images stored in R2, referenced by key
+
+4. **Path Validation**
    - Unique path enforcement
    - URL format validation
    - Duplicate prevention
 
-4. **Authentication**
+5. **Authentication**
    - All operations require admin authentication
    - Session validation via Better Auth
 
@@ -98,6 +111,7 @@ Page metadata is stored in the `page_metadatas` table:
   metadata_keywords: string[];     // Array of keywords (stored as JSON)
   sitemap_priority: number;        // 0.0 to 1.0 (default: 0.5)
   sitemap_changefreq: ChangeFreq;  // always, hourly, daily, weekly, monthly, yearly, never
+  og_image_key: string | null;     // OpenGraph image key in R2 (optional)
   created_at: Date;                // Auto-generated
   updated_at: Date;                // Auto-updated
 }
@@ -126,11 +140,30 @@ PAGE_METADATA_COLUMNS = {
   METADATA_DESCRIPTION: "metadata_description",
   METADATA_KEYWORDS: "metadata_keywords",
   SITEMAP_PRIORITY: "sitemap_priority",
-  SITEMAP_CHANGEFREQ: "sitemap_changefreq"
+  SITEMAP_CHANGEFREQ: "sitemap_changefreq",
+  OG_IMAGE_KEY: "og_image_key"
 }
 
 // Valid change frequency values
 type ChangeFreq = "always" | "hourly" | "daily" | "weekly" | "monthly" | "yearly" | "never";
+```
+
+## Database Migration
+
+When changes are made to the database schema (e.g., adding `og_image_key` column), apply migrations:
+
+```bash
+# Generate migration from schema changes (already done)
+bun d1:generate
+
+# Apply migration to remote D1 database (choose based on environment)
+bun d1:migrate:development  # For development environment
+bun d1:migrate:production   # For production environment
+```
+
+**Migration file**: `src/adapters/d1/migrations/0020_dusty_squirrel_girl.sql`
+```sql
+ALTER TABLE `page_metadatas` ADD `og_image_key` text;
 ```
 
 ## Integration Points
@@ -205,12 +238,13 @@ export const metadata: Metadata = {
 ### Internal Dependencies
 - `@/adapters/d1` - Database access and constants
 - `@/features/dashboard-auth` - Authentication
+- `@/features/dashboard-gallery` - Gallery photos for OG image selection
 - `@/lib/orpc/server` - RPC base configuration
 - `@/lib/rpc` - Client-side RPC client
 
 ## Usage Examples
 
-### Creating Page Metadata
+### Creating Page Metadata with OpenGraph Image
 
 ```typescript
 const createMutation = rpc.pageSettings.createPageMetadata.useMutation();
@@ -221,7 +255,8 @@ await createMutation.mutateAsync({
   metadata_description: "Learn about Djavacoal's history and mission",
   metadata_keywords: ["about", "company", "coal", "supplier"],
   sitemap_priority: 0.8,
-  sitemap_changefreq: "monthly"
+  sitemap_changefreq: "monthly",
+  og_image_key: "gallery/abc123-og-image.jpg" // Optional R2 key
 });
 ```
 
@@ -234,7 +269,7 @@ const { data, isLoading } = rpc.pageSettings.listPageMetadata.useQuery({
   limit: 20
 });
 
-// data.items: PageMetadata[]
+// data.items: PageMetadata[] (includes og_image_key)
 // data.total: number
 // data.page: number
 // data.pageSize: number
@@ -252,8 +287,21 @@ await updateMutation.mutateAsync({
   metadata_description: "Updated description",
   metadata_keywords: ["about", "company"],
   sitemap_priority: 0.9,
-  sitemap_changefreq: "weekly"
+  sitemap_changefreq: "weekly",
+  og_image_key: "gallery/new-og-image.jpg" // null to remove
 });
+```
+
+### Using the OgImagePicker Component
+
+```tsx
+import { OgImagePicker } from "@/features/dashboard-page-settings/components/atoms";
+
+<OgImagePicker
+  value={form.getValues().og_image_key}
+  onChange={(key) => form.setFieldValue("og_image_key", key)}
+  disabled={isLoading}
+/>
 ```
 
 ### Deleting Page Metadata
@@ -333,11 +381,11 @@ Typical pages to configure:
 
 ```typescript
 const commonPages = [
-  { path: "/", priority: 1.0, changefreq: "daily" },
-  { path: "/about-company", priority: 0.8, changefreq: "monthly" },
-  { path: "/our-products", priority: 0.9, changefreq: "weekly" },
-  { path: "/production-info", priority: 0.7, changefreq: "monthly" },
-  { path: "/contact-us", priority: 0.6, changefreq: "yearly" },
+  { path: "/", priority: 1.0, changefreq: "daily", og_image_key: "gallery/home-og.jpg" },
+  { path: "/about-company", priority: 0.8, changefreq: "monthly", og_image_key: null },
+  { path: "/our-products", priority: 0.9, changefreq: "weekly", og_image_key: "gallery/products-og.jpg" },
+  { path: "/production-info", priority: 0.7, changefreq: "monthly", og_image_key: null },
+  { path: "/contact-us", priority: 0.6, changefreq: "yearly", og_image_key: null },
   // Dynamic routes handled separately
 ];
 ```
@@ -346,12 +394,13 @@ const commonPages = [
 
 - **dashboard-news** - News articles have their own SEO metadata
 - **dashboard-product** - Products may have dynamic SEO
+- **dashboard-gallery** - Provides images for OG image selection
 - **sitemap.xml** - Consumes this metadata
 - **dashboard-auth** - Provides authentication
 
 ## Future Enhancements
 
-- [ ] Open Graph metadata (og:title, og:image)
+- [x] Open Graph image (og:image) - Implemented via gallery picker
 - [ ] Twitter Card metadata
 - [ ] Canonical URL management
 - [ ] Robots meta tags (noindex, nofollow)

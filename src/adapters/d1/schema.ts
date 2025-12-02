@@ -507,6 +507,12 @@ const PAGE_METADATA_COLUMN_FIELDS = {
     })
         .notNull()
         .$default(() => "weekly"),
+
+    /**
+     * OpenGraph image key stored in R2 (optional)
+     * Used for social media sharing previews
+     */
+    [PAGE_METADATA_COLUMNS.OG_IMAGE_KEY]: text(),
 } as const;
 
 const TEAM_MEMBER_COLUMN_FIELDS = {

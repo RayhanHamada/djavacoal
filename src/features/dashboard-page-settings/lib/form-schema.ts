@@ -74,6 +74,8 @@ export const CreatePageMetadataFormSchema = z.object({
     sitemap_changefreq: z
         .enum(SITEMAP_CHANGEFREQ_ENUM)
         .default(SITEMAP_CHANGEFREQ_DEFAULT),
+    /** OpenGraph image key stored in R2 (optional) */
+    og_image_key: z.string().nullable().optional(),
 });
 
 /**
@@ -133,6 +135,8 @@ export const EditPageMetadataFormSchema = z.object({
     sitemap_changefreq: z
         .enum(SITEMAP_CHANGEFREQ_ENUM)
         .default(SITEMAP_CHANGEFREQ_DEFAULT),
+    /** OpenGraph image key stored in R2 (optional) */
+    og_image_key: z.string().nullable().optional(),
 });
 
 export const validateCreatePageMetadataForm = zod4Resolver(

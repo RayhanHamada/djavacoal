@@ -629,8 +629,9 @@ If this is a fresh installation, ensure the FAQ table exists:
 # Generate migration if needed
 bun d1:generate
 
-# Apply migration to remote database
-bun d1:migrate:djavacoal
+# Apply migration to remote database (choose based on environment)
+bun d1:migrate:development  # For development
+bun d1:migrate:production   # For production
 ```
 
 ### Public API

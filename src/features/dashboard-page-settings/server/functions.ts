@@ -50,6 +50,7 @@ export const listPageMetadata = base
                     pageMetadatas[PAGE_METADATA_COLUMNS.SITEMAP_PRIORITY],
                 sitemap_changefreq:
                     pageMetadatas[PAGE_METADATA_COLUMNS.SITEMAP_CHANGEFREQ],
+                og_image_key: pageMetadatas[PAGE_METADATA_COLUMNS.OG_IMAGE_KEY],
                 created_at: pageMetadatas[COMMON_COLUMNS.CREATED_AT],
                 updated_at: pageMetadatas[COMMON_COLUMNS.UPDATED_AT],
             })
@@ -81,6 +82,7 @@ export const listPageMetadata = base
                         | "monthly"
                         | "yearly"
                         | "never") ?? "weekly",
+                og_image_key: (item.og_image_key as string | null) ?? null,
                 created_at: new Date(item.created_at ?? 0),
                 updated_at: new Date(item.updated_at ?? 0),
             })),
@@ -135,6 +137,10 @@ export const getPageMetadataById = base
                     | "monthly"
                     | "yearly"
                     | "never") ?? "weekly",
+            og_image_key:
+                (pageMetadata[PAGE_METADATA_COLUMNS.OG_IMAGE_KEY] as
+                    | string
+                    | null) ?? null,
             created_at: new Date(pageMetadata[COMMON_COLUMNS.CREATED_AT] ?? 0),
             updated_at: new Date(pageMetadata[COMMON_COLUMNS.UPDATED_AT] ?? 0),
         };
@@ -155,6 +161,7 @@ export const createPageMetadata = base
             metadata_keywords,
             sitemap_priority,
             sitemap_changefreq,
+            og_image_key,
         } = input;
 
         // Check if path already exists
@@ -176,6 +183,7 @@ export const createPageMetadata = base
                 [PAGE_METADATA_COLUMNS.METADATA_KEYWORDS]: metadata_keywords,
                 [PAGE_METADATA_COLUMNS.SITEMAP_PRIORITY]: sitemap_priority,
                 [PAGE_METADATA_COLUMNS.SITEMAP_CHANGEFREQ]: sitemap_changefreq,
+                [PAGE_METADATA_COLUMNS.OG_IMAGE_KEY]: og_image_key ?? null,
             })
             .returning({
                 id: pageMetadatas[COMMON_COLUMNS.ID],
@@ -203,6 +211,7 @@ export const updatePageMetadata = base
             metadata_keywords,
             sitemap_priority,
             sitemap_changefreq,
+            og_image_key,
         } = input;
 
         // Check if page metadata exists
@@ -232,6 +241,7 @@ export const updatePageMetadata = base
                 [PAGE_METADATA_COLUMNS.METADATA_KEYWORDS]: metadata_keywords,
                 [PAGE_METADATA_COLUMNS.SITEMAP_PRIORITY]: sitemap_priority,
                 [PAGE_METADATA_COLUMNS.SITEMAP_CHANGEFREQ]: sitemap_changefreq,
+                [PAGE_METADATA_COLUMNS.OG_IMAGE_KEY]: og_image_key ?? null,
             })
             .where(eq(pageMetadatas[COMMON_COLUMNS.ID], id));
 

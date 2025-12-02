@@ -49,6 +49,7 @@ export const ListPageMetadataOutputSchema = z.object({
             metadata_keywords: z.array(z.string()),
             sitemap_priority: z.number(),
             sitemap_changefreq: z.enum(SITEMAP_CHANGEFREQ_ENUM),
+            og_image_key: z.string().nullable(),
             created_at: z.date(),
             updated_at: z.date(),
         })
@@ -76,6 +77,7 @@ export const GetPageMetadataByIdOutputSchema = z.object({
     metadata_keywords: z.array(z.string()),
     sitemap_priority: z.number(),
     sitemap_changefreq: z.enum(SITEMAP_CHANGEFREQ_ENUM),
+    og_image_key: z.string().nullable(),
     created_at: z.date(),
     updated_at: z.date(),
 });
@@ -136,6 +138,8 @@ export const CreatePageMetadataInputSchema = z.object({
     sitemap_changefreq: z
         .enum(SITEMAP_CHANGEFREQ_ENUM)
         .default(SITEMAP_CHANGEFREQ_DEFAULT),
+    /** OpenGraph image key stored in R2 (optional) */
+    og_image_key: z.string().nullable().optional(),
 });
 
 /**
@@ -195,6 +199,8 @@ export const UpdatePageMetadataInputSchema = z.object({
     sitemap_changefreq: z
         .enum(SITEMAP_CHANGEFREQ_ENUM)
         .default(SITEMAP_CHANGEFREQ_DEFAULT),
+    /** OpenGraph image key stored in R2 (optional) */
+    og_image_key: z.string().nullable().optional(),
 });
 
 /**
