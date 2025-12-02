@@ -10,7 +10,7 @@ export default function HeaderSection() {
             {/* Background Image */}
             <div className="relative h-48 w-full md:h-72">
                 <Image
-                    src="/images/bg-banner-header.png"
+                    src="/images/bg-banner-ProductionProcess.png"
                     alt={t("bannerAlt")}
                     fill
                     className="object-cover object-center"
@@ -18,7 +18,7 @@ export default function HeaderSection() {
                 />
 
                 {/* Overlay */}
-                <div className="absolute inset-0 flex items-center justify-center bg-black/50">
+                <div className="absolute inset-0 flex items-center justify-center bg-black/20">
                     <h1 className="text-2xl font-semibold italic md:text-4xl">
                         {t("title")}
                     </h1>
