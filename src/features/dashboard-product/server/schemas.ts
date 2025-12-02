@@ -5,6 +5,9 @@ import {
     IMAGE_MIME_REGEX,
     MAX_PAGE_SIZE,
     MEDIA_TYPE_ENUM,
+    METADATA_DESCRIPTION_MAX_LENGTH,
+    METADATA_KEYWORD_MAX_LENGTH,
+    METADATA_KEYWORDS_MAX_COUNT,
     PACKAGING_DESCRIPTION_MAX_LENGTH,
     PACKAGING_DESCRIPTION_MIN_LENGTH,
     PACKAGING_NAME_MAX_LENGTH,
@@ -277,6 +280,29 @@ export const CreateProductInputSchema = z.object({
     packaging_option_ids: z.array(z.number()).default([]),
     is_hidden: z.boolean().default(false),
     order_index: z.number().default(0),
+    /** SEO metadata description (max 160 chars, optional) */
+    metadata_description: z
+        .string()
+        .max(
+            METADATA_DESCRIPTION_MAX_LENGTH,
+            PRODUCT_FIELD_ERRORS.METADATA_DESCRIPTION_MAX
+        )
+        .optional(),
+    /** SEO metadata keywords (max 20 items, each max 30 chars, optional) */
+    metadata_keywords: z
+        .array(
+            z
+                .string()
+                .max(
+                    METADATA_KEYWORD_MAX_LENGTH,
+                    PRODUCT_FIELD_ERRORS.METADATA_KEYWORD_MAX_LENGTH
+                )
+        )
+        .max(
+            METADATA_KEYWORDS_MAX_COUNT,
+            PRODUCT_FIELD_ERRORS.METADATA_KEYWORDS_MAX_COUNT
+        )
+        .optional(),
 });
 
 export type CreateProductInput = z.infer<typeof CreateProductInputSchema>;
@@ -333,6 +359,29 @@ export const UpdateProductInputSchema = z.object({
     packaging_option_ids: z.array(z.number()).default([]),
     is_hidden: z.boolean().default(false),
     order_index: z.number().default(0),
+    /** SEO metadata description (max 160 chars, optional) */
+    metadata_description: z
+        .string()
+        .max(
+            METADATA_DESCRIPTION_MAX_LENGTH,
+            PRODUCT_FIELD_ERRORS.METADATA_DESCRIPTION_MAX
+        )
+        .optional(),
+    /** SEO metadata keywords (max 20 items, each max 30 chars, optional) */
+    metadata_keywords: z
+        .array(
+            z
+                .string()
+                .max(
+                    METADATA_KEYWORD_MAX_LENGTH,
+                    PRODUCT_FIELD_ERRORS.METADATA_KEYWORD_MAX_LENGTH
+                )
+        )
+        .max(
+            METADATA_KEYWORDS_MAX_COUNT,
+            PRODUCT_FIELD_ERRORS.METADATA_KEYWORDS_MAX_COUNT
+        )
+        .optional(),
 });
 
 export type UpdateProductInput = z.infer<typeof UpdateProductInputSchema>;
@@ -410,6 +459,10 @@ export const ProductDetailSchema = z.object({
     order_index: z.number(),
     created_at: z.date(),
     updated_at: z.date(),
+    /** SEO metadata description (optional) */
+    metadata_description: z.string().optional(),
+    /** SEO metadata keywords (optional) */
+    metadata_keywords: z.array(z.string()).optional(),
 });
 
 export type ProductDetail = z.infer<typeof ProductDetailSchema>;

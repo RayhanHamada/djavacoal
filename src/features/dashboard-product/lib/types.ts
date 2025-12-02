@@ -78,6 +78,10 @@ export interface ProductDetail {
     order_index: number;
     created_at: Date;
     updated_at: Date;
+    /** SEO metadata description (max 160 chars, optional) */
+    metadata_description?: string;
+    /** SEO metadata keywords (max 20 items, each max 30 chars, optional) */
+    metadata_keywords?: string[];
 }
 
 /**

@@ -343,6 +343,20 @@ const PRODUCT_COLUMN_FIELDS = {
         .notNull()
         .default(false),
     [PRODUCT_COLUMNS.ORDER_INDEX]: int().notNull().default(0),
+
+    /**
+     * SEO metadata description (max 160 chars, optional)
+     */
+    [PRODUCT_COLUMNS.METADATA_DESCRIPTION]: text(),
+
+    /**
+     * SEO metadata keywords (JSON array, max 20 items, each max 30 chars, optional)
+     */
+    [PRODUCT_COLUMNS.METADATA_KEYWORDS]: text({
+        mode: "json",
+    })
+        .$type<string[]>()
+        .$default(() => []),
 } as const;
 
 /**

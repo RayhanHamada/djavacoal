@@ -19,7 +19,11 @@ export async function generateMetadata({
     if (!product) return {};
 
     const title = product.en_name;
-    const description = `Details and specifications for ${product.en_name}. Explore features, packaging options, and more.`;
+    const description =
+        product.metadata_description ||
+        `Details and specifications for ${product.en_name}. Explore features, packaging options, and more.`;
+
+    const keywords = product.metadata_keywords;
     const imagekey = product.medias.at(0)?.image_key;
     const imageURL = imagekey
         ? new URL(imagekey, process.env.NEXT_PUBLIC_ASSET_URL).toString()
@@ -28,6 +32,7 @@ export async function generateMetadata({
     return {
         title,
         description,
+        keywords,
         openGraph: {
             type: "website",
             title,

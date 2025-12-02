@@ -3,6 +3,9 @@ import { z } from "zod/v4";
 
 import {
     MEDIA_TYPE_ENUM,
+    METADATA_DESCRIPTION_MAX_LENGTH,
+    METADATA_KEYWORD_MAX_LENGTH,
+    METADATA_KEYWORDS_MAX_COUNT,
     MIN_MEDIA_ITEMS,
     MIN_SPECIFICATIONS,
     MIN_VARIANT_SIZES,
@@ -141,6 +144,29 @@ export const productFormSchema = z.object({
         ),
     packaging_option_ids: z.array(z.string()),
     is_hidden: z.boolean(),
+    /** SEO metadata description (max 160 chars, optional) */
+    metadata_description: z
+        .string()
+        .max(
+            METADATA_DESCRIPTION_MAX_LENGTH,
+            PRODUCT_FIELD_ERRORS.METADATA_DESCRIPTION_MAX
+        )
+        .optional(),
+    /** SEO metadata keywords (max 20 items, each max 30 chars, optional) */
+    metadata_keywords: z
+        .array(
+            z
+                .string()
+                .max(
+                    METADATA_KEYWORD_MAX_LENGTH,
+                    PRODUCT_FIELD_ERRORS.METADATA_KEYWORD_MAX_LENGTH
+                )
+        )
+        .max(
+            METADATA_KEYWORDS_MAX_COUNT,
+            PRODUCT_FIELD_ERRORS.METADATA_KEYWORDS_MAX_COUNT
+        )
+        .optional(),
 });
 
 export const validatePackagingOptionFormSchema = zod4Resolver(
