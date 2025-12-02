@@ -1,5 +1,7 @@
 "use client";
 
+import { useRef } from "react";
+
 import {
     Button,
     Drawer,
@@ -15,6 +17,10 @@ import { notifications } from "@mantine/notifications";
 import { useMutation } from "@tanstack/react-query";
 
 import { SITEMAP_CHANGEFREQ_VALUES } from "@/adapters/d1/constants";
+import {
+    OgImagePicker,
+    OgImagePickerRef,
+} from "@/features/dashboard-page-settings/components/atoms";
 import {
     CreatePageMetadataFormValues,
     MAX_KEYWORDS,
@@ -43,6 +49,8 @@ export function CreatePageMetadataDrawer({
     onClose,
     onSuccess,
 }: CreatePageMetadataDrawerProps) {
+    const ogImagePickerRef = useRef<OgImagePickerRef>(null);
+
     const form = useForm<CreatePageMetadataFormValues>({
         mode: "uncontrolled",
         initialValues: {
@@ -52,26 +60,38 @@ export function CreatePageMetadataDrawer({
             metadata_keywords: [],
             sitemap_priority: SITEMAP_PRIORITY_DEFAULT,
             sitemap_changefreq: SITEMAP_CHANGEFREQ_DEFAULT,
+            og_image_key: null,
         },
         validate: validateCreatePageMetadataForm,
     });
 
     const createMutation = useMutation(
         rpc.pageSettings.createPageMetadata.mutationOptions({
-            onSuccess: (_, __, ___, context) => {
+            async onMutate() {
+                notifications.show({
+                    title: "Creating...",
+                    message: "Creating page metadata entry",
+                    color: "blue",
+                    position: "bottom-center",
+                });
+            },
+            async onSuccess(_, __, ___, context) {
                 notifications.show({
                     title: "Success",
                     message: "Page metadata created successfully",
                     color: "green",
+                    position: "bottom-center",
                 });
+
                 context.client.invalidateQueries({
                     queryKey: rpc.pageSettings.listPageMetadata.key(),
                 });
+
                 form.reset();
                 onSuccess();
                 onClose();
             },
-            onError: (error) => {
+            async onError(error) {
                 notifications.show({
                     title: "Error",
                     message:
@@ -79,13 +99,34 @@ export function CreatePageMetadataDrawer({
                             ? error.message
                             : "Failed to create page metadata",
                     color: "red",
+                    position: "bottom-center",
                 });
             },
         })
     );
 
     const handleSubmit = form.onSubmit(async (values) => {
-        await createMutation.mutateAsync(values);
+        try {
+            // Upload pending OG image if any
+            const ogImageKey =
+                await ogImagePickerRef.current?.uploadPendingFile();
+
+            await createMutation.mutateAsync({
+                ...values,
+                og_image_key: ogImageKey ?? null,
+            });
+        } catch (error) {
+            console.error("Failed to create page metadata:", error);
+            notifications.show({
+                title: "Error",
+                message:
+                    error instanceof Error
+                        ? error.message
+                        : "Failed to upload image",
+                color: "red",
+                position: "bottom-center",
+            });
+        }
     });
 
     function handleClose() {
@@ -202,6 +243,15 @@ export function CreatePageMetadataDrawer({
                         ]}
                         key={form.key("sitemap_changefreq")}
                         {...form.getInputProps("sitemap_changefreq")}
+                        disabled={createMutation.isPending}
+                    />
+
+                    <OgImagePicker
+                        ref={ogImagePickerRef}
+                        value={form.getValues().og_image_key}
+                        onChange={(key) =>
+                            form.setFieldValue("og_image_key", key)
+                        }
                         disabled={createMutation.isPending}
                     />
 

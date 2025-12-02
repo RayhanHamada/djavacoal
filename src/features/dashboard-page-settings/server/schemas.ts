@@ -10,6 +10,8 @@ import {
     METADATA_KEYWORD_MIN_LENGTH,
     METADATA_TITLE_MAX_LENGTH,
     METADATA_TITLE_MIN_LENGTH,
+    OG_IMAGE_ALLOWED_MIME_TYPES,
+    OG_IMAGE_MAX_FILE_SIZE,
     PATH_MAX_LENGTH,
     PATH_MIN_LENGTH,
     SITEMAP_CHANGEFREQ_DEFAULT,
@@ -49,6 +51,7 @@ export const ListPageMetadataOutputSchema = z.object({
             metadata_keywords: z.array(z.string()),
             sitemap_priority: z.number(),
             sitemap_changefreq: z.enum(SITEMAP_CHANGEFREQ_ENUM),
+            og_image_key: z.string().nullable(),
             created_at: z.date(),
             updated_at: z.date(),
         })
@@ -76,6 +79,7 @@ export const GetPageMetadataByIdOutputSchema = z.object({
     metadata_keywords: z.array(z.string()),
     sitemap_priority: z.number(),
     sitemap_changefreq: z.enum(SITEMAP_CHANGEFREQ_ENUM),
+    og_image_key: z.string().nullable(),
     created_at: z.date(),
     updated_at: z.date(),
 });
@@ -136,6 +140,8 @@ export const CreatePageMetadataInputSchema = z.object({
     sitemap_changefreq: z
         .enum(SITEMAP_CHANGEFREQ_ENUM)
         .default(SITEMAP_CHANGEFREQ_DEFAULT),
+    /** OpenGraph image key stored in R2 (optional) */
+    og_image_key: z.string().nullable().optional(),
 });
 
 /**
@@ -195,6 +201,8 @@ export const UpdatePageMetadataInputSchema = z.object({
     sitemap_changefreq: z
         .enum(SITEMAP_CHANGEFREQ_ENUM)
         .default(SITEMAP_CHANGEFREQ_DEFAULT),
+    /** OpenGraph image key stored in R2 (optional) */
+    og_image_key: z.string().nullable().optional(),
 });
 
 /**
@@ -202,4 +210,38 @@ export const UpdatePageMetadataInputSchema = z.object({
  */
 export const DeletePageMetadataInputSchema = z.object({
     id: z.number().int().positive(),
+});
+
+/**
+ * Input schema for generating presigned upload URL for OG images
+ */
+export const GenerateOgImageUploadUrlInputSchema = z.object({
+    /** File name for the upload */
+    fileName: z.string().trim().min(1, "File name is required"),
+    /** MIME type of the image */
+    contentType: z
+        .string()
+        .refine(
+            (val): val is (typeof OG_IMAGE_ALLOWED_MIME_TYPES)[number] =>
+                OG_IMAGE_ALLOWED_MIME_TYPES.includes(
+                    val as (typeof OG_IMAGE_ALLOWED_MIME_TYPES)[number]
+                ),
+            "Invalid image type. Allowed: JPEG, PNG, GIF, WebP"
+        ),
+    /** File size in bytes */
+    fileSize: z
+        .number()
+        .int()
+        .positive()
+        .max(OG_IMAGE_MAX_FILE_SIZE, "File size must be less than 10MB"),
+});
+
+/**
+ * Output schema for presigned upload URL response
+ */
+export const GenerateOgImageUploadUrlOutputSchema = z.object({
+    /** Presigned URL for uploading to R2 */
+    uploadUrl: z.string().url(),
+    /** R2 key where the image will be stored */
+    key: z.string(),
 });

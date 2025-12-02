@@ -144,6 +144,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/news/pinned": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Fetch pinned news for home page
+         * @description Get news articles pinned to home page, ordered by published date descending
+         */
+        get: operations["getPinnedNews"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/news/{slug}": {
         parameters: {
             query?: never;
@@ -1228,6 +1248,151 @@ export interface operations {
                                 /** @description Total number of pages */
                                 total_pages: number;
                             };
+                        };
+                    };
+                };
+            };
+            /** @description 400 */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        /** @constant */
+                        defined: true;
+                        /** @constant */
+                        code: "BAD_REQUEST";
+                        /** @constant */
+                        status: 400;
+                        /** @default The request was invalid or cannot be served. */
+                        message: string;
+                        data?: Record<string, never> | null;
+                    } | {
+                        /** @constant */
+                        defined: false;
+                        code: string;
+                        status: number;
+                        message: string;
+                        data?: unknown;
+                    };
+                };
+            };
+            /** @description 401 */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        /** @constant */
+                        defined: true;
+                        /** @constant */
+                        code: "UNAUTHORIZED";
+                        /** @constant */
+                        status: 401;
+                        /** @default You are not authorized to perform this action. */
+                        message: string;
+                        data?: Record<string, never> | null;
+                    } | {
+                        /** @constant */
+                        defined: false;
+                        code: string;
+                        status: number;
+                        message: string;
+                        data?: unknown;
+                    };
+                };
+            };
+            /** @description 404 */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        /** @constant */
+                        defined: true;
+                        /** @constant */
+                        code: "NOT_FOUND";
+                        /** @constant */
+                        status: 404;
+                        /** @default The requested resource was not found. */
+                        message: string;
+                        data?: Record<string, never> | null;
+                    } | {
+                        /** @constant */
+                        defined: false;
+                        code: string;
+                        status: number;
+                        message: string;
+                        data?: unknown;
+                    };
+                };
+            };
+            /** @description 500 */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        /** @constant */
+                        defined: true;
+                        /** @constant */
+                        code: "INTERNAL_SERVER_ERROR";
+                        /** @constant */
+                        status: 500;
+                        /** @default An internal server error occurred. */
+                        message: string;
+                        data?: Record<string, never> | null;
+                    } | {
+                        /** @constant */
+                        defined: false;
+                        code: string;
+                        status: number;
+                        message: string;
+                        data?: unknown;
+                    };
+                };
+            };
+        };
+    };
+    getPinnedNews: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: {
+                            /** @description Array of pinned news articles ordered by published_at desc */
+                            news: {
+                                /** @description Article ID */
+                                id: number;
+                                /** @description Article slug for URL */
+                                slug: string;
+                                /** @description Localized article title */
+                                title: string;
+                                /**
+                                 * Format: date-time
+                                 * @description Publication date of the article
+                                 */
+                                published_at: string;
+                                /** @description URL of the article's cover image */
+                                cover_image_url: string | null;
+                            }[];
+                            /** @description Total number of pinned news articles */
+                            total: number;
                         };
                     };
                 };

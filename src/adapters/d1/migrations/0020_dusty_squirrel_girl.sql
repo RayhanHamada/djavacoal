@@ -1,0 +1,1 @@
+ALTER TABLE `page_metadatas` ADD `og_image_key` text;

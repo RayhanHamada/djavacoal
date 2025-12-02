@@ -1,10 +1,17 @@
 import "server-only";
 
 import { asc, count, eq, like } from "drizzle-orm";
+import { nanoid } from "nanoid";
 
 import { COMMON_COLUMNS, PAGE_METADATA_COLUMNS } from "@/adapters/d1/constants";
 import { getDB } from "@/adapters/d1/db";
 import { pageMetadatas } from "@/adapters/d1/schema";
+import {
+    DEFAULT_BUCKET_NAME,
+    generatePresignedUploadUrl,
+    getR2Client,
+    PAGE_METADATA_OG_PREFIX,
+} from "@/adapters/r2";
 import {
     findPageMetadataById,
     isPathAvailable,
@@ -12,6 +19,8 @@ import {
 import {
     CreatePageMetadataInputSchema,
     DeletePageMetadataInputSchema,
+    GenerateOgImageUploadUrlInputSchema,
+    GenerateOgImageUploadUrlOutputSchema,
     GetPageMetadataByIdInputSchema,
     GetPageMetadataByIdOutputSchema,
     ListPageMetadataInputSchema,
@@ -50,6 +59,7 @@ export const listPageMetadata = base
                     pageMetadatas[PAGE_METADATA_COLUMNS.SITEMAP_PRIORITY],
                 sitemap_changefreq:
                     pageMetadatas[PAGE_METADATA_COLUMNS.SITEMAP_CHANGEFREQ],
+                og_image_key: pageMetadatas[PAGE_METADATA_COLUMNS.OG_IMAGE_KEY],
                 created_at: pageMetadatas[COMMON_COLUMNS.CREATED_AT],
                 updated_at: pageMetadatas[COMMON_COLUMNS.UPDATED_AT],
             })
@@ -81,6 +91,7 @@ export const listPageMetadata = base
                         | "monthly"
                         | "yearly"
                         | "never") ?? "weekly",
+                og_image_key: (item.og_image_key as string | null) ?? null,
                 created_at: new Date(item.created_at ?? 0),
                 updated_at: new Date(item.updated_at ?? 0),
             })),
@@ -135,6 +146,10 @@ export const getPageMetadataById = base
                     | "monthly"
                     | "yearly"
                     | "never") ?? "weekly",
+            og_image_key:
+                (pageMetadata[PAGE_METADATA_COLUMNS.OG_IMAGE_KEY] as
+                    | string
+                    | null) ?? null,
             created_at: new Date(pageMetadata[COMMON_COLUMNS.CREATED_AT] ?? 0),
             updated_at: new Date(pageMetadata[COMMON_COLUMNS.UPDATED_AT] ?? 0),
         };
@@ -155,6 +170,7 @@ export const createPageMetadata = base
             metadata_keywords,
             sitemap_priority,
             sitemap_changefreq,
+            og_image_key,
         } = input;
 
         // Check if path already exists
@@ -176,6 +192,7 @@ export const createPageMetadata = base
                 [PAGE_METADATA_COLUMNS.METADATA_KEYWORDS]: metadata_keywords,
                 [PAGE_METADATA_COLUMNS.SITEMAP_PRIORITY]: sitemap_priority,
                 [PAGE_METADATA_COLUMNS.SITEMAP_CHANGEFREQ]: sitemap_changefreq,
+                [PAGE_METADATA_COLUMNS.OG_IMAGE_KEY]: og_image_key ?? null,
             })
             .returning({
                 id: pageMetadatas[COMMON_COLUMNS.ID],
@@ -203,6 +220,7 @@ export const updatePageMetadata = base
             metadata_keywords,
             sitemap_priority,
             sitemap_changefreq,
+            og_image_key,
         } = input;
 
         // Check if page metadata exists
@@ -232,6 +250,7 @@ export const updatePageMetadata = base
                 [PAGE_METADATA_COLUMNS.METADATA_KEYWORDS]: metadata_keywords,
                 [PAGE_METADATA_COLUMNS.SITEMAP_PRIORITY]: sitemap_priority,
                 [PAGE_METADATA_COLUMNS.SITEMAP_CHANGEFREQ]: sitemap_changefreq,
+                [PAGE_METADATA_COLUMNS.OG_IMAGE_KEY]: og_image_key ?? null,
             })
             .where(eq(pageMetadatas[COMMON_COLUMNS.ID], id));
 
@@ -265,6 +284,48 @@ export const deletePageMetadata = base
 
         return {
             success: true,
+        };
+    })
+    .callable();
+
+/**
+ * Generate presigned URL for uploading OG image to R2
+ */
+export const generateOgImageUploadUrl = base
+    .input(GenerateOgImageUploadUrlInputSchema)
+    .output(GenerateOgImageUploadUrlOutputSchema)
+    .handler(async function ({ input, errors }) {
+        const { contentType } = input;
+
+        // Generate unique key with prefix
+        const uniqueId = nanoid();
+        const key = `${PAGE_METADATA_OG_PREFIX}/${uniqueId}`;
+
+        // Validate required environment variables
+        const { S3_API, R2_ACCESS_KEY_ID, R2_SECRET_ACCESS_KEY } = process.env;
+        if (!S3_API || !R2_ACCESS_KEY_ID || !R2_SECRET_ACCESS_KEY) {
+            throw errors.INTERNAL_SERVER_ERROR({
+                message: "R2 storage configuration is incomplete",
+            });
+        }
+
+        // Create R2 client
+        const r2Client = getR2Client({
+            endpoint: S3_API,
+            accessKeyId: R2_ACCESS_KEY_ID,
+            secretAccessKey: R2_SECRET_ACCESS_KEY,
+        });
+
+        // Generate presigned URL for PUT operation
+        const uploadUrl = await generatePresignedUploadUrl(r2Client, {
+            key,
+            contentType,
+            bucketName: DEFAULT_BUCKET_NAME,
+        });
+
+        return {
+            uploadUrl,
+            key,
         };
     })
     .callable();

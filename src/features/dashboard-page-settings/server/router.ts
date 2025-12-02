@@ -1,6 +1,7 @@
 import {
     createPageMetadata,
     deletePageMetadata,
+    generateOgImageUploadUrl,
     getPageMetadataById,
     listPageMetadata,
     updatePageMetadata,
@@ -12,4 +13,5 @@ export const router = {
     createPageMetadata,
     updatePageMetadata,
     deletePageMetadata,
+    generateOgImageUploadUrl,
 };

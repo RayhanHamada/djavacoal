@@ -174,6 +174,8 @@ export const PAGE_METADATA_COLUMNS = {
     METADATA_KEYWORDS: "metadata_keywords",
     SITEMAP_PRIORITY: "sitemap_priority",
     SITEMAP_CHANGEFREQ: "sitemap_changefreq",
+    /** OpenGraph image key stored in R2 (optional) */
+    OG_IMAGE_KEY: "og_image_key",
 } as const;
 
 export const TEAM_MEMBER_COLUMNS = {

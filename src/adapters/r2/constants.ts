@@ -40,6 +40,11 @@ export const STATIC_MEDIA_PRODUCT_GALLERY_PREFIX =
 export const PRODUCT_CATALOGUE_PREFIX = "product-catalogue";
 
 /**
+ * Page metadata OG images folder prefix in R2
+ */
+export const PAGE_METADATA_OG_PREFIX = "page-metadata/og-images";
+
+/**
  * Presigned URL expiration time in seconds (1 hour)
  */
 export const PRESIGNED_URL_EXPIRATION = 3600;

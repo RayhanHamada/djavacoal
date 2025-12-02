@@ -26,20 +26,36 @@ export async function generateMetadata(): Promise<Metadata> {
     const description =
         pageMetadata?.metadata_description || "Quality Charcoal from Indonesia";
 
+    const ogImage = pageMetadata?.og_image_key
+        ? new URL(
+              pageMetadata.og_image_key,
+              process.env.NEXT_PUBLIC_ASSET_URL
+          ).toString()
+        : undefined;
+
+    const keywords = pageMetadata?.metadata_keywords || [
+        "charcoal",
+        "djavacoal",
+        "indonesia",
+        "quality charcoal",
+    ];
+
     return {
         title,
         description,
-        keywords: pageMetadata?.metadata_keywords || [
-            "charcoal",
-            "djavacoal",
-            "indonesia",
-            "quality charcoal",
-        ],
+        keywords,
         assets: process.env.NEXT_PUBLIC_ASSETS_URL,
         openGraph: {
             type: "website",
             title,
             description,
+            images: ogImage,
+        },
+        twitter: {
+            card: "summary_large_image",
+            title,
+            description,
+            images: ogImage,
         },
     };
 }

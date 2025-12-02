@@ -133,8 +133,8 @@ export const MY_TABLE_COLUMNS = {
 // 3. Generate migration
 bun d1:generate
 
-// 4. Apply migration
-bun d1:migrate:djavacoal
+// 4. Apply migration (choose based on environment)
+bun d1:migrate:development  // or bun d1:migrate:production
 
 // 5. Use in code
 import { getDB } from "@/adapters/d1/db";
@@ -213,9 +213,10 @@ bun start                  # Production server
 bun lint                   # ESLint with auto-fix
 
 # Database
-bun d1:generate            # Generate migration from schema
-bun d1:migrate:djavacoal   # Apply migrations to D1
-bun d1:studio              # Open Drizzle Studio
+bun d1:generate              # Generate migration from schema
+bun d1:migrate:development   # Apply migrations to development D1
+bun d1:migrate:production    # Apply migrations to production D1
+bun d1:studio                # Open Drizzle Studio
 
 # Cloudflare
 bun cf:build               # Build for Workers
@@ -299,12 +300,12 @@ const session = await auth.api.getSession({ headers });
 
 ## 📚 Key Documentation Files
 
-| File | Purpose |
-|------|---------|
+| File                              | Purpose                        |
+| --------------------------------- | ------------------------------ |
 | `.github/copilot-instructions.md` | Complete project documentation |
-| `docs/AGENTS_MD_GUIDE.md` | How to write feature docs |
-| `docs/FEATURES_OVERVIEW.md` | All features catalog |
-| `src/features/*/AGENTS.md` | Individual feature docs |
+| `docs/AGENTS_MD_GUIDE.md`         | How to write feature docs      |
+| `docs/FEATURES_OVERVIEW.md`       | All features catalog           |
+| `src/features/*/AGENTS.md`        | Individual feature docs        |
 
 ## 🎨 Code Style
 
@@ -419,7 +420,7 @@ Need to make it bilingual?
 
 ### Database errors
 1. Check schema in `src/adapters/d1/schema.ts`
-2. Verify migrations applied: `bun d1:migrate:djavacoal`
+2. Verify migrations applied: `bun d1:migrate:development` or `bun d1:migrate:production`
 3. Use constants for column names
 4. Check Cloudflare context is available
 
