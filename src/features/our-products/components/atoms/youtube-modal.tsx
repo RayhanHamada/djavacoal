@@ -42,7 +42,7 @@ export function YouTubeModal({
             </button>
 
             <div
-                className="relative w-full max-w-xs sm:max-w-lg md:max-w-3xl lg:max-w-5xl"
+                className="relative w-full max-w-xs sm:max-w-lg md:max-w-3xl lg:max-w-4xl"
                 onClick={(e) => e.stopPropagation()}
             >
                 <iframe
