@@ -80,3 +80,21 @@ export const SITEMAP_PRIORITY_OPTIONS = [
     { value: 0.5, label: "0.5 - Default (Content)" },
     { value: 0.3, label: "0.3 - Low (Secondary)" },
 ] as const;
+
+// ============================================
+// OG Image Upload Configuration
+// ============================================
+
+/** Maximum file size for OG image upload (10MB in bytes) */
+export const OG_IMAGE_MAX_FILE_SIZE = 10 * 1024 * 1024;
+
+/** Allowed MIME types for OG image uploads */
+export const OG_IMAGE_ALLOWED_MIME_TYPES = [
+    "image/jpeg",
+    "image/png",
+    "image/gif",
+    "image/webp",
+] as const;
+
+/** Type for allowed OG image MIME types */
+export type OgImageMimeType = (typeof OG_IMAGE_ALLOWED_MIME_TYPES)[number];

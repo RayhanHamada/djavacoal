@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { forwardRef, useCallback, useImperativeHandle, useState } from "react";
 
 import {
     ActionIcon,
@@ -9,6 +9,7 @@ import {
     Button,
     Card,
     Center,
+    FileButton,
     Group,
     Image,
     Loader,
@@ -19,11 +20,22 @@ import {
     Text,
     TextInput,
 } from "@mantine/core";
-import { IconPhoto, IconSearch, IconTrash, IconX } from "@tabler/icons-react";
+import { notifications } from "@mantine/notifications";
+import {
+    IconPhoto,
+    IconSearch,
+    IconTrash,
+    IconUpload,
+    IconX,
+} from "@tabler/icons-react";
 import { useQuery } from "@tanstack/react-query";
 import { useDebounce } from "ahooks";
 
-import { rpc } from "@/lib/rpc";
+import {
+    OG_IMAGE_ALLOWED_MIME_TYPES,
+    OG_IMAGE_MAX_FILE_SIZE,
+} from "@/features/dashboard-page-settings/lib/constants";
+import { client, rpc } from "@/lib/rpc";
 
 interface OgImagePickerProps {
     /** Current OG image key (from R2) */
@@ -35,6 +47,16 @@ interface OgImagePickerProps {
 }
 
 /**
+ * Ref handle for OgImagePicker component
+ */
+export interface OgImagePickerRef {
+    /** Upload the currently held file. Returns the R2 key or null if no pending file */
+    uploadPendingFile: () => Promise<string | null>;
+    /** Check if there's a pending file to upload */
+    hasPendingFile: () => boolean;
+}
+
+/**
  * Builds a URL for displaying the OG image from R2
  */
 function getOgImageUrl(key: string): string {
@@ -42,93 +64,243 @@ function getOgImageUrl(key: string): string {
 }
 
 /**
- * OgImagePicker - Atom component for selecting OpenGraph images from gallery
+ * OgImagePicker - Atom component for selecting OpenGraph images
+ *
+ * Supports two methods:
+ * 1. Direct upload via FileButton (deferred until form submit)
+ * 2. Selection from gallery via modal picker
  *
  * Displays current image preview with options to change or remove.
- * Opens a gallery picker modal for selecting images.
+ * Uses forwardRef to expose upload functionality to parent.
  */
-export function OgImagePicker({
-    value,
-    onChange,
-    disabled = false,
-}: OgImagePickerProps) {
-    const [modalOpened, setModalOpened] = useState(false);
+export const OgImagePicker = forwardRef<OgImagePickerRef, OgImagePickerProps>(
+    function OgImagePicker({ value, onChange, disabled = false }, ref) {
+        const [modalOpened, setModalOpened] = useState(false);
+        const [pendingFile, setPendingFile] = useState<File | null>(null);
+        const [previewUrl, setPreviewUrl] = useState<string | null>(null);
 
-    const handleSelect = (photo: { key: string }) => {
-        onChange(photo.key);
-        setModalOpened(false);
-    };
+        // Expose upload function to parent via ref
+        useImperativeHandle(ref, () => ({
+            uploadPendingFile: async () => {
+                if (!pendingFile) {
+                    // No pending file - return existing key
+                    return value || null;
+                }
 
-    const handleRemove = () => {
-        onChange(null);
-    };
+                // Upload the pending file
+                const { uploadUrl, key } =
+                    await client.pageSettings.generateOgImageUploadUrl({
+                        fileName: pendingFile.name,
+                        contentType: pendingFile.type,
+                        fileSize: pendingFile.size,
+                    });
 
-    const imageUrl = value ? getOgImageUrl(value) : null;
+                const uploadResponse = await fetch(uploadUrl, {
+                    method: "PUT",
+                    body: pendingFile,
+                    headers: {
+                        "Content-Type": pendingFile.type,
+                    },
+                });
 
-    return (
-        <Stack gap="xs">
-            <Text size="sm" fw={500}>
-                OpenGraph Image
-            </Text>
-            <Text size="xs" c="dimmed">
-                Image displayed when sharing on social media (recommended:
-                1200×630px)
-            </Text>
+                if (!uploadResponse.ok) {
+                    throw new Error("Failed to upload image to storage");
+                }
 
-            {imageUrl ? (
-                <Card withBorder p="xs" radius="md">
-                    <Stack gap="xs">
-                        <AspectRatio ratio={1200 / 630}>
-                            <Image
-                                src={imageUrl}
-                                alt="OpenGraph preview"
-                                fit="cover"
-                                radius="sm"
-                            />
-                        </AspectRatio>
-                        <Group gap="xs">
-                            <Button
-                                variant="light"
-                                size="xs"
-                                leftSection={<IconPhoto size={14} />}
-                                onClick={() => setModalOpened(true)}
-                                disabled={disabled}
-                                flex={1}
-                            >
-                                Change
-                            </Button>
-                            <Button
-                                variant="light"
-                                color="red"
-                                size="xs"
-                                leftSection={<IconTrash size={14} />}
-                                onClick={handleRemove}
-                                disabled={disabled}
-                            >
-                                Remove
-                            </Button>
-                        </Group>
-                    </Stack>
-                </Card>
-            ) : (
-                <Button
-                    variant="light"
-                    leftSection={<IconPhoto size={16} />}
-                    onClick={() => setModalOpened(true)}
-                    disabled={disabled}
-                >
-                    Choose from Gallery
-                </Button>
-            )}
+                // Clean up preview URL
+                if (previewUrl) {
+                    URL.revokeObjectURL(previewUrl);
+                }
 
-            <OgImagePickerModal
-                opened={modalOpened}
-                onClose={() => setModalOpened(false)}
-                onSelect={handleSelect}
-            />
-        </Stack>
-    );
-}
+                // Clear pending state
+                setPendingFile(null);
+                setPreviewUrl(null);
+
+                return key;
+            },
+            hasPendingFile: () => pendingFile !== null,
+        }));
+
+        const handleGallerySelect = (photo: { key: string }) => {
+            // Clear any pending file when selecting from gallery
+            if (previewUrl) {
+                URL.revokeObjectURL(previewUrl);
+                setPreviewUrl(null);
+            }
+            setPendingFile(null);
+            onChange(photo.key);
+            setModalOpened(false);
+        };
+
+        const handleRemove = () => {
+            if (previewUrl) {
+                URL.revokeObjectURL(previewUrl);
+                setPreviewUrl(null);
+            }
+            setPendingFile(null);
+            onChange(null);
+        };
+
+        const handleFileSelect = useCallback(
+            (file: File | null) => {
+                if (!file) return;
+
+                // Validate file type
+                if (
+                    !OG_IMAGE_ALLOWED_MIME_TYPES.includes(
+                        file.type as (typeof OG_IMAGE_ALLOWED_MIME_TYPES)[number]
+                    )
+                ) {
+                    notifications.show({
+                        title: "Invalid file type",
+                        message:
+                            "Please upload a JPEG, PNG, GIF, or WebP image",
+                        color: "red",
+                        position: "bottom-center",
+                    });
+                    return;
+                }
+
+                // Validate file size
+                if (file.size > OG_IMAGE_MAX_FILE_SIZE) {
+                    notifications.show({
+                        title: "File too large",
+                        message: "Image must be less than 10MB",
+                        color: "red",
+                        position: "bottom-center",
+                    });
+                    return;
+                }
+
+                // Clean up previous preview URL
+                if (previewUrl) {
+                    URL.revokeObjectURL(previewUrl);
+                }
+
+                // Create local preview and store file for later upload
+                const url = URL.createObjectURL(file);
+                setPreviewUrl(url);
+                setPendingFile(file);
+
+                // Clear any existing R2 key since we have a new pending file
+                onChange(null);
+            },
+            [onChange, previewUrl]
+        );
+
+        // Determine what image to show: pending file preview, existing R2 image, or nothing
+        const displayUrl = previewUrl || (value ? getOgImageUrl(value) : null);
+        const isDisabled = disabled;
+
+        return (
+            <Stack gap="xs">
+                <Text size="sm" fw={500}>
+                    OpenGraph Image
+                </Text>
+                <Text size="xs" c="dimmed">
+                    Image displayed when sharing on social media (recommended:
+                    1200×630px)
+                </Text>
+
+                {displayUrl ? (
+                    <Card withBorder p="xs" radius="md">
+                        <Stack gap="xs">
+                            <AspectRatio ratio={1200 / 630}>
+                                <Image
+                                    src={displayUrl}
+                                    alt="OpenGraph preview"
+                                    fit="cover"
+                                    radius="sm"
+                                />
+                            </AspectRatio>
+                            {pendingFile && (
+                                <Text size="xs" c="dimmed" ta="center">
+                                    Pending upload: {pendingFile.name}
+                                </Text>
+                            )}
+                            <Group gap="xs">
+                                <FileButton
+                                    onChange={handleFileSelect}
+                                    accept={OG_IMAGE_ALLOWED_MIME_TYPES.join(
+                                        ","
+                                    )}
+                                    disabled={isDisabled}
+                                >
+                                    {(props) => (
+                                        <Button
+                                            {...props}
+                                            variant="light"
+                                            size="xs"
+                                            leftSection={
+                                                <IconUpload size={14} />
+                                            }
+                                            disabled={isDisabled}
+                                        >
+                                            Upload
+                                        </Button>
+                                    )}
+                                </FileButton>
+                                <Button
+                                    variant="light"
+                                    size="xs"
+                                    leftSection={<IconPhoto size={14} />}
+                                    onClick={() => setModalOpened(true)}
+                                    disabled={isDisabled}
+                                    flex={1}
+                                >
+                                    Gallery
+                                </Button>
+                                <Button
+                                    variant="light"
+                                    color="red"
+                                    size="xs"
+                                    leftSection={<IconTrash size={14} />}
+                                    onClick={handleRemove}
+                                    disabled={isDisabled}
+                                >
+                                    Remove
+                                </Button>
+                            </Group>
+                        </Stack>
+                    </Card>
+                ) : (
+                    <Group gap="xs">
+                        <FileButton
+                            onChange={handleFileSelect}
+                            accept={OG_IMAGE_ALLOWED_MIME_TYPES.join(",")}
+                            disabled={isDisabled}
+                        >
+                            {(props) => (
+                                <Button
+                                    {...props}
+                                    variant="light"
+                                    leftSection={<IconUpload size={16} />}
+                                    disabled={isDisabled}
+                                >
+                                    Upload Image
+                                </Button>
+                            )}
+                        </FileButton>
+                        <Button
+                            variant="light"
+                            leftSection={<IconPhoto size={16} />}
+                            onClick={() => setModalOpened(true)}
+                            disabled={isDisabled}
+                        >
+                            Choose from Gallery
+                        </Button>
+                    </Group>
+                )}
+
+                <OgImagePickerModal
+                    opened={modalOpened}
+                    onClose={() => setModalOpened(false)}
+                    onSelect={handleGallerySelect}
+                />
+            </Stack>
+        );
+    }
+);
 
 interface OgImagePickerModalProps {
     opened: boolean;

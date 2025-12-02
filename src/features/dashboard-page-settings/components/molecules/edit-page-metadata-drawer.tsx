@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 
 import {
     Button,
@@ -17,7 +17,10 @@ import { notifications } from "@mantine/notifications";
 import { useMutation, useQuery } from "@tanstack/react-query";
 
 import { SITEMAP_CHANGEFREQ_VALUES } from "@/adapters/d1/constants";
-import { OgImagePicker } from "@/features/dashboard-page-settings/components/atoms";
+import {
+    OgImagePicker,
+    OgImagePickerRef,
+} from "@/features/dashboard-page-settings/components/atoms";
 import {
     EditPageMetadataFormValues,
     MAX_KEYWORDS,
@@ -48,6 +51,8 @@ export function EditPageMetadataDrawer({
     pageMetadataId,
     onSuccess,
 }: EditPageMetadataDrawerProps) {
+    const ogImagePickerRef = useRef<OgImagePickerRef>(null);
+
     const form = useForm<EditPageMetadataFormValues>({
         mode: "uncontrolled",
         initialValues: {
@@ -98,6 +103,7 @@ export function EditPageMetadataDrawer({
                     title: "Success",
                     message: "Page metadata updated successfully",
                     color: "green",
+                    position: "bottom-center",
                 });
                 context.client.invalidateQueries({
                     queryKey: rpc.pageSettings.listPageMetadata.key(),
@@ -114,13 +120,34 @@ export function EditPageMetadataDrawer({
                             ? error.message
                             : "Failed to update page metadata",
                     color: "red",
+                    position: "bottom-center",
                 });
             },
         })
     );
 
     const handleSubmit = form.onSubmit(async (values) => {
-        await updateMutation.mutateAsync(values);
+        try {
+            // Upload pending OG image if any
+            const ogImageKey =
+                await ogImagePickerRef.current?.uploadPendingFile();
+
+            await updateMutation.mutateAsync({
+                ...values,
+                og_image_key: ogImageKey ?? null,
+            });
+        } catch (error) {
+            console.error("Failed to update page metadata:", error);
+            notifications.show({
+                title: "Error",
+                message:
+                    error instanceof Error
+                        ? error.message
+                        : "Failed to upload image",
+                color: "red",
+                position: "bottom-center",
+            });
+        }
     });
 
     function handleClose() {
@@ -243,6 +270,7 @@ export function EditPageMetadataDrawer({
                     />
 
                     <OgImagePicker
+                        ref={ogImagePickerRef}
                         value={form.getValues().og_image_key}
                         onChange={(key) =>
                             form.setFieldValue("og_image_key", key)

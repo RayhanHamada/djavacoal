@@ -1,10 +1,17 @@
 import "server-only";
 
 import { asc, count, eq, like } from "drizzle-orm";
+import { nanoid } from "nanoid";
 
 import { COMMON_COLUMNS, PAGE_METADATA_COLUMNS } from "@/adapters/d1/constants";
 import { getDB } from "@/adapters/d1/db";
 import { pageMetadatas } from "@/adapters/d1/schema";
+import {
+    DEFAULT_BUCKET_NAME,
+    generatePresignedUploadUrl,
+    getR2Client,
+    PAGE_METADATA_OG_PREFIX,
+} from "@/adapters/r2";
 import {
     findPageMetadataById,
     isPathAvailable,
@@ -12,6 +19,8 @@ import {
 import {
     CreatePageMetadataInputSchema,
     DeletePageMetadataInputSchema,
+    GenerateOgImageUploadUrlInputSchema,
+    GenerateOgImageUploadUrlOutputSchema,
     GetPageMetadataByIdInputSchema,
     GetPageMetadataByIdOutputSchema,
     ListPageMetadataInputSchema,
@@ -275,6 +284,48 @@ export const deletePageMetadata = base
 
         return {
             success: true,
+        };
+    })
+    .callable();
+
+/**
+ * Generate presigned URL for uploading OG image to R2
+ */
+export const generateOgImageUploadUrl = base
+    .input(GenerateOgImageUploadUrlInputSchema)
+    .output(GenerateOgImageUploadUrlOutputSchema)
+    .handler(async function ({ input, errors }) {
+        const { contentType } = input;
+
+        // Generate unique key with prefix
+        const uniqueId = nanoid();
+        const key = `${PAGE_METADATA_OG_PREFIX}/${uniqueId}`;
+
+        // Validate required environment variables
+        const { S3_API, R2_ACCESS_KEY_ID, R2_SECRET_ACCESS_KEY } = process.env;
+        if (!S3_API || !R2_ACCESS_KEY_ID || !R2_SECRET_ACCESS_KEY) {
+            throw errors.INTERNAL_SERVER_ERROR({
+                message: "R2 storage configuration is incomplete",
+            });
+        }
+
+        // Create R2 client
+        const r2Client = getR2Client({
+            endpoint: S3_API,
+            accessKeyId: R2_ACCESS_KEY_ID,
+            secretAccessKey: R2_SECRET_ACCESS_KEY,
+        });
+
+        // Generate presigned URL for PUT operation
+        const uploadUrl = await generatePresignedUploadUrl(r2Client, {
+            key,
+            contentType,
+            bucketName: DEFAULT_BUCKET_NAME,
+        });
+
+        return {
+            uploadUrl,
+            key,
         };
     })
     .callable();

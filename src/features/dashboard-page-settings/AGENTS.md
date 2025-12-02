@@ -54,11 +54,12 @@ dashboard-page-settings/
    - Sitemap Change Frequency: always, hourly, daily, weekly, monthly, yearly, never
    - OpenGraph Image: Optional image for social media sharing (stored in R2)
 
-3. **OpenGraph Image Upload**
+3. **OpenGraph Image Management**
+   - Direct upload via FileButton (presigned URL to R2)
    - Select images from centralized gallery
    - Preview with 1200×630 aspect ratio (recommended OG image size)
    - Remove existing OG image
-   - Images stored in R2, referenced by key
+   - Images stored in R2 under `page-metadata/og-images/` prefix
 
 4. **Path Validation**
    - Unique path enforcement
@@ -96,6 +97,9 @@ rpc.pageSettings.updatePageMetadata.useMutation()
 
 // Delete page metadata
 rpc.pageSettings.deletePageMetadata.useMutation()
+
+// Generate presigned URL for OG image upload
+rpc.pageSettings.generateOgImageUploadUrl.useMutation()
 ```
 
 ### Database Schema
@@ -146,6 +150,15 @@ PAGE_METADATA_COLUMNS = {
 
 // Valid change frequency values
 type ChangeFreq = "always" | "hourly" | "daily" | "weekly" | "monthly" | "yearly" | "never";
+```
+
+### R2 Storage
+
+OpenGraph images uploaded directly are stored in R2 with a dedicated prefix:
+
+```typescript
+// Located in @/adapters/r2/constants.ts
+PAGE_METADATA_OG_PREFIX = "page-metadata/og-images"
 ```
 
 ## Database Migration
@@ -294,6 +307,11 @@ await updateMutation.mutateAsync({
 
 ### Using the OgImagePicker Component
 
+The `OgImagePicker` component supports two methods for selecting OpenGraph images:
+
+1. **Direct Upload**: Upload images directly via FileButton (uses presigned URL)
+2. **Gallery Selection**: Choose from existing images in the centralized gallery
+
 ```tsx
 import { OgImagePicker } from "@/features/dashboard-page-settings/components/atoms";
 
@@ -310,6 +328,33 @@ import { OgImagePicker } from "@/features/dashboard-page-settings/components/ato
 const deleteMutation = rpc.pageSettings.deletePageMetadata.useMutation();
 
 await deleteMutation.mutateAsync({ id: 123 });
+```
+
+### Direct Upload of OpenGraph Image
+
+The `generateOgImageUploadUrl` function generates a presigned URL for uploading images directly to R2:
+
+```typescript
+// Step 1: Get presigned URL
+const { uploadUrl, key } = await client.pageSettings.generateOgImageUploadUrl({
+  fileName: "my-og-image.jpg",
+  contentType: "image/jpeg",
+  fileSize: 1024 * 500, // 500KB
+});
+
+// Step 2: Upload file directly to R2
+await fetch(uploadUrl, {
+  method: "PUT",
+  body: file,
+  headers: { "Content-Type": file.type },
+});
+
+// Step 3: Save the key with page metadata
+await updateMutation.mutateAsync({
+  id: 123,
+  og_image_key: key, // e.g., "page-metadata/og-images/abc123"
+  // ...other fields
+});
 ```
 
 ## Sitemap Configuration Guide
