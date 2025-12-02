@@ -19,8 +19,12 @@ import { RichTextEditor } from "../atoms";
 
 type PackagingOptionFormProps = {
     initialData?: PackagingOptionFormValues;
-    onSubmit: (data: PackagingOptionFormValues & { photo?: File }) => void;
-    onCancel: () => void;
+    onSubmit(
+        data: PackagingOptionFormValues & {
+            photo?: File;
+        }
+    ): void;
+    onCancel(): void;
     isSubmitting: boolean;
     assetUrl?: string;
 };

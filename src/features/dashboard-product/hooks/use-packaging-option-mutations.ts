@@ -10,7 +10,15 @@ export function usePackagingOptionMutations() {
 
     const createMutation = useMutation(
         rpc.dashboardProduct.createPackagingOption.mutationOptions({
-            onSuccess: async (_, __, ___, { client }) => {
+            async onMutate(variables, context) {
+                notifications.show({
+                    title: "Creating packaging option...",
+                    message: "",
+                    color: "blue",
+                });
+                return context;
+            },
+            async onSuccess(_, __, ___, { client }) {
                 notifications.show({
                     title: "Packaging option created successfully",
                     message: "",
@@ -25,7 +33,7 @@ export function usePackagingOptionMutations() {
                 ]);
                 router.push("/dashboard/products/packaging-options");
             },
-            onError: () => {
+            async onError() {
                 notifications.show({
                     title: "Failed to create packaging option",
                     message: "",
@@ -37,7 +45,15 @@ export function usePackagingOptionMutations() {
 
     const updateMutation = useMutation(
         rpc.dashboardProduct.updatePackagingOption.mutationOptions({
-            onSuccess: async (_, __, ___, { client }) => {
+            async onMutate(variables, context) {
+                notifications.show({
+                    title: "Updating packaging option...",
+                    message: "",
+                    color: "blue",
+                });
+                return context;
+            },
+            async onSuccess(_, __, ___, { client }) {
                 notifications.show({
                     title: "Packaging option updated successfully",
                     message: "",
@@ -57,7 +73,7 @@ export function usePackagingOptionMutations() {
 
                 router.push("/dashboard/products/packaging-options");
             },
-            onError: () => {
+            async onError() {
                 notifications.show({
                     title: "Failed to update packaging option",
                     message: "",
@@ -69,7 +85,15 @@ export function usePackagingOptionMutations() {
 
     const deleteMutation = useMutation(
         rpc.dashboardProduct.deletePackagingOption.mutationOptions({
-            onSuccess: async (_, __, ___, { client }) => {
+            async onMutate(variables, context) {
+                notifications.show({
+                    title: "Deleting packaging option...",
+                    message: "",
+                    color: "blue",
+                });
+                return context;
+            },
+            async onSuccess(_, __, ___, { client }) {
                 notifications.show({
                     title: "Packaging option deleted successfully",
                     message: "",
@@ -87,7 +111,7 @@ export function usePackagingOptionMutations() {
                     }),
                 ]);
             },
-            onError: () => {
+            async onError() {
                 notifications.show({
                     title: "Failed to delete packaging option",
                     message: "",
