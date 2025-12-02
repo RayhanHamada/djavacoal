@@ -18,6 +18,8 @@ export const getProductMetadata = cache(async (productId: number) => {
         columns: {
             id: true,
             en_name: true,
+            metadata_description: true,
+            metadata_keywords: true,
         },
         where(fields, operators) {
             return operators.and(
