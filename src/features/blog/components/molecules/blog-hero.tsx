@@ -13,7 +13,7 @@ export function BlogHero({ title, className }: BlogHeroProps) {
     return (
         <div
             className={cn(
-                "relative flex h-[350px] w-full flex-col items-center justify-center gap-[214px] overflow-hidden",
+                "relative flex h-48 w-full flex-col items-center justify-center gap-[214px] overflow-hidden md:h-72",
                 "bg-gradient-radial from-[rgba(219,172,102,1)] from-72% to-[rgba(21,21,21,0.3)] to-39%",
                 className
             )}
@@ -29,7 +29,7 @@ export function BlogHero({ title, className }: BlogHeroProps) {
                 </h1>
             </div>
             {/* 🔹 Garis bawah */}
-            <div className="absolute bottom-0 left-0 h-[1px] w-full bg-[#474747]" />
+            <div className="absolute bottom-0 left-0 h-px w-full bg-[#474747]" />
         </div>
     );
 }
