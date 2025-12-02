@@ -55,7 +55,7 @@ export function CardBrand() {
     ];
 
     return (
-        <div className="grid w-full grid-cols-1 gap-2 lg:grid-cols-3">
+        <div className="grid w-full grid-cols-1 gap-5 lg:grid-cols-3 lg:gap-2">
             {mockCards.map((card) => (
                 <div key={card.id} className="flex flex-col">
                     <div className="group relative cursor-pointer overflow-hidden border border-[#FFFFFF25] bg-[radial-gradient(circle_at_center,#000_0%,#171717_50%,#ffffff30_100%)] shadow-[0_0_30px_#00000040] transition-all hover:ring-2 hover:ring-[#EFA12D]">
