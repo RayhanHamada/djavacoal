@@ -42,7 +42,7 @@ export function NewsListSection({ newsItems }: NewsListSectionProps) {
     if (!totalSlides) return null;
 
     return (
-        <section className="relative w-full overflow-hidden border-t border-[#D0D0D0] bg-[#0D0D0D] py-12 md:py-16">
+        <section className="bg-primary relative w-full overflow-hidden border-t border-[#D0D0D0] py-12 md:py-16">
             <SectionHeading
                 title={t("title")}
                 highlight={t("highlight")}
