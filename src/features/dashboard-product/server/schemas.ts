@@ -95,16 +95,8 @@ export const CreatePackagingOptionInputSchema = z.object({
         .trim()
         .min(PACKAGING_NAME_MIN_LENGTH)
         .max(PACKAGING_NAME_MAX_LENGTH),
-    en_description: z
-        .string()
-        .trim()
-        .min(PACKAGING_DESCRIPTION_MIN_LENGTH)
-        .max(PACKAGING_DESCRIPTION_MAX_LENGTH),
-    ar_description: z
-        .string()
-        .trim()
-        .min(PACKAGING_DESCRIPTION_MIN_LENGTH)
-        .max(PACKAGING_DESCRIPTION_MAX_LENGTH),
+    en_description: z.string().trim().min(PACKAGING_DESCRIPTION_MIN_LENGTH),
+    ar_description: z.string().trim().min(PACKAGING_DESCRIPTION_MIN_LENGTH),
     photo_key: z.string(),
 });
 
