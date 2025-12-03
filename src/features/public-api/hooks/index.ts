@@ -11,7 +11,7 @@ export function useFooterContentAPI() {
 export function useListProductNamesAPI() {
     return $api.useQuery("get", "/products-names", {
         query: {
-            limit: 20,
+            limit: 100,
         },
     });
 }
