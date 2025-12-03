@@ -151,13 +151,10 @@ export const PACKAGING_INFO_CONTENT_BODY_OUTPUT_SCHEMA = z.object({
 });
 
 export const PRODUCT_DETAIL_PATH_INPUT_SCHEMA = z.object({
-    id: z
+    slug: z
         .string()
-        .transform((val) => Number(val))
-        .refine((val) => !isNaN(val), {
-            message: "Product ID must be a valid number",
-        })
-        .describe("The ID of the product to fetch details for"),
+        .min(1)
+        .describe("The URL-friendly slug of the product to fetch details for"),
 });
 
 export const PRODUCT_DETAIL_BODY_OUTPUT_SCHEMA = z.object({

@@ -27,9 +27,9 @@ export function useMenuItems() {
 
     const productSubmenus = useMemo(
         () =>
-            namesData?.data?.names.map(({ id, name }) => ({
+            namesData?.data?.names.map(({ slug, name }) => ({
                 label: name,
-                href: `/our-products/${id}`,
+                href: `/our-products/${slug}`,
             })) ?? [],
         [namesData]
     );

@@ -95,7 +95,7 @@ interface MobileDropdownProps {
     brandLabel: string;
     onToggle: () => void;
     onClose: () => void;
-    getProductUrl: (productId: number) => string;
+    getProductUrl: (slug: string) => string;
 }
 
 function MobileDropdown({
@@ -152,7 +152,7 @@ interface DropdownMenuProps {
     currentProductId: number | undefined;
     isBrandPage: boolean;
     brandLabel: string;
-    getProductUrl: (productId: number) => string;
+    getProductUrl: (slug: string) => string;
     onItemClick: () => void;
 }
 
@@ -169,7 +169,7 @@ function DropdownMenu({
             {products.map((product) => (
                 <DropdownItemLink
                     key={product.id}
-                    href={getProductUrl(product.id)}
+                    href={getProductUrl(product.slug)}
                     label={product.name}
                     isActive={currentProductId === product.id && !isBrandPage}
                     onClick={onItemClick}
@@ -194,7 +194,7 @@ interface DesktopNavProps {
     currentProductId: number | undefined;
     isBrandPage: boolean;
     brandLabel: string;
-    getProductUrl: (productId: number) => string;
+    getProductUrl: (slug: string) => string;
 }
 
 function DesktopNav({
@@ -211,7 +211,7 @@ function DesktopNav({
                     {products.map((product) => (
                         <SidebarNavLink
                             key={product.id}
-                            href={getProductUrl(product.id)}
+                            href={getProductUrl(product.slug)}
                             label={product.name}
                             isActive={
                                 currentProductId === product.id && !isBrandPage

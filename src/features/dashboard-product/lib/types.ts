@@ -13,6 +13,8 @@ export interface ProductListItem {
     id: number;
     en_name: string;
     ar_name: string;
+    /** URL-friendly slug (dash-separated English name, immutable after creation) */
+    slug: string;
     image_url: string;
     is_hidden: boolean;
     order_index: number;
@@ -66,6 +68,8 @@ export interface ProductDetail {
     id: number;
     en_name: string;
     ar_name: string;
+    /** URL-friendly slug (dash-separated English name, immutable after creation) */
+    slug: string;
     en_description: string;
     ar_description: string;
     moq: string;

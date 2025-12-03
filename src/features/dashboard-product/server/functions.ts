@@ -34,7 +34,10 @@ import {
     PRODUCT_VARIANTS_PREFIX,
 } from "@/adapters/r2";
 import { getAuth } from "@/features/dashboard-auth/lib/better-auth-server";
-import { MEDIA_TYPE_ENUM } from "@/features/dashboard-product/lib";
+import {
+    generateProductSlug,
+    MEDIA_TYPE_ENUM,
+} from "@/features/dashboard-product/lib";
 import {
     CreatePackagingOptionInputSchema,
     CreatePackagingOptionOutputSchema,
@@ -434,6 +437,7 @@ export const listProducts = base
                 id: p.id,
                 en_name: p.en_name,
                 ar_name: p.ar_name,
+                slug: p.slug,
                 image_url: new URL(
                     p.medias[0]?.image_key ?? "",
                     process.env.NEXT_PUBLIC_ASSET_URL
@@ -542,6 +546,7 @@ export const getProductById = base
             id: product[COMMON_COLUMNS.ID],
             en_name: product[PRODUCT_COLUMNS.EN_NAME],
             ar_name: product[PRODUCT_COLUMNS.AR_NAME],
+            slug: product[PRODUCT_COLUMNS.SLUG],
             en_description: product[PRODUCT_COLUMNS.EN_DESCRIPTION],
             ar_description: product[PRODUCT_COLUMNS.AR_DESCRIPTION],
             moq: product[PRODUCT_COLUMNS.MOQ],
@@ -622,12 +627,29 @@ export const createProduct = base
 
         const nextOrder = (maxOrderResult.at(0)?.maxOrder ?? -1) + 1;
 
+        // Generate slug from English name (immutable after creation)
+        const slug = generateProductSlug(input.en_name);
+
+        // Check if slug already exists
+        const existingSlug = await db
+            .select({ id: products[COMMON_COLUMNS.ID] })
+            .from(products)
+            .where(eq(products[PRODUCT_COLUMNS.SLUG], slug))
+            .limit(1);
+
+        if (existingSlug.length > 0) {
+            throw errors.BAD_REQUEST({
+                message: `A product with a similar name already exists. Please use a different English name.`,
+            });
+        }
+
         // Insert product
         const productResult = await db
             .insert(products)
             .values({
                 en_name: input.en_name,
                 ar_name: input.ar_name,
+                slug,
                 en_description: input.en_description,
                 ar_description: input.ar_description,
                 moq: input.moq,

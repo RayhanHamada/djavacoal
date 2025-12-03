@@ -32,11 +32,11 @@ export function usePublicFaqsAPI() {
     return $api.useQuery("get", "/faqs");
 }
 
-export function useProductDetailAPI(id: number) {
-    return $api.useQuery("get", "/products/{id}", {
+export function useProductDetailAPI(slug: string) {
+    return $api.useQuery("get", "/products/{slug}", {
         params: {
             path: {
-                id: id.toString(),
+                slug,
             },
         },
     });

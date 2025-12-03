@@ -14,3 +14,20 @@ export function extractYoutubeID(url: string): string | undefined {
     const match = url.match(pattern);
     return match?.[1];
 }
+
+/**
+ * Generate a URL-friendly slug from an English product name.
+ * Converts to lowercase, replaces spaces with dashes, and removes special characters.
+ *
+ * @param enName - English product name
+ * @returns URL-friendly slug (e.g., "Premium Coal" -> "premium-coal")
+ */
+export function generateProductSlug(enName: string): string {
+    return enName
+        .toLowerCase()
+        .trim()
+        .replace(/[^\w\s-]/g, "") // Remove special characters except spaces and dashes
+        .replace(/\s+/g, "-") // Replace spaces with dashes
+        .replace(/-+/g, "-") // Replace multiple dashes with single dash
+        .replace(/^-|-$/g, ""); // Remove leading/trailing dashes
+}

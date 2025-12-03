@@ -1,21 +1,19 @@
 import { Metadata } from "next";
 
 import { ProductContent } from "@/features/our-products/components/organism";
-import { getProductMetadata } from "@/features/our-products/server/dal";
+import { getProductMetadataBySlug } from "@/features/our-products/server/dal";
 
 interface ProductPageProps {
-    params: Promise<{ productId: string }>;
+    params: Promise<{ slug: string }>;
 }
 
 export async function generateMetadata({
     params,
 }: ProductPageProps): Promise<Metadata> {
     const resolvedParams = await params;
-    const productId = resolvedParams.productId;
+    const { slug } = resolvedParams;
 
-    if (isNaN(Number(productId))) return {};
-
-    const product = await getProductMetadata(Number(productId));
+    const product = await getProductMetadataBySlug(slug);
     if (!product) return {};
 
     const title = product.en_name;
@@ -43,6 +41,6 @@ export async function generateMetadata({
 }
 
 export default async function ProductPage({ params }: ProductPageProps) {
-    const { productId } = await params;
-    return <ProductContent productId={Number(productId)} />;
+    const { slug } = await params;
+    return <ProductContent slug={slug} />;
 }

@@ -335,6 +335,12 @@ const PRODUCT_COLUMN_FIELDS = {
     [PRODUCT_COLUMNS.EN_DESCRIPTION]: text().notNull(),
     [PRODUCT_COLUMNS.AR_DESCRIPTION]: text().notNull(),
 
+    /**
+     * URL-friendly slug derived from English name (dash-separated, lowercase)
+     * Created once during product creation and never modified
+     */
+    [PRODUCT_COLUMNS.SLUG]: text().notNull().unique(),
+
     [PRODUCT_COLUMNS.MOQ]: text().notNull(),
     [PRODUCT_COLUMNS.PRODUCTION_CAPACITY]: text().notNull(),
     [PRODUCT_COLUMNS.IS_HIDDEN]: int({

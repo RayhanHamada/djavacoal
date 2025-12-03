@@ -68,7 +68,7 @@ export async function getProducts(
 ): Promise<ProductData[]> {
     return await db
         .select({
-            id: products[COMMON_COLUMNS.ID],
+            slug: products[PRODUCT_COLUMNS.SLUG],
             updatedAt: products[COMMON_COLUMNS.UPDATED_AT],
         })
         .from(products)
@@ -170,7 +170,7 @@ export function generateProductsSitemap(
 
     for (const product of productsData) {
         const entry: SitemapEntry = {
-            loc: new URL(`/our-products/${product.id}`, baseURL).toString(),
+            loc: new URL(`/our-products/${product.slug}`, baseURL).toString(),
             lastmod: formatLastMod(product.updatedAt),
             changefreq: config.changefreq as SitemapEntry["changefreq"],
             priority: config.priority,

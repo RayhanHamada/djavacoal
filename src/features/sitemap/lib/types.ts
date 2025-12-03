@@ -30,6 +30,6 @@ export type BlogArticleData = {
 };
 
 export type ProductData = {
-    id: number;
+    slug: string;
     updatedAt: Date | null;
 };

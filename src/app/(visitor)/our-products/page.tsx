@@ -2,7 +2,7 @@ import { redirect } from "next/navigation";
 
 import { getCloudflareContext } from "@opennextjs/cloudflare";
 
-import { COMMON_COLUMNS, PRODUCT_COLUMNS } from "@/adapters/d1/constants";
+import { PRODUCT_COLUMNS } from "@/adapters/d1/constants";
 import { getDB } from "@/adapters/d1/db";
 
 export default async function OurProductsPage() {
@@ -12,7 +12,7 @@ export default async function OurProductsPage() {
     // Fetch first visible product ordered by order_index
     const firstProduct = await db.query.products.findFirst({
         columns: {
-            [COMMON_COLUMNS.ID]: true,
+            [PRODUCT_COLUMNS.SLUG]: true,
         },
         orderBy(products, { asc }) {
             return [asc(products[PRODUCT_COLUMNS.ORDER_INDEX])];
@@ -23,7 +23,7 @@ export default async function OurProductsPage() {
     });
 
     if (firstProduct) {
-        redirect(`/our-products/${firstProduct[COMMON_COLUMNS.ID]}`);
+        redirect(`/our-products/${firstProduct[PRODUCT_COLUMNS.SLUG]}`);
     }
 
     // Fallback to brand page if no products available

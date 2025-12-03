@@ -59,6 +59,23 @@ export function ProductForm({ product }: ProductFormProps) {
     return (
         <form onSubmit={handleSubmit}>
             <Stack gap="lg">
+                {/* Product Slug (read-only, shown only for existing products) */}
+                {product?.slug && (
+                    <TextInput
+                        label="URL Slug"
+                        description="Auto-generated from English name. Cannot be changed."
+                        value={product.slug}
+                        readOnly
+                        disabled
+                        styles={{
+                            input: {
+                                backgroundColor: "var(--mantine-color-gray-1)",
+                                cursor: "not-allowed",
+                            },
+                        }}
+                    />
+                )}
+
                 {/* Product Names */}
                 <Fieldset legend="Product Name">
                     <Stack gap="md">
@@ -69,6 +86,11 @@ export function ProductForm({ product }: ProductFormProps) {
                             key={form.key("en_name")}
                             {...form.getInputProps("en_name")}
                             disabled={isSubmitting}
+                            description={
+                                !product
+                                    ? "This will be used to generate the URL slug"
+                                    : undefined
+                            }
                         />
                         <TextInput
                             label="Arabic Name"

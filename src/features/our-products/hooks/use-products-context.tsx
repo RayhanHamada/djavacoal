@@ -26,7 +26,9 @@ interface ProductsContextValue {
     /** Error from fetching products list */
     productListError: Error | null;
 
-    /** ID of the currently viewed product (from URL) */
+    /** Slug of the currently viewed product (from URL) */
+    currentProductSlug: string | undefined;
+    /** ID of the currently viewed product (derived from slug match) */
     currentProductId: number | undefined;
 
     /** Whether we're on the brand page route */
@@ -38,7 +40,7 @@ interface ProductsContextValue {
     isReady: boolean;
 
     /** Get the URL for a product */
-    getProductUrl: (productId: number) => string;
+    getProductUrl: (slug: string) => string;
 }
 
 const ProductsContext = createContext<ProductsContextValue | null>(null);
@@ -53,8 +55,8 @@ export function ProductsProvider({ children }: { children: ReactNode }) {
     // Check if we're on the brand page
     const isBrandPage = pathname === DJAVACOAL_BRANDS_PATH;
 
-    // Extract product ID from URL path (e.g., /our-products/123 -> 123)
-    const currentProductId = extractProductIdFromPath(pathname);
+    // Extract product slug from URL path (e.g., /our-products/premium-coal -> premium-coal)
+    const currentProductSlug = extractProductSlugFromPath(pathname);
 
     // Fetch product list
     const {
@@ -63,20 +65,26 @@ export function ProductsProvider({ children }: { children: ReactNode }) {
         error: productListError,
     } = useListProductNamesAPI();
 
-    const getProductUrl = (productId: number) =>
-        `${PRODUCTS_BASE_PATH}/${productId}`;
+    const products = productListData?.data?.names ?? [];
+
+    // Find current product ID from slug
+    const currentProductId = products.find(
+        (p) => p.slug === currentProductSlug
+    )?.id;
+
+    const getProductUrl = (slug: string) => `${PRODUCTS_BASE_PATH}/${slug}`;
 
     const value: ProductsContextValue = {
-        products: productListData?.data?.names ?? [],
+        products,
         isLoadingProducts,
         productListError: productListError as Error | null,
 
+        currentProductSlug,
         currentProductId,
         isBrandPage,
 
-        hasProducts: Boolean(productListData?.data?.names?.length),
-        isReady:
-            !isLoadingProducts && Boolean(productListData?.data?.names?.length),
+        hasProducts: Boolean(products.length),
+        isReady: !isLoadingProducts && Boolean(products.length),
 
         getProductUrl,
     };
@@ -89,12 +97,12 @@ export function ProductsProvider({ children }: { children: ReactNode }) {
 }
 
 /**
- * Extract product ID from pathname like /our-products/123
+ * Extract product slug from pathname like /our-products/premium-coal
  */
-function extractProductIdFromPath(pathname: string): number | undefined {
-    const match = pathname.match(/^\/our-products\/(\d+)$/);
-    if (match) {
-        return parseInt(match[1], 10);
+function extractProductSlugFromPath(pathname: string): string | undefined {
+    const match = pathname.match(/^\/our-products\/([^/]+)$/);
+    if (match && match[1] !== "djavacoal-brand") {
+        return match[1];
     }
     return undefined;
 }

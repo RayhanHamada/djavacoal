@@ -117,6 +117,8 @@ export const PRODUCT_COLUMNS = {
     AR_NAME: "ar_name",
     EN_DESCRIPTION: "en_description",
     AR_DESCRIPTION: "ar_description",
+    /** URL-friendly slug derived from English name, created once and immutable */
+    SLUG: "slug",
     MOQ: "moq",
     PRODUCTION_CAPACITY: "production_capacity",
     IS_HIDDEN: "is_hidden",

@@ -12,7 +12,7 @@ export function FooterProductList() {
             {productNames?.data.names.map((item) => (
                 <Link
                     key={item.id}
-                    href={`/our-products/${item.id}`}
+                    href={`/our-products/${item.slug}`}
                     className="decoration-secondary hover:underline"
                 >
                     <li>{item.name}</li>

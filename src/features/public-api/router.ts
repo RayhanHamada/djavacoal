@@ -86,6 +86,7 @@ export const router = {
                     [COMMON_COLUMNS.ID]: true,
                     [PRODUCT_COLUMNS.AR_NAME]: true,
                     [PRODUCT_COLUMNS.EN_NAME]: true,
+                    [PRODUCT_COLUMNS.SLUG]: true,
                 },
                 orderBy(products, { asc }) {
                     return [asc(products[PRODUCT_COLUMNS.ORDER_INDEX])];
@@ -106,12 +107,9 @@ export const router = {
                                 ? item[PRODUCT_COLUMNS.AR_NAME]
                                 : item[PRODUCT_COLUMNS.EN_NAME];
 
-                            const slug = `${item[PRODUCT_COLUMNS.EN_NAME]
-                                .replaceAll(" ", "-")
-                                .toLowerCase()}-${item[COMMON_COLUMNS.ID]}`;
                             return {
                                 id: item[COMMON_COLUMNS.ID],
-                                slug,
+                                slug: item[PRODUCT_COLUMNS.SLUG],
                                 name,
                             };
                         }),
@@ -622,9 +620,9 @@ export const router = {
     getProductDetail: publicBase
         .route({
             method: "GET",
-            path: "/products/{id}",
+            path: "/products/{slug}",
             summary: "Fetch product detail data",
-            description: "Get product detail by product ID",
+            description: "Get product detail by product slug",
             inputStructure: "detailed",
             outputStructure: "detailed",
         })
@@ -644,17 +642,15 @@ export const router = {
             input: { params },
         }) {
             const isArabic = locale === LOCALES.AR;
-            console.log(locale);
             const db = getDB(env.DJAVACOAL_DB);
 
             const product = await db.query.products.findFirst({
                 where(fields, operators) {
                     return operators.and(
-                        operators.eq(fields[COMMON_COLUMNS.ID], params.id),
+                        operators.eq(fields[PRODUCT_COLUMNS.SLUG], params.slug),
                         operators.eq(fields[PRODUCT_COLUMNS.IS_HIDDEN], false)
                     );
                 },
-
                 with: {
                     packagingOptions: {
                         columns: {},
@@ -699,9 +695,7 @@ export const router = {
                 throw errors.NOT_FOUND();
             }
 
-            const slug = product[PRODUCT_COLUMNS.EN_NAME]
-                .replaceAll(" ", "-")
-                .toLowerCase();
+            const slug = product[PRODUCT_COLUMNS.SLUG];
 
             const medias = product.medias.map((media) => {
                 const id = media[COMMON_COLUMNS.ID];

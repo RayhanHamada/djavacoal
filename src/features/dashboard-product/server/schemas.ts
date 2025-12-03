@@ -401,6 +401,8 @@ export const ProductListItemSchema = z.object({
     id: z.number(),
     en_name: z.string(),
     ar_name: z.string(),
+    /** URL-friendly slug (dash-separated English name, immutable after creation) */
+    slug: z.string(),
     image_url: z.string(),
     is_hidden: z.boolean(),
     order_index: z.number(),
@@ -439,6 +441,8 @@ export const ProductDetailSchema = z.object({
     id: z.number(),
     en_name: z.string(),
     ar_name: z.string(),
+    /** URL-friendly slug (dash-separated English name, immutable after creation) */
+    slug: z.string(),
     en_description: z.string(),
     ar_description: z.string(),
     moq: z.string(),

@@ -36,16 +36,16 @@ interface PackagingOption {
 // ─────────────────────────────────────────────────────────────────────────────
 
 interface ProductContentProps {
-    productId: number;
+    slug: string;
 }
 
 /**
  * Product content organism - displays product details.
- * Fetches product data based on the provided productId.
+ * Fetches product data based on the provided slug.
  */
-export function ProductContent({ productId }: ProductContentProps) {
+export function ProductContent({ slug }: ProductContentProps) {
     const t = useTranslations("OurProducts");
-    const { data, isLoading, error } = useProductDetailAPI(productId);
+    const { data, isLoading, error } = useProductDetailAPI(slug);
 
     const selectedProduct = data?.data;
 

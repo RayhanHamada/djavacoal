@@ -104,7 +104,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/products/{id}": {
+    "/products/{slug}": {
         parameters: {
             query?: never;
             header?: never;
@@ -113,7 +113,7 @@ export interface paths {
         };
         /**
          * Fetch product detail data
-         * @description Get product detail by product ID
+         * @description Get product detail by product slug
          */
         get: operations["getProductDetail"];
         put?: never;
@@ -999,7 +999,7 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                id: string;
+                slug: string;
             };
             cookie?: never;
         };
