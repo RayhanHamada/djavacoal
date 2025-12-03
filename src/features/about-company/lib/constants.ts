@@ -195,4 +195,4 @@ export const WATERMARK_IMAGE = "/images/watermark-legal.png";
 export const LOGO_IMAGE = "/svgs/logo.svg";
 export const THUMBNAIL_IMAGE = "/images/thumbnail-yt.png";
 export const FACTORY_IMAGE = "/images/factory1.png";
-export const BANNER_IMAGE = "/images/bg-banner-header.png";
+export const BANNER_IMAGE = "/images/bg-banner-OurProduct.png";

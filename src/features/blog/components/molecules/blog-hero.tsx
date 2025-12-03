@@ -18,12 +18,12 @@ export function BlogHero({ title, className }: BlogHeroProps) {
                 className
             )}
             style={{
-                backgroundImage: "url(/images/bg-banner-header.png)",
+                backgroundImage: "url(/images/bg-banner-OurProduct.png)",
                 backgroundSize: "cover",
                 backgroundPosition: "center",
             }}
         >
-            <div className="absolute inset-0 flex items-center justify-center bg-black/50">
+            <div className="absolute inset-0 flex items-center justify-center bg-black/20">
                 <h1 className="text-2xl font-semibold text-white italic md:text-4xl">
                     {title}
                 </h1>
