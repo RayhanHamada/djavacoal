@@ -30,7 +30,7 @@ export default function HeaderSection({
                     priority
                 />
 
-                <div className="absolute inset-0 flex items-center justify-center bg-black/50">
+                <div className="absolute inset-0 flex items-center justify-center bg-black/20">
                     <h1 className="text-2xl font-semibold italic md:text-4xl">
                         {displayTitle}
                     </h1>
