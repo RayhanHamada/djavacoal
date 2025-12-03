@@ -38,15 +38,24 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     return {
         title: metadata.meta_title,
         description: metadata.meta_description,
+        keywords: metadata.tags,
         openGraph: {
             type: "article",
             title: metadata.meta_title,
             description: metadata.meta_description,
             images: metadata.cover_image_url ? [metadata.cover_image_url] : [],
             authors: "Djavacoal Team",
-            alternateLocale: ["ar-SA", "en-US"],
+            alternateLocale: ["ar-SA"],
             locale: "en-US",
             publishedTime: metadata.published_at,
+        },
+        twitter: {
+            card: "summary_large_image",
+            title: metadata.meta_title,
+            description: metadata.meta_description,
+            images: metadata.cover_image_url
+                ? [metadata.cover_image_url]
+                : undefined,
         },
     };
 }

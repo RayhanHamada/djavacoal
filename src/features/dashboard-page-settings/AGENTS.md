@@ -159,6 +159,72 @@ OpenGraph images uploaded directly are stored in R2 with a dedicated prefix:
 ```typescript
 // Located in @/adapters/r2/constants.ts
 PAGE_METADATA_OG_PREFIX = "page-metadata/og-images"
+DEFAULT_OG_IMAGES_PREFIX = "default-og-images"
+```
+
+### Default OG Images (Site-Wide)
+
+Default OG images are stored per social media platform for site-wide fallback. These are used when a page doesn't have a custom OG image set.
+
+#### Supported Platforms
+
+| Platform  | Dimensions | Description                         |
+| --------- | ---------- | ----------------------------------- |
+| Facebook  | 1200×630   | Primary Open Graph image            |
+| LinkedIn  | 1200×1200  | Square format preferred by LinkedIn |
+| Instagram | 1080×1080  | Square format for OG reading        |
+| Twitter/X | 800×418    | summary_large_image card sizing     |
+
+#### KV Storage
+
+Default OG image R2 keys are stored in Cloudflare KV:
+
+```typescript
+// Located in @/adapters/kv/constants.ts
+KV_KEYS = {
+  OG_DEFAULT_FACEBOOK: "og_default:facebook",
+  OG_DEFAULT_LINKEDIN: "og_default:linkedin",
+  OG_DEFAULT_INSTAGRAM: "og_default:instagram",
+  OG_DEFAULT_TWITTER: "og_default:twitter",
+}
+```
+
+#### RPC Functions
+
+```typescript
+// Generate presigned URL for uploading default OG image
+rpc.pageSettings.generateDefaultOgImageUploadUrl.useMutation()
+
+// Save default OG image key to KV after upload
+rpc.pageSettings.saveDefaultOgImage.useMutation()
+
+// Get single platform's default OG image
+rpc.pageSettings.getDefaultOgImage.useQuery({ platformId: "facebook" })
+
+// Get all default OG images
+rpc.pageSettings.getAllDefaultOgImages.useQuery()
+
+// Delete a platform's default OG image
+rpc.pageSettings.deleteDefaultOgImage.useMutation()
+```
+
+#### UI Components
+
+- **DefaultOgImagesModal** - Modal for managing all default OG images
+- **OgImagePlatformCard** - Card component for individual platform image
+
+#### Usage Example
+
+```typescript
+// In a page component to get the modal
+import { DefaultOgImagesModal } from "@/features/dashboard-page-settings";
+import { useDisclosure } from "@mantine/hooks";
+
+const [opened, { open, close }] = useDisclosure(false);
+
+// Render button and modal
+<Button onClick={open}>Default OG Images</Button>
+<DefaultOgImagesModal opened={opened} onClose={close} />
 ```
 
 ## Database Migration
@@ -446,6 +512,7 @@ const commonPages = [
 ## Future Enhancements
 
 - [x] Open Graph image (og:image) - Implemented via gallery picker
+- [x] Default OG images per platform - Facebook, LinkedIn, Instagram, Twitter/X
 - [ ] Twitter Card metadata
 - [ ] Canonical URL management
 - [ ] Robots meta tags (noindex, nofollow)

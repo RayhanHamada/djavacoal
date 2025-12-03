@@ -6,25 +6,36 @@ import { nanoid } from "nanoid";
 import { COMMON_COLUMNS, PAGE_METADATA_COLUMNS } from "@/adapters/d1/constants";
 import { getDB } from "@/adapters/d1/db";
 import { pageMetadatas } from "@/adapters/d1/schema";
+import { KV_KEYS } from "@/adapters/kv/constants";
 import {
     DEFAULT_BUCKET_NAME,
+    DEFAULT_OG_IMAGES_PREFIX,
+    deleteObject,
     generatePresignedUploadUrl,
     getR2Client,
     PAGE_METADATA_OG_PREFIX,
 } from "@/adapters/r2";
+import { OG_IMAGE_PLATFORM_IDS } from "@/features/dashboard-page-settings/lib/constants";
 import {
     findPageMetadataById,
     isPathAvailable,
 } from "@/features/dashboard-page-settings/server/helpers";
 import {
     CreatePageMetadataInputSchema,
+    DeleteDefaultOgImageInputSchema,
     DeletePageMetadataInputSchema,
+    GenerateDefaultOgImageUploadUrlInputSchema,
+    GenerateDefaultOgImageUploadUrlOutputSchema,
     GenerateOgImageUploadUrlInputSchema,
     GenerateOgImageUploadUrlOutputSchema,
+    GetAllDefaultOgImagesOutputSchema,
+    GetDefaultOgImageInputSchema,
+    GetDefaultOgImageOutputSchema,
     GetPageMetadataByIdInputSchema,
     GetPageMetadataByIdOutputSchema,
     ListPageMetadataInputSchema,
     ListPageMetadataOutputSchema,
+    SaveDefaultOgImageInputSchema,
     UpdatePageMetadataInputSchema,
 } from "@/features/dashboard-page-settings/server/schemas";
 import base from "@/lib/orpc/server";
@@ -326,6 +337,178 @@ export const generateOgImageUploadUrl = base
         return {
             uploadUrl,
             key,
+        };
+    })
+    .callable();
+
+// ============================================
+// Default OG Image Functions
+// ============================================
+
+/**
+ * Get KV key for a specific OG image platform
+ */
+function getOgImageKvKey(
+    platformId: "facebook" | "linkedin" | "instagram" | "twitter"
+): string {
+    const kvKeyMap = {
+        facebook: KV_KEYS.OG_DEFAULT_FACEBOOK,
+        linkedin: KV_KEYS.OG_DEFAULT_LINKEDIN,
+        instagram: KV_KEYS.OG_DEFAULT_INSTAGRAM,
+        twitter: KV_KEYS.OG_DEFAULT_TWITTER,
+    } as const;
+    return kvKeyMap[platformId];
+}
+
+/**
+ * Build public URL for default OG image
+ */
+function buildDefaultOgImageUrl(r2Key: string): string {
+    const assetUrl = process.env.NEXT_PUBLIC_ASSET_URL || "";
+    return `${assetUrl}${r2Key}`;
+}
+
+/**
+ * Generate presigned URL for uploading default OG image to R2
+ */
+export const generateDefaultOgImageUploadUrl = base
+    .input(GenerateDefaultOgImageUploadUrlInputSchema)
+    .output(GenerateDefaultOgImageUploadUrlOutputSchema)
+    .handler(async function ({ input, errors }) {
+        const { platformId, contentType } = input;
+
+        // Generate unique key with prefix
+        const uniqueId = nanoid();
+        const key = `${DEFAULT_OG_IMAGES_PREFIX}/${platformId}/${uniqueId}`;
+
+        // Validate required environment variables
+        const { S3_API, R2_ACCESS_KEY_ID, R2_SECRET_ACCESS_KEY } = process.env;
+        if (!S3_API || !R2_ACCESS_KEY_ID || !R2_SECRET_ACCESS_KEY) {
+            throw errors.INTERNAL_SERVER_ERROR({
+                message: "R2 storage configuration is incomplete",
+            });
+        }
+
+        // Create R2 client
+        const r2Client = getR2Client({
+            endpoint: S3_API,
+            accessKeyId: R2_ACCESS_KEY_ID,
+            secretAccessKey: R2_SECRET_ACCESS_KEY,
+        });
+
+        // Generate presigned URL for PUT operation
+        const uploadUrl = await generatePresignedUploadUrl(r2Client, {
+            key,
+            contentType,
+            bucketName: DEFAULT_BUCKET_NAME,
+        });
+
+        return {
+            uploadUrl,
+            key,
+        };
+    })
+    .callable();
+
+/**
+ * Save default OG image key to KV
+ */
+export const saveDefaultOgImage = base
+    .input(SaveDefaultOgImageInputSchema)
+    .handler(async function ({ context: { env }, input }) {
+        const { platformId, r2Key } = input;
+
+        const kvKey = getOgImageKvKey(platformId);
+        await env.DJAVACOAL_KV.put(kvKey, r2Key);
+
+        return {
+            success: true,
+        };
+    })
+    .callable();
+
+/**
+ * Get default OG image for a specific platform
+ */
+export const getDefaultOgImage = base
+    .input(GetDefaultOgImageInputSchema)
+    .output(GetDefaultOgImageOutputSchema)
+    .handler(async function ({ context: { env }, input }) {
+        const { platformId } = input;
+
+        const kvKey = getOgImageKvKey(platformId);
+        const r2Key = await env.DJAVACOAL_KV.get(kvKey);
+
+        return {
+            r2Key: r2Key ?? null,
+            url: r2Key ? buildDefaultOgImageUrl(r2Key) : null,
+        };
+    })
+    .callable();
+
+/**
+ * Get all default OG images for all platforms
+ */
+export const getAllDefaultOgImages = base
+    .output(GetAllDefaultOgImagesOutputSchema)
+    .handler(async function ({ context: { env } }) {
+        const images = await Promise.all(
+            OG_IMAGE_PLATFORM_IDS.map(async (platformId) => {
+                const kvKey = getOgImageKvKey(platformId);
+                const r2Key = await env.DJAVACOAL_KV.get(kvKey);
+
+                return {
+                    platformId,
+                    r2Key: r2Key ?? null,
+                    url: r2Key ? buildDefaultOgImageUrl(r2Key) : null,
+                };
+            })
+        );
+
+        return { images };
+    })
+    .callable();
+
+/**
+ * Delete default OG image for a specific platform
+ */
+export const deleteDefaultOgImage = base
+    .input(DeleteDefaultOgImageInputSchema)
+    .handler(async function ({ context: { env }, input, errors }) {
+        const { platformId } = input;
+
+        const kvKey = getOgImageKvKey(platformId);
+        const existingR2Key = await env.DJAVACOAL_KV.get(kvKey);
+
+        if (!existingR2Key) {
+            throw errors.NOT_FOUND({
+                message: `No OG image found for ${platformId}`,
+            });
+        }
+
+        // Validate required environment variables
+        const { S3_API, R2_ACCESS_KEY_ID, R2_SECRET_ACCESS_KEY } = process.env;
+        if (!S3_API || !R2_ACCESS_KEY_ID || !R2_SECRET_ACCESS_KEY) {
+            throw errors.INTERNAL_SERVER_ERROR({
+                message: "R2 storage configuration is incomplete",
+            });
+        }
+
+        // Create R2 client
+        const r2Client = getR2Client({
+            endpoint: S3_API,
+            accessKeyId: R2_ACCESS_KEY_ID,
+            secretAccessKey: R2_SECRET_ACCESS_KEY,
+        });
+
+        // Delete from R2
+        await deleteObject(r2Client, existingR2Key, DEFAULT_BUCKET_NAME);
+
+        // Delete from KV
+        await env.DJAVACOAL_KV.delete(kvKey);
+
+        return {
+            success: true,
         };
     })
     .callable();

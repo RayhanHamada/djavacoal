@@ -12,6 +12,7 @@ import {
     METADATA_TITLE_MIN_LENGTH,
     OG_IMAGE_ALLOWED_MIME_TYPES,
     OG_IMAGE_MAX_FILE_SIZE,
+    OG_IMAGE_PLATFORM_IDS,
     PATH_MAX_LENGTH,
     PATH_MIN_LENGTH,
     SITEMAP_CHANGEFREQ_DEFAULT,
@@ -244,4 +245,91 @@ export const GenerateOgImageUploadUrlOutputSchema = z.object({
     uploadUrl: z.string().url(),
     /** R2 key where the image will be stored */
     key: z.string(),
+});
+
+// ============================================
+// Default OG Image Schemas
+// ============================================
+
+/**
+ * Input schema for generating presigned upload URL for default OG images
+ */
+export const GenerateDefaultOgImageUploadUrlInputSchema = z.object({
+    /** Platform ID (facebook, linkedin, instagram, twitter) */
+    platformId: z.enum(OG_IMAGE_PLATFORM_IDS),
+    /** MIME type of the image */
+    contentType: z
+        .string()
+        .refine(
+            (val): val is (typeof OG_IMAGE_ALLOWED_MIME_TYPES)[number] =>
+                OG_IMAGE_ALLOWED_MIME_TYPES.includes(
+                    val as (typeof OG_IMAGE_ALLOWED_MIME_TYPES)[number]
+                ),
+            "Invalid image type. Allowed: JPEG, PNG, GIF, WebP"
+        ),
+    /** File size in bytes */
+    fileSize: z
+        .number()
+        .int()
+        .positive()
+        .max(OG_IMAGE_MAX_FILE_SIZE, "File size must be less than 10MB"),
+});
+
+/**
+ * Output schema for presigned upload URL response for default OG images
+ */
+export const GenerateDefaultOgImageUploadUrlOutputSchema = z.object({
+    /** Presigned URL for uploading to R2 */
+    uploadUrl: z.string().url(),
+    /** R2 key where the image will be stored */
+    key: z.string(),
+});
+
+/**
+ * Input schema for saving default OG image key to KV
+ */
+export const SaveDefaultOgImageInputSchema = z.object({
+    /** Platform ID (facebook, linkedin, instagram, twitter) */
+    platformId: z.enum(OG_IMAGE_PLATFORM_IDS),
+    /** R2 key for the uploaded image */
+    r2Key: z.string().min(1, "R2 key is required"),
+});
+
+/**
+ * Input schema for getting default OG image
+ */
+export const GetDefaultOgImageInputSchema = z.object({
+    /** Platform ID (facebook, linkedin, instagram, twitter) */
+    platformId: z.enum(OG_IMAGE_PLATFORM_IDS),
+});
+
+/**
+ * Output schema for getting default OG image
+ */
+export const GetDefaultOgImageOutputSchema = z.object({
+    /** R2 key for the image (null if not set) */
+    r2Key: z.string().nullable(),
+    /** Full URL to access the image (null if not set) */
+    url: z.string().nullable(),
+});
+
+/**
+ * Input schema for deleting default OG image
+ */
+export const DeleteDefaultOgImageInputSchema = z.object({
+    /** Platform ID (facebook, linkedin, instagram, twitter) */
+    platformId: z.enum(OG_IMAGE_PLATFORM_IDS),
+});
+
+/**
+ * Output schema for getting all default OG images
+ */
+export const GetAllDefaultOgImagesOutputSchema = z.object({
+    images: z.array(
+        z.object({
+            platformId: z.enum(OG_IMAGE_PLATFORM_IDS),
+            r2Key: z.string().nullable(),
+            url: z.string().nullable(),
+        })
+    ),
 });

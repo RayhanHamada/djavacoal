@@ -1193,6 +1193,7 @@ export const router = {
                         sitemap_priority: priority
                             ? parseFloat(priority)
                             : 0.65,
+                        tags: article[NEWS_COLUMNS.METADATA_TAG_LIST],
                     },
                 },
             };

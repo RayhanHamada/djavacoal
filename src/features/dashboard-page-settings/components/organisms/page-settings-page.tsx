@@ -1,9 +1,20 @@
 "use client";
 
-import { Box, Container, Stack, Text, Title } from "@mantine/core";
+import {
+    Box,
+    Button,
+    Container,
+    Group,
+    Stack,
+    Text,
+    Title,
+} from "@mantine/core";
+import { useDisclosure } from "@mantine/hooks";
+import { IconPhoto } from "@tabler/icons-react";
 
 import {
     CreatePageMetadataDrawer,
+    DefaultOgImagesModal,
     DeletePageMetadataModal,
     EditPageMetadataDrawer,
 } from "@/features/dashboard-page-settings/components/molecules";
@@ -45,6 +56,12 @@ export function PageSettingsPage() {
         closeDeleteModal,
     } = usePageMetadataModals();
 
+    // Default OG Images modal state
+    const [
+        ogImagesModalOpened,
+        { open: openOgImagesModal, close: closeOgImagesModal },
+    ] = useDisclosure(false);
+
     // Handlers
     const handleEdit = (id: number) => {
         const item = items.find((i) => i.id === id);
@@ -68,12 +85,21 @@ export function PageSettingsPage() {
         <Container size="xl" p="xl" pb={96}>
             <Stack gap="lg">
                 {/* Header */}
-                <Box>
-                    <Title order={2}>Static Page Metadata Settings</Title>
-                    <Text size="sm" c="dimmed">
-                        Manage metadata for static pages
-                    </Text>
-                </Box>
+                <Group justify="space-between" align="flex-start">
+                    <Box>
+                        <Title order={2}>Static Page Metadata Settings</Title>
+                        <Text size="sm" c="dimmed">
+                            Manage metadata for static pages
+                        </Text>
+                    </Box>
+                    <Button
+                        leftSection={<IconPhoto size={18} />}
+                        variant="light"
+                        onClick={openOgImagesModal}
+                    >
+                        Default OG Images
+                    </Button>
+                </Group>
 
                 {/* Table */}
                 <PageMetadataTable
@@ -112,6 +138,12 @@ export function PageSettingsPage() {
                     onClose={closeDeleteModal}
                     pageMetadata={selectedPageMetadata}
                     onSuccess={handleSuccess}
+                />
+
+                {/* Default OG Images Modal */}
+                <DefaultOgImagesModal
+                    opened={ogImagesModalOpened}
+                    onClose={closeOgImagesModal}
                 />
             </Stack>
         </Container>

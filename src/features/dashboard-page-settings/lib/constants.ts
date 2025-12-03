@@ -98,3 +98,55 @@ export const OG_IMAGE_ALLOWED_MIME_TYPES = [
 
 /** Type for allowed OG image MIME types */
 export type OgImageMimeType = (typeof OG_IMAGE_ALLOWED_MIME_TYPES)[number];
+
+// ============================================
+// Default OG Image Configuration
+// ============================================
+
+/**
+ * Platform-specific OG image configurations
+ * Each platform has recommended dimensions for optimal display
+ */
+export const DEFAULT_OG_IMAGE_PLATFORMS = [
+    {
+        id: "facebook",
+        label: "Facebook",
+        description: "Primary Open Graph image",
+        width: 1200,
+        height: 630,
+        aspectRatio: "1200:630",
+    },
+    {
+        id: "linkedin",
+        label: "LinkedIn",
+        description: "Square format preferred by LinkedIn",
+        width: 1200,
+        height: 1200,
+        aspectRatio: "1:1",
+    },
+    {
+        id: "instagram",
+        label: "Instagram",
+        description: "Square format for OG reading",
+        width: 1080,
+        height: 1080,
+        aspectRatio: "1:1",
+    },
+    {
+        id: "twitter",
+        label: "Twitter/X",
+        description: "summary_large_image card sizing",
+        width: 800,
+        height: 418,
+        aspectRatio: "800:418",
+    },
+] as const;
+
+/** Type for OG image platform IDs */
+export type OgImagePlatformId =
+    (typeof DEFAULT_OG_IMAGE_PLATFORMS)[number]["id"];
+
+/** Array of platform IDs for schema validation */
+export const OG_IMAGE_PLATFORM_IDS = DEFAULT_OG_IMAGE_PLATFORMS.map(
+    (p) => p.id
+) as [OgImagePlatformId, ...OgImagePlatformId[]];
