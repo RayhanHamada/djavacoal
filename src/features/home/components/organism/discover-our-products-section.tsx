@@ -63,7 +63,7 @@ function ProductCard({
                     }}
                 ></p>
                 <Link
-                    href={`/our-products#${slug}`}
+                    href={`/our-products/${slug}`}
                     className="mt-3 inline-block font-['Open_Sans'] text-[13px] font-semibold text-[#1E90FF] hover:underline md:text-[14px]"
                 >
                     {t("detailProducts")}
