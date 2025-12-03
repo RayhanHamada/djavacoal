@@ -50,7 +50,7 @@ export function BlogDetailHeader({
     return (
         <div className={cn("flex flex-col gap-5 md:gap-5", className)}>
             <div className="flex flex-col gap-5">
-                <h1 className="font-inter text-2xl leading-[1.21em] font-bold text-white md:text-[25px]">
+                <h1 className="font-inter text-left text-2xl leading-[1.21em] font-bold text-white md:text-[32px]">
                     {title}
                 </h1>
                 <div className="flex items-center gap-2">
