@@ -332,6 +332,9 @@ export const NEWS_METADATA_BODY_OUTPUT_SCHEMA = z.object({
             .min(0)
             .max(1)
             .describe("Sitemap priority (0.0-1.0)"),
+        tags: z
+            .array(z.string())
+            .describe("Array of tags associated with the article"),
     }),
 });
 

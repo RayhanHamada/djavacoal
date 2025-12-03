@@ -1682,6 +1682,8 @@ export interface operations {
                             sitemap_changefreq: "always" | "hourly" | "daily" | "weekly" | "monthly" | "yearly" | "never";
                             /** @description Sitemap priority (0.0-1.0) */
                             sitemap_priority: number;
+                            /** @description Array of tags associated with the article */
+                            tags: string[];
                         };
                     };
                 };
