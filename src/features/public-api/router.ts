@@ -253,6 +253,7 @@ export const router = {
                         [PRODUCT_COLUMNS.AR_NAME]: true,
                         [PRODUCT_COLUMNS.EN_DESCRIPTION]: true,
                         [PRODUCT_COLUMNS.AR_DESCRIPTION]: true,
+                        [PRODUCT_COLUMNS.SLUG]: true,
                     },
                     where(fields, operators) {
                         return operators.eq(
@@ -287,11 +288,7 @@ export const router = {
                 .then((items) => {
                     return items.map((item) => {
                         const id = item[COMMON_COLUMNS.ID];
-
-                        const enName = item[PRODUCT_COLUMNS.EN_NAME]
-                            .toLowerCase()
-                            .replaceAll(" ", "-");
-                        const slug = `${enName}-${id}`;
+                        const slug = item[PRODUCT_COLUMNS.SLUG];
 
                         const imageKey = item.medias.at(0)!.image_key!;
                         const image_url = new URL(
