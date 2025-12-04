@@ -30,7 +30,7 @@ const productionItems = [
     {
         id: "packaging",
         titleKey: "packaging",
-        image: "/images/home-production-info4.png",
+        image: "/images/home-production-info44.png",
         href: `/production-info#${SECTIONS_ELEMENTS_ID.PRODUCTION_INFO.PACKAGING_INFO}`,
     },
 ];
