@@ -1,4 +1,5 @@
 import { NewsPreviewPage } from "@/features/dashboard-news/components/pages";
+import "@/features/blog/components/atoms/blog-content.css";
 
 /**
  * News Preview Route

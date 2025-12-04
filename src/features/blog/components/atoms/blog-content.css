@@ -21,12 +21,18 @@ p[style*="text-align: center"] .node-image .image-component {
 }
 
 /* 4. Table styling for blog content */
+/* Wrapper for horizontal scroll - apply this class to table's parent container */
+.tableWrapper {
+    overflow-x: auto;
+    max-width: 100%;
+    margin: 1.5rem 0;
+}
+
 table {
     border-collapse: collapse;
     table-layout: auto;
-    width: auto;
-    max-width: 100%;
-    margin: 1.5rem auto;
+    width: max-content;
+    min-width: 100%;
     border-radius: 8px;
     overflow: hidden;
     box-shadow:
@@ -86,10 +92,5 @@ table tbody tr:last-child td {
     table th,
     table td {
         padding: 0.5rem 0.75rem;
-    }
-
-    /* Make table horizontally scrollable on mobile if needed */
-    table {
-        min-width: 600px;
     }
 }

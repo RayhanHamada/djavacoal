@@ -103,6 +103,7 @@ export function NewsRichTextEditor({
             TableKit.configure({
                 table: {
                     resizable: true,
+                    renderWrapper: true,
                     HTMLAttributes: {
                         align: {
                             default: "center",
