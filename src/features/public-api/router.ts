@@ -153,7 +153,9 @@ export const router = {
 
                 env.DJAVACOAL_KV.get(KV_KEYS.MAPS_LINK),
                 env.DJAVACOAL_KV.get(KV_KEYS.ADDRESS_LINE),
-                env.DJAVACOAL_KV.get(KV_KEYS.WHATSAPP_NUMBER),
+                env.DJAVACOAL_KV.get(KV_KEYS.WHATSAPP_NUMBER).then(
+                    (v) => v?.replaceAll(" ", "") ?? null
+                ),
                 env.DJAVACOAL_KV.get(KV_KEYS.EMAIL_ADDRESS),
             ]);
 
@@ -240,7 +242,7 @@ export const router = {
 
                 kv
                     .get(KV_KEYS.WHATSAPP_NUMBER)
-                    .then((v) => v || "")
+                    .then((v) => v?.replaceAll(" ", "") || "")
                     .catch(() => ""),
             ]);
 
@@ -489,7 +491,7 @@ export const router = {
                     .catch(() => ""),
                 kv
                     .get(KV_KEYS.WHATSAPP_NUMBER)
-                    .then((v) => v ?? "")
+                    .then((v) => v?.replaceAll(" ", "") || "")
                     .catch(() => ""),
             ]);
 
@@ -811,7 +813,7 @@ export const router = {
             // Get WhatsApp number from KV
             const whatsapp_number = await env.DJAVACOAL_KV.get(
                 KV_KEYS.WHATSAPP_NUMBER
-            );
+            ).then((v) => v?.replaceAll(" ", "") || "");
 
             return {
                 body: {
@@ -1216,7 +1218,9 @@ export const router = {
                 tiktok_link,
             ] = await Promise.all([
                 kv.get(KV_KEYS.EMAIL_ADDRESS),
-                kv.get(KV_KEYS.WHATSAPP_NUMBER),
+                kv
+                    .get(KV_KEYS.WHATSAPP_NUMBER)
+                    .then((v) => v?.replaceAll(" ", "") ?? null),
                 kv.get(KV_KEYS.ADDRESS_LINE),
                 kv.get(KV_KEYS.FACEBOOK_LINK),
                 kv.get(KV_KEYS.LINKEDIN_LINK),
