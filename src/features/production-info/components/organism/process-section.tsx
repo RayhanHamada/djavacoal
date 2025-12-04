@@ -77,7 +77,7 @@ export default function ProcessSection() {
                 description: t("steps.step2.description"),
             },
             {
-                image: "/images/Step3.png",
+                image: "/images/Step33.png",
                 title: t("steps.step3.title"),
                 description: t("steps.step3.description"),
             },
