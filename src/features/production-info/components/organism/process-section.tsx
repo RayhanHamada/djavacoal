@@ -25,7 +25,7 @@ function StepCard({ image, title, description }: StepCardProps) {
                     alt={title}
                     width={500}
                     height={500}
-                    className="h-auto w-full rounded-xl object-cover"
+                    className="aspect-square h-auto w-full rounded-xl object-cover"
                 />
 
                 {/* Gradasi hitam tipis di bagian atas */}
