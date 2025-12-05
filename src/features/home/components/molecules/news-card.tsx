@@ -2,6 +2,8 @@
 
 import type { NewsItem } from "../../lib/types";
 
+import Link from "next/link";
+
 import { NewsCardContent, NewsCardImage } from "../atoms";
 import { cn } from "@/lib/utils";
 
@@ -21,18 +23,16 @@ export function NewsCard({
     className,
 }: NewsCardProps) {
     return (
-        <article
-            className={cn(
-                "group relative mx-auto flex w-full max-w-11/12 flex-col justify-center overflow-hidden md:max-w-[500px]",
-                className
-            )}
-        >
-            <NewsCardImage slug={slug} coverImage={coverImage} alt={title} />
-            <NewsCardContent
-                slug={slug}
-                title={title}
-                publishedAt={publishedAt}
-            />
-        </article>
+        <Link href={`/blog/${slug}`}>
+            <article
+                className={cn(
+                    "group relative mx-auto flex w-full max-w-11/12 flex-col justify-center overflow-hidden md:max-w-[500px]",
+                    className
+                )}
+            >
+                <NewsCardImage coverImage={coverImage} alt={title} />
+                <NewsCardContent title={title} publishedAt={publishedAt} />
+            </article>
+        </Link>
     );
 }

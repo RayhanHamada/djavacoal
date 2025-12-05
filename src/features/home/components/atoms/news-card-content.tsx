@@ -1,12 +1,8 @@
 "use client";
 
-import Link from "next/link";
-
 import { ArrowRight } from "lucide-react";
 
 interface NewsCardContentProps {
-    /** Article slug for link */
-    slug: string;
     /** Article title */
     title: string;
     /** Publication date as ISO string */
@@ -16,11 +12,7 @@ interface NewsCardContentProps {
 /**
  * NewsCardContent - Content section for news card with date, title, and arrow
  */
-export function NewsCardContent({
-    slug,
-    title,
-    publishedAt,
-}: NewsCardContentProps) {
+export function NewsCardContent({ title, publishedAt }: NewsCardContentProps) {
     const formattedDate = new Date(publishedAt).toLocaleDateString("en-US", {
         month: "short",
         day: "numeric",
@@ -32,7 +24,7 @@ export function NewsCardContent({
             <NewsCardDate date={formattedDate} />
             <div className="flex justify-between">
                 <NewsCardTitle title={title} />
-                <NewsCardArrow slug={slug} title={title} />
+                <NewsCardArrow />
             </div>
         </div>
     );
@@ -70,24 +62,13 @@ function NewsCardTitle({ title }: NewsCardTitleProps) {
     );
 }
 
-interface NewsCardArrowProps {
-    /** Article slug for link */
-    slug: string;
-    /** Article title for aria-label */
-    title: string;
-}
-
 /**
- * NewsCardArrow - Arrow link button for news card
+ * NewsCardArrow - Arrow icon for news card
  */
-function NewsCardArrow({ slug, title }: NewsCardArrowProps) {
+function NewsCardArrow() {
     return (
-        <Link
-            href={`/blog/${slug}`}
-            className="shrink-0 text-[#EFA12D] transition-transform duration-300 group-hover:translate-x-1"
-            aria-label={`Read more about ${title}`}
-        >
+        <span className="shrink-0 text-[#EFA12D] transition-transform duration-300 group-hover:translate-x-1">
             <ArrowRight className="h-5 w-5 md:h-6 md:w-6" />
-        </Link>
+        </span>
     );
 }
