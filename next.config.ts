@@ -32,6 +32,25 @@ const nextConfig: NextConfig = {
         ],
         formats: ["image/webp"],
     },
+    async redirects() {
+        return [
+            {
+                source: "/category/:path*",
+                destination: "/blog",
+                permanent: false,
+            },
+            {
+                // Match any path that starts with a 4-digit year
+                // /2021
+                // /2021/09
+                // /2021/09/09
+                // /2021/09/09/slug/whatever
+                source: "/:year(\\d{4})/:rest*",
+                destination: "/blog",
+                permanent: true,
+            },
+        ];
+    },
 };
 
 /**
