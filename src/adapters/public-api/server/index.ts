@@ -11,6 +11,8 @@ import { z } from "zod";
 import { PUBLIC_API_PREFIX } from "@/adapters/public-api/constants";
 import { router } from "@/features/public-api/router";
 
+const origin = new URL(process.env.NEXT_PUBLIC_BASE_URL).hostname;
+
 const handler = new OpenAPIHandler(router, {
     clientInterceptors: [
         onError(async function (error) {
@@ -68,7 +70,7 @@ const handler = new OpenAPIHandler(router, {
             },
         }),
         new CORSPlugin({
-            origin: new URL(process.env.NEXT_PUBLIC_BASE_URL).origin,
+            origin: [`https://${origin}`, `https://www.${origin}`],
         }),
     ],
 });
